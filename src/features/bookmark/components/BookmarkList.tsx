@@ -49,7 +49,42 @@ export function BookmarkList() {
       ) : (
         <div className="space-y-4">
           {data.items.map((item) => (
-            <FeedItem key={item.id} dua={{ ...item, isSaved: true }} />
+            <FeedItem
+              key={item.id}
+              post={{
+                id: item.id,
+                type: 'DUA',
+                content: null,
+                createdAt: item.createdAt || new Date().toISOString(),
+                author: {
+                  id: item.createdBy?.id || 'scholar',
+                  name: item.createdBy?.name || 'PeaceTweet Scholar',
+                  username: item.createdBy?.username || 'scholar',
+                  avatar: null,
+                },
+                dua: {
+                  id: item.id,
+                  title: item.title,
+                  fadilah: item.fadilah,
+                  duaBangla: item.duaBangla,
+                  meaningBangla: item.meaningBangla,
+                  arabicText: item.arabicText,
+                  transliteration: item.transliteration,
+                  category: item.category,
+                  references: item.references || [],
+                  audios: item.audios || [],
+                  audioUrl: item.audios?.[0]?.audioUrl || null,
+                },
+                stats: {
+                  reactionCount: 0,
+                  commentCount: 0,
+                },
+                viewer: {
+                  hasReacted: false,
+                  hasSaved: true,
+                },
+              }}
+            />
           ))}
         </div>
       )}

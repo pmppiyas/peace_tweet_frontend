@@ -4,101 +4,92 @@ import React, { useState } from 'react';
 import { useFeed } from '../hooks/useFeed';
 import { FeedList } from './FeedList';
 import { FeedSkeleton } from './FeedSkeleton';
-import { Button } from '@/components/ui/Button';
-import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useDebounce } from '@/hooks/useDebounce';
-import { useLanguage } from '@/providers/LanguageProvider';
+import { PostComposer } from './PostComposer';
+import { PostType } from '../types/feed.types';
+import { AlertCircle, RefreshCw, Sparkles, BookOpen, PenTool, HelpCircle, Megaphone } from 'lucide-react';
+import { cn } from '@/lib/utils/cn';
 
-export interface FeedProps {
-  categoryId?: string;
-  initialSearch?: string;
-}
+export function Feed() {
+  const [activeType, setActiveType] = useState<PostType | undefined>(undefined);
 
-export function Feed({ categoryId, initialSearch = '' }: FeedProps) {
-  const { t, formatNumber } = useLanguage();
-  const [page, setPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState(initialSearch);
-  const debouncedSearch = useDebounce(searchTerm, 400);
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+    refetch,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useFeed(activeType);
 
-  const { data, isLoading, isError, error, isFetching } = useFeed({
-    page,
-    limit: 10,
-    categoryId,
-    search: debouncedSearch || undefined,
-  });
+  // Flatten all paginated items
+  const allPosts = data?.pages.flatMap((page) => page?.items || []) || [];
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-    setPage(1);
-  };
+  const filterTabs: Array<{ label: string; type?: PostType; icon: React.ReactNode }> = [
+    { label: 'সকল পোস্ট', type: undefined, icon: <Sparkles className="h-3.5 w-3.5" /> },
+    { label: 'দোয়া', type: 'DUA', icon: <BookOpen className="h-3.5 w-3.5" /> },
+    { label: 'স্মরণ ও চিন্তা', type: 'TEXT', icon: <PenTool className="h-3.5 w-3.5" /> },
+    { label: 'জিজ্ঞাসা', type: 'QUESTION', icon: <HelpCircle className="h-3.5 w-3.5" /> },
+    { label: 'ঘোষণা', type: 'ANNOUNCEMENT', icon: <Megaphone className="h-3.5 w-3.5" /> },
+  ];
 
   return (
     <div className="space-y-4">
-      {/* Minimal Search Bar */}
-      <div className="relative">
-        <Search className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          placeholder={t('feed.searchPlaceholder')}
-          className="h-10 w-full rounded-2xl border border-gray-100 bg-white pl-10 pr-4 text-xs sm:text-sm placeholder:text-gray-400 focus:border-emerald-500 focus:outline-hidden dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100"
-        />
-        {isFetching && !isLoading && (
-          <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[11px] text-emerald-600 font-medium">
-            {t('feed.loading')}
-          </div>
-        )}
+      {/* 1. Post Composer */}
+      <PostComposer />
+
+      {/* 2. Type Filter Navigation Tabs */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+        {filterTabs.map((tab) => {
+          const isActive = activeType === tab.type;
+          return (
+            <button
+              key={tab.label}
+              type="button"
+              onClick={() => setActiveType(tab.type)}
+              className={cn(
+                'inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition-all select-none',
+                isActive
+                  ? 'bg-emerald-600 text-white shadow-2xs'
+                  : 'bg-white border border-[#e4e6eb] text-[#65676b] hover:border-gray-300 hover:text-[#050505] dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#b0b3b8] dark:hover:text-[#e4e6eb]',
+              )}
+            >
+              {tab.icon}
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
       </div>
 
-      {/* Main Content Area */}
+      {/* 3. Feed Content States */}
       {isLoading ? (
         <FeedSkeleton />
       ) : isError ? (
-        <div className="rounded-2xl border border-red-100 bg-red-50/70 p-6 text-center text-xs sm:text-sm text-red-700 dark:bg-red-950/40 dark:border-red-900 dark:text-red-300">
-          {t('feed.failed')}
+        <div className="flex flex-col items-center justify-center rounded-xl border border-rose-200 bg-rose-50/70 p-8 text-center dark:border-rose-900/60 dark:bg-rose-950/30">
+          <AlertCircle className="h-8 w-8 text-rose-600 dark:text-rose-400" />
+          <h3 className="mt-2 text-sm font-bold text-rose-800 dark:text-rose-300">
+            ফিড লোড করা যাচ্ছে না
+          </h3>
+          <p className="mt-1 text-xs text-rose-600 dark:text-rose-400 max-w-sm">
+            সার্ভারের সাথে সংযোগ স্থাপন করা সম্ভব হয়নি। অনুগ্রহ করে ইন্টারনেট সংযোগ পরীক্ষা করে পুনরায় চেষ্টা করুন।
+          </p>
+          <button
+            type="button"
+            onClick={() => refetch()}
+            className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-rose-600 px-4 py-2 text-xs font-bold text-white hover:bg-rose-700 transition-colors shadow-2xs"
+          >
+            <RefreshCw className="h-3.5 w-3.5" />
+            <span>আবার চেষ্টা করুন</span>
+          </button>
         </div>
       ) : (
-        <>
-          <FeedList duas={data?.duas || []} />
-
-          {/* Pagination Controls */}
-          {data?.meta && data.meta.totalPages > 1 && (
-            <div className="flex items-center justify-between border-t border-gray-100 pt-4 dark:border-gray-800">
-              <p className="text-xs text-gray-400">
-                {t('feed.pageInfo', {
-                  page: formatNumber(data.meta.page),
-                  totalPages: formatNumber(data.meta.totalPages),
-                  total: formatNumber(data.meta.total),
-                })}
-              </p>
-
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={!data.meta.hasPreviousPage}
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="gap-1 rounded-xl text-xs"
-                >
-                  <ChevronLeft className="h-3.5 w-3.5" />
-                  <span>{t('feed.prevPage')}</span>
-                </Button>
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={!data.meta.hasNextPage}
-                  onClick={() => setPage((p) => p + 1)}
-                  className="gap-1 rounded-xl text-xs"
-                >
-                  <span>{t('feed.nextPage')}</span>
-                  <ChevronRight className="h-3.5 w-3.5" />
-                </Button>
-              </div>
-            </div>
-          )}
-        </>
+        <FeedList
+          items={allPosts}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+          fetchNextPage={fetchNextPage}
+        />
       )}
     </div>
   );

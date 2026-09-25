@@ -23,11 +23,12 @@ export function Navbar() {
   const { t } = useLanguage();
 
   const navCenterLinks = [
-    { label: t('nav.home'), href: ROUTES.HOME, icon: Home },
-    { label: t('nav.duas'), href: ROUTES.DUAS, icon: Compass },
-    { label: t('nav.categories'), href: ROUTES.CATEGORIES, icon: Layers },
-    { label: t('nav.bookmarks'), href: isAuthenticated ? ROUTES.SAVED : ROUTES.LOGIN, icon: Bookmark },
+    { id: 'nav-home', label: t('nav.home'), href: ROUTES.HOME, icon: Home },
+    { id: 'nav-duas', label: t('nav.duas'), href: ROUTES.DUAS, icon: Compass },
+    { id: 'nav-categories', label: t('nav.categories'), href: ROUTES.CATEGORIES, icon: Layers },
+    { id: 'nav-bookmarks', label: t('nav.bookmarks'), href: isAuthenticated ? ROUTES.SAVED : ROUTES.LOGIN, icon: Bookmark },
   ];
+
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-[#e4e6eb] bg-white dark:border-[#393a3b] dark:bg-[#242526] shadow-2xs select-none">
@@ -69,9 +70,10 @@ export function Navbar() {
 
                 return (
                   <Link
-                    key={item.href}
+                    key={item.id}
                     href={item.href}
                     className={cn(
+
                       'relative flex h-full items-center justify-center transition-colors px-1',
                       isActive
                         ? 'text-emerald-600 dark:text-emerald-400'

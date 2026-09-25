@@ -14,11 +14,9 @@ export default function HomePage() {
         <Sidebar />
 
         {/* Center Main Feed Column */}
-        <main className="w-full max-w-2xl min-w-0 space-y-4 sm:space-y-5">
+        <main className="w-full max-w-2xl min-w-0 space-y-4">
           {/* Quick Stories / Topic Circles */}
           <StoryBar />
-
-          <CreatePostBox />
 
           {/* Social Duas & Feed Stream */}
           <Feed />

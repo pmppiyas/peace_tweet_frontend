@@ -1,40 +1,80 @@
 'use client';
 
-import React from 'react';
-import { Dua } from '@/types/dua.types';
+import React, { useEffect, useRef } from 'react';
+import { FeedItem as FeedItemType } from '../types/feed.types';
 import { FeedItem } from './FeedItem';
-import { BookOpen } from 'lucide-react';
+import { FeedSkeleton } from './FeedSkeleton';
+import { EmptyFeed } from './EmptyFeed';
 
-export interface FeedListProps {
-  duas: Dua[];
-  emptyMessage?: string;
+interface FeedListProps {
+  items: FeedItemType[];
+  hasNextPage?: boolean;
+  isFetchingNextPage?: boolean;
+  fetchNextPage: () => void;
 }
 
 export function FeedList({
-  duas,
-  emptyMessage = 'No Duas found in this feed.',
+  items,
+  hasNextPage,
+  isFetchingNextPage,
+  fetchNextPage,
 }: FeedListProps) {
-  if (!duas || duas.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-gray-200 p-12 text-center dark:border-gray-800">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400">
-          <BookOpen className="h-6 w-6" />
-        </div>
-        <h3 className="mt-3 text-sm font-semibold text-gray-900 dark:text-gray-100">
-          {emptyMessage}
-        </h3>
-        <p className="mt-1 text-xs text-gray-400">
-          Try adjusting your search terms or exploring other categories.
-        </p>
-      </div>
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
+  // IntersectionObserver for smooth infinite scroll
+  useEffect(() => {
+    if (!hasNextPage || isFetchingNextPage) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          fetchNextPage();
+        }
+      },
+      {
+        rootMargin: '200px',
+        threshold: 0.1,
+      },
     );
+
+    const currentEl = loadMoreRef.current;
+    if (currentEl) {
+      observer.observe(currentEl);
+    }
+
+    return () => {
+      if (currentEl) {
+        observer.unobserve(currentEl);
+      }
+    };
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  if (!items || items.length === 0) {
+    return <EmptyFeed />;
   }
 
   return (
     <div className="space-y-4">
-      {duas.map((dua) => (
-        <FeedItem key={dua.id} dua={dua} />
+      {items.map((post) => (
+        <FeedItem key={post.id} post={post} />
       ))}
+
+      {/* Infinite Scroll Sentinel */}
+      <div ref={loadMoreRef} className="h-4 w-full" />
+
+      {/* Loading More Skeleton */}
+      {isFetchingNextPage && (
+        <div className="pt-2">
+          <FeedSkeleton />
+        </div>
+      )}
+
+      {/* End of Feed */}
+      {!hasNextPage && items.length > 5 && (
+        <div className="py-6 text-center text-xs text-[#65676b] dark:text-[#b0b3b8]">
+          ✨ আপনি সকল সাম্প্রতিক পোস্ট দেখে ফেলেছেন
+        </div>
+      )}
     </div>
   );
 }

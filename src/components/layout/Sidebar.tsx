@@ -25,36 +25,42 @@ export function Sidebar() {
 
   const menuItems = [
     {
+      id: 'sidebar-home',
       label: t('nav.home'),
       href: ROUTES.HOME,
       icon: Home,
       iconBg: 'bg-emerald-600 text-white',
     },
     {
+      id: 'sidebar-duas',
       label: t('nav.duas'),
       href: ROUTES.DUAS,
       icon: Compass,
       iconBg: 'bg-teal-500 text-white',
     },
     {
+      id: 'sidebar-categories',
       label: t('nav.categories'),
       href: ROUTES.CATEGORIES,
       icon: Layers,
       iconBg: 'bg-blue-600 text-white',
     },
     {
+      id: 'sidebar-bookmarks',
       label: t('nav.bookmarks'),
       href: isAuthenticated ? ROUTES.SAVED : ROUTES.LOGIN,
       icon: Bookmark,
       iconBg: 'bg-purple-600 text-white',
     },
     {
-      label: t('nav.profile'),
+      id: 'sidebar-profile',
+      label: isAuthenticated ? t('nav.profile') : t('nav.login'),
       href: isAuthenticated ? ROUTES.PROFILE : ROUTES.LOGIN,
       icon: User,
       iconBg: 'bg-amber-600 text-white',
     },
     {
+      id: 'sidebar-settings',
       label: t('nav.settings'),
       href: ROUTES.SETTINGS,
       icon: Settings,
@@ -90,7 +96,7 @@ export function Sidebar() {
 
           return (
             <Link
-              key={item.href}
+              key={item.id}
               href={item.href}
               className={cn(
                 'flex items-center gap-3 rounded-xl px-2.5 py-2 transition-colors',
@@ -99,6 +105,7 @@ export function Sidebar() {
                   : 'text-[#050505] dark:text-[#e4e6eb] hover:bg-[#e4e6eb]/80 dark:hover:bg-[#3a3b3c] font-semibold text-[15px]',
               )}
             >
+
               <div
                 className={cn(
                   'flex h-9 w-9 shrink-0 items-center justify-center rounded-full shadow-xs',

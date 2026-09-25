@@ -35,4 +35,19 @@ export const API_ENDPOINTS = {
     UPDATE: (id: string) => `/sources/${id}`,
     DELETE: (id: string) => `/sources/${id}`,
   },
+  FEED: {
+    GET: '/feed',
+  },
+  POSTS: {
+    CREATE: '/posts',
+    DETAIL: (id: string) => `/posts/${id}`,
+    UPDATE: (id: string) => `/posts/${id}`,
+    DELETE: (id: string) => `/posts/${id}`,
+    SAVE: (id: string) => `/posts/${id}/save`,
+    UNSAVE: (id: string) => `/posts/${id}/save`,
+    REACTION: (id: string) => `/posts/${id}/reaction`,
+    UNREACTION: (id: string) => `/posts/${id}/reaction`,
+    COMMENTS: (id: string) => `/posts/${id}/comments`,
+    CREATE_COMMENT: (id: string) => `/posts/${id}/comments`,
+  },
 } as const;

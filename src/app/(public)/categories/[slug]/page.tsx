@@ -6,8 +6,11 @@ import { Container } from '@/components/layout/Container';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { RightSidebar } from '@/components/layout/RightSidebar';
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs';
-import { Feed } from '@/features/feed/components/Feed';
 import { useCategory } from '@/features/category/hooks/useCategory';
+import { useDuas } from '@/features/dua/hooks/useDuas';
+import { FeedItem } from '@/features/feed/components/FeedItem';
+import { FeedSkeleton } from '@/features/feed/components/FeedSkeleton';
+import { EmptyFeed } from '@/features/feed/components/EmptyFeed';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { ROUTES } from '@/constants/routes';
 
@@ -45,11 +48,66 @@ export default function CategoryDetailPage() {
             </div>
           )}
 
-          {category?.id && <Feed categoryId={category.id} />}
+          {category?.id && <CategoryDuaList categoryId={category.id} />}
         </main>
 
         <RightSidebar />
       </div>
     </Container>
+  );
+}
+
+function CategoryDuaList({ categoryId }: { categoryId: string }) {
+  const { data, isLoading } = useDuas({ categoryId });
+
+  if (isLoading) {
+    return <FeedSkeleton />;
+  }
+
+  if (!data?.items || data.items.length === 0) {
+    return <EmptyFeed message="এই ক্যাটাগরিতে এখনো কোনো দোয়া যুক্ত করা হয়নি" />;
+  }
+
+  return (
+    <div className="space-y-4">
+      {data.items.map((dua: any) => (
+        <FeedItem
+          key={dua.id}
+          post={{
+            id: dua.id,
+            type: 'DUA',
+            content: null,
+            createdAt: dua.createdAt || new Date().toISOString(),
+            author: {
+              id: dua.createdBy?.id || 'scholar',
+              name: dua.createdBy?.name || 'PeaceTweet Scholar',
+              username: dua.createdBy?.username || 'scholar',
+              avatar: null,
+            },
+            dua: {
+              id: dua.id,
+              title: dua.title,
+              fadilah: dua.fadilah,
+              duaBangla: dua.duaBangla,
+              meaningBangla: dua.meaningBangla,
+              arabicText: dua.arabicText,
+              transliteration: dua.transliteration,
+              category: dua.category,
+              references: dua.references || [],
+              audios: dua.audios || [],
+              audioUrl: dua.audios?.[0]?.audioUrl || null,
+            },
+            stats: {
+              reactionCount: 0,
+              commentCount: 0,
+            },
+            viewer: {
+              hasReacted: false,
+              hasSaved: false,
+            },
+          }}
+        />
+      ))}
+    </div>
   );
 }

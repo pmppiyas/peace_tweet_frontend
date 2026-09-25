@@ -75,13 +75,13 @@ export function DuaDetail({ dua }: { dua: Dua }) {
             children: (
               <div className="space-y-2.5 pt-1">
                 {dua.arabicText && (
-                  <div className="rounded-lg bg-emerald-50/40 p-3 dark:bg-gray-800/60 border border-emerald-100/60 dark:border-gray-800">
+                  <div className="rounded-lg bg-[#f0f2f5] p-3 dark:bg-[#3a3b3c] border border-[#e4e6eb] dark:border-[#393a3b]">
                     <ArabicText text={dua.arabicText} />
                   </div>
                 )}
                 {dua.transliteration && (
-                  <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed px-1">
-                    <span className="font-semibold text-gray-800 dark:text-gray-200">{t('post.accordion.pronunciation')} </span>
+                  <p className="text-xs text-[#65676b] dark:text-[#b0b3b8] leading-relaxed px-1">
+                    <span className="font-semibold text-[#050505] dark:text-[#e4e6eb]">{t('post.accordion.pronunciation')} </span>
                     <span className="italic">{dua.transliteration}</span>
                   </p>
                 )}

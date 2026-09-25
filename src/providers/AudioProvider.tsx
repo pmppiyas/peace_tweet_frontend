@@ -71,3 +71,6 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     </>
   );
 }
+
+export const useAudio = useAudioStore;
+
