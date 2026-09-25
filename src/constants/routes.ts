@@ -1,0 +1,17 @@
+export const ROUTES = {
+  HOME: '/',
+  DUAS: '/duas',
+  DUA_DETAIL: (id: string) => `/duas/${id}`,
+  CATEGORIES: '/categories',
+  CATEGORY_DETAIL: (slug: string) => `/categories/${slug}`,
+  SEARCH: '/search',
+  LOGIN: '/login',
+  REGISTER: '/register',
+  SAVED: '/saved',
+  PROFILE: '/profile',
+  SETTINGS: '/settings',
+  ADMIN: '/admin',
+  ADMIN_DUAS: '/admin/duas',
+  ADMIN_CATEGORIES: '/admin/categories',
+  ADMIN_SOURCES: '/admin/sources',
+} as const;
