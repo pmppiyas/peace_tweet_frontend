@@ -8,6 +8,7 @@ export const en = {
     login: 'Log In',
     join: 'Join Now',
     profile: 'My Profile',
+    friends: 'Friends',
     settings: 'Settings',
     admin: 'Admin Panel',
   },

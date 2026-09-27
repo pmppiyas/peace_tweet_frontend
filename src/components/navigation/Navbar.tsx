@@ -25,10 +25,19 @@ export function Navbar() {
   const navCenterLinks = [
     { id: 'nav-home', label: t('nav.home'), href: ROUTES.HOME, icon: Home },
     { id: 'nav-duas', label: t('nav.duas'), href: ROUTES.DUAS, icon: Compass },
-    { id: 'nav-categories', label: t('nav.categories'), href: ROUTES.CATEGORIES, icon: Layers },
-    { id: 'nav-bookmarks', label: t('nav.bookmarks'), href: isAuthenticated ? ROUTES.SAVED : ROUTES.LOGIN, icon: Bookmark },
+    {
+      id: 'nav-categories',
+      label: t('nav.categories'),
+      href: ROUTES.CATEGORIES,
+      icon: Layers,
+    },
+    {
+      id: 'nav-bookmarks',
+      label: t('nav.bookmarks'),
+      href: isAuthenticated ? ROUTES.SAVED : ROUTES.LOGIN,
+      icon: Bookmark,
+    },
   ];
-
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-[#e4e6eb] bg-white dark:border-[#393a3b] dark:bg-[#242526] shadow-2xs select-none">
@@ -66,22 +75,29 @@ export function Navbar() {
               {navCenterLinks.map((item) => {
                 const Icon = item.icon;
                 const isActive =
-                  item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
+                  item.href === '/'
+                    ? pathname === '/'
+                    : pathname.startsWith(item.href);
 
                 return (
                   <Link
                     key={item.id}
                     href={item.href}
                     className={cn(
-
                       'relative flex h-full items-center justify-center transition-colors px-1',
                       isActive
                         ? 'text-emerald-600 dark:text-emerald-400'
-                        : 'text-[#65676b] hover:bg-[#f0f2f5] hover:rounded-xl dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c]',
+                        : 'text-[#65676b] hover:bg-[#f0f2f5] hover:rounded-xl dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c]'
                     )}
                     title={item.label}
                   >
-                    <Icon className={cn('h-6 w-6', isActive && 'stroke-[2.5] text-emerald-600 dark:text-emerald-400')} />
+                    <Icon
+                      className={cn(
+                        'h-6 w-6',
+                        isActive &&
+                          'stroke-[2.5] text-emerald-600 dark:text-emerald-400'
+                      )}
+                    />
                     {isActive && (
                       <span className="absolute bottom-0 left-0 right-0 h-[3px] bg-emerald-600 dark:bg-emerald-400 rounded-t-md" />
                     )}

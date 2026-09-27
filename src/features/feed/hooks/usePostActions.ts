@@ -12,9 +12,7 @@ export function usePostActions() {
   const { isAuthenticated } = useAuth();
   const router = useRouter();
 
-  /**
-   * Helper to optimistically update a post across all cached infinite feed pages
-   */
+  // Helper to optimistically update a post across all cached infinite feed pages
   const updateFeedCache = (
     postId: string,
     updater: (post: FeedItem) => FeedItem,
@@ -36,9 +34,7 @@ export function usePostActions() {
     );
   };
 
-  /**
-   * Optimistic Reaction Mutation (LIKE)
-   */
+  // Optimistic Reaction Mutation (LIKE)
   const reactMutation = useMutation({
     mutationFn: async ({
       postId,
@@ -94,9 +90,7 @@ export function usePostActions() {
     },
   });
 
-  /**
-   * Optimistic Save/Bookmark Mutation
-   */
+  // Optimistic Save/Bookmark Mutation
   const saveMutation = useMutation({
     mutationFn: async ({
       postId,
@@ -144,9 +138,7 @@ export function usePostActions() {
     },
   });
 
-  /**
-   * Create Post Mutation
-   */
+  // Create Post Mutation
   const createPostMutation = useMutation({
     mutationFn: async (input: CreatePostInput) => {
       return feedApi.createPost(input);
@@ -156,9 +148,7 @@ export function usePostActions() {
     },
   });
 
-  /**
-   * Delete Post Mutation
-   */
+  // Delete Post Mutation
   const deletePostMutation = useMutation({
     mutationFn: async (postId: string) => {
       return feedApi.deletePost(postId);

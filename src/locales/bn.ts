@@ -8,6 +8,7 @@ export const bn = {
     login: 'লগইন',
     join: 'জয়েন করুন',
     profile: 'প্রোফাইল',
+    friends: 'বন্ধুরা',
     settings: 'সেটিংস',
     admin: 'অ্যাডমিন',
   },

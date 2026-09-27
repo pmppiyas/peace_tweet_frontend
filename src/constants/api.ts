@@ -9,6 +9,7 @@ export const API_ENDPOINTS = {
   USERS: {
     ME: '/users/me',
     SAVED_DUAS: '/users/me/saved-duas',
+    PROFILE: (username: string) => `/users/${username}`,
   },
   DUAS: {
     LIST: '/duas',
@@ -23,7 +24,7 @@ export const API_ENDPOINTS = {
   },
   CATEGORIES: {
     LIST: '/categories',
-    DETAIL: (id: string) => `/categories/${id}`,
+    DETAIL: (slug: string) => `/categories/${slug}`,
     CREATE: '/categories',
     UPDATE: (id: string) => `/categories/${id}`,
     DELETE: (id: string) => `/categories/${id}`,
@@ -49,5 +50,16 @@ export const API_ENDPOINTS = {
     UNREACTION: (id: string) => `/posts/${id}/reaction`,
     COMMENTS: (id: string) => `/posts/${id}/comments`,
     CREATE_COMMENT: (id: string) => `/posts/${id}/comments`,
+  },
+  FRIENDS: {
+    LIST: '/friends',
+    RECEIVED_REQUESTS: '/friends/requests/received',
+    SENT_REQUESTS: '/friends/requests/sent',
+    STATUS: (userId: string) => `/friends/status/${userId}`,
+    SEND_REQUEST: '/friends/requests',
+    CANCEL_REQUEST: (requestId: string) => `/friends/requests/${requestId}`,
+    ACCEPT_REQUEST: (requestId: string) => `/friends/requests/${requestId}/accept`,
+    REJECT_REQUEST: (requestId: string) => `/friends/requests/${requestId}/reject`,
+    UNFRIEND: (userId: string) => `/friends/${userId}`,
   },
 } as const;

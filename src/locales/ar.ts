@@ -8,6 +8,7 @@ export const ar = {
     login: 'تسجيل الدخول',
     join: 'انضم الآن',
     profile: 'الملف الشخصي',
+    friends: 'الأصدقاء',
     settings: 'الإعدادات',
     admin: 'لوحة الإدارة',
   },

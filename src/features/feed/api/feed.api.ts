@@ -11,9 +11,7 @@ import {
 } from '../types/feed.types';
 
 export const feedApi = {
-  /**
-   * Fetch public feed with cursor pagination and optional type filter
-   */
+  // Fetch public feed with cursor pagination and optional type filter
   getFeed: async (params?: FeedFilters): Promise<ApiResponse<FeedResponse>> => {
     const { data } = await apiClient.get<ApiResponse<FeedResponse>>(
       API_ENDPOINTS.FEED.GET,
@@ -22,9 +20,7 @@ export const feedApi = {
     return data;
   },
 
-  /**
-   * Get single post by ID
-   */
+  // Get single post by ID
   getPost: async (id: string): Promise<ApiResponse<FeedItem>> => {
     const { data } = await apiClient.get<ApiResponse<FeedItem>>(
       API_ENDPOINTS.POSTS.DETAIL(id),
@@ -32,9 +28,7 @@ export const feedApi = {
     return data;
   },
 
-  /**
-   * Create a new post
-   */
+  // Create a new post
   createPost: async (input: CreatePostInput): Promise<ApiResponse<FeedItem>> => {
     const { data } = await apiClient.post<ApiResponse<FeedItem>>(
       API_ENDPOINTS.POSTS.CREATE,
@@ -43,9 +37,7 @@ export const feedApi = {
     return data;
   },
 
-  /**
-   * Update an existing post
-   */
+  // Update an existing post
   updatePost: async (
     id: string,
     input: UpdatePostInput,
@@ -57,9 +49,7 @@ export const feedApi = {
     return data;
   },
 
-  /**
-   * Delete a post
-   */
+  // Delete a post
   deletePost: async (id: string): Promise<ApiResponse<{ success: boolean }>> => {
     const { data } = await apiClient.delete<ApiResponse<{ success: boolean }>>(
       API_ENDPOINTS.POSTS.DELETE(id),
@@ -67,9 +57,7 @@ export const feedApi = {
     return data;
   },
 
-  /**
-   * React (LIKE) to a post
-   */
+  // React (LIKE) to a post
   reactToPost: async (
     postId: string,
   ): Promise<ApiResponse<{ hasReacted: boolean; reactionCount: number }>> => {
@@ -79,9 +67,7 @@ export const feedApi = {
     return data;
   },
 
-  /**
-   * Remove reaction from a post
-   */
+  // Remove reaction from a post
   unreactToPost: async (
     postId: string,
   ): Promise<ApiResponse<{ hasReacted: boolean; reactionCount: number }>> => {
@@ -91,9 +77,7 @@ export const feedApi = {
     return data;
   },
 
-  /**
-   * Save a post to bookmarks
-   */
+  // Save a post to bookmarks
   savePost: async (
     postId: string,
   ): Promise<ApiResponse<{ hasSaved: boolean }>> => {
@@ -103,9 +87,7 @@ export const feedApi = {
     return data;
   },
 
-  /**
-   * Remove a post from saved bookmarks
-   */
+  // Remove a post from saved bookmarks
   unsavePost: async (
     postId: string,
   ): Promise<ApiResponse<{ hasSaved: boolean }>> => {
@@ -115,9 +97,7 @@ export const feedApi = {
     return data;
   },
 
-  /**
-   * Get comments for a post
-   */
+  // Get comments for a post
   getComments: async (
     postId: string,
     limit?: number,
@@ -129,9 +109,7 @@ export const feedApi = {
     return data;
   },
 
-  /**
-   * Add a comment to a post
-   */
+  // Add a comment to a post
   createComment: async (
     postId: string,
     content: string,

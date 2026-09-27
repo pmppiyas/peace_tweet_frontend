@@ -1,17 +1,40 @@
 export const ROUTES = {
   HOME: '/',
-  DUAS: '/duas',
-  DUA_DETAIL: (id: string) => `/duas/${id}`,
-  CATEGORIES: '/categories',
-  CATEGORY_DETAIL: (slug: string) => `/categories/${slug}`,
+  AUTH: {
+    LOGIN: '/login',
+    REGISTER: '/register',
+  },
+  DUAS: {
+    HOME: '/duas',
+    DETAIL: (id: string) => `/duas/${id}`,
+  },
+  CATEGORIES: {
+    HOME: '/categories',
+    DETAIL: (slug: string) => `/categories/${slug}`,
+  },
   SEARCH: '/search',
-  LOGIN: '/login',
-  REGISTER: '/register',
   SAVED: '/saved',
   PROFILE: '/profile',
   SETTINGS: '/settings',
-  ADMIN: '/admin',
-  ADMIN_DUAS: '/admin/duas',
-  ADMIN_CATEGORIES: '/admin/categories',
-  ADMIN_SOURCES: '/admin/sources',
+  USERS: {
+    PROFILE: (username: string) => `/users/${username}`,
+  },
+  FRIENDS: {
+    HOME: '/friends',
+    REQUESTS: '/friends/requests',
+    LIST: '/friends/list',
+    SENT: '/friends/sent',
+  },
+  ADMIN: {
+    HOME: '/admin',
+    DUAS: '/admin/duas',
+    CATEGORIES: '/admin/categories',
+    SOURCES: '/admin/sources',
+  },
+
+  LOGIN: '/login',
+  REGISTER: '/register',
+  DUA_DETAIL: (id: string) => `/duas/${id}`,
+  CATEGORY_DETAIL: (slug: string) => `/categories/${slug}`,
+  USER_PROFILE: (username: string) => `/users/${username}`,
 } as const;
