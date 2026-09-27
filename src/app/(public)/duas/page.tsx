@@ -24,7 +24,7 @@ export default function DuasPage() {
               All Duas & Dhikr
             </h1>
             <p className="text-xs text-[#65676b] dark:text-[#b0b3b8] mt-0.5">
-              Authentic prayers from the Holy Qur'an and Sunnah
+              Authentic prayers from the Holy Qur&apos;an and Sunnah
             </p>
           </div>
 

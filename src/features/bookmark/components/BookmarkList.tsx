@@ -57,9 +57,9 @@ export function BookmarkList() {
                 content: null,
                 createdAt: item.createdAt || new Date().toISOString(),
                 author: {
-                  id: item.createdBy?.id || 'scholar',
-                  name: item.createdBy?.name || 'PeaceTweet Scholar',
-                  username: item.createdBy?.username || 'scholar',
+                  id: (item as any).createdBy?.id || item.createdById || 'scholar',
+                  name: (item as any).createdBy?.name || 'PeaceTweet Scholar',
+                  username: (item as any).createdBy?.username || 'scholar',
                   avatar: null,
                 },
                 dua: {

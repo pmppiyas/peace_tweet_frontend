@@ -9,6 +9,7 @@ import {
   Settings,
   User,
   Users,
+  Users2,
   Shield,
   Sparkles,
 } from 'lucide-react';
@@ -33,14 +34,14 @@ export function Sidebar() {
     {
       id: 'sidebar-duas',
       label: t('nav.duas'),
-      href: ROUTES.DUAS.HOME,
+      href: ROUTES.DUAS,
       icon: Compass,
       iconBg: 'bg-teal-500 text-white',
     },
     {
       id: 'sidebar-categories',
       label: t('nav.categories'),
-      href: ROUTES.CATEGORIES.HOME,
+      href: ROUTES.CATEGORIES,
       icon: Layers,
       iconBg: 'bg-blue-600 text-white',
     },
@@ -50,6 +51,13 @@ export function Sidebar() {
       href: isAuthenticated ? ROUTES.FRIENDS.HOME : ROUTES.LOGIN,
       icon: Users,
       iconBg: 'bg-indigo-600 text-white',
+    },
+    {
+      id: 'sidebar-groups',
+      label: t('nav.groups'),
+      href: ROUTES.GROUPS.HOME,
+      icon: Users2,
+      iconBg: 'bg-emerald-700 text-white',
     },
     {
       id: 'sidebar-bookmarks',

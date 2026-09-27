@@ -12,25 +12,31 @@ export function usePostActions() {
   const { isAuthenticated } = useAuth();
   const router = useRouter();
 
-  // Helper to optimistically update a post across all cached infinite feed pages
+  // Helper to optimistically update a post across all cached infinite feed and group pages
   const updateFeedCache = (
     postId: string,
     updater: (post: FeedItem) => FeedItem,
   ) => {
+    const updateInfiniteData = (oldData?: InfiniteData<FeedResponse>) => {
+      if (!oldData) return oldData;
+      return {
+        ...oldData,
+        pages: oldData.pages.map((page) => ({
+          ...page,
+          items: page.items.map((post) =>
+            post.id === postId ? updater(post) : post,
+          ),
+        })),
+      };
+    };
+
     queryClient.setQueriesData<InfiniteData<FeedResponse>>(
       { queryKey: ['feed'] },
-      (oldData) => {
-        if (!oldData) return oldData;
-        return {
-          ...oldData,
-          pages: oldData.pages.map((page) => ({
-            ...page,
-            items: page.items.map((post) =>
-              post.id === postId ? updater(post) : post,
-            ),
-          })),
-        };
-      },
+      updateInfiniteData,
+    );
+    queryClient.setQueriesData<InfiniteData<FeedResponse>>(
+      { queryKey: ['groups'] },
+      updateInfiniteData,
     );
   };
 

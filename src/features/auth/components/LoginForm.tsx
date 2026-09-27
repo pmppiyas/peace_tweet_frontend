@@ -78,7 +78,7 @@ export function LoginForm() {
           </Button>
 
           <p className="text-center text-xs text-gray-500 dark:text-gray-400 pt-2">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link
               href={ROUTES.REGISTER}
               className="font-bold text-emerald-600 hover:underline dark:text-emerald-400"

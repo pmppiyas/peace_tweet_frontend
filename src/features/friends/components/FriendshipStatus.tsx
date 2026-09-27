@@ -16,16 +16,16 @@ export function FriendshipStatusBadge({ status, className }: FriendshipStatusPro
   const config = FRIENDSHIP_STATUS_CONFIG[status] || FRIENDSHIP_STATUS_CONFIG.NONE;
   const label = locale === 'bn' ? config.labelBn : config.label;
 
-  const badgeVariantMap: Record<FriendshipStatus, 'emerald' | 'gold' | 'default'> = {
+  const badgeVariantMap: Record<FriendshipStatus, 'emerald' | 'gold' | 'gray'> = {
     FRIENDS: 'emerald',
     PENDING_SENT: 'gold',
     PENDING_RECEIVED: 'emerald',
-    NONE: 'default',
-    SELF: 'default',
+    NONE: 'gray',
+    SELF: 'gray',
   };
 
   return (
-    <Badge variant={badgeVariantMap[status] || 'default'} className={className}>
+    <Badge variant={badgeVariantMap[status] || 'gray'} className={className}>
       {label}
     </Badge>
   );

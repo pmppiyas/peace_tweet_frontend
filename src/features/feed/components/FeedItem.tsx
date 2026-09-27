@@ -29,7 +29,7 @@ import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/constants/routes';
 
 interface FeedItemProps {
-  post: FeedItem;
+  post: FeedItemType;
 }
 
 export function FeedItem({ post }: FeedItemProps) {
