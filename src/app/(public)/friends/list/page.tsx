@@ -30,7 +30,7 @@ export default function AllFriendsRoutePage() {
               placeholder={
                 locale === 'bn' ? 'বন্ধুদের খুঁজুন...' : 'Search friends...'
               }
-              className="pl-10 pr-10 h-9 rounded-xl bg-[#e4e6eb]/60 dark:bg-[#3a3b3c] border-transparent focus:border-emerald-500 focus:bg-white dark:focus:bg-[#242526]"
+              className="pl-10 pr-10 h-9 rounded-xl bg-[#e4e6eb]/60 dark:bg-[#3a3b3c] border-transparent focus:border-primary-500 focus:bg-white dark:focus:bg-[#242526]"
             />
             {search && (
               <button

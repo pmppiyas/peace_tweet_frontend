@@ -14,7 +14,7 @@ export function AdminDashboard() {
       description: 'Create new Duas, edit content, assign audio, and manage publication status.',
       href: ROUTES.ADMIN.DUAS,
       icon: BookOpen,
-      color: 'bg-emerald-600',
+      color: 'bg-primary-500',
     },
     {
       title: 'Dua Categories',
@@ -37,7 +37,7 @@ export function AdminDashboard() {
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <Shield className="h-6 w-6 text-emerald-600" />
+            <Shield className="h-6 w-6 text-primary-500" />
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Admin Dashboard</h1>
           </div>
           <p className="text-xs text-gray-400 mt-1">
@@ -52,13 +52,13 @@ export function AdminDashboard() {
           const Icon = item.icon;
           return (
             <Link key={item.title} href={item.href} className="group">
-              <Card className="h-full border border-gray-100 p-6 hover:border-emerald-500 hover:shadow-sm transition-all rounded-2xl dark:border-gray-800">
+              <Card className="h-full border border-gray-100 p-6 hover:border-primary-500 hover:shadow-sm transition-all rounded-2xl dark:border-gray-800">
                 <div className="flex items-center gap-3.5">
                   <div className={`flex h-11 w-11 items-center justify-center rounded-xl text-white ${item.color} shadow-xs`}>
                     <Icon className="h-5 w-5" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-sm sm:text-base text-gray-900 group-hover:text-emerald-700 transition-colors dark:text-white">
+                    <h3 className="font-bold text-sm sm:text-base text-gray-900 group-hover:text-primary-600 transition-colors dark:text-white">
                       {item.title}
                     </h3>
                   </div>

@@ -24,7 +24,7 @@ export function BookmarkList() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search within your saved bookmarks..."
-          className="h-10 w-full rounded-xl border border-[#e4e6eb] bg-white pl-10 pr-4 text-xs sm:text-sm placeholder:text-[#65676b] focus:border-emerald-600 focus:outline-hidden dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#e4e6eb] dark:placeholder:text-[#b0b3b8]"
+          className="h-10 w-full rounded-xl border border-[#e4e6eb] bg-white pl-10 pr-4 text-xs sm:text-sm placeholder:text-[#65676b] focus:border-primary-500 focus:outline-hidden dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#e4e6eb] dark:placeholder:text-[#b0b3b8]"
         />
       </div>
 

@@ -22,7 +22,7 @@ export function DuaMeaning({
   return (
     <div className={cn('space-y-2 rounded-xl bg-[#f0f2f5]/70 p-3.5 dark:bg-[#3a3b3c]/60 border border-[#e4e6eb] dark:border-[#393a3b]', className)}>
       <div className="space-y-1">
-        <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
+        <span className="text-[11px] font-bold uppercase tracking-wider text-primary-600 dark:text-primary-400">
           দোয়ার অর্থ ও উচ্চারণ
         </span>
         <p className="text-[14px] font-medium text-[#050505] dark:text-[#e4e6eb] leading-relaxed" lang="bn">

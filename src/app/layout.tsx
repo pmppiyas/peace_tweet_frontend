@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Raleway } from 'next/font/google';
 import './globals.css';
 import { siteConfig } from '@/config/site';
 import { QueryProvider } from '@/providers/QueryProvider';
@@ -20,15 +21,22 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
 };
 
+const raleway = Raleway({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-raleway',
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={raleway.variable} suppressHydrationWarning>
       <body
-        className="font-sans min-h-screen flex flex-col antialiased bg-[#f0f2f5] text-[#050505] dark:bg-[#18191a] dark:text-[#e4e6eb]"
+        className={`${raleway.variable} font-sans min-h-screen flex flex-col antialiased bg-[#f0f2f5] text-[#050505] dark:bg-[#18191a] dark:text-[#e4e6eb]`}
       >
         <ThemeProvider>
           <LanguageProvider>

@@ -43,7 +43,7 @@ export function Accordion({ items, allowMultiple = true, className }: AccordionP
             <button
               type="button"
               onClick={() => toggleItem(item.id)}
-              className="flex w-full items-center justify-between px-3.5 py-2.5 text-left text-xs sm:text-sm font-semibold text-[#050505] hover:text-emerald-700 dark:text-[#e4e6eb] dark:hover:text-emerald-400 transition-colors"
+              className="flex w-full items-center justify-between px-3.5 py-2.5 text-left text-xs sm:text-sm font-semibold text-[#050505] hover:text-primary-600 dark:text-[#e4e6eb] dark:hover:text-primary-400 transition-colors"
             >
               <div className="flex items-center gap-2">
                 {item.icon && <span className="text-[#65676b] dark:text-[#b0b3b8]">{item.icon}</span>}
@@ -53,7 +53,7 @@ export function Accordion({ items, allowMultiple = true, className }: AccordionP
               <ChevronDown
                 className={cn(
                   'h-4 w-4 text-[#65676b] dark:text-[#b0b3b8] transition-transform duration-200 ease-out',
-                  isOpen && 'rotate-180 text-emerald-600 dark:text-emerald-400',
+                  isOpen && 'rotate-180 text-primary-500 dark:text-primary-400',
                 )}
               />
             </button>

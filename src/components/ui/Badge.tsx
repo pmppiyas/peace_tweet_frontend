@@ -13,7 +13,7 @@ export function Badge({
 }: BadgeProps) {
   const variantStyles = {
     emerald:
-      'bg-emerald-50 text-emerald-700 border-emerald-200/60 dark:bg-emerald-950/70 dark:text-emerald-300 dark:border-emerald-800',
+      'bg-primary-50 text-primary-600 border-primary-200/60 dark:bg-primary-900/70 dark:text-primary-300 dark:border-primary-700',
     gold:
       'bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/70 dark:text-amber-300 dark:border-amber-800',
     outline:

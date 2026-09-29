@@ -2,12 +2,14 @@ export const API_ENDPOINTS = {
   AUTH: {
     REGISTER: '/auth/register',
     LOGIN: '/auth/login',
+    FACEBOOK: '/auth/facebook',
     REFRESH: '/auth/refresh',
     LOGOUT: '/auth/logout',
     ME: '/auth/me',
   },
   USERS: {
     ME: '/users/me',
+    CHANGE_PASSWORD: '/users/change-password',
     SAVED_DUAS: '/users/me/saved-duas',
     PROFILE: (username: string) => `/users/${username}`,
   },
@@ -82,5 +84,9 @@ export const API_ENDPOINTS = {
     MEMBERSHIP: (id: string) => `/groups/${id}/membership`,
     POSTS: (id: string) => `/groups/${id}/posts`,
     CREATE_POST: (id: string) => `/groups/${id}/posts`,
+  },
+  UPLOADS: {
+    IMAGE: '/uploads/image',
+    AVATAR: '/uploads/avatar',
   },
 } as const;

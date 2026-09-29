@@ -16,7 +16,10 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { ROUTES } from '@/constants/routes';
-import { SectionSidebar, SidebarNavItem } from '@/components/navigation/SectionSidebar';
+import {
+  SectionSidebar,
+  SidebarNavItem,
+} from '@/components/navigation/SectionSidebar';
 
 export function Sidebar() {
   const { isAuthenticated, isAdmin } = useAuth();
@@ -28,7 +31,7 @@ export function Sidebar() {
       label: t('nav.home'),
       href: ROUTES.HOME,
       icon: Home,
-      iconBg: 'bg-emerald-600 text-white',
+      iconBg: 'bg-primary-500 text-white',
       exact: true,
     },
     {
@@ -57,7 +60,7 @@ export function Sidebar() {
       label: t('nav.groups'),
       href: ROUTES.GROUPS.HOME,
       icon: Users2,
-      iconBg: 'bg-emerald-700 text-white',
+      iconBg: 'bg-primary-600 text-white',
     },
     {
       id: 'sidebar-bookmarks',
@@ -95,7 +98,7 @@ export function Sidebar() {
 
   const hadithFooter = (
     <div className="rounded-xl border border-[#e4e6eb] bg-white p-3.5 text-xs text-[#050505] dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#e4e6eb] shadow-2xs">
-      <div className="flex items-center gap-1.5 font-bold text-emerald-800 dark:text-emerald-400 mb-1">
+      <div className="flex items-center gap-1.5 font-bold text-primary-700 dark:text-primary-400 mb-1">
         <Sparkles className="h-4 w-4" />
         <span>{t('sidebar.dailyHadithTitle')}</span>
       </div>

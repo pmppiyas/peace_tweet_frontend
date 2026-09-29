@@ -51,7 +51,7 @@ export function Feed() {
               className={cn(
                 'inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition-all select-none',
                 isActive
-                  ? 'bg-emerald-600 text-white shadow-2xs'
+                  ? 'bg-primary-500 text-white shadow-2xs'
                   : 'bg-white border border-[#e4e6eb] text-[#65676b] hover:border-gray-300 hover:text-[#050505] dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#b0b3b8] dark:hover:text-[#e4e6eb]',
               )}
             >

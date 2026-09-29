@@ -58,11 +58,11 @@ export function FriendsTabs({ activeTab, onTabChange }: FriendsTabsProps) {
             className={cn(
               'flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap min-h-[40px]',
               isActive
-                ? 'bg-white text-emerald-800 shadow-xs dark:bg-[#242526] dark:text-emerald-400'
+                ? 'bg-white text-primary-700 shadow-xs dark:bg-[#242526] dark:text-primary-400'
                 : 'text-[#65676b] hover:text-[#050505] hover:bg-black/5 dark:text-[#b0b3b8] dark:hover:text-white dark:hover:bg-white/5',
             )}
           >
-            <Icon className={cn('h-4 w-4 shrink-0', isActive && 'text-emerald-600 dark:text-emerald-400')} />
+            <Icon className={cn('h-4 w-4 shrink-0', isActive && 'text-primary-500 dark:text-primary-400')} />
             <span>{locale === 'bn' ? tab.labelBn : tab.label}</span>
             {typeof tab.count === 'number' && (
               <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1.5 text-[11px] font-bold text-white">

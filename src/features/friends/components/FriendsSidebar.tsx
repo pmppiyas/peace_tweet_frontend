@@ -22,7 +22,7 @@ export function FriendsSidebar() {
       label: locale === 'bn' ? 'হোম' : 'Home',
       href: ROUTES.FRIENDS.HOME,
       icon: Home,
-      iconBg: 'bg-emerald-600 text-white',
+      iconBg: 'bg-primary-500 text-white',
       exact: true,
     },
     {

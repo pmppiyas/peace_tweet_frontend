@@ -32,6 +32,18 @@ export function useAuthActions() {
     },
   });
 
+  const facebookLoginMutation = useMutation({
+    mutationFn: (payload: string | { code?: string; accessToken?: string; redirectUri?: string }) =>
+      authApi.facebookLogin(payload),
+    onSuccess: (response) => {
+      const { user, accessToken, refreshToken } = response.data;
+      setTokens(accessToken, refreshToken);
+      setUser(user);
+      queryClient.clear();
+      router.push(ROUTES.HOME);
+    },
+  });
+
   const logoutMutation = useMutation({
     mutationFn: () => authApi.logout(),
     onSettled: () => {
@@ -49,6 +61,10 @@ export function useAuthActions() {
     login: loginMutation.mutateAsync,
     isLoggingIn: loginMutation.isPending,
     loginError: loginMutation.error,
+
+    facebookLogin: facebookLoginMutation.mutateAsync,
+    isFacebookLoggingIn: facebookLoginMutation.isPending,
+    facebookLoginError: facebookLoginMutation.error,
 
     logout: logoutMutation.mutateAsync,
     isLoggingOut: logoutMutation.isPending,

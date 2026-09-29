@@ -1,3 +1,5 @@
+import { BloodGroup } from '@/types/user.types';
+
 // Relationship status states returned by backend
 export type FriendshipStatus =
   | 'NONE'
@@ -17,7 +19,10 @@ export interface FriendUser {
   id: string;
   name: string;
   username: string;
-  avatar: string | null;
+  avatar?: string | null;
+  avatarUrl?: string | null;
+  location?: string | null;
+  bloodGroup?: BloodGroup | null;
 }
 
 // Friend list item

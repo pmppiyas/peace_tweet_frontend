@@ -16,7 +16,7 @@ export function StoryBar() {
       title: t('stories.morningEvening'),
       slug: 'morning-evening',
       icon: Sun,
-      gradient: 'from-amber-500/90 via-emerald-600 to-teal-900',
+      gradient: 'from-amber-500/90 via-primary-500 to-teal-900',
       tag: 'Sabah-Masa',
     },
     {
@@ -30,7 +30,7 @@ export function StoryBar() {
       title: t('stories.prayer'),
       slug: 'prayer',
       icon: Sparkles,
-      gradient: 'from-emerald-600 via-teal-700 to-cyan-900',
+      gradient: 'from-primary-500 via-teal-700 to-cyan-900',
       tag: 'Salah',
     },
     {
@@ -63,14 +63,14 @@ export function StoryBar() {
         href={ROUTES.CATEGORIES}
         className="relative flex flex-col justify-between w-[105px] sm:w-[120px] h-[165px] sm:h-[185px] shrink-0 rounded-xl bg-white dark:bg-[#242526] border border-[#e4e6eb] dark:border-[#393a3b] overflow-hidden shadow-xs hover:shadow-md transition-all group"
       >
-        <div className="h-[110px] sm:h-[125px] w-full bg-gradient-to-b from-emerald-100 to-emerald-50 dark:from-emerald-950/60 dark:to-gray-800 flex items-center justify-center overflow-hidden">
-          <div className="h-12 w-12 rounded-full bg-emerald-600 text-white font-bold text-lg flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+        <div className="h-[110px] sm:h-[125px] w-full bg-gradient-to-b from-primary-100 to-primary-50 dark:from-primary-900/60 dark:to-gray-800 flex items-center justify-center overflow-hidden">
+          <div className="h-12 w-12 rounded-full bg-primary-500 text-white font-bold text-lg flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
             {user?.name?.charAt(0) || '🕊️'}
           </div>
         </div>
 
         <div className="absolute top-[90px] sm:top-[105px] left-1/2 -translate-x-1/2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-600 text-white border-[3px] border-white dark:border-[#242526] shadow-sm">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-white border-[3px] border-white dark:border-[#242526] shadow-sm">
             <Plus className="h-4 w-4 stroke-[3]" />
           </div>
         </div>
@@ -101,14 +101,14 @@ export function StoryBar() {
 
             {/* Top Left Icon Ring (Like Story Avatar) */}
             <div className="relative z-10 p-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 backdrop-blur-md border-2 border-emerald-400 text-white shadow-sm">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 backdrop-blur-md border-2 border-primary-400 text-white shadow-sm">
                 <Icon className="h-4.5 w-4.5" />
               </div>
             </div>
 
             {/* Bottom Title Label */}
             <div className="relative z-10 p-2.5">
-              <span className="text-[10px] font-medium text-emerald-200 block uppercase tracking-wider">
+              <span className="text-[10px] font-medium text-primary-200 block uppercase tracking-wider">
                 #{story.tag}
               </span>
               <p className="text-xs sm:text-[13px] font-bold text-white leading-tight drop-shadow-sm line-clamp-2">

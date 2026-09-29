@@ -36,7 +36,7 @@ export function FriendCard({ friend }: FriendCardProps) {
     <>
       <Card className="flex flex-col justify-between overflow-hidden border border-[#e4e6eb] bg-white rounded-2xl shadow-2xs hover:shadow-md transition-all duration-200 dark:border-[#393a3b] dark:bg-[#242526]">
         {/* Top Cover / Large Avatar */}
-        <Link href={profileUrl} className="block relative bg-gradient-to-br from-emerald-600 via-teal-700 to-indigo-800 aspect-[4/3] flex items-center justify-center group overflow-hidden">
+        <Link href={profileUrl} className="block relative bg-gradient-to-br from-primary-500 via-teal-700 to-indigo-800 aspect-[4/3] flex items-center justify-center group overflow-hidden">
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/20 backdrop-blur-xs text-white text-3xl font-black shadow-lg group-hover:scale-110 transition-transform">
             {targetUser.name?.charAt(0) || 'U'}
           </div>

@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Calendar, Mail, Shield, User } from 'lucide-react';
+import Image from 'next/image';
+import { Calendar, Droplet, Mail, MapPin, User } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -13,6 +14,22 @@ import { FriendActionButton } from '@/features/friends/components/FriendActionBu
 import { FriendshipStatusBadge } from '@/features/friends/components/FriendshipStatus';
 import Link from 'next/link';
 import { ROUTES } from '@/constants/routes';
+import { BloodGroup } from '@/types/user.types';
+
+const formatBloodGroup = (bg?: BloodGroup | null) => {
+  if (!bg) return null;
+  const map: Record<BloodGroup, string> = {
+    A_POSITIVE: 'A+',
+    A_NEGATIVE: 'A-',
+    B_POSITIVE: 'B+',
+    B_NEGATIVE: 'B-',
+    AB_POSITIVE: 'AB+',
+    AB_NEGATIVE: 'AB-',
+    O_POSITIVE: 'O+',
+    O_NEGATIVE: 'O-',
+  };
+  return map[bg] || bg;
+};
 
 export interface PublicProfileViewProps {
   username: string;
@@ -73,14 +90,28 @@ export function PublicProfileView({ username }: PublicProfileViewProps) {
 
   const relationshipStatus = profile.friendship?.status || 'NONE';
   const requestId = profile.friendship?.requestId;
+  const bloodGroupLabel = formatBloodGroup(profile.bloodGroup);
 
   return (
     <div className="max-w-2xl mx-auto space-y-4">
       <Card className="border border-[#e4e6eb] bg-white shadow-2xs dark:border-[#393a3b] dark:bg-[#242526] rounded-2xl overflow-hidden">
         {/* Profile Header */}
         <CardHeader className="text-center pb-5 border-b border-[#e4e6eb] dark:border-[#393a3b]">
-          <div className="mx-auto mb-3 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-600 text-white text-3xl font-black shadow-sm">
-            {profile.name?.charAt(0) || 'U'}
+          {/* Avatar Image */}
+          <div className="relative mx-auto mb-3 h-20 w-20 overflow-hidden rounded-full border-2 border-primary-500/20 bg-primary-500 text-white shadow-sm">
+            {profile.avatarUrl ? (
+              <Image
+                src={profile.avatarUrl}
+                alt={profile.name}
+                fill
+                className="object-cover"
+                unoptimized
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center text-3xl font-black">
+                {profile.name?.charAt(0).toUpperCase() || 'U'}
+              </div>
+            )}
           </div>
 
           <CardTitle className="text-xl font-black text-[#050505] dark:text-white">
@@ -89,10 +120,17 @@ export function PublicProfileView({ username }: PublicProfileViewProps) {
           <CardDescription className="text-sm font-medium">@{profile.username}</CardDescription>
 
           {/* Badges */}
-          <div className="pt-2 flex items-center justify-center gap-2">
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-2">
             <Badge variant={profile.role === 'ADMIN' ? 'gold' : 'emerald'}>
               {profile.role === 'ADMIN' ? 'Administrator' : 'Community Member'}
             </Badge>
+
+            {bloodGroupLabel && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2.5 py-0.5 text-xs font-bold text-red-600 border border-red-200 dark:bg-red-950/60 dark:border-red-900 dark:text-red-300">
+                <Droplet className="h-3 w-3 fill-red-500 text-red-500" />
+                <span>Blood: {bloodGroupLabel}</span>
+              </span>
+            )}
 
             {relationshipStatus !== 'NONE' && relationshipStatus !== 'SELF' && (
               <FriendshipStatusBadge status={relationshipStatus} />
@@ -118,7 +156,7 @@ export function PublicProfileView({ username }: PublicProfileViewProps) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
             {profile.email && (
               <div className="flex items-center gap-3 rounded-xl bg-[#f0f2f5] p-3.5 dark:bg-[#3a3b3c]">
-                <Mail className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                <Mail className="h-4 w-4 text-primary-500 dark:text-primary-400 shrink-0" />
                 <div className="min-w-0 flex-1">
                   <p className="text-xs text-[#65676b] dark:text-[#b0b3b8]">Email</p>
                   <p className="font-semibold text-[#050505] dark:text-[#e4e6eb] truncate">
@@ -129,7 +167,7 @@ export function PublicProfileView({ username }: PublicProfileViewProps) {
             )}
 
             <div className="flex items-center gap-3 rounded-xl bg-[#f0f2f5] p-3.5 dark:bg-[#3a3b3c]">
-              <Calendar className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+              <Calendar className="h-4 w-4 text-primary-500 dark:text-primary-400 shrink-0" />
               <div className="min-w-0 flex-1">
                 <p className="text-xs text-[#65676b] dark:text-[#b0b3b8]">
                   {locale === 'bn' ? 'যুক্ত হয়েছেন' : 'Member Since'}
@@ -139,6 +177,20 @@ export function PublicProfileView({ username }: PublicProfileViewProps) {
                 </p>
               </div>
             </div>
+
+            {profile.location && (
+              <div className="flex items-center gap-3 rounded-xl bg-[#f0f2f5] p-3.5 dark:bg-[#3a3b3c] sm:col-span-2">
+                <MapPin className="h-4 w-4 text-primary-500 dark:text-primary-400 shrink-0" />
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs text-[#65676b] dark:text-[#b0b3b8]">
+                    {locale === 'bn' ? 'ঠিকানা / অবস্থান' : 'Location'}
+                  </p>
+                  <p className="font-semibold text-[#050505] dark:text-[#e4e6eb] truncate">
+                    {profile.location}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

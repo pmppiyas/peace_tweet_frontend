@@ -75,8 +75,8 @@ export function BookmarkButton({
         size === 'sm' ? 'py-1.5 px-2 text-xs' : 'py-2 px-3 text-sm',
         isSaved
           ? 'bg-amber-100/70 text-amber-700 dark:bg-amber-950/80 dark:text-amber-400 font-bold'
-          : 'text-gray-500 hover:bg-emerald-50 hover:text-brand-700 dark:text-gray-400 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-300',
-        variant === 'ghost' && 'hover:bg-emerald-50/60 dark:hover:bg-gray-800',
+          : 'text-gray-500 hover:bg-primary-50 hover:text-brand-700 dark:text-gray-400 dark:hover:bg-primary-900/40 dark:hover:text-primary-300',
+        variant === 'ghost' && 'hover:bg-primary-50/60 dark:hover:bg-gray-800',
         className,
       )}
       title={isSaved ? 'Remove from bookmarks' : 'Save to bookmarks'}

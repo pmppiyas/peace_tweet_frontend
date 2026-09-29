@@ -10,7 +10,7 @@ interface EmptyFeedProps {
 export function EmptyFeed({ message = 'এখনো কোনো পোস্ট নেই' }: EmptyFeedProps) {
   return (
     <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-[#e4e6eb] bg-white p-12 text-center dark:border-[#393a3b] dark:bg-[#242526]">
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400">
+      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-50 text-primary-500 dark:bg-primary-900/60 dark:text-primary-400">
         <BookOpen className="h-6 w-6" />
       </div>
       <h3 className="mt-3 text-sm font-bold text-[#050505] dark:text-[#e4e6eb]">

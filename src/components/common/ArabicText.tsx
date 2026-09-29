@@ -22,7 +22,7 @@ export function ArabicText({ text, className, ...props }: ArabicTextProps) {
       dir="rtl"
       lang="ar"
       className={cn(
-        'font-arabic font-normal tracking-wide text-gray-900 text-right select-text text-balance dark:text-emerald-50',
+        'font-arabic font-normal tracking-wide text-gray-900 text-right select-text text-balance dark:text-primary-50',
         fontSizes[fontSize],
         className,
       )}

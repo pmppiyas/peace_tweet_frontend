@@ -47,10 +47,10 @@ export function Navbar() {
           {/* Left Column: Brand Logo + Facebook Style Search Pill (Aligned with Left Sidebar: w-60) */}
           <div className="hidden lg:flex w-60 shrink-0 items-center gap-2">
             <Link href="/" className="flex items-center gap-2 group">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-600 text-white font-bold text-lg shadow-xs group-hover:scale-105 transition-transform">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-lg shadow-xs group-hover:scale-105 transition-transform">
                 🕊️
               </div>
-              <span className="text-xl font-extrabold tracking-tight text-emerald-800 dark:text-white">
+              <span className="text-xl font-extrabold tracking-tight text-primary-700 dark:text-white">
                 PeaceTweet
               </span>
             </Link>
@@ -61,10 +61,10 @@ export function Navbar() {
             {/* Mobile Brand Logo if screen is smaller than lg */}
             <div className="flex lg:hidden items-center gap-2 mr-2 shrink-0">
               <Link href="/" className="flex items-center gap-1.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-600 text-white font-bold text-base shadow-xs">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-base shadow-xs">
                   🕊️
                 </div>
-                <span className="font-extrabold text-base text-emerald-800 dark:text-white hidden sm:inline">
+                <span className="font-extrabold text-base text-primary-700 dark:text-white hidden sm:inline">
                   PeaceTweet
                 </span>
               </Link>
@@ -86,7 +86,7 @@ export function Navbar() {
                     className={cn(
                       'relative flex h-full items-center justify-center transition-colors px-1',
                       isActive
-                        ? 'text-emerald-600 dark:text-emerald-400'
+                        ? 'text-primary-500 dark:text-primary-400'
                         : 'text-[#65676b] hover:bg-[#f0f2f5] hover:rounded-xl dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c]'
                     )}
                     title={item.label}
@@ -95,11 +95,11 @@ export function Navbar() {
                       className={cn(
                         'h-6 w-6',
                         isActive &&
-                          'stroke-[2.5] text-emerald-600 dark:text-emerald-400'
+                          'stroke-[2.5] text-primary-500 dark:text-primary-400'
                       )}
                     />
                     {isActive && (
-                      <span className="absolute bottom-0 left-0 right-0 h-[3px] bg-emerald-600 dark:bg-emerald-400 rounded-t-md" />
+                      <span className="absolute bottom-0 left-0 right-0 h-[3px] bg-primary-500 dark:bg-primary-400 rounded-t-md" />
                     )}
                   </Link>
                 );
@@ -149,10 +149,10 @@ export function Navbar() {
             {isAuthenticated ? (
               <Link
                 href={ROUTES.PROFILE}
-                className="flex items-center gap-2 rounded-full p-0.5 hover:ring-2 hover:ring-emerald-500/20 transition-all"
+                className="flex items-center gap-2 rounded-full p-0.5 hover:ring-2 hover:ring-primary-500/20 transition-all"
                 title={user?.name || 'Profile'}
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-600 text-white font-bold text-sm shadow-xs">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm shadow-xs">
                   {user?.name?.charAt(0) || 'U'}
                 </div>
               </Link>
@@ -166,7 +166,7 @@ export function Navbar() {
                 </Link>
                 <Link
                   href={ROUTES.REGISTER}
-                  className="rounded-full bg-emerald-600 px-4 py-2 text-xs font-bold text-white hover:bg-emerald-700 transition-colors shadow-xs"
+                  className="rounded-full bg-primary-500 px-4 py-2 text-xs font-bold text-white hover:bg-primary-600 transition-colors shadow-xs"
                 >
                   {t('nav.join')}
                 </Link>

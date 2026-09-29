@@ -51,7 +51,7 @@ export function AudioPlayer({
           'flex h-9 w-9 items-center justify-center rounded-full transition-all duration-200',
           isThisAudioPlaying
             ? 'bg-brand-600 text-white shadow-md shadow-brand-600/30'
-            : 'bg-emerald-50 text-brand-700 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:text-emerald-300',
+            : 'bg-primary-50 text-brand-700 hover:bg-primary-100 dark:bg-primary-900/60 dark:text-primary-300',
           className,
         )}
         title={isThisAudioPlaying ? 'অডিও বিরতি দিন' : 'তিলাওয়াত শুনুন'}

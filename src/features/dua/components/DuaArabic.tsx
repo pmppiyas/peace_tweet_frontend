@@ -41,7 +41,7 @@ export function DuaArabic({
       <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="flex w-full items-center justify-between px-3.5 py-2 text-xs font-semibold text-[#050505] hover:text-emerald-700 dark:text-[#e4e6eb] dark:hover:text-emerald-400 transition-colors"
+        className="flex w-full items-center justify-between px-3.5 py-2 text-xs font-semibold text-[#050505] hover:text-primary-600 dark:text-[#e4e6eb] dark:hover:text-primary-400 transition-colors"
       >
         <div className="flex items-center gap-1.5">
           <Languages className="h-3.5 w-3.5 text-[#65676b] dark:text-[#b0b3b8]" />
@@ -50,7 +50,7 @@ export function DuaArabic({
         <ChevronDown
           className={cn(
             'h-3.5 w-3.5 text-[#65676b] dark:text-[#b0b3b8] transition-transform duration-200',
-            isExpanded && 'rotate-180 text-emerald-600',
+            isExpanded && 'rotate-180 text-primary-500',
           )}
         />
       </button>

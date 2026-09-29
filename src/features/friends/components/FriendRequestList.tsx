@@ -99,7 +99,7 @@ export function FriendRequestList({
         <div ref={loadMoreRef} className="py-6 flex justify-center">
           {isFetchingNextPage ? (
             <div className="flex items-center gap-2 text-xs font-semibold text-[#65676b] dark:text-[#b0b3b8]">
-              <Loader2 className="h-4 w-4 animate-spin text-emerald-600" />
+              <Loader2 className="h-4 w-4 animate-spin text-primary-500" />
               <span>{locale === 'bn' ? 'আরও লোড হচ্ছে...' : 'Loading more requests...'}</span>
             </div>
           ) : (

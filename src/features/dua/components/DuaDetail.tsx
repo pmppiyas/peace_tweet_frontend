@@ -106,7 +106,7 @@ export function DuaDetail({ dua }: { dua: Dua }) {
                 <span className="font-medium text-[#050505] dark:text-[#e4e6eb]">
                   {ref.source?.name || 'Hadith Collection'}: {ref.reference}
                 </span>
-                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">
+                <span className="text-[10px] text-primary-500 dark:text-primary-400 font-semibold">
                   {t('post.accordion.verified')}
                 </span>
               </div>
@@ -199,7 +199,7 @@ export function DuaDetail({ dua }: { dua: Dua }) {
         <div className="p-3.5 sm:p-4 pb-2.5">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-600 text-white font-bold text-sm shadow-xs">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm shadow-xs">
                 🕊️
               </div>
               <div>
@@ -207,7 +207,7 @@ export function DuaDetail({ dua }: { dua: Dua }) {
                   <span className="font-bold text-[15px] text-[#050505] dark:text-[#e4e6eb]">
                     {t('post.scholar')}
                   </span>
-                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 fill-emerald-100 dark:fill-emerald-950" />
+                  <CheckCircle2 className="h-3.5 w-3.5 text-primary-500 fill-primary-100 dark:fill-primary-900" />
                 </div>
                 <div className="flex items-center gap-1.5 text-xs text-[#65676b] dark:text-[#b0b3b8]">
                   <span>{dua.createdAt ? formatDate(dua.createdAt) : t('post.today')}</span>
@@ -219,7 +219,7 @@ export function DuaDetail({ dua }: { dua: Dua }) {
 
             {dua.category && (
               <Link href={ROUTES.CATEGORY_DETAIL(dua.category.slug)}>
-                <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2.5 py-1 rounded-full dark:bg-emerald-950/60 dark:text-emerald-300 transition-colors">
+                <span className="text-xs font-semibold text-primary-600 bg-primary-50 hover:bg-primary-100 px-2.5 py-1 rounded-full dark:bg-primary-900/60 dark:text-primary-300 transition-colors">
                   #{dua.category.name}
                 </span>
               </Link>
@@ -234,7 +234,7 @@ export function DuaDetail({ dua }: { dua: Dua }) {
 
             {dua.fadilah && (
               <div className="text-[15px] text-[#050505] dark:text-[#e4e6eb] leading-relaxed font-normal">
-                <span className="font-bold text-emerald-800 dark:text-emerald-400 mr-1.5">
+                <span className="font-bold text-primary-700 dark:text-primary-400 mr-1.5">
                   {t('post.virtueLabel')}
                 </span>
                 {dua.fadilah}
@@ -247,7 +247,7 @@ export function DuaDetail({ dua }: { dua: Dua }) {
         <div className="px-3.5 sm:px-4 pb-3">
           <div className="rounded-xl border border-[#e4e6eb] bg-[#f0f2f5]/90 p-3.5 dark:border-[#393a3b] dark:bg-[#18191a]/90 space-y-1.5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-emerald-900 dark:text-emerald-300">
+              <span className="text-xs font-bold text-primary-800 dark:text-primary-300">
                 {t('post.duaLabel')}
               </span>
               <CopyButton
@@ -290,7 +290,7 @@ export function DuaDetail({ dua }: { dua: Dua }) {
             onClick={() => setShowComments(!showComments)}
             className={cn(
               'flex items-center justify-center gap-1.5 py-2 rounded-lg hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] transition-colors',
-              showComments && 'text-emerald-600 font-bold',
+              showComments && 'text-primary-500 font-bold',
             )}
           >
             <MessageCircle className="h-4 w-4" />
@@ -310,11 +310,11 @@ export function DuaDetail({ dua }: { dua: Dua }) {
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
                 placeholder={t('post.comments.placeholder')}
-                className="h-9 w-full rounded-full border border-[#e4e6eb] bg-white px-4 text-xs placeholder:text-[#65676b] focus:border-emerald-500 focus:outline-hidden dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#e4e6eb]"
+                className="h-9 w-full rounded-full border border-[#e4e6eb] bg-white px-4 text-xs placeholder:text-[#65676b] focus:border-primary-500 focus:outline-hidden dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#e4e6eb]"
               />
               <button
                 type="submit"
-                className="rounded-full bg-emerald-600 p-2 text-white hover:bg-emerald-700"
+                className="rounded-full bg-primary-500 p-2 text-white hover:bg-primary-600"
               >
                 <Send className="h-3.5 w-3.5" />
               </button>

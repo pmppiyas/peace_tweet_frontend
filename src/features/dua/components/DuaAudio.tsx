@@ -71,18 +71,18 @@ export function DuaAudio({
       type="button"
       onClick={handlePlayToggle}
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full border border-[#e4e6eb] bg-white px-3 py-1 text-xs font-semibold shadow-2xs transition-all hover:border-emerald-600 hover:text-emerald-700 dark:border-[#393a3b] dark:bg-[#3a3b3c] dark:text-[#e4e6eb] dark:hover:border-emerald-500',
+        'inline-flex items-center gap-1.5 rounded-full border border-[#e4e6eb] bg-white px-3 py-1 text-xs font-semibold shadow-2xs transition-all hover:border-primary-500 hover:text-primary-600 dark:border-[#393a3b] dark:bg-[#3a3b3c] dark:text-[#e4e6eb] dark:hover:border-primary-500',
         isCurrentPlaying
-          ? 'border-emerald-600 bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300'
+          ? 'border-primary-500 bg-primary-50 text-primary-700 dark:bg-primary-900/60 dark:text-primary-300'
           : 'text-[#050505]',
         className,
       )}
       title={isCurrentPlaying ? 'অডিও থামান' : 'তেলাওয়াত শুনুন'}
     >
       {isCurrentPlaying ? (
-        <Pause className="h-3.5 w-3.5 fill-current text-emerald-600" />
+        <Pause className="h-3.5 w-3.5 fill-current text-primary-500" />
       ) : (
-        <Play className="h-3.5 w-3.5 fill-current text-emerald-600" />
+        <Play className="h-3.5 w-3.5 fill-current text-primary-500" />
       )}
       <span>{isCurrentPlaying ? 'অডিও থামান' : 'তেলাওয়াত শুনুন'}</span>
       {audio?.reciterName && (

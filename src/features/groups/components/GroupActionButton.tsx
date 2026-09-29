@@ -125,7 +125,7 @@ export function GroupActionButton({
         <div className="inline-flex items-center gap-1.5">
           <span
             className={cn(
-              'inline-flex items-center gap-1.5 rounded-xl bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-700 border border-emerald-500/20 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800 select-none',
+              'inline-flex items-center gap-1.5 rounded-xl bg-primary-500/10 px-3 py-1.5 text-xs font-bold text-primary-600 border border-primary-500/20 dark:bg-primary-900/40 dark:text-primary-300 dark:border-primary-700 select-none',
               className,
             )}
           >
@@ -203,7 +203,7 @@ export function GroupActionButton({
             variant="secondary"
             onClick={() => setShowLeaveModal(true)}
             className={cn(
-              'rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-rose-50 hover:text-rose-700 hover:border-rose-300 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300 dark:hover:bg-rose-950/40 dark:hover:text-rose-300 group transition-all',
+              'rounded-xl border border-primary-300 bg-primary-50 text-primary-600 hover:bg-rose-50 hover:text-rose-700 hover:border-rose-300 dark:border-primary-700 dark:bg-primary-900/40 dark:text-primary-300 dark:hover:bg-rose-950/40 dark:hover:text-rose-300 group transition-all',
               className,
             )}
           >
@@ -267,7 +267,7 @@ export function GroupActionButton({
         disabled={isJoining}
         isLoading={isJoining}
         className={cn(
-          'rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-2xs transition-all',
+          'rounded-xl bg-primary-500 hover:bg-primary-600 text-white font-bold shadow-2xs transition-all',
           className,
         )}
       >
@@ -294,7 +294,7 @@ export function GroupActionButton({
       disabled={isJoining}
       isLoading={isJoining}
       className={cn(
-        'rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-2xs transition-all',
+        'rounded-xl bg-primary-500 hover:bg-primary-600 text-white font-bold shadow-2xs transition-all',
         className,
       )}
     >

@@ -48,7 +48,7 @@ export function FloatingAudioBar() {
             <h4 className="text-xs sm:text-sm font-bold text-gray-900 truncate dark:text-gray-100">
               {currentDua.title}
             </h4>
-            <p className="text-[11px] text-emerald-600 truncate dark:text-emerald-400 font-medium">
+            <p className="text-[11px] text-primary-500 truncate dark:text-primary-400 font-medium">
               Reciter: {currentAudio.reciterName || 'Sheikh'}
             </p>
           </div>
@@ -76,7 +76,7 @@ export function FloatingAudioBar() {
             {/* Play/Pause Button */}
             <button
               onClick={isPlaying ? pause : resume}
-              className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-xs hover:bg-emerald-700 transition-colors"
+              className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-500 text-white shadow-xs hover:bg-primary-600 transition-colors"
             >
               {isPlaying ? (
                 <Pause className="h-4 w-4 fill-current" />
@@ -105,7 +105,7 @@ export function FloatingAudioBar() {
             max={duration || 100}
             value={currentTime}
             onChange={handleSliderChange}
-            className="h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-gray-100 accent-emerald-600 dark:bg-gray-800"
+            className="h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-gray-100 accent-primary-500 dark:bg-gray-800"
           />
           <span>{formatTime(duration)}</span>
         </div>

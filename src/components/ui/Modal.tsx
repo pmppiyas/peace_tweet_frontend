@@ -48,7 +48,7 @@ export function Modal({
       {/* Content */}
       <div
         className={cn(
-          'relative z-10 w-full max-w-lg rounded-3xl border border-emerald-100 bg-white p-6 shadow-2xl transition-all animate-in zoom-in-95 duration-200 dark:border-gray-800 dark:bg-gray-900',
+          'relative z-10 w-full max-w-lg rounded-3xl border border-primary-100 bg-white p-6 shadow-2xl transition-all animate-in zoom-in-95 duration-200 dark:border-gray-800 dark:bg-gray-900',
           className,
         )}
       >

@@ -33,7 +33,7 @@ export function GroupJoinRequestCard({
           href={ROUTES.USER_PROFILE(request.user.username)}
           className="shrink-0"
         >
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 text-white font-bold text-sm shadow-2xs select-none">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-teal-700 text-white font-bold text-sm shadow-2xs select-none">
             {request.user.avatarUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -50,7 +50,7 @@ export function GroupJoinRequestCard({
         <div className="min-w-0 flex-1 space-y-0.5">
           <Link
             href={ROUTES.USER_PROFILE(request.user.username)}
-            className="truncate text-xs sm:text-sm font-bold text-[#050505] hover:text-emerald-700 dark:text-[#e4e6eb] dark:hover:text-emerald-400 transition-colors"
+            className="truncate text-xs sm:text-sm font-bold text-[#050505] hover:text-primary-600 dark:text-[#e4e6eb] dark:hover:text-primary-400 transition-colors"
           >
             {request.user.name}
           </Link>
@@ -70,7 +70,7 @@ export function GroupJoinRequestCard({
           size="sm"
           onClick={() => onAccept(request)}
           disabled={isProcessing}
-          className="h-8 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 shadow-2xs"
+          className="h-8 rounded-xl bg-primary-500 hover:bg-primary-600 text-white text-xs font-bold px-3 shadow-2xs"
         >
           <Check className="h-3.5 w-3.5 mr-1" />
           <span>{locale === 'bn' ? 'অনুমোদন' : 'Accept'}</span>

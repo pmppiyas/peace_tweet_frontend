@@ -55,7 +55,7 @@ export function SectionLayout({
                     className={cn(
                       'flex items-center gap-1.5 py-1.5 px-3.5 rounded-full text-xs font-bold whitespace-nowrap transition-colors',
                       isActive
-                        ? 'bg-emerald-600 text-white'
+                        ? 'bg-primary-500 text-white'
                         : 'bg-[#f0f2f5] text-[#050505] dark:bg-[#3a3b3c] dark:text-[#e4e6eb]',
                     )}
                   >

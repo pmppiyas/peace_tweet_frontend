@@ -42,7 +42,7 @@ export function LanguageSwitcher({
               className={cn(
                 'flex flex-col items-center justify-center gap-1 rounded-xl border p-3 text-xs font-medium transition-all',
                 isSelected
-                  ? 'border-emerald-600 bg-emerald-50 text-emerald-900 font-bold dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-500 shadow-2xs'
+                  ? 'border-primary-500 bg-primary-50 text-primary-800 font-bold dark:bg-primary-900/60 dark:text-primary-300 dark:border-primary-500 shadow-2xs'
                   : 'border-[#e4e6eb] bg-[#f0f2f5] text-[#050505] hover:bg-[#e4e6eb] dark:border-[#393a3b] dark:bg-[#3a3b3c] dark:text-[#e4e6eb] dark:hover:bg-[#4e4f50]'
               )}
             >
@@ -66,7 +66,7 @@ export function LanguageSwitcher({
         className={cn(
           'flex items-center gap-1.5 rounded-full border border-gray-200 bg-white/80 px-2.5 py-1 text-xs font-medium text-gray-700 shadow-2xs transition-all hover:bg-gray-50 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800/90 dark:text-gray-200 dark:hover:bg-gray-750',
           variant === 'compact' && 'px-2 py-1',
-          isOpen && 'ring-2 ring-emerald-500/20 border-emerald-500'
+          isOpen && 'ring-2 ring-primary-500/20 border-primary-500'
         )}
         aria-expanded={isOpen}
         aria-haspopup="true"
@@ -79,7 +79,7 @@ export function LanguageSwitcher({
         <ChevronDown
           className={cn(
             'h-3 w-3 text-gray-400 transition-transform duration-200',
-            isOpen && 'rotate-180 text-emerald-600'
+            isOpen && 'rotate-180 text-primary-500'
           )}
         />
       </button>
@@ -103,7 +103,7 @@ export function LanguageSwitcher({
                   className={cn(
                     'flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-left text-xs transition-colors',
                     isSelected
-                      ? 'bg-emerald-50 text-emerald-800 font-semibold dark:bg-emerald-950/60 dark:text-emerald-300'
+                      ? 'bg-primary-50 text-primary-700 font-semibold dark:bg-primary-900/60 dark:text-primary-300'
                       : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800'
                   )}
                 >
@@ -116,7 +116,7 @@ export function LanguageSwitcher({
                       </div>
                     </div>
                   </div>
-                  {isSelected && <Check className="h-3.5 w-3.5 text-emerald-600" />}
+                  {isSelected && <Check className="h-3.5 w-3.5 text-primary-500" />}
                 </button>
               );
             })}

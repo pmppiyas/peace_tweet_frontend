@@ -21,6 +21,17 @@ export const authApi = {
     return data;
   },
 
+  facebookLogin: async (
+    payload: string | { code?: string; accessToken?: string; redirectUri?: string },
+  ): Promise<ApiResponse<AuthResponse>> => {
+    const body = typeof payload === 'string' ? { accessToken: payload } : payload;
+    const { data } = await apiClient.post<ApiResponse<AuthResponse>>(
+      API_ENDPOINTS.AUTH.FACEBOOK,
+      body,
+    );
+    return data;
+  },
+
   logout: async (): Promise<ApiResponse<{ message: string }>> => {
     const { data } = await apiClient.post<ApiResponse<{ message: string }>>(
       API_ENDPOINTS.AUTH.LOGOUT,

@@ -21,13 +21,13 @@ export function DuaReference({ references, className }: DuaReferenceProps) {
           className="inline-flex items-center gap-1.5 rounded-lg border border-[#e4e6eb] bg-white px-2.5 py-1 text-xs text-[#050505] shadow-2xs dark:border-[#393a3b] dark:bg-[#3a3b3c] dark:text-[#e4e6eb]"
         >
           <BookOpen className="h-3 w-3 text-[#65676b] dark:text-[#b0b3b8]" />
-          <span className="font-semibold text-emerald-700 dark:text-emerald-400">
+          <span className="font-semibold text-primary-600 dark:text-primary-400">
             {ref.source?.name || 'Hadith Collection'}
           </span>
           <span className="text-[#65676b] dark:text-[#b0b3b8]">|</span>
           <span className="font-medium">{ref.reference}</span>
           {ref.verified && (
-            <CheckCircle className="h-3 w-3 text-emerald-600 dark:text-emerald-400 fill-emerald-100 dark:fill-emerald-950" />
+            <CheckCircle className="h-3 w-3 text-primary-500 dark:text-primary-400 fill-primary-100 dark:fill-primary-900" />
           )}
         </div>
       ))}

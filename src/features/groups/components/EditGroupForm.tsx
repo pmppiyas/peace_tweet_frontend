@@ -83,8 +83,8 @@ export function EditGroupForm({ group }: EditGroupFormProps) {
         )}
 
         {success && (
-          <div className="flex items-center gap-2 rounded-xl bg-emerald-50 p-3 text-xs font-semibold text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-900">
-            <Check className="h-4 w-4 text-emerald-600" />
+          <div className="flex items-center gap-2 rounded-xl bg-primary-50 p-3 text-xs font-semibold text-primary-600 border border-primary-200 dark:bg-primary-900/40 dark:text-primary-300 dark:border-primary-800">
+            <Check className="h-4 w-4 text-primary-500" />
             <span>
               {locale === 'bn'
                 ? 'গ্রুপ তথ্য সফলভাবে আপডেট হয়েছে।'
@@ -133,7 +133,7 @@ export function EditGroupForm({ group }: EditGroupFormProps) {
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
             maxLength={500}
-            className="w-full resize-none rounded-xl border border-[#e4e6eb] bg-white p-3 text-xs sm:text-sm text-[#050505] placeholder:text-[#65676b] focus:border-emerald-600 focus:outline-hidden dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#e4e6eb]"
+            className="w-full resize-none rounded-xl border border-[#e4e6eb] bg-white p-3 text-xs sm:text-sm text-[#050505] placeholder:text-[#65676b] focus:border-primary-500 focus:outline-hidden dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#e4e6eb]"
           />
         </div>
 
@@ -154,13 +154,13 @@ export function EditGroupForm({ group }: EditGroupFormProps) {
                   className={cn(
                     'flex flex-col items-start rounded-2xl border p-3.5 text-left transition-all',
                     isSelected
-                      ? 'border-emerald-600 bg-emerald-50/60 dark:border-emerald-700 dark:bg-emerald-950/40 shadow-xs ring-1 ring-emerald-600'
+                      ? 'border-primary-500 bg-primary-50/60 dark:border-primary-600 dark:bg-primary-900/40 shadow-xs ring-1 ring-primary-500'
                       : 'border-[#e4e6eb] bg-white hover:bg-[#f0f2f5] dark:border-[#393a3b] dark:bg-[#242526] dark:hover:bg-[#3a3b3c]',
                   )}
                 >
                   <div className="flex items-center gap-2 mb-1">
                     {v === 'PUBLIC' ? (
-                      <Globe className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                      <Globe className="h-4 w-4 text-primary-500 dark:text-primary-400" />
                     ) : (
                       <Lock className="h-4 w-4 text-amber-600 dark:text-amber-400" />
                     )}
@@ -187,7 +187,7 @@ export function EditGroupForm({ group }: EditGroupFormProps) {
             onChange={(e) => setRules(e.target.value)}
             rows={3}
             maxLength={1000}
-            className="w-full resize-none rounded-xl border border-[#e4e6eb] bg-white p-3 text-xs sm:text-sm text-[#050505] placeholder:text-[#65676b] focus:border-emerald-600 focus:outline-hidden dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#e4e6eb]"
+            className="w-full resize-none rounded-xl border border-[#e4e6eb] bg-white p-3 text-xs sm:text-sm text-[#050505] placeholder:text-[#65676b] focus:border-primary-500 focus:outline-hidden dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#e4e6eb]"
           />
         </div>
 
@@ -196,7 +196,7 @@ export function EditGroupForm({ group }: EditGroupFormProps) {
           <Button
             type="submit"
             isLoading={isUpdatingGroup}
-            className="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5"
+            className="rounded-xl bg-primary-500 hover:bg-primary-600 text-white font-bold px-5"
           >
             <Save className="h-4 w-4 mr-1.5" />
             {locale === 'bn' ? 'সংরক্ষণ করুন' : 'Save Changes'}

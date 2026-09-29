@@ -35,7 +35,7 @@ export function FriendsHeader({
             placeholder={
               locale === 'bn' ? 'বন্ধুদের খুঁজুন...' : 'Search friends...'
             }
-            className="pl-10 pr-10 h-10 rounded-xl bg-[#f0f2f5] dark:bg-[#3a3b3c] border-transparent focus:border-emerald-500 focus:bg-white dark:focus:bg-[#242526]"
+            className="pl-10 pr-10 h-10 rounded-xl bg-[#f0f2f5] dark:bg-[#3a3b3c] border-transparent focus:border-primary-500 focus:bg-white dark:focus:bg-[#242526]"
           />
           {searchQuery && (
             <button

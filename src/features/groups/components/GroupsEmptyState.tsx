@@ -33,7 +33,7 @@ export function GroupsEmptyState({
     }
   > = {
     discover: {
-      icon: <Users className="h-10 w-10 text-emerald-600 dark:text-emerald-400" />,
+      icon: <Users className="h-10 w-10 text-primary-500 dark:text-primary-400" />,
       title: locale === 'bn' ? 'কোনো গ্রুপ পাওয়া যায়নি' : 'No Groups Found',
       description:
         locale === 'bn'
@@ -45,7 +45,7 @@ export function GroupsEmptyState({
       },
     },
     'my-groups': {
-      icon: <Users className="h-10 w-10 text-emerald-600 dark:text-emerald-400" />,
+      icon: <Users className="h-10 w-10 text-primary-500 dark:text-primary-400" />,
       title:
         locale === 'bn'
           ? 'আপনি কোনো গ্রুপে যুক্ত হননি'
@@ -94,7 +94,7 @@ export function GroupsEmptyState({
           : 'When new members request to join, their requests will appear here.',
     },
     posts: {
-      icon: <Users className="h-10 w-10 text-emerald-600 dark:text-emerald-400" />,
+      icon: <Users className="h-10 w-10 text-primary-500 dark:text-primary-400" />,
       title: locale === 'bn' ? 'এই গ্রুপে এখনও কোনো পোস্ট নেই' : 'No Posts in this Group Yet',
       description:
         locale === 'bn'
@@ -107,7 +107,7 @@ export function GroupsEmptyState({
 
   return (
     <Card className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#e4e6eb] bg-white p-8 text-center shadow-2xs dark:border-[#393a3b] dark:bg-[#242526]">
-      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 mb-3">
+      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-50 dark:bg-primary-900/40 mb-3">
         {current.icon}
       </div>
       <h3 className="text-base font-bold text-[#050505] dark:text-[#e4e6eb]">
@@ -121,7 +121,7 @@ export function GroupsEmptyState({
         <Link href={current.cta.href} className="mt-4">
           <Button
             size="sm"
-            className="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
+            className="rounded-xl bg-primary-500 hover:bg-primary-600 text-white font-bold"
           >
             <Plus className="h-4 w-4 mr-1.5" />
             {current.cta.label}
@@ -133,7 +133,7 @@ export function GroupsEmptyState({
         <Button
           size="sm"
           onClick={onAction}
-          className="mt-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
+          className="mt-4 rounded-xl bg-primary-500 hover:bg-primary-600 text-white font-bold"
         >
           {actionText}
         </Button>

@@ -39,7 +39,7 @@ export function GroupMemberCard({
           href={ROUTES.USER_PROFILE(member.user.username)}
           className="shrink-0"
         >
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 text-white font-bold text-sm shadow-2xs select-none">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-teal-700 text-white font-bold text-sm shadow-2xs select-none">
             {member.user.avatarUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -57,7 +57,7 @@ export function GroupMemberCard({
           <div className="flex items-center gap-2">
             <Link
               href={ROUTES.USER_PROFILE(member.user.username)}
-              className="truncate text-xs sm:text-sm font-bold text-[#050505] hover:text-emerald-700 dark:text-[#e4e6eb] dark:hover:text-emerald-400 transition-colors"
+              className="truncate text-xs sm:text-sm font-bold text-[#050505] hover:text-primary-600 dark:text-[#e4e6eb] dark:hover:text-primary-400 transition-colors"
             >
               {member.user.name}
             </Link>

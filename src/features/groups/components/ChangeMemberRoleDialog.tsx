@@ -67,7 +67,7 @@ export function ChangeMemberRoleDialog({
         locale === 'bn'
           ? 'গ্রুপ সেটিংস পরিবর্তন এবং সদস্য রিমুভ করতে পারবে।'
           : 'Full management of members, settings, and requests.',
-      icon: <ShieldAlert className="h-4 w-4 text-emerald-600" />,
+      icon: <ShieldAlert className="h-4 w-4 text-primary-500" />,
     },
   ];
 
@@ -99,7 +99,7 @@ export function ChangeMemberRoleDialog({
                 className={cn(
                   'flex w-full items-start justify-between rounded-2xl border p-3.5 text-left transition-all',
                   isSelected
-                    ? 'border-emerald-600 bg-emerald-50/60 dark:border-emerald-700 dark:bg-emerald-950/40 shadow-xs'
+                    ? 'border-primary-500 bg-primary-50/60 dark:border-primary-600 dark:bg-primary-900/40 shadow-xs'
                     : 'border-[#e4e6eb] bg-white hover:bg-[#f0f2f5] dark:border-[#393a3b] dark:bg-[#242526] dark:hover:bg-[#3a3b3c]',
                 )}
               >
@@ -116,7 +116,7 @@ export function ChangeMemberRoleDialog({
                 </div>
 
                 {isSelected && (
-                  <Check className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <Check className="h-4 w-4 text-primary-500 shrink-0 mt-0.5" />
                 )}
               </button>
             );
@@ -135,7 +135,7 @@ export function ChangeMemberRoleDialog({
           </Button>
           <Button
             type="submit"
-            className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
+            className="w-full sm:w-auto bg-primary-500 hover:bg-primary-600 text-white font-bold"
             isLoading={isChanging}
           >
             {locale === 'bn' ? 'রোল আপডেট করুন' : 'Save Role'}

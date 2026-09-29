@@ -92,7 +92,7 @@ export default function GroupDetailPage() {
               <Link href={ROUTES.GROUPS.HOME} className="mt-4">
                 <Button
                   size="sm"
-                  className="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
+                  className="rounded-xl bg-primary-500 hover:bg-primary-600 text-white font-bold"
                 >
                   <Users className="h-4 w-4 mr-1.5" />
                   {locale === 'bn' ? 'সকল গ্রুপ দেখুন' : 'Explore Groups'}

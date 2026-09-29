@@ -7,7 +7,7 @@ import { ROUTES } from '@/constants/routes';
 export default function NotFound() {
   return (
     <Container className="py-24 text-center">
-      <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-emerald-50 text-brand-600 dark:bg-emerald-950/60 dark:text-emerald-400 shadow-md">
+      <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-primary-50 text-brand-600 dark:bg-primary-900/60 dark:text-primary-400 shadow-md">
         <BookX className="h-10 w-10" />
       </div>
       <h2 className="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white">

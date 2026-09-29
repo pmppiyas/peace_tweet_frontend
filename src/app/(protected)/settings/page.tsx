@@ -10,6 +10,7 @@ import { useTheme } from '@/providers/ThemeProvider';
 import { useUiStore } from '@/stores/uiStore';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
+import { ProfileSettingsCard } from '@/features/profile/components/ProfileSettingsCard';
 import { Moon, Sun, Type, Globe } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 
@@ -29,16 +30,19 @@ export default function SettingsPage() {
           <div>
             <h1 className="text-xl font-bold text-gray-900 dark:text-white">{t('nav.settings')}</h1>
             <p className="text-xs text-gray-400 mt-0.5">
-              Customize your display preferences, language, and Arabic font size
+              Customize your profile details, display preferences, and application settings
             </p>
           </div>
 
           <div className="space-y-3">
+            {/* Personal Profile Details Card */}
+            <ProfileSettingsCard />
+
             {/* Language Preference Card */}
             <Card className="border border-gray-100 dark:border-gray-800 rounded-2xl">
               <CardHeader className="pb-2">
                 <div className="flex items-center gap-1.5">
-                  <Globe className="h-4 w-4 text-emerald-600" />
+                  <Globe className="h-4 w-4 text-primary-500" />
                   <CardTitle className="text-sm font-semibold">Language / ভাষা / اللغة</CardTitle>
                 </div>
                 <CardDescription className="text-xs">
@@ -64,7 +68,7 @@ export default function SettingsPage() {
                   className={cn(
                     'flex items-center justify-center gap-2 rounded-xl border p-3 text-xs font-medium transition-all',
                     theme === 'light'
-                      ? 'border-emerald-600 bg-emerald-50 text-emerald-800 font-bold dark:bg-[#3a3b3c] shadow-2xs'
+                      ? 'border-primary-500 bg-primary-50 text-primary-700 font-bold dark:bg-[#3a3b3c] shadow-2xs'
                       : 'border-[#e4e6eb] bg-[#f0f2f5] text-[#050505] hover:bg-[#e4e6eb] dark:border-[#393a3b] dark:bg-[#3a3b3c] dark:text-[#e4e6eb]',
                   )}
                 >
@@ -77,7 +81,7 @@ export default function SettingsPage() {
                   className={cn(
                     'flex items-center justify-center gap-2 rounded-xl border p-3 text-xs font-medium transition-all',
                     theme === 'dark'
-                      ? 'border-emerald-600 bg-[#3a3b3c] text-emerald-400 font-bold shadow-2xs'
+                      ? 'border-primary-500 bg-[#3a3b3c] text-primary-400 font-bold shadow-2xs'
                       : 'border-[#e4e6eb] bg-[#f0f2f5] text-[#050505] hover:bg-[#e4e6eb] dark:border-[#393a3b] dark:bg-[#3a3b3c] dark:text-[#e4e6eb]',
                   )}
                 >
@@ -91,7 +95,7 @@ export default function SettingsPage() {
             <Card className="border border-[#e4e6eb] dark:border-[#393a3b] rounded-xl">
               <CardHeader className="pb-2">
                 <div className="flex items-center gap-1.5">
-                  <Type className="h-4 w-4 text-emerald-600" />
+                  <Type className="h-4 w-4 text-primary-500" />
                   <CardTitle className="text-sm font-semibold">Arabic Font Size</CardTitle>
                 </div>
                 <CardDescription className="text-xs">
@@ -106,7 +110,7 @@ export default function SettingsPage() {
                     className={cn(
                       'rounded-xl border p-2.5 text-xs font-medium transition-all capitalize text-center',
                       fontSize === size
-                        ? 'border-emerald-600 bg-emerald-50 text-emerald-800 font-bold dark:bg-emerald-950/60 dark:text-emerald-300 shadow-2xs'
+                        ? 'border-primary-500 bg-primary-50 text-primary-700 font-bold dark:bg-primary-900/60 dark:text-primary-300 shadow-2xs'
                         : 'border-[#e4e6eb] bg-[#f0f2f5] text-[#050505] hover:bg-[#e4e6eb] dark:border-[#393a3b] dark:bg-[#3a3b3c] dark:text-[#e4e6eb]',
                     )}
                   >

@@ -75,7 +75,7 @@ export default function GroupsPage() {
           <div className="rounded-2xl bg-white p-4 sm:p-5 border border-[#e4e6eb] shadow-2xs dark:border-[#393a3b] dark:bg-[#242526]">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 text-white font-bold shadow-2xs select-none">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-teal-700 text-white font-bold shadow-2xs select-none">
                   <Users className="h-5 w-5" />
                 </div>
                 <div>
@@ -94,7 +94,7 @@ export default function GroupsPage() {
               <Link href={isAuthenticated ? ROUTES.GROUPS.CREATE : ROUTES.LOGIN}>
                 <Button
                   size="sm"
-                  className="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-2xs w-full sm:w-auto"
+                  className="rounded-xl bg-primary-500 hover:bg-primary-600 text-white font-bold text-xs shadow-2xs w-full sm:w-auto"
                 >
                   <Plus className="h-4 w-4 mr-1.5" />
                   <span>{locale === 'bn' ? 'নতুন গ্রুপ' : 'Create Group'}</span>
@@ -114,7 +114,7 @@ export default function GroupsPage() {
                     ? 'গ্রুপের নাম বা বিষয় দিয়ে খুঁজুন...'
                     : 'Search groups by name or topic...'
                 }
-                className="h-10 w-full rounded-2xl border border-[#e4e6eb] bg-[#f0f2f5] pl-9 pr-4 text-xs sm:text-sm text-[#050505] placeholder:text-[#65676b] focus:border-emerald-600 focus:bg-white focus:outline-hidden dark:border-[#393a3b] dark:bg-[#3a3b3c] dark:text-[#e4e6eb] dark:placeholder:text-[#b0b3b8] dark:focus:bg-[#242526]"
+                className="h-10 w-full rounded-2xl border border-[#e4e6eb] bg-[#f0f2f5] pl-9 pr-4 text-xs sm:text-sm text-[#050505] placeholder:text-[#65676b] focus:border-primary-500 focus:bg-white focus:outline-hidden dark:border-[#393a3b] dark:bg-[#3a3b3c] dark:text-[#e4e6eb] dark:placeholder:text-[#b0b3b8] dark:focus:bg-[#242526]"
               />
             </div>
           </div>

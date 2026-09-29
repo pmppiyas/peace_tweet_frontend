@@ -22,7 +22,7 @@ export function Breadcrumbs({
     >
       <Link
         href="/"
-        className="flex items-center gap-1 hover:text-emerald-600 transition-colors"
+        className="flex items-center gap-1 hover:text-primary-500 transition-colors"
       >
         <Home className="h-3.5 w-3.5" />
         <span className="sr-only">Home</span>
@@ -34,7 +34,7 @@ export function Breadcrumbs({
           {item.href ? (
             <Link
               href={item.href}
-              className="hover:text-emerald-600 transition-colors truncate max-w-[150px] sm:max-w-xs"
+              className="hover:text-primary-500 transition-colors truncate max-w-[150px] sm:max-w-xs"
             >
               {item.label}
             </Link>

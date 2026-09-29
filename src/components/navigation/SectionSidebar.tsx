@@ -72,7 +72,7 @@ export function SectionSidebar({
           href={ROUTES.PROFILE}
           className="flex items-center gap-3 rounded-xl px-2.5 py-2 hover:bg-[#e4e6eb] dark:hover:bg-[#3a3b3c] transition-colors"
         >
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-600 text-white font-bold text-sm shadow-xs">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm shadow-xs">
             {user.name.charAt(0)}
           </div>
           <div className="min-w-0 flex-1">
@@ -99,7 +99,7 @@ export function SectionSidebar({
               className={cn(
                 'flex items-center justify-between rounded-xl px-2.5 py-2 transition-colors',
                 isActive
-                  ? 'bg-[#e4e6eb] dark:bg-[#3a3b3c] font-bold text-emerald-800 dark:text-emerald-400'
+                  ? 'bg-[#e4e6eb] dark:bg-[#3a3b3c] font-bold text-primary-700 dark:text-primary-400'
                   : 'text-[#050505] dark:text-[#e4e6eb] hover:bg-[#e4e6eb]/80 dark:hover:bg-[#3a3b3c] font-semibold text-[15px]',
               )}
             >
@@ -107,7 +107,7 @@ export function SectionSidebar({
                 <div
                   className={cn(
                     'flex h-9 w-9 shrink-0 items-center justify-center rounded-full shadow-xs',
-                    item.iconBg || (isActive ? 'bg-emerald-600 text-white' : 'bg-gray-600 text-white'),
+                    item.iconBg || (isActive ? 'bg-primary-500 text-white' : 'bg-gray-600 text-white'),
                   )}
                 >
                   <Icon className="h-4.5 w-4.5" />
@@ -121,7 +121,7 @@ export function SectionSidebar({
                 </span>
               )}
               {item.badge && (
-                <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-bold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 shrink-0 ml-2">
+                <span className="rounded-full bg-primary-100 px-2 py-0.5 text-[11px] font-bold text-primary-600 dark:bg-primary-900/60 dark:text-primary-300 shrink-0 ml-2">
                   {item.badge}
                 </span>
               )}

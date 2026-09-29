@@ -23,7 +23,7 @@ export function GroupCard({ group, className }: GroupCardProps) {
   return (
     <Card
       className={cn(
-        'group flex flex-col justify-between rounded-2xl border border-[#e4e6eb] bg-white p-4 shadow-2xs transition-all hover:border-emerald-300/80 hover:shadow-xs dark:border-[#393a3b] dark:bg-[#242526] dark:hover:border-emerald-700/60',
+        'group flex flex-col justify-between rounded-2xl border border-[#e4e6eb] bg-white p-4 shadow-2xs transition-all hover:border-primary-300/80 hover:shadow-xs dark:border-[#393a3b] dark:bg-[#242526] dark:hover:border-primary-600/60',
         className,
       )}
     >
@@ -34,7 +34,7 @@ export function GroupCard({ group, className }: GroupCardProps) {
             href={ROUTES.GROUPS.DETAIL(group.slug)}
             className="flex items-center gap-3 min-w-0 flex-1"
           >
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 text-white font-bold text-lg shadow-2xs select-none">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-teal-700 text-white font-bold text-lg shadow-2xs select-none">
               {group.avatarUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -48,7 +48,7 @@ export function GroupCard({ group, className }: GroupCardProps) {
             </div>
 
             <div className="min-w-0 flex-1">
-              <h3 className="truncate text-sm font-bold text-[#050505] group-hover:text-emerald-700 dark:text-[#e4e6eb] dark:group-hover:text-emerald-400 transition-colors">
+              <h3 className="truncate text-sm font-bold text-[#050505] group-hover:text-primary-600 dark:text-[#e4e6eb] dark:group-hover:text-primary-400 transition-colors">
                 {group.name}
               </h3>
               <p className="truncate text-xs text-[#65676b] dark:text-[#b0b3b8]">
@@ -87,7 +87,7 @@ export function GroupCard({ group, className }: GroupCardProps) {
       {/* Footer: Member Count & Action Button */}
       <div className="mt-4 flex items-center justify-between gap-2 border-t border-[#f0f2f5] pt-3 dark:border-[#3a3b3c]">
         <div className="flex items-center gap-1.5 text-xs text-[#65676b] dark:text-[#b0b3b8]">
-          <Users className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+          <Users className="h-3.5 w-3.5 text-primary-500 dark:text-primary-400" />
           <span>
             {formatNumber(group.memberCount || 0)}{' '}
             {locale === 'bn' ? 'সদস্য' : 'members'}
@@ -98,7 +98,7 @@ export function GroupCard({ group, className }: GroupCardProps) {
           <Link href={ROUTES.GROUPS.DETAIL(group.slug)}>
             <button
               type="button"
-              className="text-xs font-bold text-emerald-700 hover:underline dark:text-emerald-400 px-2 py-1"
+              className="text-xs font-bold text-primary-600 hover:underline dark:text-primary-400 px-2 py-1"
             >
               {locale === 'bn' ? 'দেখুন' : 'View Group'}
             </button>

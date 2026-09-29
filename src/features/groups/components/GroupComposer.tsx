@@ -70,7 +70,7 @@ export function GroupComposer({ group }: GroupComposerProps) {
     <Card className="border border-[#e4e6eb] bg-white p-3.5 sm:p-4 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526] rounded-2xl">
       {!isOpen ? (
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white font-bold text-sm select-none">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm select-none">
             {user?.name ? user.name.charAt(0).toUpperCase() : '🕊️'}
           </div>
           <button
@@ -92,14 +92,14 @@ export function GroupComposer({ group }: GroupComposerProps) {
           {/* Header */}
           <div className="flex items-center justify-between border-b border-[#e4e6eb] pb-2.5 dark:border-[#393a3b]">
             <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-600 text-white font-bold text-xs select-none">
+              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-xs select-none">
                 {user?.name ? user.name.charAt(0).toUpperCase() : '🕊️'}
               </div>
               <div>
                 <p className="text-xs font-bold text-[#050505] dark:text-[#e4e6eb] leading-none">
                   {user?.name}
                 </p>
-                <span className="text-[10px] text-emerald-700 dark:text-emerald-400 font-semibold">
+                <span className="text-[10px] text-primary-600 dark:text-primary-400 font-semibold">
                   {group.name}
                 </span>
               </div>
@@ -129,7 +129,7 @@ export function GroupComposer({ group }: GroupComposerProps) {
               className={cn(
                 'inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold transition-all',
                 postType === 'TEXT'
-                  ? 'bg-emerald-50 text-emerald-900 border border-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-300'
+                  ? 'bg-primary-50 text-primary-800 border border-primary-500 dark:bg-primary-900/60 dark:text-primary-300'
                   : 'bg-[#f0f2f5] text-[#65676b] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:text-[#b0b3b8]',
               )}
             >
@@ -146,7 +146,7 @@ export function GroupComposer({ group }: GroupComposerProps) {
               className={cn(
                 'inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold transition-all',
                 postType === 'DUA'
-                  ? 'bg-emerald-50 text-emerald-900 border border-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-300'
+                  ? 'bg-primary-50 text-primary-800 border border-primary-500 dark:bg-primary-900/60 dark:text-primary-300'
                   : 'bg-[#f0f2f5] text-[#65676b] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:text-[#b0b3b8]',
               )}
             >
@@ -176,9 +176,9 @@ export function GroupComposer({ group }: GroupComposerProps) {
           {postType === 'DUA' && (
             <div className="space-y-2">
               {selectedDua ? (
-                <div className="flex items-center justify-between rounded-xl bg-emerald-50/60 p-3 border border-emerald-200 dark:bg-emerald-950/40 dark:border-emerald-900">
+                <div className="flex items-center justify-between rounded-xl bg-primary-50/60 p-3 border border-primary-200 dark:bg-primary-900/40 dark:border-primary-800">
                   <div>
-                    <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400">
+                    <span className="text-[10px] font-bold text-primary-600 dark:text-primary-400">
                       {locale === 'bn' ? 'যুক্ত করা দোয়া:' : 'Attached Dua:'}
                     </span>
                     <p className="text-xs font-bold text-[#050505] dark:text-[#e4e6eb]">
@@ -191,7 +191,7 @@ export function GroupComposer({ group }: GroupComposerProps) {
                   <button
                     type="button"
                     onClick={() => setShowDuaPicker(true)}
-                    className="text-xs font-semibold text-emerald-700 hover:underline dark:text-emerald-400"
+                    className="text-xs font-semibold text-primary-600 hover:underline dark:text-primary-400"
                   >
                     {locale === 'bn' ? 'পরিবর্তন' : 'Change'}
                   </button>
@@ -200,7 +200,7 @@ export function GroupComposer({ group }: GroupComposerProps) {
                 <button
                   type="button"
                   onClick={() => setShowDuaPicker(true)}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-emerald-300 p-3 text-xs font-semibold text-emerald-700 hover:bg-emerald-50 transition-colors dark:border-emerald-800 dark:text-emerald-400 dark:hover:bg-emerald-950/40"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-primary-300 p-3 text-xs font-semibold text-primary-600 hover:bg-primary-50 transition-colors dark:border-primary-700 dark:text-primary-400 dark:hover:bg-primary-900/40"
                 >
                   <BookOpen className="h-4 w-4" />
                   <span>
@@ -231,7 +231,7 @@ export function GroupComposer({ group }: GroupComposerProps) {
                     : 'Write something for the group members...'
             }
             rows={3}
-            className="w-full resize-none rounded-xl border border-[#e4e6eb] bg-[#f0f2f5] p-3 text-xs sm:text-sm text-[#050505] placeholder:text-[#65676b] focus:border-emerald-600 focus:bg-white focus:outline-hidden dark:border-[#393a3b] dark:bg-[#3a3b3c] dark:text-[#e4e6eb] dark:placeholder:text-[#b0b3b8] dark:focus:bg-[#242526]"
+            className="w-full resize-none rounded-xl border border-[#e4e6eb] bg-[#f0f2f5] p-3 text-xs sm:text-sm text-[#050505] placeholder:text-[#65676b] focus:border-primary-500 focus:bg-white focus:outline-hidden dark:border-[#393a3b] dark:bg-[#3a3b3c] dark:text-[#e4e6eb] dark:placeholder:text-[#b0b3b8] dark:focus:bg-[#242526]"
           />
 
           {/* Footer Submit Bar */}
@@ -249,7 +249,7 @@ export function GroupComposer({ group }: GroupComposerProps) {
               }
               isLoading={isCreatingPost}
               size="sm"
-              className="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4"
+              className="rounded-xl bg-primary-500 hover:bg-primary-600 text-white font-bold px-4"
             >
               {locale === 'bn' ? 'পোস্ট করুন' : 'Post'}
             </Button>
@@ -286,7 +286,7 @@ export function GroupComposer({ group }: GroupComposerProps) {
                     ? 'দোয়ার নাম দিয়ে খুঁজুন...'
                     : 'Search Dua by title...'
                 }
-                className="h-9 w-full rounded-xl border border-[#e4e6eb] bg-[#f0f2f5] pl-8 pr-3 text-xs text-[#050505] placeholder:text-[#65676b] focus:border-emerald-600 focus:bg-white focus:outline-hidden dark:border-[#393a3b] dark:bg-[#3a3b3c] dark:text-[#e4e6eb]"
+                className="h-9 w-full rounded-xl border border-[#e4e6eb] bg-[#f0f2f5] pl-8 pr-3 text-xs text-[#050505] placeholder:text-[#65676b] focus:border-primary-500 focus:bg-white focus:outline-hidden dark:border-[#393a3b] dark:bg-[#3a3b3c] dark:text-[#e4e6eb]"
               />
             </div>
 
@@ -294,7 +294,7 @@ export function GroupComposer({ group }: GroupComposerProps) {
             <div className="max-h-60 overflow-y-auto space-y-1.5">
               {isLoadingDuas ? (
                 <div className="py-6 text-center text-xs text-[#65676b] dark:text-[#b0b3b8]">
-                  <Loader2 className="h-4 w-4 animate-spin mx-auto mb-1 text-emerald-600" />
+                  <Loader2 className="h-4 w-4 animate-spin mx-auto mb-1 text-primary-500" />
                   {locale === 'bn' ? 'দোয়া লোড হচ্ছে...' : 'Loading Duas...'}
                 </div>
               ) : !duasData?.items || duasData.items.length === 0 ? (
@@ -316,7 +316,7 @@ export function GroupComposer({ group }: GroupComposerProps) {
                     className={cn(
                       'flex w-full items-start justify-between rounded-xl p-2.5 text-left text-xs transition-colors border',
                       selectedDua?.id === d.id
-                        ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950/60'
+                        ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/60'
                         : 'border-[#e4e6eb] hover:bg-[#f0f2f5] dark:border-[#393a3b] dark:hover:bg-[#3a3b3c]',
                     )}
                   >
@@ -329,7 +329,7 @@ export function GroupComposer({ group }: GroupComposerProps) {
                       </p>
                     </div>
                     {selectedDua?.id === d.id && (
-                      <Check className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+                      <Check className="h-4 w-4 text-primary-500 shrink-0 mt-0.5" />
                     )}
                   </button>
                 ))

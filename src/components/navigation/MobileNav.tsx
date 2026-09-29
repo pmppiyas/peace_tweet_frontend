@@ -47,7 +47,7 @@ export function MobileNav() {
               className={cn(
                 'flex flex-col items-center justify-center gap-0.5 h-full w-full px-1 text-center transition-colors select-none overflow-hidden',
                 isActive
-                  ? 'text-emerald-600 dark:text-emerald-400 font-bold'
+                  ? 'text-primary-500 dark:text-primary-400 font-bold'
                   : 'text-[#65676b] hover:text-[#050505] dark:text-[#b0b3b8] dark:hover:text-[#e4e6eb]',
               )}
             >

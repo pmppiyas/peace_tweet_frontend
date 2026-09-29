@@ -57,12 +57,12 @@ export function ShareButton({
       type="button"
       onClick={handleShare}
       className={cn(
-        'flex items-center justify-center gap-1.5 rounded-xl transition-all duration-200 hover:bg-emerald-50 hover:text-brand-700 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-300',
+        'flex items-center justify-center gap-1.5 rounded-xl transition-all duration-200 hover:bg-primary-50 hover:text-brand-700 dark:hover:bg-primary-900/40 dark:hover:text-primary-300',
         size === 'sm' ? 'py-1.5 px-2 text-xs' : 'py-2 px-3 text-sm',
         copied
           ? 'text-brand-600 dark:text-brand-400 font-bold'
           : 'text-gray-500 dark:text-gray-400',
-        variant === 'ghost' && 'hover:bg-emerald-50/60 dark:hover:bg-gray-800',
+        variant === 'ghost' && 'hover:bg-primary-50/60 dark:hover:bg-gray-800',
         className,
       )}
       title={copied ? 'Link copied!' : 'Share Dua'}

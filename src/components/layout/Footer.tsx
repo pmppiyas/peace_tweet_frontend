@@ -9,7 +9,7 @@ export function Footer() {
       <Container>
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-600 text-white font-bold text-sm shadow-xs">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm shadow-xs">
               🕊️
             </div>
             <div>
@@ -21,16 +21,16 @@ export function Footer() {
           </div>
 
           <div className="flex flex-wrap justify-center gap-6 text-xs text-[#65676b] dark:text-[#b0b3b8]">
-            <Link href="/duas" className="hover:text-emerald-600 transition-colors">
+            <Link href="/duas" className="hover:text-primary-500 transition-colors">
               All Duas
             </Link>
-            <Link href="/categories" className="hover:text-emerald-600 transition-colors">
+            <Link href="/categories" className="hover:text-primary-500 transition-colors">
               Categories
             </Link>
-            <Link href="/search" className="hover:text-emerald-600 transition-colors">
+            <Link href="/search" className="hover:text-primary-500 transition-colors">
               Search
             </Link>
-            <Link href="/saved" className="hover:text-emerald-600 transition-colors">
+            <Link href="/saved" className="hover:text-primary-500 transition-colors">
               Bookmarks
             </Link>
           </div>

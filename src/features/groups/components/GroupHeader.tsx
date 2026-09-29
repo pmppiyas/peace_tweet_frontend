@@ -27,7 +27,7 @@ export function GroupHeader({ group }: GroupHeaderProps) {
     <div className="space-y-4">
       <Card className="overflow-hidden rounded-2xl border border-[#e4e6eb] bg-white shadow-2xs dark:border-[#393a3b] dark:bg-[#242526]">
         {/* Cover banner */}
-        <div className="h-28 sm:h-36 w-full bg-gradient-to-r from-emerald-600 via-teal-700 to-emerald-800 relative">
+        <div className="h-28 sm:h-36 w-full bg-gradient-to-r from-primary-500 via-teal-700 to-primary-700 relative">
           <div className="absolute inset-0 bg-black/10" />
         </div>
 
@@ -36,7 +36,7 @@ export function GroupHeader({ group }: GroupHeaderProps) {
           {/* Avatar floating on cover */}
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 -mt-12 sm:-mt-14 mb-3">
             <div className="flex items-end gap-3.5">
-              <div className="flex h-20 w-20 sm:h-24 sm:w-24 shrink-0 items-center justify-center rounded-2xl border-4 border-white bg-gradient-to-br from-emerald-500 to-teal-700 text-white font-bold text-2xl sm:text-3xl shadow-md dark:border-[#242526] select-none">
+              <div className="flex h-20 w-20 sm:h-24 sm:w-24 shrink-0 items-center justify-center rounded-2xl border-4 border-white bg-gradient-to-br from-primary-500 to-teal-700 text-white font-bold text-2xl sm:text-3xl shadow-md dark:border-[#242526] select-none">
                 {group.avatarUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -106,7 +106,7 @@ export function GroupHeader({ group }: GroupHeaderProps) {
           {/* Stats Bar */}
           <div className="flex flex-wrap items-center gap-4 text-xs text-[#65676b] dark:text-[#b0b3b8] pt-3 mt-3 border-t border-[#f0f2f5] dark:border-[#3a3b3c]">
             <div className="flex items-center gap-1.5 font-medium">
-              <Users className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+              <Users className="h-4 w-4 text-primary-500 dark:text-primary-400" />
               <span>
                 <strong className="text-[#050505] dark:text-[#e4e6eb]">
                   {formatNumber(group.memberCount || 0)}

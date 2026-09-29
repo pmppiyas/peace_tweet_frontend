@@ -173,7 +173,7 @@ export function FriendActionButton({
             aria-label="Remove friend"
             title={locale === 'bn' ? 'আনফ্রেন্ড করতে ক্লিক করুন' : 'Click to unfriend'}
           >
-            <Check className="mr-1.5 h-4 w-4 text-emerald-600" />
+            <Check className="mr-1.5 h-4 w-4 text-primary-500" />
             <span>{locale === 'bn' ? 'বন্ধু' : 'Friends'}</span>
           </Button>
         )}

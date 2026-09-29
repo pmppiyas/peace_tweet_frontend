@@ -29,7 +29,7 @@ export function DuaPostCard({ post }: DuaPostCardProps) {
             href={ROUTES.DUA_DETAIL(dua.id)}
             className="group block"
           >
-            <h2 className="text-[16px] sm:text-[17px] font-bold text-[#050505] group-hover:text-emerald-700 dark:text-[#e4e6eb] dark:group-hover:text-emerald-400 transition-colors">
+            <h2 className="text-[16px] sm:text-[17px] font-bold text-[#050505] group-hover:text-primary-600 dark:text-[#e4e6eb] dark:group-hover:text-primary-400 transition-colors">
               🌙 {dua.title}
             </h2>
           </Link>

@@ -46,7 +46,7 @@ export function CreatePostBox() {
       <div className="rounded-xl border border-[#e4e6eb] bg-white p-3 sm:p-3.5 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526]">
         {/* Top Input Trigger */}
         <div className="flex items-center gap-2.5">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white font-bold text-sm shadow-xs">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm shadow-xs">
             {user?.name?.charAt(0) || '🕊️'}
           </div>
 
@@ -64,7 +64,7 @@ export function CreatePostBox() {
             onClick={handleOpen}
             className="flex items-center justify-center gap-2 py-2 px-2 rounded-lg hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] transition-colors text-xs sm:text-sm font-semibold text-[#65676b] dark:text-[#b0b3b8]"
           >
-            <BookOpen className="h-5 w-5 text-emerald-600" />
+            <BookOpen className="h-5 w-5 text-primary-500" />
             <span className="truncate">{t('createPost.tabDua')}</span>
           </button>
 
@@ -104,7 +104,7 @@ export function CreatePostBox() {
               value={fadilah}
               onChange={(e) => setFadilah(e.target.value)}
               required
-              className="w-full rounded-xl border border-gray-200 bg-white p-3 text-sm focus:border-emerald-500 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900"
+              className="w-full rounded-xl border border-gray-200 bg-white p-3 text-sm focus:border-primary-500 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900"
             />
           </div>
 
@@ -126,7 +126,7 @@ export function CreatePostBox() {
               placeholder={t('createPost.arabicPlaceholder')}
               value={arabicText}
               onChange={(e) => setArabicText(e.target.value)}
-              className="w-full rounded-xl border border-gray-200 bg-white p-3 font-arabic text-base text-right focus:border-emerald-500 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900"
+              className="w-full rounded-xl border border-gray-200 bg-white p-3 font-arabic text-base text-right focus:border-primary-500 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900"
             />
           </div>
 
@@ -147,7 +147,7 @@ export function CreatePostBox() {
               value={meaningBangla}
               onChange={(e) => setMeaningBangla(e.target.value)}
               required
-              className="w-full rounded-xl border border-gray-200 bg-white p-3 text-sm focus:border-emerald-500 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900"
+              className="w-full rounded-xl border border-gray-200 bg-white p-3 text-sm focus:border-primary-500 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900"
             />
           </div>
 

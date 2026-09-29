@@ -52,7 +52,7 @@ export function FriendsHomeView() {
           {receivedRequests.length > 0 && (
             <Link
               href={ROUTES.FRIENDS.REQUESTS}
-              className="text-sm font-bold text-emerald-600 hover:text-emerald-700 hover:underline dark:text-emerald-400 flex items-center gap-1"
+              className="text-sm font-bold text-primary-500 hover:text-primary-600 hover:underline dark:text-primary-400 flex items-center gap-1"
             >
               <span>{locale === 'bn' ? 'সব দেখুন' : 'See all'}</span>
               <ChevronRight className="h-4 w-4" />
@@ -87,7 +87,7 @@ export function FriendsHomeView() {
           {friends.length > 0 && (
             <Link
               href={ROUTES.FRIENDS.LIST}
-              className="text-sm font-bold text-emerald-600 hover:text-emerald-700 hover:underline dark:text-emerald-400 flex items-center gap-1"
+              className="text-sm font-bold text-primary-500 hover:text-primary-600 hover:underline dark:text-primary-400 flex items-center gap-1"
             >
               <span>{locale === 'bn' ? 'সব দেখুন' : 'See all'}</span>
               <ChevronRight className="h-4 w-4" />

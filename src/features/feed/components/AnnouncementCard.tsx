@@ -10,8 +10,8 @@ interface AnnouncementCardProps {
 
 export function AnnouncementCard({ post }: AnnouncementCardProps) {
   return (
-    <div className="space-y-3 rounded-xl bg-emerald-50/50 p-4 border border-emerald-100 dark:bg-emerald-950/20 dark:border-emerald-900/40">
-      <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-800 dark:bg-emerald-900/80 dark:text-emerald-300">
+    <div className="space-y-3 rounded-xl bg-primary-50/50 p-4 border border-primary-100 dark:bg-primary-900/20 dark:border-primary-800/40">
+      <div className="inline-flex items-center gap-1.5 rounded-full bg-primary-100 px-2.5 py-0.5 text-xs font-bold text-primary-700 dark:bg-primary-800/80 dark:text-primary-300">
         <Megaphone className="h-3.5 w-3.5" />
         <span>ঘোষণা (Announcement)</span>
       </div>

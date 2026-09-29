@@ -44,7 +44,7 @@ export function RightSidebar() {
       <div className="rounded-xl border border-[#e4e6eb] bg-white p-3.5 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526]">
         <div className="flex items-center justify-between pb-2 border-b border-[#e4e6eb] dark:border-[#393a3b]">
           <div className="flex items-center gap-1.5 text-xs font-bold text-[#050505] dark:text-[#e4e6eb]">
-            <Sparkles className="h-4 w-4 text-emerald-600" />
+            <Sparkles className="h-4 w-4 text-primary-500" />
             <span>{t('tasbih.title')}</span>
           </div>
           <button
@@ -57,7 +57,7 @@ export function RightSidebar() {
         </div>
 
         <div className="mt-3 text-center space-y-2">
-          <p className="font-arabic text-2xl font-bold text-[#050505] dark:text-emerald-300">
+          <p className="font-arabic text-2xl font-bold text-[#050505] dark:text-primary-300">
             {currentZikr.arabic}
           </p>
           <p className="text-xs text-[#65676b] dark:text-[#b0b3b8]">
@@ -66,7 +66,7 @@ export function RightSidebar() {
 
           <button
             onClick={handleTasbihClick}
-            className="w-full mt-2 rounded-xl bg-emerald-600 py-2.5 text-white font-bold hover:bg-emerald-700 active:scale-98 transition-all shadow-xs"
+            className="w-full mt-2 rounded-xl bg-primary-500 py-2.5 text-white font-bold hover:bg-primary-600 active:scale-98 transition-all shadow-xs"
           >
             <span className="text-xl font-bold">{formatNumber(tasbihCount)}</span>
             <span className="text-[11px] opacity-90 block font-normal">{t('tasbih.countLabel')}</span>
@@ -77,7 +77,7 @@ export function RightSidebar() {
       {/* 2. Trending Topics / Duas (Like Facebook's Sponsored / Group list) */}
       <div className="rounded-xl border border-[#e4e6eb] bg-white p-3.5 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526] space-y-2">
         <div className="flex items-center gap-1.5 pb-2 border-b border-[#e4e6eb] dark:border-[#393a3b] text-xs font-bold text-[#050505] dark:text-[#e4e6eb]">
-          <TrendingUp className="h-4 w-4 text-emerald-600" />
+          <TrendingUp className="h-4 w-4 text-primary-500" />
           <span>{t('trending.title')}</span>
         </div>
 
@@ -107,7 +107,7 @@ export function RightSidebar() {
       {/* 3. Footer / Community Tag */}
       <div className="px-2 text-[11px] text-[#65676b] dark:text-[#b0b3b8] space-y-1">
         <p className="flex items-center gap-1 font-semibold text-[#050505] dark:text-[#e4e6eb]">
-          <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+          <ShieldCheck className="h-3.5 w-3.5 text-primary-500" />
           <span>{t('trending.footerSlogan')}</span>
         </p>
         <p>© 2026 PeaceTweet</p>

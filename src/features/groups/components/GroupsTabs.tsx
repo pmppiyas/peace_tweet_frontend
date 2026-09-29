@@ -36,7 +36,7 @@ export function GroupsNavTabs({
         className={cn(
           'inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs sm:text-sm font-bold transition-all',
           activeTab === 'discover'
-            ? 'bg-emerald-600 text-white shadow-2xs'
+            ? 'bg-primary-500 text-white shadow-2xs'
             : 'text-[#65676b] hover:bg-[#f0f2f5] hover:text-[#050505] dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] dark:hover:text-[#e4e6eb]',
         )}
       >
@@ -50,7 +50,7 @@ export function GroupsNavTabs({
         className={cn(
           'inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs sm:text-sm font-bold transition-all',
           activeTab === 'my-groups'
-            ? 'bg-emerald-600 text-white shadow-2xs'
+            ? 'bg-primary-500 text-white shadow-2xs'
             : 'text-[#65676b] hover:bg-[#f0f2f5] hover:text-[#050505] dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] dark:hover:text-[#e4e6eb]',
         )}
       >
@@ -62,7 +62,7 @@ export function GroupsNavTabs({
               'rounded-full px-1.5 py-0.2 text-[10px] font-bold',
               activeTab === 'my-groups'
                 ? 'bg-white/20 text-white'
-                : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300',
+                : 'bg-primary-100 text-primary-700 dark:bg-primary-900/60 dark:text-primary-300',
             )}
           >
             {formatNumber(myGroupsCount)}
@@ -101,7 +101,7 @@ export function GroupDetailTabs({
           className={cn(
             'inline-flex shrink-0 items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs sm:text-sm font-bold transition-all',
             isPosts
-              ? 'bg-emerald-600 text-white shadow-2xs'
+              ? 'bg-primary-500 text-white shadow-2xs'
               : 'text-[#65676b] hover:bg-[#f0f2f5] hover:text-[#050505] dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] dark:hover:text-[#e4e6eb]',
           )}
         >
@@ -117,7 +117,7 @@ export function GroupDetailTabs({
           className={cn(
             'inline-flex shrink-0 items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs sm:text-sm font-bold transition-all',
             isMembers
-              ? 'bg-emerald-600 text-white shadow-2xs'
+              ? 'bg-primary-500 text-white shadow-2xs'
               : 'text-[#65676b] hover:bg-[#f0f2f5] hover:text-[#050505] dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] dark:hover:text-[#e4e6eb]',
           )}
         >
@@ -134,7 +134,7 @@ export function GroupDetailTabs({
             className={cn(
               'inline-flex shrink-0 items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs sm:text-sm font-bold transition-all',
               isRequests
-                ? 'bg-emerald-600 text-white shadow-2xs'
+                ? 'bg-primary-500 text-white shadow-2xs'
                 : 'text-[#65676b] hover:bg-[#f0f2f5] hover:text-[#050505] dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] dark:hover:text-[#e4e6eb]',
             )}
           >
@@ -165,7 +165,7 @@ export function GroupDetailTabs({
             className={cn(
               'inline-flex shrink-0 items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs sm:text-sm font-bold transition-all',
               isSettings
-                ? 'bg-emerald-600 text-white shadow-2xs'
+                ? 'bg-primary-500 text-white shadow-2xs'
                 : 'text-[#65676b] hover:bg-[#f0f2f5] hover:text-[#050505] dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] dark:hover:text-[#e4e6eb]',
             )}
           >

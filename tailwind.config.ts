@@ -24,6 +24,20 @@ const config: Config = {
           900: '#064e3b',
           950: '#022c22',
         },
+        // Primary = Facebook blue
+        primary: {
+          50:  '#e8f0fe',
+          100: '#c6d9fd',
+          200: '#9dbafb',
+          300: '#6e9af8',
+          400: '#4a80f5',
+          500: '#1877f2',
+          600: '#1565d8',
+          700: '#1054be',
+          800: '#0c43a4',
+          900: '#083380',
+          950: '#052060',
+        },
         fb: {
           bg: '#f0f2f5',
           card: '#ffffff',
@@ -47,7 +61,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["'Nunito Sans'", 'var(--font-nunito-sans)', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        sans: ["'Raleway'", 'var(--font-raleway)', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
         arabic: ['var(--font-amiri)', "'Scheherazade New'", "'Traditional Arabic'", 'serif'],
         bangla: ['var(--font-noto-sans-bengali)', "'SolaimanLipi'", "'Kalpurush'", 'sans-serif'],
       },

@@ -45,7 +45,7 @@ export function FriendsEmptyState({ type, message }: FriendsEmptyStateProps) {
 
   return (
     <Card className="flex flex-col items-center justify-center py-12 px-6 text-center border border-dashed border-[#e4e6eb] bg-white rounded-3xl dark:border-[#393a3b] dark:bg-[#242526]">
-      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400">
+      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary-50 text-primary-500 dark:bg-primary-900/50 dark:text-primary-400">
         <Icon className="h-8 w-8" />
       </div>
       <h3 className="text-base font-bold text-[#050505] dark:text-[#e4e6eb]">
