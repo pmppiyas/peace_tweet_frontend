@@ -27,6 +27,7 @@ export interface SectionSidebarProps {
   showUserProfile?: boolean;
   extraHeader?: React.ReactNode;
   footer?: React.ReactNode;
+  activeId?: string;
   className?: string;
 }
 
@@ -37,6 +38,7 @@ export function SectionSidebar({
   showUserProfile = true,
   extraHeader,
   footer,
+  activeId,
   className,
 }: SectionSidebarProps) {
   const pathname = usePathname();
@@ -87,9 +89,11 @@ export function SectionSidebar({
       <nav className="space-y-0.5">
         {items.map((item) => {
           const Icon = item.icon;
-          const isActive = item.exact
-            ? pathname === item.href
-            : pathname.startsWith(item.href);
+          const isActive = activeId
+            ? item.id === activeId
+            : item.exact
+              ? pathname === item.href
+              : pathname.startsWith(item.href);
 
           return (
             <Link

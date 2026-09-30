@@ -1,10 +1,16 @@
+import { envConfig } from './env';
+
 export const siteConfig = {
   name: 'PeaceTweet',
   title: 'PeaceTweet — Peaceful Islamic Social Media & Dua Platform',
   description:
     'A peaceful social platform to discover authentic Duas, virtues, Hadith references, Arabic recitations, and inspiring Islamic reflections.',
-  url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
-  apiUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1',
+  url: envConfig.siteUrl,
+  apiUrl: envConfig.apiUrl,
+  logo: '/p-logo.svg',
+  favicon: '/p-favicon.svg',
+  metaAppId: envConfig.metaAppId,
+  metaRedirectUri: envConfig.metaRedirectUri,
   links: {
     github: 'https://github.com',
   },

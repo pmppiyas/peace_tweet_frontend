@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
   Home,
@@ -46,9 +47,16 @@ export function Navbar() {
         <div className="flex gap-6 justify-center items-center h-14">
           {/* Left Column: Brand Logo + Facebook Style Search Pill (Aligned with Left Sidebar: w-60) */}
           <div className="hidden lg:flex w-60 shrink-0 items-center gap-2">
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-lg shadow-xs group-hover:scale-105 transition-transform">
-                🕊️
+            <Link href="/" className="flex items-center gap-2.5 group">
+              <div className="relative h-10 w-10 shrink-0 group-hover:scale-105 transition-transform">
+                <Image
+                  src="/p-logo.svg"
+                  alt="PeaceTweet Logo"
+                  width={40}
+                  height={40}
+                  priority
+                  className="rounded-xl shadow-xs"
+                />
               </div>
               <span className="text-xl font-extrabold tracking-tight text-primary-700 dark:text-white">
                 PeaceTweet
@@ -60,9 +68,16 @@ export function Navbar() {
           <div className="w-full max-w-2xl min-w-0 h-full flex items-center justify-between">
             {/* Mobile Brand Logo if screen is smaller than lg */}
             <div className="flex lg:hidden items-center gap-2 mr-2 shrink-0">
-              <Link href="/" className="flex items-center gap-1.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-base shadow-xs">
-                  🕊️
+              <Link href="/" className="flex items-center gap-2">
+                <div className="relative h-9 w-9 shrink-0">
+                  <Image
+                    src="/p-logo.svg"
+                    alt="PeaceTweet Logo"
+                    width={36}
+                    height={36}
+                    priority
+                    className="rounded-xl shadow-xs"
+                  />
                 </div>
                 <span className="font-extrabold text-base text-primary-700 dark:text-white hidden sm:inline">
                   PeaceTweet

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
 import { usePostActions } from '../hooks/usePostActions';
 import { useDuas } from '@/features/dua/hooks/useDuas';
@@ -42,8 +43,14 @@ export function PostComposer() {
     return (
       <Card className="border border-[#e4e6eb] bg-white p-3.5 sm:p-4 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526] rounded-xl flex items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm">
-            🕊️
+          <div className="relative h-9 w-9 shrink-0">
+            <Image
+              src="/p-logo.svg"
+              alt="PeaceTweet"
+              width={36}
+              height={36}
+              className="rounded-xl shadow-xs"
+            />
           </div>
           <p className="text-xs sm:text-sm text-[#65676b] dark:text-[#b0b3b8]">
             একটি অর্থপূর্ণ ইসলামিক চিন্তা বা দোয়া শেয়ার করতে সাইন ইন করুন।

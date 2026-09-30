@@ -9,7 +9,6 @@ import { LanguageProvider } from '@/providers/LanguageProvider';
 import { AudioProvider } from '@/providers/AudioProvider';
 import { Navbar } from '@/components/navigation/Navbar';
 import { MobileNav } from '@/components/navigation/MobileNav';
-import { Footer } from '@/components/layout/Footer';
 import { FloatingAudioBar } from '@/features/audio/components/FloatingAudioBar';
 
 export const metadata: Metadata = {
@@ -19,6 +18,16 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   metadataBase: new URL(siteConfig.url),
+  icons: {
+    icon: [
+      { url: '/p-favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: '32x32' },
+    ],
+    shortcut: '/p-favicon.svg',
+    apple: [
+      { url: '/p-logo.svg', sizes: '512x512', type: 'image/svg+xml' },
+    ],
+  },
 };
 
 const raleway = Raleway({
@@ -46,7 +55,6 @@ export default function RootLayout({
                   <Navbar />
                   <main className="flex-1 pb-16 md:pb-8">{children}</main>
                   <FloatingAudioBar />
-                  <Footer />
                   <MobileNav />
                 </AudioProvider>
               </AuthProvider>

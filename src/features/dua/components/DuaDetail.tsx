@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArabicText } from '@/components/common/ArabicText';
 import { AudioPlayer } from '@/components/common/AudioPlayer';
 import { BookmarkButton } from '@/components/common/BookmarkButton';
@@ -199,8 +200,14 @@ export function DuaDetail({ dua }: { dua: Dua }) {
         <div className="p-3.5 sm:p-4 pb-2.5">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm shadow-xs">
-                🕊️
+              <div className="relative h-10 w-10 shrink-0">
+                <Image
+                  src="/p-logo.svg"
+                  alt="PeaceTweet Scholar"
+                  width={40}
+                  height={40}
+                  className="rounded-xl shadow-xs"
+                />
               </div>
               <div>
                 <div className="flex items-center gap-1">

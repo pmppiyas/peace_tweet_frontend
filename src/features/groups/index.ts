@@ -35,3 +35,5 @@ export * from './components/GroupSkeleton';
 export * from './components/GroupMemberSkeleton';
 export * from './components/GroupRequestSkeleton';
 export * from './components/GroupsEmptyState';
+export * from './components/GroupsSidebar';
+export * from './components/GroupsLayout';

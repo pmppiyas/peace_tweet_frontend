@@ -17,6 +17,7 @@ export interface SectionMobileTab {
 export interface SectionLayoutProps {
   sidebar: React.ReactNode;
   mobileTabs?: SectionMobileTab[];
+  activeMobileTabId?: string;
   children: React.ReactNode;
   maxWidth?: string;
   className?: string;
@@ -26,6 +27,7 @@ export interface SectionLayoutProps {
 export function SectionLayout({
   sidebar,
   mobileTabs = [],
+  activeMobileTabId,
   children,
   maxWidth = 'max-w-6xl',
   className,
@@ -44,9 +46,11 @@ export function SectionLayout({
           {mobileTabs.length > 0 && (
             <div className="lg:hidden sticky top-14 z-30 bg-white dark:bg-[#242526] border-b border-[#e4e6eb] dark:border-[#393a3b] p-2 flex gap-1 overflow-x-auto shadow-2xs select-none">
               {mobileTabs.map((tab) => {
-                const isActive = tab.exact
-                  ? pathname === tab.href
-                  : pathname.startsWith(tab.href);
+                const isActive = activeMobileTabId
+                  ? tab.id === activeMobileTabId
+                  : tab.exact
+                    ? pathname === tab.href
+                    : pathname.startsWith(tab.href);
 
                 return (
                   <Link
