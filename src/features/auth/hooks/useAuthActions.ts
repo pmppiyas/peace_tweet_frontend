@@ -49,7 +49,7 @@ export function useAuthActions() {
     onSettled: () => {
       storeLogout();
       queryClient.clear();
-      router.push(ROUTES.LOGIN);
+      router.push(ROUTES.HOME);
     },
   });
 

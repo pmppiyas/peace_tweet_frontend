@@ -21,70 +21,62 @@ export default function GroupSettingsPage() {
   const { locale } = useLanguage();
   const { data: group, isLoading, isError } = useGroup(slug);
 
-  if (isLoading) {
-    return (
-      <Container size="xl" className="py-4 sm:py-6">
-        <div className="flex gap-6 justify-center">
-          <Sidebar />
-          <main className="w-full max-w-2xl min-w-0 space-y-4">
-            <Skeleton className="h-4 w-40" />
-            <Skeleton className="h-48 w-full rounded-2xl" />
-            <Skeleton className="h-64 w-full rounded-2xl" />
-          </main>
-          <RightSidebar />
-        </div>
-      </Container>
-    );
-  }
+  let content: React.ReactNode;
 
-  if (isError || !group) {
-    return (
-      <Container size="xl" className="py-4 sm:py-6">
-        <div className="flex gap-6 justify-center">
-          <Sidebar />
-          <main className="w-full max-w-2xl min-w-0 space-y-4">
-            <Card className="p-8 text-center">
-              <AlertCircle className="h-8 w-8 text-rose-600 mx-auto mb-2" />
-              <p className="text-sm font-bold text-rose-800">
-                {locale === 'bn' ? 'গ্রুপ পাওয়া যায়নি' : 'Group Not Found'}
-              </p>
-            </Card>
-          </main>
-          <RightSidebar />
-        </div>
-      </Container>
+  if (isLoading) {
+    content = (
+      <>
+        <Skeleton className="h-4 w-40" />
+        <Skeleton className="h-48 w-full rounded-2xl" />
+        <Skeleton className="h-64 w-full rounded-2xl" />
+      </>
+    );
+  } else if (isError || !group) {
+    content = (
+      <Card className="p-8 text-center">
+        <AlertCircle className="h-8 w-8 text-rose-600 mx-auto mb-2" />
+        <p className="text-sm font-bold text-rose-800">
+          {locale === 'bn' ? 'গ্রুপ পাওয়া যায়নি' : 'Group Not Found'}
+        </p>
+      </Card>
+    );
+  } else {
+    content = (
+      <>
+        <Breadcrumbs
+          items={[
+            {
+              label: locale === 'bn' ? 'গ্রুপসমূহ' : 'Groups',
+              href: ROUTES.GROUPS.HOME,
+            },
+            {
+              label: group.name,
+              href: ROUTES.GROUPS.DETAIL(group.slug),
+            },
+            { label: locale === 'bn' ? 'সেটিংস' : 'Settings' },
+          ]}
+        />
+
+        <GroupHeader group={group} />
+
+        <GroupSettings group={group} />
+      </>
     );
   }
 
   return (
-    <Container size="xl" className="py-4 sm:py-6">
-      <div className="flex gap-6 justify-center">
-        <Sidebar />
+    <div className="h-[calc(100vh-3.5rem)] overflow-hidden bg-[#f0f2f5] dark:bg-[#18191a]">
+      <Container size="xl" className="h-full px-0 sm:px-4">
+        <div className="flex h-full justify-center gap-4 lg:gap-6">
+          <Sidebar />
 
-        <main className="w-full max-w-2xl min-w-0 space-y-4">
-          <Breadcrumbs
-            items={[
-              {
-                label: locale === 'bn' ? 'গ্রুপসমূহ' : 'Groups',
-                href: ROUTES.GROUPS.HOME,
-              },
-              {
-                label: group.name,
-                href: ROUTES.GROUPS.DETAIL(group.slug),
-              },
-              { label: locale === 'bn' ? 'সেটিংস' : 'Settings' },
-            ]}
-          />
+          <main className="w-full max-w-2xl min-w-0 h-full overflow-y-auto overscroll-contain py-4 pb-20 sm:pb-8 space-y-4 px-2 sm:px-0">
+            {content}
+          </main>
 
-          {/* Group Header & Tabs */}
-          <GroupHeader group={group} />
-
-          {/* Group Settings Form & Actions */}
-          <GroupSettings group={group} />
-        </main>
-
-        <RightSidebar />
-      </div>
-    </Container>
+          <RightSidebar />
+        </div>
+      </Container>
+    </div>
   );
 }

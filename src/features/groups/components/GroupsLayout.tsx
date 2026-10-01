@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { usePathname } from 'next/navigation';
 import { ROUTES } from '@/constants/routes';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { useMyGroups } from '../hooks/useMyGroups';
@@ -19,6 +20,7 @@ export function GroupsLayout({
   activeTab,
   onSelectTab,
 }: GroupsLayoutProps) {
+  const pathname = usePathname();
   const { locale } = useLanguage();
   const { isAuthenticated } = useAuth();
   const { data: myGroupsData } = useMyGroups({ limit: 10 });
@@ -65,6 +67,7 @@ export function GroupsLayout({
       sidebar={
         <GroupsSidebar activeId={activeId} onSelectTab={onSelectTab} />
       }
+      backHref={pathname === ROUTES.GROUPS.HOME ? '/' : ROUTES.GROUPS.HOME}
       mobileTabs={mobileTabs}
       activeMobileTabId={activeMobileTabId}
       maxWidth="max-w-6xl"

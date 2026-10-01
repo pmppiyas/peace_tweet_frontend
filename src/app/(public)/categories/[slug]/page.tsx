@@ -21,39 +21,41 @@ export default function CategoryDetailPage() {
   const { data: category, isLoading } = useCategory(slug);
 
   return (
-    <Container size="xl" className="py-4 sm:py-6">
-      <div className="flex gap-6 justify-center">
-        <Sidebar />
+    <div className="h-[calc(100vh-3.5rem)] overflow-hidden bg-[#f0f2f5] dark:bg-[#18191a]">
+      <Container size="xl" className="h-full px-0 sm:px-4">
+        <div className="flex h-full justify-center gap-4 lg:gap-6">
+          <Sidebar />
 
-        <main className="w-full max-w-2xl min-w-0 space-y-4">
-          <Breadcrumbs
-            items={[
-              { label: 'Categories', href: ROUTES.CATEGORIES },
-              { label: category?.name || slug },
-            ]}
-          />
+          <main className="w-full max-w-2xl min-w-0 h-full overflow-y-auto overscroll-contain py-4 pb-20 sm:pb-8 space-y-4 px-2 sm:px-0">
+            <Breadcrumbs
+              items={[
+                { label: 'Categories', href: ROUTES.CATEGORIES },
+                { label: category?.name || slug },
+              ]}
+            />
 
-          {isLoading ? (
-            <Skeleton className="h-16 w-full rounded-xl" />
-          ) : (
-            <div className="rounded-xl bg-white p-4 border border-[#e4e6eb] shadow-2xs dark:border-[#393a3b] dark:bg-[#242526]">
-              <h1 className="text-lg font-bold text-[#050505] dark:text-[#e4e6eb]">
-                {category?.name}
-              </h1>
-              {category?.description && (
-                <p className="mt-1 text-xs text-[#65676b] dark:text-[#b0b3b8] leading-relaxed">
-                  {category.description}
-                </p>
-              )}
-            </div>
-          )}
+            {isLoading ? (
+              <Skeleton className="h-16 w-full rounded-xl" />
+            ) : (
+              <div className="rounded-xl bg-white p-4 border border-[#e4e6eb] shadow-2xs dark:border-[#393a3b] dark:bg-[#242526]">
+                <h1 className="text-lg font-bold text-[#050505] dark:text-[#e4e6eb]">
+                  {category?.name}
+                </h1>
+                {category?.description && (
+                  <p className="mt-1 text-xs text-[#65676b] dark:text-[#b0b3b8] leading-relaxed">
+                    {category.description}
+                  </p>
+                )}
+              </div>
+            )}
 
-          {category?.id && <CategoryDuaList categoryId={category.id} />}
-        </main>
+            {category?.id && <CategoryDuaList categoryId={category.id} />}
+          </main>
 
-        <RightSidebar />
-      </div>
-    </Container>
+          <RightSidebar />
+        </div>
+      </Container>
+    </div>
   );
 }
 

@@ -1,129 +1,98 @@
 'use client';
 
-import React from 'react';
-import { Container } from '@/components/layout/Container';
-import { Sidebar } from '@/components/layout/Sidebar';
-import { RightSidebar } from '@/components/layout/RightSidebar';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card';
-import { Breadcrumbs } from '@/components/navigation/Breadcrumbs';
-import { useTheme } from '@/providers/ThemeProvider';
-import { useUiStore } from '@/stores/uiStore';
+import React, { Suspense, useEffect, useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { User, KeyRound, Shield, Palette, Globe } from 'lucide-react';
 import { useLanguage } from '@/providers/LanguageProvider';
-import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
+import { SettingsLayout } from '@/features/profile/components/SettingsLayout';
+import { SettingsTab } from '@/features/profile/components/SettingsSidebar';
 import { ProfileSettingsCard } from '@/features/profile/components/ProfileSettingsCard';
-import { Moon, Sun, Type, Globe } from 'lucide-react';
+import { PrivacySettingsCard } from '@/features/profile/components/PrivacySettingsCard';
+import { ThemeSettingsCard } from '@/features/profile/components/ThemeSettingsCard';
+import { LanguageSettingsCard } from '@/features/profile/components/LanguageSettingsCard';
 import { cn } from '@/lib/utils/cn';
 
-export default function SettingsPage() {
-  const { theme, setTheme } = useTheme();
-  const { fontSize, setFontSize } = useUiStore();
-  const { t } = useLanguage();
+function SettingsContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const { locale } = useLanguage();
+  const tabParam = searchParams.get('tab') as SettingsTab | null;
+
+  const [activeTab, setActiveTab] = useState<SettingsTab>('profile');
+
+  // Sync active tab with URL query parameter
+  useEffect(() => {
+    if (
+      tabParam &&
+      ['profile', 'security', 'privacy', 'theme', 'language'].includes(tabParam)
+    ) {
+      setActiveTab(tabParam);
+    } else {
+      setActiveTab('profile');
+    }
+  }, [tabParam]);
+
+  const handleSelectTab = (tab: SettingsTab) => {
+    setActiveTab(tab);
+    router.replace(`/settings?tab=${tab}`, { scroll: false });
+  };
+
+  const tabs = [
+    {
+      id: 'profile' as const,
+      label: locale === 'bn' ? 'প্রোফাইল' : 'Profile',
+      icon: User,
+    },
+    {
+      id: 'security' as const,
+      label: locale === 'bn' ? 'সিকিউরিটি' : 'Security',
+      icon: KeyRound,
+    },
+    {
+      id: 'privacy' as const,
+      label: locale === 'bn' ? 'প্রাইভেসি' : 'Privacy',
+      icon: Shield,
+    },
+    {
+      id: 'theme' as const,
+      label: locale === 'bn' ? 'থিম' : 'Theme',
+      icon: Palette,
+    },
+    {
+      id: 'language' as const,
+      label: locale === 'bn' ? 'ভাষা' : 'Language',
+      icon: Globe,
+    },
+  ];
 
   return (
-    <Container size="xl" className="py-4 sm:py-6">
-      <div className="flex gap-6 justify-center">
-        <Sidebar />
-
-        <main className="w-full max-w-2xl min-w-0 space-y-4">
-          <Breadcrumbs items={[{ label: t('nav.settings') }]} />
-
-          <div>
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white">{t('nav.settings')}</h1>
-            <p className="text-xs text-gray-400 mt-0.5">
-              Customize your profile details, display preferences, and application settings
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            {/* Personal Profile Details Card */}
-            <ProfileSettingsCard />
-
-            {/* Language Preference Card */}
-            <Card className="border border-gray-100 dark:border-gray-800 rounded-2xl">
-              <CardHeader className="pb-2">
-                <div className="flex items-center gap-1.5">
-                  <Globe className="h-4 w-4 text-primary-500" />
-                  <CardTitle className="text-sm font-semibold">Language / ভাষা / اللغة</CardTitle>
-                </div>
-                <CardDescription className="text-xs">
-                  Choose your preferred application language
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <LanguageSwitcher variant="inline" />
-              </CardContent>
-            </Card>
-
-            {/* Theme Card */}
-            <Card className="border border-gray-100 dark:border-gray-800 rounded-2xl">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold">Theme Appearance</CardTitle>
-                <CardDescription className="text-xs">
-                  Choose between Light and Dark mode
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="grid grid-cols-2 gap-2.5">
-                <button
-                  onClick={() => setTheme('light')}
-                  className={cn(
-                    'flex items-center justify-center gap-2 rounded-xl border p-3 text-xs font-medium transition-all',
-                    theme === 'light'
-                      ? 'border-primary-500 bg-primary-50 text-primary-700 font-bold dark:bg-[#3a3b3c] shadow-2xs'
-                      : 'border-[#e4e6eb] bg-[#f0f2f5] text-[#050505] hover:bg-[#e4e6eb] dark:border-[#393a3b] dark:bg-[#3a3b3c] dark:text-[#e4e6eb]',
-                  )}
-                >
-                  <Sun className="h-4 w-4 text-amber-500" />
-                  <span>Light Mode</span>
-                </button>
-
-                <button
-                  onClick={() => setTheme('dark')}
-                  className={cn(
-                    'flex items-center justify-center gap-2 rounded-xl border p-3 text-xs font-medium transition-all',
-                    theme === 'dark'
-                      ? 'border-primary-500 bg-[#3a3b3c] text-primary-400 font-bold shadow-2xs'
-                      : 'border-[#e4e6eb] bg-[#f0f2f5] text-[#050505] hover:bg-[#e4e6eb] dark:border-[#393a3b] dark:bg-[#3a3b3c] dark:text-[#e4e6eb]',
-                  )}
-                >
-                  <Moon className="h-4 w-4 text-blue-400" />
-                  <span>Dark Mode</span>
-                </button>
-              </CardContent>
-            </Card>
-
-            {/* Font Size Card */}
-            <Card className="border border-[#e4e6eb] dark:border-[#393a3b] rounded-xl">
-              <CardHeader className="pb-2">
-                <div className="flex items-center gap-1.5">
-                  <Type className="h-4 w-4 text-primary-500" />
-                  <CardTitle className="text-sm font-semibold">Arabic Font Size</CardTitle>
-                </div>
-                <CardDescription className="text-xs">
-                  Adjust Arabic calligraphy text size for comfortable reading
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="grid grid-cols-3 gap-2">
-                {(['normal', 'large', 'extra-large'] as const).map((size) => (
-                  <button
-                    key={size}
-                    onClick={() => setFontSize(size)}
-                    className={cn(
-                      'rounded-xl border p-2.5 text-xs font-medium transition-all capitalize text-center',
-                      fontSize === size
-                        ? 'border-primary-500 bg-primary-50 text-primary-700 font-bold dark:bg-primary-900/60 dark:text-primary-300 shadow-2xs'
-                        : 'border-[#e4e6eb] bg-[#f0f2f5] text-[#050505] hover:bg-[#e4e6eb] dark:border-[#393a3b] dark:bg-[#3a3b3c] dark:text-[#e4e6eb]',
-                    )}
-                  >
-                    {size === 'normal' ? 'Normal' : size === 'large' ? 'Large' : 'Extra Large'}
-                  </button>
-                ))}
-              </CardContent>
-            </Card>
-          </div>
-        </main>
-
-        <RightSidebar />
+    <SettingsLayout activeTab={activeTab} onSelectTab={handleSelectTab}>
+      <div className="space-y-4">
+        {/* Tab Content Display */}
+        <div className="pt-1">
+          {activeTab === 'profile' && <ProfileSettingsCard section="profile" />}
+          {activeTab === 'security' && (
+            <ProfileSettingsCard section="security" />
+          )}
+          {activeTab === 'privacy' && <PrivacySettingsCard />}
+          {activeTab === 'theme' && <ThemeSettingsCard />}
+          {activeTab === 'language' && <LanguageSettingsCard />}
+        </div>
       </div>
-    </Container>
+    </SettingsLayout>
+  );
+}
+
+export default function SettingsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="p-8 text-center text-sm text-[#65676b] dark:text-[#b0b3b8]">
+          Loading settings...
+        </div>
+      }
+    >
+      <SettingsContent />
+    </Suspense>
   );
 }

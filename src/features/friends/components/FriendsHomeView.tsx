@@ -2,27 +2,25 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ChevronRight, UserPlus, Users } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { useReceivedFriendRequests } from '../hooks/useFriendRequests';
 import { useFriends } from '../hooks/useFriends';
 import { FriendRequestCard } from './FriendRequestCard';
 import { FriendCard } from './FriendCard';
-import { FriendRequestSkeleton, FriendCardSkeleton } from './FriendsPageSkeleton';
+import {
+  FriendRequestSkeleton,
+  FriendCardSkeleton,
+} from './FriendsPageSkeleton';
 import { FriendsEmptyState } from './FriendsEmptyState';
 
 export function FriendsHomeView() {
   const { locale } = useLanguage();
-  const {
-    data: requestsData,
-    isLoading: isRequestsLoading,
-  } = useReceivedFriendRequests();
+  const { data: requestsData, isLoading: isRequestsLoading } =
+    useReceivedFriendRequests();
 
-  const {
-    data: friendsData,
-    isLoading: isFriendsLoading,
-  } = useFriends();
+  const { data: friendsData, isLoading: isFriendsLoading } = useFriends();
 
   const receivedRequests =
     requestsData?.pages?.flatMap((page) => page?.items || []) || [];
@@ -71,7 +69,11 @@ export function FriendsHomeView() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
             {topRequests.map((request) => (
-              <FriendRequestCard key={request.id} request={request} variant="received" />
+              <FriendRequestCard
+                key={request.id}
+                request={request}
+                variant="received"
+              />
             ))}
           </div>
         )}

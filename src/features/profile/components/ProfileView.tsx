@@ -1,14 +1,16 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
+import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
-import { useAuthActions } from '@/features/auth/hooks/useAuthActions';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { Mail, Calendar, LogOut, MapPin, Droplet } from 'lucide-react';
+import { LogoutConfirmModal } from '@/components/common/LogoutConfirmModal';
+import { Mail, Calendar, LogOut, MapPin, Droplet, Settings } from 'lucide-react';
 import { formatDate } from '@/lib/utils/date';
+import { ROUTES } from '@/constants/routes';
 import { BloodGroup } from '@/types/user.types';
 
 const formatBloodGroup = (bg?: BloodGroup | null) => {
@@ -28,7 +30,7 @@ const formatBloodGroup = (bg?: BloodGroup | null) => {
 
 export function ProfileView() {
   const { user } = useAuth();
-  const { logout, isLoggingOut } = useAuthActions();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   if (!user) {
     return (
@@ -109,12 +111,20 @@ export function ProfileView() {
             )}
           </div>
 
-          <div className="pt-3 border-t border-[#e4e6eb] dark:border-[#393a3b]">
+          <div className="pt-3 border-t border-[#e4e6eb] dark:border-[#393a3b] flex flex-col sm:flex-row gap-2.5">
+            <Link href={ROUTES.SETTINGS} className="flex-1">
+              <Button
+                variant="outline"
+                className="w-full gap-2 rounded-xl font-bold border-[#e4e6eb] dark:border-[#393a3b] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c]"
+              >
+                <Settings className="h-4 w-4" />
+                <span>Edit Profile & Settings</span>
+              </Button>
+            </Link>
             <Button
               variant="destructive"
-              className="w-full gap-2 rounded-xl"
-              onClick={() => logout()}
-              isLoading={isLoggingOut}
+              className="gap-2 rounded-xl sm:w-auto"
+              onClick={() => setShowLogoutModal(true)}
             >
               <LogOut className="h-4 w-4" />
               <span>Log Out</span>
@@ -122,6 +132,12 @@ export function ProfileView() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Logout Confirmation Modal */}
+      <LogoutConfirmModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+      />
     </div>
   );
 }

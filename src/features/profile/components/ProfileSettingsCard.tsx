@@ -44,7 +44,11 @@ const BLOOD_GROUPS: { value: BloodGroup; label: string }[] = [
   { value: 'O_NEGATIVE', label: 'O-' },
 ];
 
-export function ProfileSettingsCard() {
+export interface ProfileSettingsCardProps {
+  section?: 'all' | 'profile' | 'security';
+}
+
+export function ProfileSettingsCard({ section = 'all' }: ProfileSettingsCardProps) {
   const { user } = useAuth();
   const { setUser } = useAuthStore();
 
@@ -263,10 +267,14 @@ export function ProfileSettingsCard() {
 
   if (!user) return null;
 
+  const showProfile = section === 'all' || section === 'profile';
+  const showSecurity = section === 'all' || section === 'security';
+
   return (
     <div className="space-y-4">
       {/* Profile Details Card */}
-      <Card className="border border-gray-100 dark:border-gray-800 rounded-2xl">
+      {showProfile && (
+        <Card className="border border-gray-100 dark:border-gray-800 rounded-2xl">
         <CardHeader className="pb-3">
           <div className="flex items-center gap-1.5">
             <User className="h-4 w-4 text-primary-500" />
@@ -435,9 +443,11 @@ export function ProfileSettingsCard() {
           </div>
         </CardContent>
       </Card>
+      )}
 
       {/* Set / Change Password Card */}
-      <Card className="border border-gray-100 dark:border-gray-800 rounded-2xl">
+      {showSecurity && (
+        <Card className="border border-gray-100 dark:border-gray-800 rounded-2xl">
         <CardHeader className="pb-3">
           <div className="flex items-center gap-1.5">
             <KeyRound className="h-4 w-4 text-primary-500" />
@@ -569,6 +579,7 @@ export function ProfileSettingsCard() {
           </form>
         </CardContent>
       </Card>
+      )}
     </div>
   );
 }

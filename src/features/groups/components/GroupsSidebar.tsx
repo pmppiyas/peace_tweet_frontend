@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { Compass, Users, PlusCircle, Users2 } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
 import { useLanguage } from '@/providers/LanguageProvider';
@@ -16,6 +17,7 @@ export interface GroupsSidebarProps {
 }
 
 export function GroupsSidebar({ activeId, onSelectTab }: GroupsSidebarProps) {
+  const pathname = usePathname();
   const { locale } = useLanguage();
   const { isAuthenticated } = useAuth();
   const { data: myGroupsData } = useMyGroups({ limit: 10 });
@@ -92,6 +94,7 @@ export function GroupsSidebar({ activeId, onSelectTab }: GroupsSidebarProps) {
   return (
     <SectionSidebar
       title={locale === 'bn' ? 'গ্রুপসমূহ' : 'Groups'}
+      backHref={pathname === ROUTES.GROUPS.HOME ? '/' : ROUTES.GROUPS.HOME}
       items={navItems}
       showUserProfile={true}
       activeId={activeId}

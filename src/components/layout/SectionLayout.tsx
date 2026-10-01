@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { ArrowLeft } from 'lucide-react';
 import { Container } from '@/components/layout/Container';
 import { cn } from '@/lib/utils/cn';
 
@@ -16,6 +17,7 @@ export interface SectionMobileTab {
 
 export interface SectionLayoutProps {
   sidebar: React.ReactNode;
+  backHref?: string;
   mobileTabs?: SectionMobileTab[];
   activeMobileTabId?: string;
   children: React.ReactNode;
@@ -26,6 +28,7 @@ export interface SectionLayoutProps {
 
 export function SectionLayout({
   sidebar,
+  backHref = '/',
   mobileTabs = [],
   activeMobileTabId,
   children,
@@ -36,15 +39,26 @@ export function SectionLayout({
   const pathname = usePathname();
 
   return (
-    <div className={cn('min-h-[calc(100vh-3.5rem)] bg-[#f0f2f5] dark:bg-[#18191a]', className)}>
-      <Container size="xl" className="px-0 sm:px-4">
-        <div className="flex flex-col lg:flex-row min-h-[calc(100vh-3.5rem)]">
+    <div
+      className={cn(
+        'h-[calc(100vh-3.5rem)] overflow-hidden bg-[#f0f2f5] dark:bg-[#18191a]',
+        className
+      )}
+    >
+      <Container size="xl" className="h-full px-0 sm:px-4">
+        <div className="flex flex-col lg:flex-row h-full">
           {/* Dedicated Section Sidebar */}
           {sidebar}
 
-          {/* Mobile Sticky Top Horizontal Tab Navigation */}
           {mobileTabs.length > 0 && (
-            <div className="lg:hidden sticky top-14 z-30 bg-white dark:bg-[#242526] border-b border-[#e4e6eb] dark:border-[#393a3b] p-2 flex gap-1 overflow-x-auto shadow-2xs select-none">
+            <div className="lg:hidden shrink-0 bg-white dark:bg-[#242526] border-b border-[#e4e6eb] dark:border-[#393a3b] p-2 flex items-center gap-1.5 overflow-x-auto shadow-2xs select-none">
+              <Link
+                href={backHref}
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors"
+                title="Back"
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Link>
               {mobileTabs.map((tab) => {
                 const isActive = activeMobileTabId
                   ? tab.id === activeMobileTabId
@@ -60,7 +74,7 @@ export function SectionLayout({
                       'flex items-center gap-1.5 py-1.5 px-3.5 rounded-full text-xs font-bold whitespace-nowrap transition-colors',
                       isActive
                         ? 'bg-primary-500 text-white'
-                        : 'bg-[#f0f2f5] text-[#050505] dark:bg-[#3a3b3c] dark:text-[#e4e6eb]',
+                        : 'bg-[#f0f2f5] text-[#050505] dark:bg-[#3a3b3c] dark:text-[#e4e6eb]'
                     )}
                   >
                     <span>{tab.label}</span>
@@ -76,7 +90,12 @@ export function SectionLayout({
           )}
 
           {/* Main Content Area */}
-          <main className={cn('flex-1 min-w-0 p-4 sm:p-6 lg:p-8', contentClassName)}>
+          <main
+            className={cn(
+              'flex-1 min-w-0 h-full overflow-y-auto overscroll-contain p-4 pb-20 sm:p-6 lg:p-8',
+              contentClassName
+            )}
+          >
             <div className={cn('mx-auto', maxWidth)}>{children}</div>
           </main>
         </div>

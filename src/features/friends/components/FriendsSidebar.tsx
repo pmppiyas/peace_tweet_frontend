@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { usePathname } from 'next/navigation';
 import {
   Users,
   UserCheck,
@@ -13,6 +14,7 @@ import { usePendingRequestsCount } from '../hooks/useFriendRequests';
 import { SectionSidebar, SidebarNavItem } from '@/components/navigation/SectionSidebar';
 
 export function FriendsSidebar() {
+  const pathname = usePathname();
   const { locale } = useLanguage();
   const { data: requestCount = 0 } = usePendingRequestsCount();
 
@@ -51,6 +53,8 @@ export function FriendsSidebar() {
 
   return (
     <SectionSidebar
+      title={locale === 'bn' ? 'বন্ধু' : 'Friends'}
+      backHref={pathname === ROUTES.FRIENDS.HOME ? '/' : ROUTES.FRIENDS.HOME}
       items={navItems}
       showUserProfile={true}
     />

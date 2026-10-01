@@ -93,3 +93,11 @@ export function CardFooter({
     </div>
   );
 }
+
+Card.Header = CardHeader;
+Card.Title = CardTitle;
+Card.Description = CardDescription;
+Card.Content = CardContent;
+Card.Footer = CardFooter;
+
+export default Card;

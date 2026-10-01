@@ -3,9 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LucideIcon } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
-import { ROUTES } from '@/constants/routes';
+import { LucideIcon, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 
 export interface SidebarNavItem {
@@ -23,6 +21,8 @@ export interface SidebarNavItem {
 export interface SectionSidebarProps {
   title?: string | React.ReactNode;
   headerAction?: React.ReactNode;
+  backHref?: string;
+  onBack?: () => void;
   items: SidebarNavItem[];
   showUserProfile?: boolean;
   extraHeader?: React.ReactNode;
@@ -34,56 +34,59 @@ export interface SectionSidebarProps {
 export function SectionSidebar({
   title,
   headerAction,
+  backHref,
+  onBack,
   items,
-  showUserProfile = true,
   extraHeader,
   footer,
   activeId,
   className,
 }: SectionSidebarProps) {
   const pathname = usePathname();
-  const { user, isAuthenticated } = useAuth();
 
   return (
     <aside
       className={cn(
-        'hidden lg:block w-60 shrink-0 space-y-2 sticky top-20 h-[calc(100vh-5.5rem)] overflow-y-auto pr-2 select-none',
-        className,
+        'hidden lg:block w-60 xl:w-64 shrink-0 space-y-2 h-full overflow-y-auto overscroll-contain py-4 pr-2 select-none',
+        className
       )}
     >
-      {/* 1. Optional Title / Header Action */}
-      {(title || headerAction) && (
-        <div className="flex items-center justify-between px-2.5 pb-1">
-          {typeof title === 'string' ? (
-            <h2 className="text-lg font-black tracking-tight text-[#050505] dark:text-white">
-              {title}
-            </h2>
-          ) : (
-            title
-          )}
-          {headerAction && <div>{headerAction}</div>}
+      {/* 1. Optional Title / Header Action with Back Button */}
+      {(title || headerAction || backHref || onBack) && (
+        <div className="flex items-center justify-between px-2 pb-1.5 pt-0.5">
+          <div className="flex items-center gap-2 min-w-0">
+            {backHref ? (
+              <Link
+                href={backHref}
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors"
+                title="Back"
+              >
+                <ArrowLeft className="h-4.5 w-4.5" />
+              </Link>
+            ) : onBack ? (
+              <button
+                type="button"
+                onClick={onBack}
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors"
+                title="Back"
+              >
+                <ArrowLeft className="h-4.5 w-4.5" />
+              </button>
+            ) : null}
+            {typeof title === 'string' ? (
+              <h2 className="text-xl font-bold tracking-tight text-[#050505] dark:text-white truncate">
+                {title}
+              </h2>
+            ) : (
+              title
+            )}
+          </div>
+          {headerAction && <div className="shrink-0">{headerAction}</div>}
         </div>
       )}
 
       {/* 2. Optional Extra Header (e.g. Back button or category pills) */}
       {extraHeader}
-
-      {/* 3. User Short Profile Row */}
-      {showUserProfile && isAuthenticated && user && (
-        <Link
-          href={ROUTES.PROFILE}
-          className="flex items-center gap-3 rounded-xl px-2.5 py-2 hover:bg-[#e4e6eb] dark:hover:bg-[#3a3b3c] transition-colors"
-        >
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm shadow-xs">
-            {user.name.charAt(0)}
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="font-bold text-[15px] text-[#050505] dark:text-[#e4e6eb] truncate">
-              {user.name}
-            </p>
-          </div>
-        </Link>
-      )}
 
       {/* 4. Navigation Menu Items */}
       <nav className="space-y-0.5">
@@ -104,14 +107,17 @@ export function SectionSidebar({
                 'flex items-center justify-between rounded-xl px-2.5 py-2 transition-colors',
                 isActive
                   ? 'bg-[#e4e6eb] dark:bg-[#3a3b3c] font-bold text-primary-700 dark:text-primary-400'
-                  : 'text-[#050505] dark:text-[#e4e6eb] hover:bg-[#e4e6eb]/80 dark:hover:bg-[#3a3b3c] font-semibold text-[15px]',
+                  : 'text-[#050505] dark:text-[#e4e6eb] hover:bg-[#e4e6eb]/80 dark:hover:bg-[#3a3b3c] font-semibold text-[15px]'
               )}
             >
               <div className="flex items-center gap-3 min-w-0">
                 <div
                   className={cn(
                     'flex h-9 w-9 shrink-0 items-center justify-center rounded-full shadow-xs',
-                    item.iconBg || (isActive ? 'bg-primary-500 text-white' : 'bg-gray-600 text-white'),
+                    item.iconBg ||
+                      (isActive
+                        ? 'bg-primary-500 text-white'
+                        : 'bg-gray-600 text-white')
                   )}
                 >
                   <Icon className="h-4.5 w-4.5" />

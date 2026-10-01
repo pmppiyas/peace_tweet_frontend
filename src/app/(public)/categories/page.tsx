@@ -3,7 +3,6 @@ import { Container } from '@/components/layout/Container';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { RightSidebar } from '@/components/layout/RightSidebar';
 import { CategoryList } from '@/features/category/components/CategoryList';
-import { Breadcrumbs } from '@/components/navigation/Breadcrumbs';
 
 export const metadata = {
   title: 'Dua Categories | PeaceTweet',
@@ -12,27 +11,18 @@ export const metadata = {
 
 export default function CategoriesPage() {
   return (
-    <Container size="xl" className="py-4 sm:py-6">
-      <div className="flex gap-6 justify-center">
-        <Sidebar />
+    <div className="h-[calc(100vh-3.5rem)] overflow-hidden bg-[#f0f2f5] dark:bg-[#18191a]">
+      <Container size="xl" className="h-full px-0 sm:px-4">
+        <div className="flex h-full justify-center gap-4 lg:gap-6">
+          <Sidebar />
 
-        <main className="w-full max-w-2xl min-w-0 space-y-4">
-          <Breadcrumbs items={[{ label: 'Categories' }]} />
+          <main className="w-full max-w-2xl min-w-0 h-full overflow-y-auto overscroll-contain py-4 pb-20 sm:pb-8 space-y-4 px-2 sm:px-0">
+            <CategoryList />
+          </main>
 
-          <div className="rounded-xl bg-white p-4 border border-[#e4e6eb] shadow-2xs dark:border-[#393a3b] dark:bg-[#242526]">
-            <h1 className="text-lg font-bold text-[#050505] dark:text-[#e4e6eb]">
-              Thematic Dua Categories
-            </h1>
-            <p className="text-xs text-[#65676b] dark:text-[#b0b3b8] mt-0.5">
-              Browse prophetic supplications tailored for daily occasions and needs
-            </p>
-          </div>
-
-          <CategoryList />
-        </main>
-
-        <RightSidebar />
-      </div>
-    </Container>
+          <RightSidebar />
+        </div>
+      </Container>
+    </div>
   );
 }

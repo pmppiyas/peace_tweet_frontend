@@ -1,7 +1,6 @@
 export const en = {
   nav: {
     home: 'Home Feed',
-    duas: 'Explore Duas',
     categories: 'Categories',
     bookmarks: 'Bookmarks',
     search: 'Search',
@@ -14,7 +13,8 @@ export const en = {
     admin: 'Admin Panel',
   },
   feed: {
-    searchPlaceholder: 'Search Duas by title, meaning, pronunciation, or virtue...',
+    searchPlaceholder:
+      'Search Duas by title, meaning, pronunciation, or virtue...',
     loading: 'Loading...',
     failed: 'Failed to load Duas. Please check your connection.',
     empty: 'No Duas found in this feed.',
@@ -41,11 +41,13 @@ export const en = {
       noReferences: 'Preserved in authentic Hadith collections.',
       rules: 'Recitation Rules & Recommended Times',
       timing: '• Recommended Time: During {cat} specific hours or situations.',
-      frequency: '• Frequency: Recite 1 or 3 times with a focused and sincere heart.',
+      frequency:
+        '• Frequency: Recite 1 or 3 times with a focused and sincere heart.',
       audio: 'Audio Recitation & Pronunciation Guide',
       recitedBy: 'Recited by Qari',
       lessons: 'Key Lessons & Spiritual Benefits',
-      lessonsText: 'Reflecting upon the words of this supplication brings peace to the heart and draws one nearer to Allah.',
+      lessonsText:
+        'Reflecting upon the words of this supplication brings peace to the heart and draws one nearer to Allah.',
     },
     actions: {
       like: 'Like',
@@ -67,22 +69,27 @@ export const en = {
   createPost: {
     placeholder: 'Share a Dua, Hadith, or reflection...',
     title: 'Share a Post on PeaceTweet',
-    description: 'Share an authentic Dua with virtues, references, and translations.',
+    description:
+      'Share an authentic Dua with virtues, references, and translations.',
     virtueLabel: 'Virtue & Context (Main Head / Fadilah) *',
-    virtuePlaceholder: 'e.g. The Prophet ﷺ said: Whoever recites this supplication in the morning and evening...',
+    virtuePlaceholder:
+      'e.g. The Prophet ﷺ said: Whoever recites this supplication in the morning and evening...',
     titleLabel: 'Dua Title *',
     titlePlaceholder: 'e.g. Sayyid al-Istighfar (Chief of Forgiveness)',
     arabicLabel: 'Arabic Text (Optional)',
     arabicPlaceholder: 'اللَّهُمَّ أَنْتَ رَبِّي لا إِلَهَ إِلا أَنْتَ...',
     transliterationLabel: 'Transliteration (Pronunciation)',
-    transliterationPlaceholder: 'e.g. Allahumma anta Rabbi la ilaha illa anta...',
+    transliterationPlaceholder:
+      'e.g. Allahumma anta Rabbi la ilaha illa anta...',
     meaningLabel: 'English Translation & Meaning *',
-    meaningPlaceholder: 'e.g. O Allah! You are my Lord, there is no deity except You...',
+    meaningPlaceholder:
+      'e.g. O Allah! You are my Lord, there is no deity except You...',
     referenceLabel: 'Hadith / Quran Reference',
     referencePlaceholder: 'e.g. Sahih al-Bukhari: 6306',
     cancel: 'Cancel',
     publish: 'Publish Post',
-    submittedAlert: 'Alhamdulillah! Your post has been submitted and will appear in the feed.',
+    submittedAlert:
+      'Alhamdulillah! Your post has been submitted and will appear in the feed.',
     loginPrompt: 'Please log in to share a post or Dua.',
     tabDua: 'Dua & Translation',
     tabVirtue: 'Virtue (Fadilah)',
@@ -113,7 +120,8 @@ export const en = {
   },
   sidebar: {
     dailyHadithTitle: 'Daily Hadith',
-    dailyHadithQuote: '"Whoever is not grateful to the people is not grateful to Allah."',
+    dailyHadithQuote:
+      '"Whoever is not grateful to the people is not grateful to Allah."',
     dailyHadithSource: '— Abu Dawud (4811)',
   },
 };

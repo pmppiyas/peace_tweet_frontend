@@ -39,6 +39,7 @@ export function SavedLayout({ children }: SavedLayoutProps) {
   return (
     <SectionLayout
       sidebar={<SavedSidebar />}
+      backHref="/"
       mobileTabs={mobileTabs}
       maxWidth="max-w-4xl"
     >

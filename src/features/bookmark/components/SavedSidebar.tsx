@@ -45,6 +45,7 @@ export function SavedSidebar({ activeId }: SavedSidebarProps) {
   return (
     <SectionSidebar
       title={locale === 'bn' ? 'সংরক্ষিত আইটেম' : 'Saved'}
+      backHref="/"
       items={navItems}
       showUserProfile={true}
       activeId={activeId}

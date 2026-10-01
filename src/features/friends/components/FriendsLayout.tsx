@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { usePathname } from 'next/navigation';
 import { ROUTES } from '@/constants/routes';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { usePendingRequestsCount } from '../hooks/useFriendRequests';
@@ -12,6 +13,7 @@ export interface FriendsLayoutProps {
 }
 
 export function FriendsLayout({ children }: FriendsLayoutProps) {
+  const pathname = usePathname();
   const { locale } = useLanguage();
   const { data: requestCount = 0 } = usePendingRequestsCount();
 
@@ -43,6 +45,7 @@ export function FriendsLayout({ children }: FriendsLayoutProps) {
   return (
     <SectionLayout
       sidebar={<FriendsSidebar />}
+      backHref={pathname === ROUTES.FRIENDS.HOME ? '/' : ROUTES.FRIENDS.HOME}
       mobileTabs={mobileTabs}
       maxWidth="max-w-6xl"
     >
