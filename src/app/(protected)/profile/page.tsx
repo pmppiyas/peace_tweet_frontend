@@ -1,16 +1,21 @@
-import React from 'react';
-import { ProfileLayout } from '@/features/profile/components/ProfileLayout';
-import { ProfileView } from '@/features/profile/components/ProfileView';
+import React, { Suspense } from 'react';
+import { ProfilePageContent } from '@/features/profile/components/ProfilePageContent';
 
 export const metadata = {
   title: 'My Profile | PeaceTweet',
-  description: 'User profile and account information',
+  description: 'User profile, friends, groups, and saved items',
 };
 
 export default function ProfilePage() {
   return (
-    <ProfileLayout activeId="profile-overview">
-      <ProfileView />
-    </ProfileLayout>
+    <Suspense
+      fallback={
+        <div className="min-h-[50vh] flex items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-3 border-primary-500/30 border-t-primary-500" />
+        </div>
+      }
+    >
+      <ProfilePageContent />
+    </Suspense>
   );
 }

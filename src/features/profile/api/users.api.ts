@@ -1,15 +1,19 @@
 import { apiClient } from '@/lib/api/client';
 import { API_ENDPOINTS } from '@/constants/api';
 import { ApiResponse } from '@/types/api.types';
-import { BloodGroup, User } from '@/types/user.types';
+import { BloodGroup, User, UserStatus } from '@/types/user.types';
 
 export interface UpdateUserInput {
   name?: string;
   username?: string;
   email?: string;
   avatarUrl?: string | null;
+  coverUrl?: string | null;
   location?: string | null;
   bloodGroup?: BloodGroup | null;
+  bio?: string | null;
+  badge?: string;
+  userStatus?: UserStatus;
 }
 
 export interface ChangePasswordInput {

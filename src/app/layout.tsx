@@ -24,9 +24,7 @@ export const metadata: Metadata = {
       { url: '/favicon.ico', sizes: '32x32' },
     ],
     shortcut: '/p-favicon.svg',
-    apple: [
-      { url: '/p-logo.svg', sizes: '512x512', type: 'image/svg+xml' },
-    ],
+    apple: [{ url: '/p-logo.svg', sizes: '512x512', type: 'image/svg+xml' }],
   },
 };
 
@@ -53,7 +51,7 @@ export default function RootLayout({
               <AuthProvider>
                 <AudioProvider>
                   <Navbar />
-                  <main className="flex-1 pb-16 md:pb-8">{children}</main>
+                  <main className="flex-1">{children}</main>
                   <FloatingAudioBar />
                   <MobileNav />
                 </AudioProvider>

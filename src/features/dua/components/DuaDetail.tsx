@@ -30,7 +30,7 @@ import { formatDate } from '@/lib/utils/date';
 import { cn } from '@/lib/utils/cn';
 
 export function DuaDetail({ dua }: { dua: Dua }) {
-  const { t, formatNumber } = useLanguage();
+  const { t, formatNumber, locale } = useLanguage();
   const [likes, setLikes] = useState(86);
   const [isLiked, setIsLiked] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -217,7 +217,7 @@ export function DuaDetail({ dua }: { dua: Dua }) {
                   <CheckCircle2 className="h-3.5 w-3.5 text-primary-500 fill-primary-100 dark:fill-primary-900" />
                 </div>
                 <div className="flex items-center gap-1.5 text-xs text-[#65676b] dark:text-[#b0b3b8]">
-                  <span>{dua.createdAt ? formatDate(dua.createdAt) : t('post.today')}</span>
+                  <span>{dua.createdAt ? formatDate(dua.createdAt, locale) : t('post.today')}</span>
                   <span>•</span>
                   <Globe className="h-3 w-3" />
                 </div>

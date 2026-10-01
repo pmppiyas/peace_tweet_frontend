@@ -51,7 +51,7 @@ export function SectionLayout({
           {sidebar}
 
           {mobileTabs.length > 0 && (
-            <div className="lg:hidden shrink-0 bg-white dark:bg-[#242526] border-b border-[#e4e6eb] dark:border-[#393a3b] p-2 flex items-center gap-1.5 overflow-x-auto shadow-2xs select-none">
+            <div className="lg:hidden shrink-0 bg-white dark:bg-[#242526] border-b border-[#e4e6eb] dark:border-[#393a3b] p-2 flex items-center gap-1.5 overflow-x-auto scrollbar-none shadow-2xs select-none">
               <Link
                 href={backHref}
                 className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors"
@@ -92,7 +92,7 @@ export function SectionLayout({
           {/* Main Content Area */}
           <main
             className={cn(
-              'flex-1 min-w-0 h-full overflow-y-auto overscroll-contain p-4 pb-20 sm:p-6 lg:p-8',
+              'flex-1 min-w-0 h-full overflow-y-auto overscroll-contain no-scrollbar scrollbar-none p-4 pb-20 sm:p-6 lg:p-8',
               contentClassName
             )}
           >

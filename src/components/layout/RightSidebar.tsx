@@ -39,7 +39,7 @@ export function RightSidebar() {
   ];
 
   return (
-    <aside className="hidden xl:block w-72 xl:w-80 shrink-0 space-y-3.5 h-full overflow-y-auto overscroll-contain py-4 pl-2 select-none">
+    <aside className="hidden xl:block w-72 xl:w-80 shrink-0 space-y-3.5 h-full overflow-y-auto overscroll-contain py-4 pl-2 pr-2 select-none">
       {/* 1. Interactive Digital Tasbih Widget */}
       <div className="rounded-xl border border-[#e4e6eb] bg-white p-3.5 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526]">
         <div className="flex items-center justify-between pb-2 border-b border-[#e4e6eb] dark:border-[#393a3b]">

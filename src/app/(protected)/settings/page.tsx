@@ -2,20 +2,24 @@
 
 import React, { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { User, KeyRound, Shield, Palette, Globe } from 'lucide-react';
+import { User, KeyRound, Shield, Palette, Globe, LogOut } from 'lucide-react';
 import { useLanguage } from '@/providers/LanguageProvider';
+import { useAuth } from '@/hooks/useAuth';
 import { SettingsLayout } from '@/features/profile/components/SettingsLayout';
 import { SettingsTab } from '@/features/profile/components/SettingsSidebar';
 import { ProfileSettingsCard } from '@/features/profile/components/ProfileSettingsCard';
 import { PrivacySettingsCard } from '@/features/profile/components/PrivacySettingsCard';
 import { ThemeSettingsCard } from '@/features/profile/components/ThemeSettingsCard';
 import { LanguageSettingsCard } from '@/features/profile/components/LanguageSettingsCard';
+import { LogoutConfirmModal } from '@/components/common/LogoutConfirmModal';
 import { cn } from '@/lib/utils/cn';
 
 function SettingsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { locale } = useLanguage();
+  const { isAuthenticated } = useAuth();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const tabParam = searchParams.get('tab') as SettingsTab | null;
 
   const [activeTab, setActiveTab] = useState<SettingsTab>('profile');
@@ -66,20 +70,52 @@ function SettingsContent() {
   ];
 
   return (
-    <SettingsLayout activeTab={activeTab} onSelectTab={handleSelectTab}>
-      <div className="space-y-4">
-        {/* Tab Content Display */}
-        <div className="pt-1">
-          {activeTab === 'profile' && <ProfileSettingsCard section="profile" />}
-          {activeTab === 'security' && (
-            <ProfileSettingsCard section="security" />
+    <>
+      <SettingsLayout activeTab={activeTab} onSelectTab={handleSelectTab}>
+        <div className="space-y-4">
+          {/* Tab Content Display */}
+          <div className="pt-1">
+            {activeTab === 'profile' && <ProfileSettingsCard section="profile" />}
+            {activeTab === 'security' && (
+              <ProfileSettingsCard section="security" />
+            )}
+            {activeTab === 'privacy' && <PrivacySettingsCard />}
+            {activeTab === 'theme' && <ThemeSettingsCard />}
+            {activeTab === 'language' && <LanguageSettingsCard />}
+          </div>
+
+          {/* Account Session / Logout Section */}
+          {isAuthenticated && (
+            <div className="pt-4 border-t border-[#e4e6eb] dark:border-[#393a3b] flex items-center justify-between gap-3">
+              <div>
+                <h3 className="text-xs sm:text-sm font-bold text-[#050505] dark:text-white">
+                  {locale === 'bn' ? 'অ্যাকাউন্ট সেশন' : 'Account Session'}
+                </h3>
+                <p className="text-[11px] text-[#65676b] dark:text-[#b0b3b8]">
+                  {locale === 'bn'
+                    ? 'আপনার অ্যাকাউন্ট থেকে নিরাপদভাবে লগআউট করুন'
+                    : 'Sign out of your account on this device'}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowLogoutModal(true)}
+                className="inline-flex items-center gap-2 rounded-xl bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-950/70 border border-rose-200 dark:border-rose-900/60 text-rose-600 dark:text-rose-400 px-3.5 py-2 text-xs font-bold transition-colors cursor-pointer shadow-xs shrink-0"
+              >
+                <LogOut className="h-4 w-4" />
+                <span>{locale === 'bn' ? 'লগআউট করুন' : 'Log Out'}</span>
+              </button>
+            </div>
           )}
-          {activeTab === 'privacy' && <PrivacySettingsCard />}
-          {activeTab === 'theme' && <ThemeSettingsCard />}
-          {activeTab === 'language' && <LanguageSettingsCard />}
         </div>
-      </div>
-    </SettingsLayout>
+      </SettingsLayout>
+
+      {/* Logout Confirmation Modal */}
+      <LogoutConfirmModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+      />
+    </>
   );
 }
 

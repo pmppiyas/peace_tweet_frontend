@@ -12,7 +12,7 @@ export default function HomePage() {
         <div className="flex h-full justify-center gap-4 lg:gap-6">
           <Sidebar />
 
-          <main className="w-full max-w-2xl min-w-0 h-full overflow-y-auto overscroll-contain py-4 pb-20 sm:pb-8 space-y-4 px-2 sm:px-0">
+          <main className="w-full max-w-2xl min-w-0 h-full overflow-y-auto overscroll-contain no-scrollbar scrollbar-none py-4 pb-20 sm:pb-8 space-y-4 px-2 sm:px-0">
             <StoryBar />
             <Feed />
           </main>

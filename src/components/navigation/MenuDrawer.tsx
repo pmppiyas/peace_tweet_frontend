@@ -17,7 +17,6 @@ import {
   Moon,
   Sun,
   Globe,
-  LogOut,
   LogIn,
   UserPlus,
   ChevronRight,
@@ -28,7 +27,6 @@ import { useTheme } from '@/providers/ThemeProvider';
 import { usePendingRequestsCount } from '@/features/friends/hooks/useFriendRequests';
 import { ROUTES } from '@/constants/routes';
 import { cn } from '@/lib/utils/cn';
-import { LogoutConfirmModal } from '@/components/common/LogoutConfirmModal';
 import { CardTitle } from '@/components/ui/Card';
 
 export interface MenuDrawerProps {
@@ -39,7 +37,6 @@ export interface MenuDrawerProps {
 export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
   const pathname = usePathname();
   const { user, isAuthenticated, isAdmin } = useAuth();
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const { locale, setLocale, t } = useLanguage();
   const { theme, setTheme } = useTheme();
   const { data: requestCount = 0 } = usePendingRequestsCount(isAuthenticated);
@@ -61,6 +58,7 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
 
   useEffect(() => {
     if (isOpen) onClose();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   if (!isOpen) return null;
@@ -329,29 +327,8 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
               </div>
             </div>
           </div>
-
-          {/* Logout Button (if authenticated) */}
-          {isAuthenticated && (
-            <div className="pt-2">
-              <button
-                type="button"
-                onClick={() => setShowLogoutModal(true)}
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-rose-200 bg-rose-50/70 p-2.5 text-xs font-bold text-rose-600 hover:bg-rose-100 dark:border-rose-900/60 dark:bg-rose-950/30 dark:text-rose-400 transition-colors"
-              >
-                <LogOut className="h-4 w-4" />
-                <span>{locale === 'bn' ? 'লগআউট করুন' : 'Log Out'}</span>
-              </button>
-            </div>
-          )}
         </div>
       </div>
-
-      {/* Logout Confirmation Modal */}
-      <LogoutConfirmModal
-        isOpen={showLogoutModal}
-        onClose={() => setShowLogoutModal(false)}
-        onSuccess={onClose}
-      />
     </div>
   );
 }

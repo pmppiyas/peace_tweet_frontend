@@ -7,26 +7,39 @@ import { FeedSkeleton } from '@/features/feed/components/FeedSkeleton';
 import { Bookmark, Search } from 'lucide-react';
 import { useDebounce } from '@/hooks/useDebounce';
 
-export function BookmarkList() {
-  const [search, setSearch] = useState('');
-  const debouncedSearch = useDebounce(search, 350);
+export interface BookmarkListProps {
+  searchQuery?: string;
+  hideSearch?: boolean;
+}
+
+export function BookmarkList({
+  searchQuery,
+  hideSearch = false,
+}: BookmarkListProps = {}) {
+  const [internalSearch, setInternalSearch] = useState('');
+  const debouncedInternalSearch = useDebounce(internalSearch, 350);
+
+  const effectiveSearch =
+    searchQuery !== undefined ? searchQuery : debouncedInternalSearch;
 
   const { data, isLoading, isError } = useBookmarks({
-    search: debouncedSearch || undefined,
+    search: effectiveSearch || undefined,
   });
 
   return (
     <div className="space-y-4">
-      <div className="relative">
-        <Search className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search within your saved bookmarks..."
-          className="h-10 w-full rounded-xl border border-[#e4e6eb] bg-white pl-10 pr-4 text-xs sm:text-sm placeholder:text-[#65676b] focus:border-primary-500 focus:outline-hidden dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#e4e6eb] dark:placeholder:text-[#b0b3b8]"
-        />
-      </div>
+      {!hideSearch && (
+        <div className="relative">
+          <Search className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <input
+            type="text"
+            value={internalSearch}
+            onChange={(e) => setInternalSearch(e.target.value)}
+            placeholder="Search within your saved bookmarks..."
+            className="h-10 w-full rounded-xl border border-[#e4e6eb] bg-white pl-10 pr-4 text-xs sm:text-sm placeholder:text-[#65676b] focus:border-primary-500 focus:outline-hidden dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#e4e6eb] dark:placeholder:text-[#b0b3b8]"
+          />
+        </div>
+      )}
 
       {isLoading ? (
         <FeedSkeleton />

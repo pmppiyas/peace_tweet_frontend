@@ -1,4 +1,4 @@
-import { BloodGroup } from '@/types/user.types';
+import { BloodGroup, UserStatus } from '@/types/user.types';
 
 // Relationship status states returned by backend
 export type FriendshipStatus =
@@ -21,8 +21,12 @@ export interface FriendUser {
   username: string;
   avatar?: string | null;
   avatarUrl?: string | null;
+  coverUrl?: string | null;
   location?: string | null;
   bloodGroup?: BloodGroup | null;
+  bio?: string | null;
+  badge?: string;
+  userStatus?: UserStatus;
 }
 
 // Friend list item

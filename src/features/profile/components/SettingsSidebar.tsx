@@ -1,15 +1,18 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   User,
   KeyRound,
   Shield,
   Palette,
   Globe,
+  LogOut,
 } from 'lucide-react';
 import { useLanguage } from '@/providers/LanguageProvider';
+import { useAuth } from '@/hooks/useAuth';
 import { SectionSidebar, SidebarNavItem } from '@/components/navigation/SectionSidebar';
+import { LogoutConfirmModal } from '@/components/common/LogoutConfirmModal';
 
 export type SettingsTab = 'profile' | 'security' | 'privacy' | 'theme' | 'language';
 
@@ -20,6 +23,8 @@ export interface SettingsSidebarProps {
 
 export function SettingsSidebar({ activeTab, onSelectTab }: SettingsSidebarProps) {
   const { locale } = useLanguage();
+  const { isAuthenticated } = useAuth();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const navItems: SidebarNavItem[] = [
     {
@@ -64,12 +69,33 @@ export function SettingsSidebar({ activeTab, onSelectTab }: SettingsSidebarProps
     },
   ];
 
+  const logoutFooter = isAuthenticated ? (
+    <button
+      type="button"
+      onClick={() => setShowLogoutModal(true)}
+      className="flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer"
+    >
+      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-600">
+        <LogOut className="h-4 w-4" />
+      </div>
+      <span>{locale === 'bn' ? 'লগআউট করুন' : 'Log Out'}</span>
+    </button>
+  ) : undefined;
+
   return (
-    <SectionSidebar
-      title={locale === 'bn' ? 'সেটিংস' : 'Settings'}
-      backHref="/profile"
-      items={navItems}
-      activeId={`settings-${activeTab}`}
-    />
+    <>
+      <SectionSidebar
+        title={locale === 'bn' ? 'সেটিংস' : 'Settings'}
+        backHref="/profile"
+        items={navItems}
+        footer={logoutFooter}
+        activeId={`settings-${activeTab}`}
+      />
+
+      <LogoutConfirmModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+      />
+    </>
   );
 }

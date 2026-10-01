@@ -1,35 +1,19 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
-import { Calendar, Droplet, Mail, MapPin, User } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { User as UserIcon } from 'lucide-react';
+import { Card } from '@/components/ui/Card';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Button } from '@/components/ui/Button';
-import { formatDate } from '@/lib/utils/date';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { useUserProfile } from '@/features/friends/hooks/useFriendshipStatus';
-import { FriendActionButton } from '@/features/friends/components/FriendActionButton';
-import { FriendshipStatusBadge } from '@/features/friends/components/FriendshipStatus';
-import Link from 'next/link';
 import { ROUTES } from '@/constants/routes';
-import { BloodGroup } from '@/types/user.types';
-
-const formatBloodGroup = (bg?: BloodGroup | null) => {
-  if (!bg) return null;
-  const map: Record<BloodGroup, string> = {
-    A_POSITIVE: 'A+',
-    A_NEGATIVE: 'A-',
-    B_POSITIVE: 'B+',
-    B_NEGATIVE: 'B-',
-    AB_POSITIVE: 'AB+',
-    AB_NEGATIVE: 'AB-',
-    O_POSITIVE: 'O+',
-    O_NEGATIVE: 'O-',
-  };
-  return map[bg] || bg;
-};
+import { ProfileView } from './ProfileView';
+import { ProfileLayout } from './ProfileLayout';
+import { ProfileFriendsTab } from './ProfileFriendsTab';
+import { ProfileGroupsTab } from './ProfileGroupsTab';
 
 export interface PublicProfileViewProps {
   username: string;
@@ -37,163 +21,134 @@ export interface PublicProfileViewProps {
 
 export function PublicProfileView({ username }: PublicProfileViewProps) {
   const { locale } = useLanguage();
+  const searchParams = useSearchParams();
   const { data: profile, isLoading, isError, refetch } = useUserProfile(username);
 
-  // Loading state
+  const rawTab = (searchParams.get('tab') || 'overview').toLowerCase();
+  const from = (searchParams.get('from') || '').toLowerCase();
+  const isFromTab = from === 'tab';
+
+  let currentTab: 'overview' | 'friend' | 'group' | 'saved' = 'overview';
+  if (rawTab === 'friend' || rawTab === 'friends') {
+    currentTab = 'friend';
+  } else if (rawTab === 'group' || rawTab === 'groups') {
+    currentTab = 'group';
+  } else {
+    currentTab = 'overview';
+  }
+
+  const activeIdMap = {
+    overview: 'profile-overview',
+    friend: isFromTab ? 'profile-overview' : 'profile-friends',
+    group: isFromTab ? 'profile-overview' : 'profile-groups',
+    saved: isFromTab ? 'profile-overview' : 'profile-saved',
+  };
+
+  const mobileTabIdMap = {
+    overview: 'tab-overview',
+    friend: isFromTab ? 'tab-overview' : 'tab-friends',
+    group: isFromTab ? 'tab-overview' : 'tab-groups',
+    saved: isFromTab ? 'tab-overview' : 'tab-saved',
+  };
+
+  const baseUrl = ROUTES.USER_PROFILE(username);
+
+  // Loading skeleton matching ProfileView hero inside ProfileLayout
   if (isLoading) {
     return (
-      <Card className="border border-[#e4e6eb] bg-white rounded-2xl p-6 dark:border-[#393a3b] dark:bg-[#242526] space-y-6">
-        <div className="flex flex-col items-center space-y-3">
-          <Skeleton className="h-20 w-20 rounded-full" />
-          <Skeleton className="h-6 w-48" />
-          <Skeleton className="h-4 w-32" />
+      <ProfileLayout
+        baseUrl={baseUrl}
+        activeId={activeIdMap[currentTab]}
+        activeMobileTabId={mobileTabIdMap[currentTab]}
+        maxWidth="max-w-4xl"
+      >
+        <div className="space-y-4 animate-pulse">
+          <div className="rounded-2xl border border-[#e4e6eb] bg-white dark:border-[#393a3b] dark:bg-[#242526] overflow-hidden">
+            <Skeleton className="h-44 sm:h-56 md:h-64 w-full rounded-none" />
+            <div className="px-4 sm:px-8 pb-4 text-center">
+              <div className="-mt-14 sm:-mt-[72px] md:-mt-20 inline-block mx-auto">
+                <Skeleton className="h-28 w-28 sm:h-36 sm:w-36 md:h-40 md:w-40 rounded-full border-4 border-white dark:border-[#242526]" />
+              </div>
+              <div className="pt-3 space-y-2 flex flex-col items-center">
+                <Skeleton className="h-7 w-48 rounded-lg" />
+                <Skeleton className="h-4 w-28 rounded-lg" />
+                <div className="flex gap-2 pt-1">
+                  <Skeleton className="h-6 w-20 rounded-full" />
+                  <Skeleton className="h-6 w-24 rounded-full" />
+                </div>
+              </div>
+              <div className="pt-4 flex justify-center">
+                <Skeleton className="h-9 w-32 rounded-xl" />
+              </div>
+              <div className="pt-3 mt-4 border-t border-[#e4e6eb] dark:border-[#393a3b] flex justify-center gap-4">
+                <Skeleton className="h-8 w-24 rounded-xl" />
+                <Skeleton className="h-8 w-20 rounded-xl" />
+                <Skeleton className="h-8 w-20 rounded-xl" />
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="flex justify-center">
-          <Skeleton className="h-10 w-36 rounded-xl" />
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t border-[#f0f2f5] dark:border-[#3a3b3c]">
-          <Skeleton className="h-16 rounded-xl" />
-          <Skeleton className="h-16 rounded-xl" />
-        </div>
-      </Card>
+      </ProfileLayout>
     );
   }
 
-  // Error / Not Found state
+  // Error / Not Found state inside ProfileLayout
   if (isError || !profile) {
     return (
-      <Card className="flex flex-col items-center justify-center p-12 text-center border border-dashed border-[#e4e6eb] bg-white rounded-3xl dark:border-[#393a3b] dark:bg-[#242526]">
-        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-600 dark:bg-red-950/50 dark:text-red-400">
-          <User className="h-8 w-8" />
-        </div>
-        <h3 className="text-base font-bold text-[#050505] dark:text-[#e4e6eb]">
-          {locale === 'bn' ? 'ব্যবহারকারী পাওয়া যায়নি' : 'User not found'}
-        </h3>
-        <p className="mt-1.5 max-w-sm text-xs text-[#65676b] dark:text-[#b0b3b8]">
-          {locale === 'bn'
-            ? `(@${username}) নামের কোনো ব্যবহারকারী পাওয়া যায়নি বা প্রোফাইলটি মুছে ফেলা হয়েছে।`
-            : `The user @${username} does not exist or has been removed.`}
-        </p>
-        <div className="mt-5 flex gap-2">
-          <Button variant="outline" size="sm" onClick={() => refetch()}>
-            {locale === 'bn' ? 'আবার চেষ্টা করুন' : 'Try Again'}
-          </Button>
-          <Link href={ROUTES.HOME}>
-            <Button variant="primary" size="sm">
-              {locale === 'bn' ? 'হোম পেজে যান' : 'Go Home'}
+      <ProfileLayout
+        baseUrl={baseUrl}
+        activeId={activeIdMap[currentTab]}
+        activeMobileTabId={mobileTabIdMap[currentTab]}
+        maxWidth="max-w-4xl"
+      >
+        <Card className="flex flex-col items-center justify-center p-12 text-center border border-dashed border-[#e4e6eb] bg-white rounded-3xl dark:border-[#393a3b] dark:bg-[#242526]">
+          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-600 dark:bg-red-950/50 dark:text-red-400">
+            <UserIcon className="h-8 w-8" />
+          </div>
+          <h3 className="text-base font-bold text-[#050505] dark:text-[#e4e6eb]">
+            {locale === 'bn' ? 'ব্যবহারকারী পাওয়া যায়নি' : 'User not found'}
+          </h3>
+          <p className="mt-1.5 max-w-sm text-xs text-[#65676b] dark:text-[#b0b3b8]">
+            {locale === 'bn'
+              ? `(@${username}) নামের কোনো ব্যবহারকারী পাওয়া যায়নি বা প্রোফাইলটি মুছে ফেলা হয়েছে।`
+              : `The user @${username} does not exist or has been removed.`}
+          </p>
+          <div className="mt-5 flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => refetch()}>
+              {locale === 'bn' ? 'আবার চেষ্টা করুন' : 'Try Again'}
             </Button>
-          </Link>
-        </div>
-      </Card>
+            <Link href={ROUTES.HOME}>
+              <Button variant="primary" size="sm">
+                {locale === 'bn' ? 'হোম পেজে যান' : 'Go Home'}
+              </Button>
+            </Link>
+          </div>
+        </Card>
+      </ProfileLayout>
     );
   }
 
-  const relationshipStatus = profile.friendship?.status || 'NONE';
-  const requestId = profile.friendship?.requestId;
-  const bloodGroupLabel = formatBloodGroup(profile.bloodGroup);
-
   return (
-    <div className="max-w-2xl mx-auto space-y-4">
-      <Card className="border border-[#e4e6eb] bg-white shadow-2xs dark:border-[#393a3b] dark:bg-[#242526] rounded-2xl overflow-hidden">
-        {/* Profile Header */}
-        <CardHeader className="text-center pb-5 border-b border-[#e4e6eb] dark:border-[#393a3b]">
-          {/* Avatar Image */}
-          <div className="relative mx-auto mb-3 h-20 w-20 overflow-hidden rounded-full border-2 border-primary-500/20 bg-primary-500 text-white shadow-sm">
-            {profile.avatarUrl ? (
-              <Image
-                src={profile.avatarUrl}
-                alt={profile.name}
-                fill
-                className="object-cover"
-                unoptimized
-              />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center text-3xl font-black">
-                {profile.name?.charAt(0).toUpperCase() || 'U'}
-              </div>
-            )}
-          </div>
-
-          <CardTitle className="text-xl font-black text-[#050505] dark:text-white">
-            {profile.name}
-          </CardTitle>
-          <CardDescription className="text-sm font-medium">@{profile.username}</CardDescription>
-
-          {/* Badges */}
-          <div className="pt-2 flex flex-wrap items-center justify-center gap-2">
-            <Badge variant={profile.role === 'ADMIN' ? 'gold' : 'emerald'}>
-              {profile.role === 'ADMIN' ? 'Administrator' : 'Community Member'}
-            </Badge>
-
-            {bloodGroupLabel && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2.5 py-0.5 text-xs font-bold text-red-600 border border-red-200 dark:bg-red-950/60 dark:border-red-900 dark:text-red-300">
-                <Droplet className="h-3 w-3 fill-red-500 text-red-500" />
-                <span>Blood: {bloodGroupLabel}</span>
-              </span>
-            )}
-
-            {relationshipStatus !== 'NONE' && relationshipStatus !== 'SELF' && (
-              <FriendshipStatusBadge status={relationshipStatus} />
-            )}
-          </div>
-
-          {/* Relationship-Aware Action Button */}
-          {relationshipStatus !== 'SELF' && (
-            <div className="pt-4 flex justify-center">
-              <FriendActionButton
-                userId={profile.id}
-                username={profile.username}
-                status={relationshipStatus}
-                requestId={requestId}
-                size="md"
-              />
-            </div>
-          )}
-        </CardHeader>
-
-        {/* Profile Info Details */}
-        <CardContent className="p-4 sm:p-6 space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-            {profile.email && (
-              <div className="flex items-center gap-3 rounded-xl bg-[#f0f2f5] p-3.5 dark:bg-[#3a3b3c]">
-                <Mail className="h-4 w-4 text-primary-500 dark:text-primary-400 shrink-0" />
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs text-[#65676b] dark:text-[#b0b3b8]">Email</p>
-                  <p className="font-semibold text-[#050505] dark:text-[#e4e6eb] truncate">
-                    {profile.email}
-                  </p>
-                </div>
-              </div>
-            )}
-
-            <div className="flex items-center gap-3 rounded-xl bg-[#f0f2f5] p-3.5 dark:bg-[#3a3b3c]">
-              <Calendar className="h-4 w-4 text-primary-500 dark:text-primary-400 shrink-0" />
-              <div className="min-w-0 flex-1">
-                <p className="text-xs text-[#65676b] dark:text-[#b0b3b8]">
-                  {locale === 'bn' ? 'যুক্ত হয়েছেন' : 'Member Since'}
-                </p>
-                <p className="font-semibold text-[#050505] dark:text-[#e4e6eb] truncate">
-                  {profile.createdAt ? formatDate(profile.createdAt) : 'Recently'}
-                </p>
-              </div>
-            </div>
-
-            {profile.location && (
-              <div className="flex items-center gap-3 rounded-xl bg-[#f0f2f5] p-3.5 dark:bg-[#3a3b3c] sm:col-span-2">
-                <MapPin className="h-4 w-4 text-primary-500 dark:text-primary-400 shrink-0" />
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs text-[#65676b] dark:text-[#b0b3b8]">
-                    {locale === 'bn' ? 'ঠিকানা / অবস্থান' : 'Location'}
-                  </p>
-                  <p className="font-semibold text-[#050505] dark:text-[#e4e6eb] truncate">
-                    {profile.location}
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+    <ProfileLayout
+      targetUser={profile}
+      baseUrl={baseUrl}
+      activeId={activeIdMap[currentTab]}
+      activeMobileTabId={mobileTabIdMap[currentTab]}
+      maxWidth="max-w-4xl"
+    >
+      {isFromTab || currentTab === 'overview' ? (
+        <ProfileView
+          targetUser={profile}
+          activeSubTab={currentTab}
+          baseUrl={baseUrl}
+          isViewAs={true}
+        />
+      ) : (
+        <>
+          {currentTab === 'friend' && <ProfileFriendsTab targetUser={profile} />}
+          {currentTab === 'group' && <ProfileGroupsTab />}
+        </>
+      )}
+    </ProfileLayout>
   );
 }

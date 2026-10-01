@@ -33,7 +33,7 @@ interface FeedItemProps {
 }
 
 export function FeedItem({ post }: FeedItemProps) {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const { user } = useAuth();
   const { toggleReaction, toggleSave, deletePost, isDeletingPost } = usePostActions();
   const [showComments, setShowComments] = useState(false);
@@ -100,7 +100,7 @@ export function FeedItem({ post }: FeedItemProps) {
               <div className="flex items-center gap-1.5 text-xs text-[#65676b] dark:text-[#b0b3b8]">
                 <span>@{post.author.username || 'peacetweet'}</span>
                 <span>•</span>
-                <span>{post.createdAt ? formatDate(post.createdAt) : 'Today'}</span>
+                <span>{post.createdAt ? formatDate(post.createdAt, locale) : (locale === 'bn' ? 'আজ' : 'Today')}</span>
                 <span>•</span>
                 <Globe className="h-3 w-3" />
               </div>
@@ -306,7 +306,7 @@ export function FeedItem({ post }: FeedItemProps) {
                         {comment.author.name}
                       </span>
                       <span className="text-[10px] text-[#65676b] dark:text-[#b0b3b8]">
-                        {formatDate(comment.createdAt)}
+                        {formatDate(comment.createdAt, locale)}
                       </span>
                     </div>
                     <p className="mt-0.5 text-[#050505] dark:text-[#e4e6eb] leading-relaxed">

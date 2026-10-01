@@ -59,7 +59,7 @@ export function GroupJoinRequestCard({
           </p>
           <p className="text-[10px] text-gray-400">
             {locale === 'bn' ? 'অনুরোধ পাঠানো হয়েছে:' : 'Requested:'}{' '}
-            {formatDate(request.createdAt)}
+            {formatDate(request.createdAt, locale)}
           </p>
         </div>
       </div>

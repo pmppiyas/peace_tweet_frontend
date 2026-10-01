@@ -125,7 +125,7 @@ export function GroupMemberList({ group }: GroupMemberListProps) {
                 ? 'সদস্যের নাম বা ইউজারনেম দিয়ে খুঁজুন...'
                 : 'Search members by name or username...'
             }
-            className="h-10 w-full rounded-2xl border border-[#e4e6eb] bg-white pl-9 pr-4 text-xs sm:text-sm text-[#050505] placeholder:text-[#65676b] focus:border-primary-500 focus:outline-hidden dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#e4e6eb]"
+            className="h-10 w-full rounded-2xl border border-[#e4e6eb] bg-white pl-10 pr-4 text-xs sm:text-sm text-[#050505] placeholder:text-[#65676b] focus:border-primary-500 focus:outline-hidden dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#e4e6eb]"
           />
         </div>
 

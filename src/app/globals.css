@@ -33,7 +33,7 @@
   }
 }
 
-/* Custom Facebook Flat Scrollbar */
+/* Custom Facebook Flat Scrollbar - Show on hover only */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -43,20 +43,73 @@
   background: transparent;
 }
 
+/* Hidden by default */
 ::-webkit-scrollbar-thumb {
-  background: #bcc0c4;
+  background: transparent;
   border-radius: 9999px;
+  transition: background-color 0.2s ease-in-out;
 }
 
-.dark ::-webkit-scrollbar-thumb {
+/* Show scrollbar thumb when the container is hovered */
+*:hover::-webkit-scrollbar-thumb {
+  background: #bcc0c4;
+}
+
+.dark *:hover::-webkit-scrollbar-thumb {
   background: #3e4042;
 }
 
+/* Darker when the thumb itself is hovered */
 ::-webkit-scrollbar-thumb:hover {
-  background: #a8abb0;
+  background: #a8abb0 !important;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #525457 !important;
+}
+
+/* Active / dragging state */
+::-webkit-scrollbar-thumb:active {
+  background: #8d949e !important;
+}
+
+.dark ::-webkit-scrollbar-thumb:active {
+  background: #606770 !important;
+}
+
+/* Firefox scrollbar support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+*:hover {
+  scrollbar-color: #bcc0c4 transparent;
+}
+
+.dark *:hover {
+  scrollbar-color: #3e4042 transparent;
 }
 
 /* Safe area for mobile navigation */
 .pb-safe {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar,
+  .scrollbar-none::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar,
+  .scrollbar-none {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+    scrollbar-color: transparent transparent !important;
+  }
+}
+
