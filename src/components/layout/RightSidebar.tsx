@@ -74,7 +74,7 @@ export function RightSidebar() {
         </div>
       </div>
 
-      {/* 2. Trending Topics / Duas (Like Facebook's Sponsored / Group list) */}
+      {/* 2. Trending Topics / Duas */}
       <div className="rounded-xl border border-[#e4e6eb] bg-white p-3.5 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526] space-y-2">
         <div className="flex items-center gap-1.5 pb-2 border-b border-[#e4e6eb] dark:border-[#393a3b] text-xs font-bold text-[#050505] dark:text-[#e4e6eb]">
           <TrendingUp className="h-4 w-4 text-primary-500" />

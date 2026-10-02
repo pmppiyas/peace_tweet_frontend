@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
+import { useLanguage } from '@/providers/LanguageProvider';
 import { usePostActions } from '../hooks/usePostActions';
 import { useDuas } from '@/features/dua/hooks/useDuas';
 import { PostType } from '../types/feed.types';
@@ -25,6 +26,7 @@ import { ROUTES } from '@/constants/routes';
 
 export function PostComposer() {
   const { user, isAuthenticated } = useAuth();
+  const { locale } = useLanguage();
   const { createPost, isCreatingPost } = usePostActions();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -53,12 +55,14 @@ export function PostComposer() {
             />
           </div>
           <p className="text-xs sm:text-sm text-[#65676b] dark:text-[#b0b3b8]">
-            একটি অর্থপূর্ণ ইসলামিক চিন্তা বা দোয়া শেয়ার করতে সাইন ইন করুন।
+            {locale === 'bn'
+              ? 'একটি অর্থপূর্ণ ইসলামিক চিন্তা বা দোয়া শেয়ার করতে সাইন ইন করুন।'
+              : 'Sign in to share a meaningful Islamic reflection or Dua.'}
           </p>
         </div>
         <Link href={ROUTES.LOGIN}>
           <Button size="sm" className="rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-xs">
-            লগইন করুন
+            {locale === 'bn' ? 'লগইন করুন' : 'Log In'}
           </Button>
         </Link>
       </Card>
@@ -99,7 +103,8 @@ export function PostComposer() {
             onClick={() => setIsOpen(true)}
             className="h-10 w-full rounded-full bg-[#f0f2f5] px-4 text-left text-xs sm:text-sm text-[#65676b] hover:bg-[#e4e6eb] transition-colors dark:bg-[#3a3b3c] dark:text-[#b0b3b8] dark:hover:bg-[#4e4f50]"
           >
-            {user?.name ? `${user.name.split(' ')[0]}, ` : ''}একটি দোয়া বা চিন্তা শেয়ার করুন...
+            {user?.name ? `${user.name.split(' ')[0]}, ` : ''}
+            {locale === 'bn' ? 'একটি দোয়া বা চিন্তা শেয়ার করুন...' : 'Share a Dua or thought...'}
           </button>
         </div>
       ) : (
@@ -115,7 +120,7 @@ export function PostComposer() {
                   {user?.name}
                 </p>
                 <span className="text-[10px] text-primary-600 dark:text-primary-400 font-semibold">
-                  পাবলিক পোস্ট (Public)
+                  {locale === 'bn' ? 'পাবলিক পোস্ট' : 'Public Post'}
                 </span>
               </div>
             </div>
@@ -149,7 +154,7 @@ export function PostComposer() {
               )}
             >
               <PenTool className="h-3.5 w-3.5" />
-              <span>টেক্সট / স্মরণ (Text)</span>
+              <span>{locale === 'bn' ? 'টেক্সট / স্মরণ' : 'Text / Reflection'}</span>
             </button>
 
             <button
@@ -166,7 +171,7 @@ export function PostComposer() {
               )}
             >
               <BookOpen className="h-3.5 w-3.5" />
-              <span>দোয়া শেয়ার (Dua Post)</span>
+              <span>{locale === 'bn' ? 'দোয়া শেয়ার' : 'Share Dua'}</span>
             </button>
 
             <button
@@ -183,7 +188,7 @@ export function PostComposer() {
               )}
             >
               <HelpCircle className="h-3.5 w-3.5" />
-              <span>প্রশ্ন / জিজ্ঞাসা (Question)</span>
+              <span>{locale === 'bn' ? 'প্রশ্ন / জিজ্ঞাসা' : 'Question'}</span>
             </button>
           </div>
 
@@ -194,7 +199,7 @@ export function PostComposer() {
                 <div className="flex items-center justify-between rounded-xl bg-primary-50/60 p-3 border border-primary-200 dark:bg-primary-900/40 dark:border-primary-800">
                   <div>
                     <span className="text-[10px] font-bold text-primary-600 dark:text-primary-400">
-                      যুক্ত করা দোয়া:
+                      {locale === 'bn' ? 'যুক্ত করা দোয়া:' : 'Selected Dua:'}
                     </span>
                     <p className="text-xs font-bold text-[#050505] dark:text-[#e4e6eb]">
                       🌙 {selectedDua.title}
@@ -208,7 +213,7 @@ export function PostComposer() {
                     onClick={() => setShowDuaPicker(true)}
                     className="text-xs font-semibold text-primary-600 hover:underline dark:text-primary-400"
                   >
-                    পরিবর্তন
+                    {locale === 'bn' ? 'পরিবর্তন' : 'Change'}
                   </button>
                 </div>
               ) : (
@@ -218,7 +223,7 @@ export function PostComposer() {
                   className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-primary-300 p-3 text-xs font-semibold text-primary-600 hover:bg-primary-50 transition-colors dark:border-primary-700 dark:text-primary-400 dark:hover:bg-primary-900/40"
                 >
                   <BookOpen className="h-4 w-4" />
-                  <span>একটি দোয়া নির্বাচন করুন (Select a Dua)</span>
+                  <span>{locale === 'bn' ? 'একটি দোয়া নির্বাচন করুন' : 'Select a Dua'}</span>
                 </button>
               )}
             </div>
@@ -230,10 +235,16 @@ export function PostComposer() {
             onChange={(e) => setContent(e.target.value)}
             placeholder={
               postType === 'DUA'
-                ? 'এই দোয়া সম্পর্কে কোনো অতিরিক্ত বার্তা বা আমল শেয়ার করতে পারেন (ঐচ্ছিক)...'
+                ? locale === 'bn'
+                  ? 'এই দোয়া সম্পর্কে কোনো অতিরিক্ত বার্তা বা আমল শেয়ার করতে পারেন (ঐচ্ছিক)...'
+                  : 'Add an optional note or reflection about this Dua...'
                 : postType === 'QUESTION'
-                  ? 'আপনার প্রশ্ন বা জিজ্ঞাসার বিষয়টি স্পষ্ট করে লিখুন...'
-                  : 'একটি অর্থপূর্ণ ইসলামিক চিন্তা বা হাদিসের শিক্ষণীয় দিক লিখুন...'
+                  ? locale === 'bn'
+                    ? 'আপনার প্রশ্ন বা জিজ্ঞাসার বিষয়টি স্পষ্ট করে লিখুন...'
+                    : 'Write your question or inquiry clearly...'
+                  : locale === 'bn'
+                    ? 'একটি অর্থপূর্ণ ইসলামিক চিন্তা বা হাদিসের শিক্ষণীয় দিক লিখুন...'
+                    : 'Share a meaningful Islamic reflection or beneficial lesson...'
             }
             rows={3}
             className="w-full resize-none rounded-xl border border-[#e4e6eb] bg-[#f0f2f5] p-3 text-xs sm:text-sm text-[#050505] placeholder:text-[#65676b] focus:border-primary-500 focus:bg-white focus:outline-hidden dark:border-[#393a3b] dark:bg-[#3a3b3c] dark:text-[#e4e6eb] dark:placeholder:text-[#b0b3b8] dark:focus:bg-[#242526]"
@@ -242,7 +253,7 @@ export function PostComposer() {
           {/* Footer Submit Bar */}
           <div className="flex items-center justify-between pt-1">
             <span className="text-[11px] text-[#65676b] dark:text-[#b0b3b8]">
-              {content.length}/5000 অক্ষর
+              {content.length}/5000 {locale === 'bn' ? 'অক্ষর' : 'characters'}
             </span>
 
             <Button
@@ -256,7 +267,7 @@ export function PostComposer() {
               size="sm"
               className="rounded-xl bg-primary-500 hover:bg-primary-600 text-white font-bold px-4"
             >
-              পোস্ট করুন
+              {locale === 'bn' ? 'পোস্ট করুন' : 'Post'}
             </Button>
           </div>
         </form>
@@ -268,7 +279,7 @@ export function PostComposer() {
           <div className="w-full max-w-md rounded-2xl border border-[#e4e6eb] bg-white p-4 shadow-xl dark:border-[#393a3b] dark:bg-[#242526] space-y-3">
             <div className="flex items-center justify-between border-b border-[#e4e6eb] pb-2 dark:border-[#393a3b]">
               <h3 className="text-sm font-bold text-[#050505] dark:text-[#e4e6eb]">
-                দোয়া নির্বাচন করুন (Select Dua)
+                {locale === 'bn' ? 'দোয়া নির্বাচন করুন' : 'Select Dua'}
               </h3>
               <button
                 type="button"
@@ -286,7 +297,7 @@ export function PostComposer() {
                 type="text"
                 value={duaSearch}
                 onChange={(e) => setDuaSearch(e.target.value)}
-                placeholder="দোয়ার নাম বা বিষয় দিয়ে খুঁজুন..."
+                placeholder={locale === 'bn' ? 'দোয়ার নাম বা বিষয় দিয়ে খুঁজুন...' : 'Search Duas by title or topic...'}
                 className="h-9 w-full rounded-xl border border-[#e4e6eb] bg-[#f0f2f5] pl-8 pr-3 text-xs text-[#050505] placeholder:text-[#65676b] focus:border-primary-500 focus:bg-white focus:outline-hidden dark:border-[#393a3b] dark:bg-[#3a3b3c] dark:text-[#e4e6eb]"
               />
             </div>
@@ -296,11 +307,11 @@ export function PostComposer() {
               {isLoadingDuas ? (
                 <div className="py-6 text-center text-xs text-[#65676b] dark:text-[#b0b3b8]">
                   <Loader2 className="h-4 w-4 animate-spin mx-auto mb-1 text-primary-500" />
-                  দোয়া লোড হচ্ছে...
+                  {locale === 'bn' ? 'দোয়া লোড হচ্ছে...' : 'Loading Duas...'}
                 </div>
               ) : !duasData?.items || duasData.items.length === 0 ? (
                 <div className="py-6 text-center text-xs text-[#65676b] dark:text-[#b0b3b8]">
-                  কোনো দোয়া পাওয়া যায়নি।
+                  {locale === 'bn' ? 'কোনো দোয়া পাওয়া যায়নি।' : 'No Duas found.'}
                 </div>
               ) : (
                 duasData.items.map((d: any) => (

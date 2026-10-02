@@ -3,7 +3,6 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { PublicProfileView } from '@/features/profile/components/PublicProfileView';
 
-// List of reserved route paths to prevent route collision with existing static top-level routes
 const RESERVED_ROUTES = new Set([
   'categories',
   'duas',

@@ -8,15 +8,16 @@ import { PostComposer } from './PostComposer';
 import { PostType } from '../types/feed.types';
 import { AlertCircle, RefreshCw, Sparkles, BookOpen, PenTool, HelpCircle, Megaphone } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
+import { useLanguage } from '@/providers/LanguageProvider';
 
 export function Feed() {
   const [activeType, setActiveType] = useState<PostType | undefined>(undefined);
+  const { locale } = useLanguage();
 
   const {
     data,
     isLoading,
     isError,
-    error,
     refetch,
     hasNextPage,
     isFetchingNextPage,
@@ -27,11 +28,31 @@ export function Feed() {
   const allPosts = data?.pages.flatMap((page) => page?.items || []) || [];
 
   const filterTabs: Array<{ label: string; type?: PostType; icon: React.ReactNode }> = [
-    { label: 'সকল পোস্ট', type: undefined, icon: <Sparkles className="h-3.5 w-3.5" /> },
-    { label: 'দোয়া', type: 'DUA', icon: <BookOpen className="h-3.5 w-3.5" /> },
-    { label: 'স্মরণ ও চিন্তা', type: 'TEXT', icon: <PenTool className="h-3.5 w-3.5" /> },
-    { label: 'জিজ্ঞাসা', type: 'QUESTION', icon: <HelpCircle className="h-3.5 w-3.5" /> },
-    { label: 'ঘোষণা', type: 'ANNOUNCEMENT', icon: <Megaphone className="h-3.5 w-3.5" /> },
+    {
+      label: locale === 'bn' ? 'সকল পোস্ট' : locale === 'ar' ? 'جميع المنشورات' : 'All Posts',
+      type: undefined,
+      icon: <Sparkles className="h-3.5 w-3.5" />,
+    },
+    {
+      label: locale === 'bn' ? 'দোয়া' : locale === 'ar' ? 'أدعية' : 'Dua',
+      type: 'DUA',
+      icon: <BookOpen className="h-3.5 w-3.5" />,
+    },
+    {
+      label: locale === 'bn' ? 'স্মরণ ও চিন্তা' : locale === 'ar' ? 'تأملات' : 'Reflections',
+      type: 'TEXT',
+      icon: <PenTool className="h-3.5 w-3.5" />,
+    },
+    {
+      label: locale === 'bn' ? 'জিজ্ঞাসা' : locale === 'ar' ? 'أسئلة' : 'Questions',
+      type: 'QUESTION',
+      icon: <HelpCircle className="h-3.5 w-3.5" />,
+    },
+    {
+      label: locale === 'bn' ? 'ঘোষণা' : locale === 'ar' ? 'إعلانات' : 'Announcements',
+      type: 'ANNOUNCEMENT',
+      icon: <Megaphone className="h-3.5 w-3.5" />,
+    },
   ];
 
   return (
@@ -69,10 +90,12 @@ export function Feed() {
         <div className="flex flex-col items-center justify-center rounded-xl border border-rose-200 bg-rose-50/70 p-8 text-center dark:border-rose-900/60 dark:bg-rose-950/30">
           <AlertCircle className="h-8 w-8 text-rose-600 dark:text-rose-400" />
           <h3 className="mt-2 text-sm font-bold text-rose-800 dark:text-rose-300">
-            ফিড লোড করা যাচ্ছে না
+            {locale === 'bn' ? 'ফিড লোড করা যাচ্ছে না' : 'Unable to load feed'}
           </h3>
           <p className="mt-1 text-xs text-rose-600 dark:text-rose-400 max-w-sm">
-            সার্ভারের সাথে সংযোগ স্থাপন করা সম্ভব হয়নি। অনুগ্রহ করে ইন্টারনেট সংযোগ পরীক্ষা করে পুনরায় চেষ্টা করুন।
+            {locale === 'bn'
+              ? 'সার্ভারের সাথে সংযোগ স্থাপন করা সম্ভব হয়নি। অনুগ্রহ করে ইন্টারনেট সংযোগ পরীক্ষা করে পুনরায় চেষ্টা করুন।'
+              : 'Could not connect to the server. Please check your internet connection and try again.'}
           </p>
           <button
             type="button"
@@ -80,7 +103,7 @@ export function Feed() {
             className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-rose-600 px-4 py-2 text-xs font-bold text-white hover:bg-rose-700 transition-colors shadow-2xs"
           >
             <RefreshCw className="h-3.5 w-3.5" />
-            <span>আবার চেষ্টা করুন</span>
+            <span>{locale === 'bn' ? 'আবার চেষ্টা করুন' : 'Try Again'}</span>
           </button>
         </div>
       ) : (

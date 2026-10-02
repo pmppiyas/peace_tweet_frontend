@@ -312,7 +312,7 @@ export function ProfileView({
         </div>
       )}
 
-      {/* 1. Facebook Profile Hero Card */}
+      {/* 1. Profile Hero Card */}
       <div className="relative z-20 rounded-2xl border border-[#e4e6eb] bg-white shadow-2xs dark:border-[#393a3b] dark:bg-[#242526]">
         {/* Cover Photo Banner */}
         <div className="relative h-44 sm:h-56 md:h-64 rounded-t-2xl bg-gradient-to-r from-emerald-800 via-teal-700 to-primary-800 overflow-hidden">
@@ -998,7 +998,7 @@ export function ProfileView({
               )}
             </div>
 
-            {/* Friends Preview Card (Facebook 6-Grid) (Only for owner) */}
+            {/* Friends Preview Card (6-Grid) (Only for owner) */}
             {isOwner && (
               <div className="rounded-2xl border border-[#e4e6eb] bg-white p-4 sm:p-5 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526]">
                 <div className="flex items-center justify-between pb-3">
@@ -1141,7 +1141,7 @@ export function ProfileView({
 
           {/* Right Column: Post Composer & Timeline */}
           <div className="lg:col-span-7 space-y-4">
-            {/* Facebook Post Composer (Hidden in View As mode or when not owner) */}
+            {/* Post Composer (Hidden in View As mode or when not owner) */}
             {isOwner && !isViewAs && <PostComposer />}
 
             {/* Quick Shortcuts Card (Only for owner in normal mode) */}

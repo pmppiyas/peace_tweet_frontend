@@ -4,7 +4,6 @@ import React, { useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuthActions } from '../hooks/useAuthActions';
-import { useFacebookSDK } from '../hooks/useFacebookSDK';
 import { uploadsApi } from '@/features/uploads/api/uploads.api';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -61,8 +60,7 @@ export function RegisterForm() {
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { register, isRegistering, isFacebookLoggingIn } = useAuthActions();
-  const { redirectToFacebookOAuth, isLoading: isRedirectingFacebook } = useFacebookSDK();
+  const { register, isRegistering } = useAuthActions();
 
   // Validate slide 1 before proceeding
   const handleProceedToStep2 = (e: React.FormEvent) => {
@@ -97,10 +95,6 @@ export function RegisterForm() {
     setStep(2);
   };
 
-  const handleFacebookLogin = () => {
-    setErrorMessage('');
-    redirectToFacebookOAuth();
-  };
 
   const handleGoogleLogin = () => {
     setErrorMessage('Google login coming soon!');
@@ -157,7 +151,7 @@ export function RegisterForm() {
     }
   };
 
-  const isSubmitting = isRegistering || isUploadingPhoto || isFacebookLoggingIn;
+  const isSubmitting = isRegistering || isUploadingPhoto;
 
   return (
     <Card className="w-full max-w-md shadow-2xs border border-[#e4e6eb] bg-white dark:border-[#393a3b] dark:bg-[#242526] rounded-2xl overflow-hidden">
@@ -300,22 +294,6 @@ export function RegisterForm() {
                 />
               </svg>
               Continue with Google
-            </button>
-
-            <button
-              type="button"
-              onClick={handleFacebookLogin}
-              disabled={isFacebookLoggingIn || isRedirectingFacebook}
-              className="w-full flex items-center justify-center gap-2.5 rounded-xl bg-[#1877F2] hover:bg-[#1565c0] transition-colors py-2.5 px-4 text-sm font-semibold text-white shadow-2xs disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              {isFacebookLoggingIn || isRedirectingFacebook ? (
-                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-              ) : (
-                <svg className="h-4 w-4 shrink-0 fill-white" viewBox="0 0 24 24">
-                  <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.793-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.883v2.268h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z" />
-                </svg>
-              )}
-              {isFacebookLoggingIn || isRedirectingFacebook ? 'Connecting...' : 'Continue with Facebook'}
             </button>
 
             <p className="text-center text-xs text-gray-500 dark:text-gray-400 pt-1">

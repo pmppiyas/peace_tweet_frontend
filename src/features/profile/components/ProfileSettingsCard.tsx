@@ -116,7 +116,6 @@ export function ProfileSettingsCard({
 
   const hasPassword = user?.hasPassword !== false;
 
-  // Handle avatar upload via Cloudinary
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -597,7 +596,7 @@ export function ProfileSettingsCard({
           <CardContent>
             {!hasPassword && (
               <div className="mb-4 rounded-xl bg-primary-50/80 dark:bg-primary-950/40 border border-primary-200 dark:border-primary-800/60 p-3 text-xs text-primary-800 dark:text-primary-200">
-                You signed in using Facebook. Set a password below to enable
+                You signed in using your social account. Set a password below to enable
                 signing in with your email (<strong>{user.email}</strong>) or
                 username (<strong>@{user.username}</strong>).
               </div>

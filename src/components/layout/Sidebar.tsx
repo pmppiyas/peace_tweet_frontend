@@ -11,6 +11,7 @@ import {
   Users,
   Users2,
   Shield,
+  Droplet,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/providers/LanguageProvider';
@@ -22,7 +23,7 @@ import {
 
 export function Sidebar() {
   const { isAuthenticated, isAdmin } = useAuth();
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
 
   const menuItems: SidebarNavItem[] = [
     {
@@ -53,6 +54,13 @@ export function Sidebar() {
       href: ROUTES.GROUPS.HOME,
       icon: Users2,
       iconBg: 'bg-primary-600 text-white',
+    },
+    {
+      id: 'sidebar-blood',
+      label: locale === 'bn' ? 'রক্তদান' : 'Blood Donation',
+      href: ROUTES.BLOOD.HOME,
+      icon: Droplet,
+      iconBg: 'bg-rose-600 text-white',
     },
     {
       id: 'sidebar-bookmarks',

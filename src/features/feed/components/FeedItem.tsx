@@ -178,7 +178,7 @@ export function FeedItem({ post }: FeedItemProps) {
                 onClick={() => setShowComments(!showComments)}
                 className="hover:underline"
               >
-                {post.stats.commentCount} মন্তব্য
+                {post.stats.commentCount} {locale === 'bn' ? 'মন্তব্য' : post.stats.commentCount === 1 ? 'comment' : 'comments'}
               </button>
             )}
           </div>
@@ -204,7 +204,7 @@ export function FeedItem({ post }: FeedItemProps) {
               post.viewer.hasReacted && 'fill-current text-rose-600 dark:text-rose-400',
             )}
           />
-          <span>{post.type === 'DUA' ? 'আমীন' : 'পছন্দ'}</span>
+          <span>{post.type === 'DUA' ? (locale === 'bn' ? 'আমীন' : 'Ameen') : (locale === 'bn' ? 'পছন্দ' : 'Like')}</span>
         </button>
 
         {/* Comment */}
@@ -219,7 +219,7 @@ export function FeedItem({ post }: FeedItemProps) {
           )}
         >
           <MessageCircle className="h-4 w-4" />
-          <span>মন্তব্য</span>
+          <span>{locale === 'bn' ? 'মন্তব্য' : 'Comment'}</span>
         </button>
 
         {/* Save */}
@@ -239,7 +239,7 @@ export function FeedItem({ post }: FeedItemProps) {
               post.viewer.hasSaved && 'fill-current text-amber-600 dark:text-amber-400',
             )}
           />
-          <span>{post.viewer.hasSaved ? 'সংরক্ষিত' : 'সেভ'}</span>
+          <span>{post.viewer.hasSaved ? (locale === 'bn' ? 'সংরক্ষিত' : 'Saved') : (locale === 'bn' ? 'সেভ' : 'Save')}</span>
         </button>
 
         {/* Share */}
@@ -249,7 +249,7 @@ export function FeedItem({ post }: FeedItemProps) {
           className="flex items-center justify-center gap-1.5 py-2 text-[#65676b] hover:bg-[#f0f2f5] hover:text-[#050505] rounded-lg transition-colors select-none dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] dark:hover:text-[#e4e6eb]"
         >
           <Share2 className="h-4 w-4" />
-          <span>{copied ? 'কপি হয়েছে!' : 'শেয়ার'}</span>
+          <span>{copied ? (locale === 'bn' ? 'কপি হয়েছে!' : 'Copied!') : (locale === 'bn' ? 'শেয়ার' : 'Share')}</span>
         </button>
       </div>
 
@@ -266,7 +266,7 @@ export function FeedItem({ post }: FeedItemProps) {
                 type="text"
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
-                placeholder="একটি অর্থপূর্ণ মন্তব্য লিখুন..."
+                placeholder={locale === 'bn' ? 'একটি অর্থপূর্ণ মন্তব্য লিখুন...' : 'Write a comment...'}
                 className="h-8 w-full rounded-full border border-[#e4e6eb] bg-white px-3.5 pr-8 text-xs text-[#050505] placeholder:text-[#65676b] focus:border-primary-500 focus:outline-hidden dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#e4e6eb] dark:placeholder:text-[#b0b3b8]"
               />
               <button
@@ -287,11 +287,11 @@ export function FeedItem({ post }: FeedItemProps) {
           {/* Comments List */}
           {isLoadingComments ? (
             <div className="py-2 text-center text-xs text-[#65676b] dark:text-[#b0b3b8]">
-              মন্তব্য লোড হচ্ছে...
+              {locale === 'bn' ? 'মন্তব্য লোড হচ্ছে...' : 'Loading comments...'}
             </div>
           ) : comments.length === 0 ? (
             <div className="py-2 text-center text-xs text-[#65676b] dark:text-[#b0b3b8]">
-              এখনো কোনো মন্তব্য করা হয়নি। প্রথম মন্তব্যটি করুন!
+              {locale === 'bn' ? 'এখনো কোনো মন্তব্য করা হয়নি। প্রথম মন্তব্যটি করুন!' : 'No comments yet. Be the first to comment!'}
             </div>
           ) : (
             <div className="space-y-2.5 pt-1">

@@ -89,4 +89,22 @@ export const API_ENDPOINTS = {
     IMAGE: '/uploads/image',
     AVATAR: '/uploads/avatar',
   },
+  BLOOD: {
+    REQUESTS: '/blood/requests',
+    REQUEST_DETAIL: (id: string) => `/blood/requests/${id}`,
+    ACCEPT: (id: string) => `/blood/requests/${id}/accept`,
+    COMPLETE_DONATION: (requestId: string, donationId: string) =>
+      `/blood/requests/${requestId}/donations/${donationId}/complete`,
+    CANCEL_DONATION: (requestId: string) =>
+      `/blood/requests/${requestId}/donations/cancel`,
+    STATUS: (id: string) => `/blood/requests/${id}/status`,
+    DONOR_MODE: '/blood/donor-mode',
+    DONORS: '/blood/donors',
+  },
+  SEARCH: {
+    GLOBAL: '/search',
+    HISTORY: '/search/history',
+    DELETE_HISTORY: (id: string) => `/search/history/${id}`,
+    CLEAR_HISTORY: '/search/history',
+  },
 } as const;

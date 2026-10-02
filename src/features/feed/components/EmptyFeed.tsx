@@ -2,22 +2,27 @@
 
 import React from 'react';
 import { BookOpen } from 'lucide-react';
+import { useLanguage } from '@/providers/LanguageProvider';
 
 interface EmptyFeedProps {
   message?: string;
 }
 
-export function EmptyFeed({ message = 'এখনো কোনো পোস্ট নেই' }: EmptyFeedProps) {
+export function EmptyFeed({ message }: EmptyFeedProps) {
+  const { locale } = useLanguage();
+
   return (
     <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-[#e4e6eb] bg-white p-12 text-center dark:border-[#393a3b] dark:bg-[#242526]">
       <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-50 text-primary-500 dark:bg-primary-900/60 dark:text-primary-400">
         <BookOpen className="h-6 w-6" />
       </div>
       <h3 className="mt-3 text-sm font-bold text-[#050505] dark:text-[#e4e6eb]">
-        {message}
+        {message || (locale === 'bn' ? 'এখনো কোনো পোস্ট নেই' : 'No posts yet')}
       </h3>
       <p className="mt-1 text-xs text-[#65676b] dark:text-[#b0b3b8] max-w-sm">
-        নতুন দোয়া ও অর্থপূর্ণ ইসলামিক পোস্ট দেখতে সাথেই থাকুন অথবা নিজে একটি পোস্ট তৈরি করুন।
+        {locale === 'bn'
+          ? 'নতুন দোয়া ও অর্থপূর্ণ ইসলামিক পোস্ট দেখতে সাথেই থাকুন অথবা নিজে একটি পোস্ট তৈরি করুন।'
+          : 'Stay tuned for new Duas and meaningful reflections, or create a post yourself.'}
       </p>
     </div>
   );

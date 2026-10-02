@@ -25,6 +25,12 @@ export const ROUTES = {
     REQUESTS: (slug: string) => `/groups/${slug}/requests`,
     SETTINGS: (slug: string) => `/groups/${slug}/settings`,
   },
+  BLOOD: {
+    HOME: '/blood',
+    CREATE: '/blood/create',
+    DONORS: '/blood/donors',
+    DETAIL: (id: string) => `/blood/${id}`,
+  },
   ADMIN: {
     HOME: '/admin',
     DUAS: '/admin/duas',

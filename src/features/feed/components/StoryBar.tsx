@@ -58,7 +58,7 @@ export function StoryBar() {
 
   return (
     <div className="flex items-center gap-2.5 overflow-x-auto pb-2 scrollbar-none select-none">
-      {/* 1. Create Story / Share Reminder Card (Like Facebook's First Story Card) */}
+      {/* 1. Create Story / Share Reminder Card */}
       <Link
         href={ROUTES.CATEGORIES}
         className="relative flex flex-col justify-between w-[105px] sm:w-[120px] h-[165px] sm:h-[185px] shrink-0 rounded-xl bg-white dark:bg-[#242526] border border-[#e4e6eb] dark:border-[#393a3b] overflow-hidden shadow-xs hover:shadow-md transition-all group"
@@ -82,7 +82,7 @@ export function StoryBar() {
         </div>
       </Link>
 
-      {/* 2. Other Facebook Story Cards */}
+      {/* 2. Other Story Cards */}
       {stories.map((story) => {
         const Icon = story.icon;
         return (

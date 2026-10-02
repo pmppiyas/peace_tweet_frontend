@@ -53,7 +53,7 @@ export function GroupsSidebar({ activeId, onSelectTab }: GroupsSidebarProps) {
     },
   ];
 
-  // List joined groups in sidebar footer (Facebook style)
+  // List joined groups in sidebar footer
   const joinedGroupsFooter =
     isAuthenticated && myGroups.length > 0 ? (
       <div className="space-y-1.5 pt-1">

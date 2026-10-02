@@ -20,6 +20,7 @@ import {
   LogIn,
   UserPlus,
   ChevronRight,
+  Droplet,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/providers/LanguageProvider';
@@ -94,6 +95,13 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
       href: ROUTES.GROUPS.HOME,
       icon: Users2,
       iconBg: 'bg-primary-600 text-white',
+    },
+    {
+      id: 'menu-blood',
+      label: locale === 'bn' ? 'রক্তদান' : 'Blood Donation',
+      href: ROUTES.BLOOD.HOME,
+      icon: Droplet,
+      iconBg: 'bg-rose-600 text-white',
     },
     {
       id: 'menu-bookmarks',

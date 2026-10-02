@@ -5,6 +5,7 @@ import { FeedItem as FeedItemType } from '../types/feed.types';
 import { FeedItem } from './FeedItem';
 import { FeedSkeleton } from './FeedSkeleton';
 import { EmptyFeed } from './EmptyFeed';
+import { useLanguage } from '@/providers/LanguageProvider';
 
 interface FeedListProps {
   items: FeedItemType[];
@@ -20,6 +21,7 @@ export function FeedList({
   fetchNextPage,
 }: FeedListProps) {
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  const { locale } = useLanguage();
 
   // IntersectionObserver for smooth infinite scroll
   useEffect(() => {
@@ -72,7 +74,9 @@ export function FeedList({
       {/* End of Feed */}
       {!hasNextPage && items.length > 5 && (
         <div className="py-6 text-center text-xs text-[#65676b] dark:text-[#b0b3b8]">
-          ✨ আপনি সকল সাম্প্রতিক পোস্ট দেখে ফেলেছেন
+          {locale === 'bn'
+            ? '✨ আপনি সকল সাম্প্রতিক পোস্ট দেখে ফেলেছেন'
+            : "✨ You're all caught up with the latest posts"}
         </div>
       )}
     </div>

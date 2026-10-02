@@ -22,7 +22,6 @@ export function CreateGroupForm() {
   const [visibility, setVisibility] = useState<GroupVisibility>('PUBLIC');
   const [error, setError] = useState<string | null>(null);
 
-  // Auto-slugify helper
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setName(val);
@@ -46,9 +45,7 @@ export function CreateGroupForm() {
 
     if (!name.trim()) {
       setError(
-        locale === 'bn'
-          ? 'গ্রুপের নাম আবশ্যক।'
-          : 'Group name is required.',
+        locale === 'bn' ? 'গ্রুপের নাম আবশ্যক।' : 'Group name is required.'
       );
       return;
     }
@@ -57,7 +54,7 @@ export function CreateGroupForm() {
       setError(
         locale === 'bn'
           ? 'গ্রুপের ইউনিক স্লাগ (@slug) আবশ্যক।'
-          : 'Group slug is required.',
+          : 'Group slug is required.'
       );
       return;
     }
@@ -76,7 +73,7 @@ export function CreateGroupForm() {
           err?.message ||
           (locale === 'bn'
             ? 'গ্রুপ তৈরি করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।'
-            : 'Failed to create group. Please try again.'),
+            : 'Failed to create group. Please try again.')
       );
     }
   };
@@ -89,7 +86,9 @@ export function CreateGroupForm() {
         </div>
         <div>
           <h2 className="text-base sm:text-lg font-bold text-[#050505] dark:text-[#e4e6eb]">
-            {locale === 'bn' ? 'নতুন ইসলামিক গ্রুপ তৈরি করুন' : 'Create a New Community Group'}
+            {locale === 'bn'
+              ? 'নতুন ইসলামিক গ্রুপ তৈরি করুন'
+              : 'Create a New Community Group'}
           </h2>
           <p className="text-xs text-[#65676b] dark:text-[#b0b3b8]">
             {locale === 'bn'
@@ -129,7 +128,10 @@ export function CreateGroupForm() {
         {/* Slug */}
         <div>
           <label className="block text-xs font-bold text-[#050505] dark:text-[#e4e6eb] mb-1.5">
-            {locale === 'bn' ? 'ইউনিক স্লাগ (Group Slug / URL)' : 'Group Slug / URL'} *
+            {locale === 'bn'
+              ? 'ইউনিক স্লাগ (Group Slug / URL)'
+              : 'Group Slug / URL'}{' '}
+            *
           </label>
           <div className="relative flex items-center">
             <span className="pointer-events-none absolute left-3 text-xs font-bold text-gray-400">
@@ -184,7 +186,7 @@ export function CreateGroupForm() {
                     'flex flex-col items-start rounded-2xl border p-4 text-left transition-all',
                     isSelected
                       ? 'border-primary-500 bg-primary-50/60 dark:border-primary-600 dark:bg-primary-900/40 shadow-xs ring-1 ring-primary-500'
-                      : 'border-[#e4e6eb] bg-white hover:bg-[#f0f2f5] dark:border-[#393a3b] dark:bg-[#242526] dark:hover:bg-[#3a3b3c]',
+                      : 'border-[#e4e6eb] bg-white hover:bg-[#f0f2f5] dark:border-[#393a3b] dark:bg-[#242526] dark:hover:bg-[#3a3b3c]'
                   )}
                 >
                   <div className="flex items-center gap-2 mb-1">
@@ -198,7 +200,9 @@ export function CreateGroupForm() {
                     </span>
                   </div>
                   <p className="text-[11px] text-[#65676b] dark:text-[#b0b3b8] leading-tight">
-                    {locale === 'bn' ? config.descriptionBn : config.description}
+                    {locale === 'bn'
+                      ? config.descriptionBn
+                      : config.description}
                   </p>
                 </button>
               );
@@ -209,7 +213,9 @@ export function CreateGroupForm() {
         {/* Rules */}
         <div>
           <label className="block text-xs font-bold text-[#050505] dark:text-[#e4e6eb] mb-1.5">
-            {locale === 'bn' ? 'গ্রুপের নিয়মাবলী (Rules - Optional)' : 'Group Rules (Optional)'}
+            {locale === 'bn'
+              ? 'গ্রুপের নিয়মাবলী (Rules - Optional)'
+              : 'Group Rules (Optional)'}
           </label>
           <textarea
             value={rules}

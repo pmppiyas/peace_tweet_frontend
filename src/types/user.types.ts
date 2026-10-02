@@ -25,6 +25,8 @@ export interface User {
   coverUrl?: string | null;
   location?: string | null;
   bloodGroup?: BloodGroup | null;
+  isDonor?: boolean;
+  donationCount?: number;
   hasPassword?: boolean;
   createdAt: string;
   updatedAt: string;

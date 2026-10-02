@@ -23,12 +23,14 @@ import { Container } from '@/components/layout/Container';
 import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/constants/routes';
 import { MenuDrawer } from './MenuDrawer';
+import { SearchDrawer } from '@/features/search/components/SearchDrawer';
 
 export function Navbar() {
   const pathname = usePathname();
   const { user, isAuthenticated } = useAuth();
   const { t } = useLanguage();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { data: requestCount = 0 } = usePendingRequestsCount(isAuthenticated);
 
   const navCenterLinks = [
@@ -91,7 +93,7 @@ export function Navbar() {
               <span>{user?.name?.charAt(0) || 'P'}</span>
             )}
           </div>
-          {/* Facebook ChevronDown badge at bottom-right of avatar */}
+          {/* ChevronDown badge at bottom-right of avatar */}
           <span className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#e4e6eb] dark:bg-[#3a3b3c] border-2 border-white dark:border-[#242526] text-[#050505] dark:text-[#e4e6eb]">
             <ChevronDown className="h-2.5 w-2.5 stroke-[3]" />
           </span>
@@ -142,14 +144,29 @@ export function Navbar() {
               </span>
             </Link>
 
-            {/* Quick Search Circular Button directly next to Logo */}
-            <Link
-              href={ROUTES.SEARCH}
-              className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors"
+            {/* Search input pill on md+, Circular button on mobile */}
+            <button
+              type="button"
+              onClick={() => setIsSearchOpen(true)}
+              className="hidden md:flex h-10 w-44 lg:w-60 items-center gap-2 rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] px-3.5 text-[#65676b] dark:text-[#b0b3b8] transition-colors cursor-pointer text-left"
               title="Search"
             >
+              <Search className="h-4 w-4 shrink-0 text-[#65676b] dark:text-[#b0b3b8]" />
+              <span className="text-sm select-none truncate">
+                Search PeaceTweet
+              </span>
+            </button>
+
+            {/* Mobile Circular Search Button */}
+            <button
+              type="button"
+              onClick={() => setIsSearchOpen(true)}
+              className="flex md:hidden h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors"
+              title="Search"
+              aria-label="Open search"
+            >
               <Search className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
-            </Link>
+            </button>
           </div>
 
           {/* Center Column: Navigation Tabs (Desktop only: lg:grid) */}
@@ -190,7 +207,7 @@ export function Navbar() {
             </nav>
           </div>
 
-          {/* Right Column: 4 Circular Buttons matching Facebook */}
+          {/* Right Column: Circular Action Buttons */}
           {rightActionButtons}
         </div>
       </Container>
@@ -199,6 +216,12 @@ export function Navbar() {
       <MenuDrawer
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
+      />
+
+      {/* Global Search Drawer */}
+      <SearchDrawer
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
       />
     </header>
   );

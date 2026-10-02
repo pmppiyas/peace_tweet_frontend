@@ -24,9 +24,9 @@ const config: Config = {
           900: '#064e3b',
           950: '#022c22',
         },
-        // Primary = Facebook blue
+
         primary: {
-          50:  '#e8f0fe',
+          50: '#e8f0fe',
           100: '#c6d9fd',
           200: '#9dbafb',
           300: '#6e9af8',
@@ -61,9 +61,28 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["'Raleway'", 'var(--font-raleway)', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-        arabic: ['var(--font-amiri)', "'Scheherazade New'", "'Traditional Arabic'", 'serif'],
-        bangla: ['var(--font-noto-sans-bengali)', "'SolaimanLipi'", "'Kalpurush'", 'sans-serif'],
+        sans: [
+          "'Raleway'",
+          'var(--font-raleway)',
+          'system-ui',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Segoe UI',
+          'Roboto',
+          'sans-serif',
+        ],
+        arabic: [
+          'var(--font-amiri)',
+          "'Scheherazade New'",
+          "'Traditional Arabic'",
+          'serif',
+        ],
+        bangla: [
+          'var(--font-noto-sans-bengali)',
+          "'SolaimanLipi'",
+          "'Kalpurush'",
+          'sans-serif',
+        ],
       },
     },
   },
