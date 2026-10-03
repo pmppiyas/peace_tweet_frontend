@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Sun, Moon, Sparkles, Heart, ShieldAlert, Compass, Plus } from 'lucide-react';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { useAuth } from '@/hooks/useAuth';
@@ -64,8 +65,18 @@ export function StoryBar() {
         className="relative flex flex-col justify-between w-[105px] sm:w-[120px] h-[165px] sm:h-[185px] shrink-0 rounded-xl bg-white dark:bg-[#242526] border border-[#e4e6eb] dark:border-[#393a3b] overflow-hidden shadow-xs hover:shadow-md transition-all group"
       >
         <div className="h-[110px] sm:h-[125px] w-full bg-gradient-to-b from-primary-100 to-primary-50 dark:from-primary-900/60 dark:to-gray-800 flex items-center justify-center overflow-hidden">
-          <div className="h-12 w-12 rounded-full bg-primary-500 text-white font-bold text-lg flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
-            {user?.name?.charAt(0) || '🕊️'}
+          <div className="relative h-12 w-12 rounded-full bg-primary-500 text-white font-bold text-lg flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform overflow-hidden">
+            {user?.avatarUrl ? (
+              <Image
+                src={user.avatarUrl}
+                alt={user.name || 'User'}
+                fill
+                className="object-cover"
+                unoptimized
+              />
+            ) : (
+              <span>{user?.name?.charAt(0) || '🕊️'}</span>
+            )}
           </div>
         </div>
 

@@ -290,8 +290,18 @@ export function PostComposer() {
     <Card className="border border-[#e4e6eb] bg-white p-3.5 sm:p-4 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526] rounded-xl transition-all">
       {!isOpen ? (
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm select-none">
-            {user?.name ? user.name.charAt(0).toUpperCase() : '🕊️'}
+          <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm select-none overflow-hidden shadow-xs">
+            {user?.avatarUrl ? (
+              <Image
+                src={user.avatarUrl}
+                alt={user.name || 'User'}
+                fill
+                className="object-cover"
+                unoptimized
+              />
+            ) : (
+              <span>{user?.name ? user.name.charAt(0).toUpperCase() : '🕊️'}</span>
+            )}
           </div>
           <button
             type="button"
@@ -310,8 +320,18 @@ export function PostComposer() {
           {/* Header */}
           <div className="flex items-center justify-between border-b border-[#e4e6eb] pb-2.5 dark:border-[#393a3b]">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-xs select-none">
-                {user?.name ? user.name.charAt(0).toUpperCase() : '🕊️'}
+              <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-xs select-none overflow-hidden shadow-xs">
+                {user?.avatarUrl ? (
+                  <Image
+                    src={user.avatarUrl}
+                    alt={user.name || 'User'}
+                    fill
+                    className="object-cover"
+                    unoptimized
+                  />
+                ) : (
+                  <span>{user?.name ? user.name.charAt(0).toUpperCase() : '🕊️'}</span>
+                )}
               </div>
               <div>
                 <div className="flex items-center gap-1.5 flex-wrap">

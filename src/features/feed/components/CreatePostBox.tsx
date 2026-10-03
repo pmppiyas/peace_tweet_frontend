@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { Button } from '@/components/ui/Button';
@@ -46,8 +47,18 @@ export function CreatePostBox() {
       <div className="rounded-xl border border-[#e4e6eb] bg-white p-3 sm:p-3.5 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526]">
         {/* Top Input Trigger */}
         <div className="flex items-center gap-2.5">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm shadow-xs">
-            {user?.name?.charAt(0) || '🕊️'}
+          <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm shadow-xs overflow-hidden">
+            {user?.avatarUrl ? (
+              <Image
+                src={user.avatarUrl}
+                alt={user.name || 'User'}
+                fill
+                className="object-cover"
+                unoptimized
+              />
+            ) : (
+              <span>{user?.name?.charAt(0) || '🕊️'}</span>
+            )}
           </div>
 
           <button

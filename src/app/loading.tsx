@@ -1,10 +1,5 @@
-import { Container } from '@/components/layout/Container';
-import { FeedSkeleton } from '@/features/feed/components/FeedSkeleton';
+import { FullPageLoader } from '@/components/ui/FullPageLoader';
 
 export default function Loading() {
-  return (
-    <Container className="py-8">
-      <FeedSkeleton />
-    </Container>
-  );
+  return <FullPageLoader />;
 }

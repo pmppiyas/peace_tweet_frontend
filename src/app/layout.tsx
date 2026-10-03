@@ -10,6 +10,7 @@ import { AudioProvider } from '@/providers/AudioProvider';
 import { Navbar } from '@/components/navigation/Navbar';
 import { MobileNav } from '@/components/navigation/MobileNav';
 import { FloatingAudioBar } from '@/features/audio/components/FloatingAudioBar';
+import { AppSplashLoader } from '@/components/ui/AppSplashLoader';
 
 export const metadata: Metadata = {
   title: {
@@ -46,6 +47,7 @@ export default function RootLayout({
         className={`${raleway.variable} font-sans min-h-screen flex flex-col antialiased bg-[#f0f2f5] text-[#050505] dark:bg-[#18191a] dark:text-[#e4e6eb]`}
       >
         <ThemeProvider>
+          <AppSplashLoader />
           <LanguageProvider>
             <QueryProvider>
               <AuthProvider>

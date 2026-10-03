@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { FeedItem as FeedItemType } from '../types/feed.types';
 import { DuaPostCard } from './DuaPostCard';
 import { TextPostCard } from './TextPostCard';
@@ -99,10 +100,22 @@ export function FeedItem({ post }: FeedItemProps) {
       <div className="p-3.5 sm:p-4 pb-2">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm shadow-xs select-none">
-              {post.author.name
-                ? post.author.name.charAt(0).toUpperCase()
-                : '🕊️'}
+            <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm shadow-xs select-none overflow-hidden">
+              {(post.author.avatar || (isAuthor ? user?.avatarUrl : null)) ? (
+                <Image
+                  src={post.author.avatar || user?.avatarUrl || ''}
+                  alt={post.author.name || 'User'}
+                  fill
+                  className="object-cover"
+                  unoptimized
+                />
+              ) : (
+                <span>
+                  {post.author.name
+                    ? post.author.name.charAt(0).toUpperCase()
+                    : '🕊️'}
+                </span>
+              )}
             </div>
             <div>
               <div className="flex items-center gap-1.5 flex-wrap">
@@ -305,8 +318,18 @@ export function FeedItem({ post }: FeedItemProps) {
         <div className="border-t border-[#e4e6eb] bg-[#f0f2f5]/40 p-3.5 sm:p-4 space-y-3 dark:border-[#393a3b] dark:bg-[#3a3b3c]/20 animate-in fade-in duration-150">
           {/* Comment Form */}
           <form onSubmit={handleCommentSubmit} className="flex gap-2">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-xs select-none">
-              {user?.name ? user.name.charAt(0).toUpperCase() : '🕊️'}
+            <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-xs select-none overflow-hidden shadow-xs">
+              {user?.avatarUrl ? (
+                <Image
+                  src={user.avatarUrl}
+                  alt={user.name || 'User'}
+                  fill
+                  className="object-cover"
+                  unoptimized
+                />
+              ) : (
+                <span>{user?.name ? user.name.charAt(0).toUpperCase() : '🕊️'}</span>
+              )}
             </div>
             <div className="relative flex-1">
               <input
@@ -353,8 +376,18 @@ export function FeedItem({ post }: FeedItemProps) {
                   key={comment.id}
                   className="flex items-start gap-2 text-xs"
                 >
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gray-200 text-gray-700 font-bold text-[10px] dark:bg-gray-700 dark:text-gray-200">
-                    {comment.author.name.charAt(0).toUpperCase()}
+                  <div className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gray-200 text-gray-700 font-bold text-[10px] dark:bg-gray-700 dark:text-gray-200 overflow-hidden">
+                    {comment.author.avatar ? (
+                      <Image
+                        src={comment.author.avatar}
+                        alt={comment.author.name || 'User'}
+                        fill
+                        className="object-cover"
+                        unoptimized
+                      />
+                    ) : (
+                      <span>{comment.author.name.charAt(0).toUpperCase()}</span>
+                    )}
                   </div>
                   <div className="flex-1 rounded-2xl bg-white p-2.5 border border-[#e4e6eb] dark:border-[#393a3b] dark:bg-[#242526]">
                     <div className="flex items-center justify-between">
