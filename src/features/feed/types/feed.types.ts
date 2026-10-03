@@ -48,6 +48,7 @@ export interface FeedItem {
   content: string | null;
   mediaUrls?: string[];
   mediaLayout?: 'COLLAGE' | 'SWIPE';
+  feeling?: string | null;
   createdAt: string;
   visibility?: PostVisibility;
   status?: PostStatus;
@@ -84,6 +85,7 @@ export interface CreatePostInput {
   content?: string;
   mediaUrls?: string[];
   mediaLayout?: 'COLLAGE' | 'SWIPE';
+  feeling?: string;
   duaId?: string;
   duaData?: {
     title?: string;
@@ -102,6 +104,7 @@ export interface UpdatePostInput {
   content?: string;
   mediaUrls?: string[];
   mediaLayout?: 'COLLAGE' | 'SWIPE';
+  feeling?: string;
   visibility?: PostVisibility;
   status?: PostStatus;
 }

@@ -14,6 +14,7 @@ import { Card } from '@/components/ui/Card';
 import { formatDate } from '@/lib/utils/date';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { useAuth } from '@/hooks/useAuth';
+import { getFeelingById } from '../constants/feelings';
 import {
   Heart,
   MessageCircle,
@@ -44,6 +45,7 @@ export function FeedItem({ post }: FeedItemProps) {
   const [showMenu, setShowMenu] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [localShareCount, setLocalShareCount] = useState(post.stats.shareCount || 0);
+  const feelingItem = getFeelingById(post.feeling);
 
   const {
     comments,
@@ -103,11 +105,20 @@ export function FeedItem({ post }: FeedItemProps) {
                 : '🕊️'}
             </div>
             <div>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1.5 flex-wrap">
                 <span className="font-bold text-[15px] text-[#050505] dark:text-[#e4e6eb]">
                   {post.author.name || 'PeaceTweet Scholar'}
                 </span>
-                <CheckCircle2 className="h-3.5 w-3.5 text-primary-500 fill-primary-100 dark:fill-primary-900" />
+                <CheckCircle2 className="h-3.5 w-3.5 text-primary-500 fill-primary-100 dark:fill-primary-900 shrink-0" />
+                {feelingItem && (
+                  <span className="text-xs text-[#65676b] dark:text-[#b0b3b8] font-normal flex items-center gap-1">
+                    <span>is feeling</span>
+                    <span className="font-semibold text-[#050505] dark:text-[#e4e6eb]">
+                      {feelingItem.label}
+                    </span>
+                    <span className="text-sm">{feelingItem.emoji}</span>
+                  </span>
+                )}
               </div>
               <div className="flex items-center gap-1.5 text-xs text-[#65676b] dark:text-[#b0b3b8]">
                 <span>@{post.author.username || 'peacetweet'}</span>

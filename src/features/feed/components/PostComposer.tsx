@@ -24,9 +24,11 @@ import {
   AlertCircle,
   LayoutGrid,
   SlidersHorizontal,
+  Smile,
 } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/constants/routes';
+import { FEELINGS, getFeelingById } from '../constants/feelings';
 
 const BLOOD_GROUPS: { value: BloodGroup; label: string }[] = [
   { value: 'A_POSITIVE', label: 'A+' },
@@ -73,11 +75,13 @@ export function PostComposer() {
   const [content, setContent] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // General Mode State (Images)
+  // General Mode State (Images & Feelings)
   const [mediaUrls, setMediaUrls] = useState<string[]>([]);
   const [mediaLayout, setMediaLayout] = useState<'COLLAGE' | 'SWIPE'>('COLLAGE');
   const [isUploadingMedia, setIsUploadingMedia] = useState(false);
   const [uploadingCount, setUploadingCount] = useState<number>(0);
+  const [feeling, setFeeling] = useState<string | null>(null);
+  const [showFeelingPicker, setShowFeelingPicker] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Dua Mode State (Inline Creation Only)
@@ -98,6 +102,8 @@ export function PostComposer() {
   );
   const [problem, setProblem] = useState('');
   const [bloodNote, setBloodNote] = useState('');
+
+  const selectedFeeling = getFeelingById(feeling);
 
   if (!isAuthenticated) {
     return (
@@ -132,6 +138,8 @@ export function PostComposer() {
     setContent('');
     setMediaUrls([]);
     setMediaLayout('COLLAGE');
+    setFeeling(null);
+    setShowFeelingPicker(false);
     setDuaTransliteration('');
     setDuaMeaning('');
     setDuaFadilah('');
@@ -236,10 +244,12 @@ export function PostComposer() {
           content: content.trim() || undefined,
           mediaUrls: mediaUrls.length > 0 ? mediaUrls : undefined,
           mediaLayout: mediaUrls.length > 1 ? mediaLayout : 'COLLAGE',
+          feeling: feeling || undefined,
         });
       } else if (postType === 'DUA') {
         await createPost({
           type: 'DUA',
+          feeling: feeling || undefined,
           duaData: {
             transliteration: duaTransliteration.trim() || undefined,
             meaning: duaMeaning.trim(),
@@ -250,6 +260,7 @@ export function PostComposer() {
         await createPost({
           type: 'BLOOD_REQUEST',
           content: content.trim() || undefined,
+          feeling: feeling || undefined,
           bloodRequestData: {
             patientName: patientName.trim(),
             bloodGroup,
@@ -303,9 +314,28 @@ export function PostComposer() {
                 {user?.name ? user.name.charAt(0).toUpperCase() : '🕊️'}
               </div>
               <div>
-                <p className="text-xs font-bold text-[#050505] dark:text-[#e4e6eb] leading-none">
-                  {user?.name}
-                </p>
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <p className="text-xs font-bold text-[#050505] dark:text-[#e4e6eb] leading-none">
+                    {user?.name}
+                  </p>
+                  {selectedFeeling && (
+                    <span className="text-xs text-[#65676b] dark:text-[#b0b3b8] font-normal flex items-center gap-1">
+                      <span>is feeling</span>
+                      <span className="font-semibold text-[#050505] dark:text-[#e4e6eb]">
+                        {selectedFeeling.label}
+                      </span>
+                      <span className="text-sm">{selectedFeeling.emoji}</span>
+                      <button
+                        type="button"
+                        onClick={() => setFeeling(null)}
+                        className="ml-0.5 rounded-full p-0.5 text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                        title="Remove feeling"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </span>
+                  )}
+                </div>
                 <span className="text-[10px] text-primary-600 dark:text-primary-400 font-semibold">
                   Public Post
                 </span>
@@ -462,8 +492,8 @@ export function PostComposer() {
                 </div>
               )}
 
-              {/* Photo Upload Trigger */}
-              <div className="flex items-center gap-2">
+              {/* Photo & Feeling Actions */}
+              <div className="flex items-center gap-2 flex-wrap">
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -496,12 +526,71 @@ export function PostComposer() {
                         : 'Add Photos'}
                   </span>
                 </button>
+
+                <button
+                  type="button"
+                  onClick={() => setShowFeelingPicker((prev) => !prev)}
+                  className={cn(
+                    'inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors',
+                    selectedFeeling
+                      ? 'border-amber-300 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-300'
+                      : 'border-gray-200 text-[#65676b] hover:bg-[#f0f2f5] dark:border-gray-700 dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c]'
+                  )}
+                >
+                  <Smile className="h-3.5 w-3.5 text-amber-500" />
+                  <span>
+                    {selectedFeeling ? `${selectedFeeling.emoji} ${selectedFeeling.label}` : 'Feeling / Activity'}
+                  </span>
+                </button>
+
                 {mediaUrls.length > 0 && (
                   <span className="text-[11px] font-medium text-[#65676b] dark:text-[#b0b3b8]">
                     {mediaUrls.length}/10 {mediaUrls.length === 1 ? 'photo' : 'photos'} attached
                   </span>
                 )}
               </div>
+
+              {/* Feeling Picker Popover Grid */}
+              {showFeelingPicker && (
+                <div className="rounded-xl border border-gray-200 bg-white p-3 shadow-md dark:border-gray-700 dark:bg-[#242526] animate-in fade-in zoom-in-95 duration-100">
+                  <div className="flex items-center justify-between pb-2 mb-2 border-b border-gray-100 dark:border-gray-800">
+                    <span className="text-xs font-bold text-gray-700 dark:text-gray-200">
+                      How are you feeling?
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setShowFeelingPicker(false)}
+                      className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-0.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-1.5 max-h-48 overflow-y-auto">
+                    {FEELINGS.map((item) => {
+                      const isSelected = feeling === item.id;
+                      return (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => {
+                            setFeeling(item.id);
+                            setShowFeelingPicker(false);
+                          }}
+                          className={cn(
+                            'flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium text-left transition-colors',
+                            isSelected
+                              ? 'bg-primary-50 text-primary-700 border border-primary-300 dark:bg-primary-950 dark:text-primary-300 dark:border-primary-800'
+                              : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'
+                          )}
+                        >
+                          <span className="text-base select-none">{item.emoji}</span>
+                          <span className="truncate capitalize">{item.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
