@@ -38,6 +38,46 @@ export const uploadsApi = {
     return data;
   },
 
+  // Upload multiple images in a single batch
+  uploadMultipleImages: async (files: File[]): Promise<string[]> => {
+    if (files.length === 0) return [];
+    try {
+      const formData = new FormData();
+      files.forEach((file) => formData.append('files', file));
+
+      const { data } = await apiClient.post<ApiResponse<UploadImageResponse[]>>(
+        '/uploads/images',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
+
+      if (data?.data && Array.isArray(data.data)) {
+        return data.data
+          .map((item) => normalizeUploadUrl(item.url))
+          .filter((url): url is string => Boolean(url));
+      }
+    } catch {
+      // Fallback: parallel individual uploads if batch fails
+    }
+
+    const individualResults = await Promise.all(
+      files.map(async (file) => {
+        try {
+          const res = await uploadsApi.uploadImage(file);
+          return res.data?.url || null;
+        } catch {
+          return null;
+        }
+      }),
+    );
+
+    return individualResults.filter((url): url is string => Boolean(url));
+  },
+
   // Upload user avatar to Cloudinary or local storage fallback
   uploadAvatar: async (file: File): Promise<ApiResponse<UploadImageResponse>> => {
     const formData = new FormData();

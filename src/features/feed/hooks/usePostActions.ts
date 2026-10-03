@@ -158,26 +158,54 @@ export function usePostActions() {
     },
   });
 
-  // Delete Post Mutation
+  // Delete Post Mutation (optimistic: hide immediately, roll back on failure)
   const deletePostMutation = useMutation({
     mutationFn: async (postId: string) => {
       return feedApi.deletePost(postId);
     },
-    onSuccess: (_data, postId) => {
-      queryClient.setQueriesData<InfiniteData<FeedResponse>>(
-        { queryKey: ['feed'] },
-        (oldData) => {
-          if (!oldData) return oldData;
-          return {
-            ...oldData,
-            pages: oldData.pages.map((page) => ({
-              ...page,
-              items: page.items.filter((p) => p.id !== postId),
-            })),
-          };
-        },
-      );
+    onMutate: async (postId: string) => {
+      await queryClient.cancelQueries({ queryKey: ['feed'] });
+      await queryClient.cancelQueries({ queryKey: ['groups'] });
+
+      const previousFeed = queryClient.getQueriesData({ queryKey: ['feed'] });
+      const previousGroups = queryClient.getQueriesData({ queryKey: ['groups'] });
+
+      const removePost = (oldData?: InfiniteData<FeedResponse>) => {
+        if (!oldData?.pages) return oldData;
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page) => ({
+            ...page,
+            items: (page.items || []).filter((p) => p.id !== postId),
+          })),
+        };
+      };
+
+      queryClient.setQueriesData<InfiniteData<FeedResponse>>({ queryKey: ['feed'] }, removePost);
+      queryClient.setQueriesData<InfiniteData<FeedResponse>>({ queryKey: ['groups'] }, removePost);
+
+      return { previousFeed, previousGroups };
+    },
+    onError: (err: any, _postId, context) => {
+      // Restore the post if the delete failed
+      context?.previousFeed?.forEach(([queryKey, data]) => {
+        queryClient.setQueryData(queryKey, data);
+      });
+      context?.previousGroups?.forEach(([queryKey, data]) => {
+        queryClient.setQueryData(queryKey, data);
+      });
+
+      const message = err?.response
+        ? err.response.data?.message || 'Failed to delete the post. Please try again.'
+        : 'Cannot reach the server. Please check your connection and try again.';
+      if (typeof window !== 'undefined') {
+        window.alert(message);
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['feed'] });
+      queryClient.invalidateQueries({ queryKey: ['groups'] });
+      queryClient.invalidateQueries({ queryKey: ['bookmarks'] });
     },
   });
 
@@ -187,7 +215,8 @@ export function usePostActions() {
     toggleSave: (postId: string, currentStatus: boolean) =>
       saveMutation.mutate({ postId, hasSaved: currentStatus }),
     createPost: createPostMutation.mutateAsync,
-    deletePost: deletePostMutation.mutateAsync,
+    // Uses mutate (not mutateAsync) so failures are handled in onError and never become unhandled rejections
+    deletePost: (postId: string) => deletePostMutation.mutate(postId),
     isCreatingPost: createPostMutation.isPending,
     isDeletingPost: deletePostMutation.isPending,
   };

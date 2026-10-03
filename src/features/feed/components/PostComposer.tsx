@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { usePostActions } from '../hooks/usePostActions';
 import { uploadsApi } from '@/features/uploads/api/uploads.api';
 import { PostType } from '../types/feed.types';
+import { PostMediaGallery } from './PostMediaGallery';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -21,6 +22,8 @@ import {
   Loader2,
   Calendar,
   AlertCircle,
+  LayoutGrid,
+  SlidersHorizontal,
 } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/constants/routes';
@@ -72,7 +75,9 @@ export function PostComposer() {
 
   // General Mode State (Images)
   const [mediaUrls, setMediaUrls] = useState<string[]>([]);
+  const [mediaLayout, setMediaLayout] = useState<'COLLAGE' | 'SWIPE'>('COLLAGE');
   const [isUploadingMedia, setIsUploadingMedia] = useState(false);
+  const [uploadingCount, setUploadingCount] = useState<number>(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Dua Mode State (Inline Creation Only)
@@ -126,6 +131,7 @@ export function PostComposer() {
   const resetForm = () => {
     setContent('');
     setMediaUrls([]);
+    setMediaLayout('COLLAGE');
     setDuaTransliteration('');
     setDuaMeaning('');
     setDuaFadilah('');
@@ -148,23 +154,29 @@ export function PostComposer() {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
+    if (mediaUrls.length + files.length > 10) {
+      setErrorMessage('You can attach a maximum of 10 photos per post.');
+      return;
+    }
+
     setIsUploadingMedia(true);
+    setUploadingCount(files.length);
     setErrorMessage(null);
 
     try {
-      const uploadPromises = Array.from(files).map((file) =>
-        uploadsApi.uploadImage(file)
-      );
-      const results = await Promise.all(uploadPromises);
-      const newUrls = results
-        .map((res) => res.data?.url)
-        .filter((url): url is string => Boolean(url));
+      const fileList = Array.from(files);
+      const newUrls = await uploadsApi.uploadMultipleImages(fileList);
 
-      setMediaUrls((prev) => [...prev, ...newUrls]);
+      if (newUrls.length > 0) {
+        setMediaUrls((prev) => [...prev, ...newUrls]);
+      } else {
+        setErrorMessage('Failed to upload images. Please check file format and try again.');
+      }
     } catch {
-      setErrorMessage('Failed to upload image. Please try again.');
+      setErrorMessage('Failed to upload image(s). Please try again.');
     } finally {
       setIsUploadingMedia(false);
+      setUploadingCount(0);
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -223,6 +235,7 @@ export function PostComposer() {
           type: 'TEXT',
           content: content.trim() || undefined,
           mediaUrls: mediaUrls.length > 0 ? mediaUrls : undefined,
+          mediaLayout: mediaUrls.length > 1 ? mediaLayout : 'COLLAGE',
         });
       } else if (postType === 'DUA') {
         await createPost({
@@ -381,13 +394,13 @@ export function PostComposer() {
                 className="w-full resize-none rounded-xl border border-[#e4e6eb] bg-[#f0f2f5] p-3 text-xs sm:text-sm text-[#050505] placeholder:text-[#65676b] focus:border-primary-500 focus:bg-white focus:outline-hidden dark:border-[#393a3b] dark:bg-[#3a3b3c] dark:text-[#e4e6eb] dark:placeholder:text-[#b0b3b8] dark:focus:bg-[#242526]"
               />
 
-              {/* Uploaded Photos Grid */}
+              {/* Uploaded Photos (removable thumbnails) */}
               {mediaUrls.length > 0 && (
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
+                <div className="flex gap-2 overflow-x-auto pt-1 pb-1">
                   {mediaUrls.map((url, idx) => (
                     <div
-                      key={idx}
-                      className="group relative aspect-video overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800"
+                      key={`${url}-${idx}`}
+                      className="group relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800"
                     >
                       <Image
                         src={url}
@@ -399,13 +412,53 @@ export function PostComposer() {
                       <button
                         type="button"
                         onClick={() => removeMediaUrl(idx)}
-                        className="absolute top-1.5 right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors"
+                        className="absolute top-0.5 right-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors"
                         title="Remove photo"
                       >
-                        <X className="h-3.5 w-3.5" />
+                        <X className="h-3 w-3" />
                       </button>
                     </div>
                   ))}
+                </div>
+              )}
+
+              {/* Layout Picker + Live Preview (2+ photos) */}
+              {mediaUrls.length > 1 && (
+                <div className="space-y-2 rounded-xl border border-[#e4e6eb] p-2.5 dark:border-[#393a3b]">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs font-semibold text-[#050505] dark:text-[#e4e6eb]">
+                      Photo Layout
+                    </span>
+                    <div className="flex items-center gap-1 rounded-lg bg-[#f0f2f5] p-0.5 dark:bg-[#3a3b3c]">
+                      {(
+                        [
+                          { value: 'COLLAGE', label: 'Collage', Icon: LayoutGrid },
+                          { value: 'SWIPE', label: 'Swipe', Icon: SlidersHorizontal },
+                        ] as const
+                      ).map(({ value, label, Icon }) => (
+                        <button
+                          key={value}
+                          type="button"
+                          onClick={() => setMediaLayout(value)}
+                          className={cn(
+                            'flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-semibold transition-all select-none',
+                            mediaLayout === value
+                              ? 'bg-white text-primary-600 shadow-2xs dark:bg-[#242526] dark:text-primary-400'
+                              : 'text-[#65676b] hover:text-[#050505] dark:text-[#b0b3b8] dark:hover:text-[#e4e6eb]'
+                          )}
+                        >
+                          <Icon className="h-3.5 w-3.5" />
+                          <span>{label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <p className="text-[11px] text-[#65676b] dark:text-[#b0b3b8]">
+                    {mediaLayout === 'COLLAGE'
+                      ? 'Photos are shown together in a grid.'
+                      : 'Photos are shown one at a time. Viewers swipe to see the next one.'}
+                  </p>
+                  <PostMediaGallery mediaUrls={mediaUrls} layout={mediaLayout} />
                 </div>
               )}
 
@@ -422,8 +475,13 @@ export function PostComposer() {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  disabled={isUploadingMedia}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-semibold text-[#65676b] hover:bg-[#f0f2f5] dark:border-gray-700 dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] transition-colors"
+                  disabled={isUploadingMedia || mediaUrls.length >= 10}
+                  className={cn(
+                    'inline-flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-semibold transition-colors dark:border-gray-700',
+                    mediaUrls.length >= 10
+                      ? 'opacity-50 cursor-not-allowed text-gray-400'
+                      : 'text-[#65676b] hover:bg-[#f0f2f5] dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c]'
+                  )}
                 >
                   {isUploadingMedia ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin text-primary-500" />
@@ -431,13 +489,16 @@ export function PostComposer() {
                     <ImageIcon className="h-3.5 w-3.5 text-emerald-500" />
                   )}
                   <span>
-                    {isUploadingMedia ? 'Uploading image...' : 'Add Photo'}
+                    {isUploadingMedia
+                      ? `Uploading ${uploadingCount > 1 ? `${uploadingCount} photos...` : 'photo...'}`
+                      : mediaUrls.length > 0
+                        ? 'Add More Photos'
+                        : 'Add Photos'}
                   </span>
                 </button>
                 {mediaUrls.length > 0 && (
-                  <span className="text-[11px] text-[#65676b] dark:text-[#b0b3b8]">
-                    {mediaUrls.length}{' '}
-                    {mediaUrls.length === 1 ? 'photo' : 'photos'} attached
+                  <span className="text-[11px] font-medium text-[#65676b] dark:text-[#b0b3b8]">
+                    {mediaUrls.length}/10 {mediaUrls.length === 1 ? 'photo' : 'photos'} attached
                   </span>
                 )}
               </div>

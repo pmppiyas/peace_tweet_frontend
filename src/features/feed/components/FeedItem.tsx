@@ -42,6 +42,7 @@ export function FeedItem({ post }: FeedItemProps) {
   const [commentText, setCommentText] = useState('');
   const [copied, setCopied] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [localShareCount, setLocalShareCount] = useState(post.stats.shareCount || 0);
 
   const {
@@ -143,7 +144,7 @@ export function FeedItem({ post }: FeedItemProps) {
                       disabled={isDeletingPost}
                       onClick={() => {
                         setShowMenu(false);
-                        deletePost(post.id);
+                        setShowDeleteConfirm(true);
                       }}
                       className="flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
                     >
@@ -361,6 +362,69 @@ export function FeedItem({ post }: FeedItemProps) {
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {/* Delete Post Confirmation Dialogue */}
+      {showDeleteConfirm && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-in fade-in duration-150"
+          onClick={() => setShowDeleteConfirm(false)}
+        >
+          <div
+            className="w-full max-w-sm rounded-2xl border border-[#e4e6eb] bg-white p-5 shadow-2xl dark:border-[#393a3b] dark:bg-[#242526] animate-in zoom-in-95 duration-150"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-rose-100 text-rose-600 dark:bg-rose-950/50 dark:text-rose-400">
+                <Trash2 className="h-5 w-5" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-[#050505] dark:text-[#e4e6eb]">
+                  Delete Post?
+                </h3>
+                <p className="text-xs text-[#65676b] dark:text-[#b0b3b8]">
+                  This action cannot be undone.
+                </p>
+              </div>
+            </div>
+
+            <p className="mt-3.5 text-xs sm:text-sm text-[#65676b] dark:text-[#b0b3b8] leading-relaxed">
+              Are you sure you want to permanently remove this post?
+            </p>
+
+            <div className="mt-5 flex items-center justify-end gap-2.5">
+              <button
+                type="button"
+                disabled={isDeletingPost}
+                onClick={() => setShowDeleteConfirm(false)}
+                className="rounded-xl border border-gray-200 px-4 py-2 text-xs font-semibold text-[#65676b] hover:bg-[#f0f2f5] dark:border-gray-700 dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={isDeletingPost}
+                onClick={() => {
+                  setShowDeleteConfirm(false);
+                  deletePost(post.id);
+                }}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-rose-600 px-4 py-2 text-xs font-semibold text-white hover:bg-rose-700 disabled:opacity-50 transition-colors shadow-xs"
+              >
+                {isDeletingPost ? (
+                  <>
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    <span>Deleting...</span>
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="h-3.5 w-3.5" />
+                    <span>Delete</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </Card>
