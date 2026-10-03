@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -19,6 +19,8 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { usePendingRequestsCount } from '@/features/friends/hooks/useFriendRequests';
+import { useUnreadNotificationsCount } from '@/features/notifications/hooks/useNotifications';
+import { NotificationDropdown } from '@/features/notifications/components/NotificationDropdown';
 import { Container } from '@/components/layout/Container';
 import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/constants/routes';
@@ -31,7 +33,10 @@ export function Navbar() {
   const { t } = useLanguage();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const notificationsTriggerRef = useRef<HTMLButtonElement>(null);
   const { data: requestCount = 0 } = usePendingRequestsCount(isAuthenticated);
+  const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount(isAuthenticated);
 
   const navCenterLinks = [
     { id: 'nav-home', label: t('nav.home'), href: ROUTES.HOME, icon: Home },
@@ -51,7 +56,7 @@ export function Navbar() {
   ];
 
   const rightActionButtons = (
-    <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+    <div className="relative flex items-center gap-1.5 sm:gap-2 shrink-0">
       {/* 2. Messenger / Messages */}
       <Link
         href={isAuthenticated ? ROUTES.FRIENDS.HOME : ROUTES.LOGIN}
@@ -61,17 +66,38 @@ export function Navbar() {
         <MessageCircle className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
       </Link>
 
-      {/* 3. Notifications with red dot badge */}
-      <Link
-        href={isAuthenticated ? ROUTES.FRIENDS.REQUESTS : ROUTES.LOGIN}
-        className="relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors"
-        title="Notifications"
-      >
-        <Bell className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
-        {isAuthenticated && requestCount > 0 && (
-          <span className="absolute top-1.5 right-1.5 h-2.5 w-2.5 rounded-full bg-red-600 ring-2 ring-white dark:ring-[#242526]" />
-        )}
-      </Link>
+      {/* 3. Notifications Bell Button */}
+      {isAuthenticated ? (
+        <button
+          ref={notificationsTriggerRef}
+          type="button"
+          onClick={() => setIsNotificationsOpen((prev) => !prev)}
+          className={cn(
+            'relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full transition-colors cursor-pointer',
+            isNotificationsOpen
+              ? 'bg-primary-50 text-primary-600 dark:bg-primary-950/60 dark:text-primary-400'
+              : 'bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb]',
+          )}
+          title="Notifications"
+          aria-label="Notifications"
+          aria-expanded={isNotificationsOpen}
+        >
+          <Bell className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
+          {unreadNotificationsCount > 0 && (
+            <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-[11px] font-bold text-white shadow-xs">
+              {unreadNotificationsCount > 9 ? '9+' : unreadNotificationsCount}
+            </span>
+          )}
+        </button>
+      ) : (
+        <Link
+          href={ROUTES.LOGIN}
+          className="relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors"
+          title="Notifications"
+        >
+          <Bell className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
+        </Link>
+      )}
 
       {/* 4. User Avatar with ChevronDown / Login */}
       {isAuthenticated ? (
@@ -118,6 +144,15 @@ export function Navbar() {
       >
         <GripVertical className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
       </button>
+
+      {/* Notifications Popover Dropdown placed at right: 0 */}
+      {isAuthenticated && (
+        <NotificationDropdown
+          isOpen={isNotificationsOpen}
+          onClose={() => setIsNotificationsOpen(false)}
+          triggerRef={notificationsTriggerRef}
+        />
+      )}
     </div>
   );
 

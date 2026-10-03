@@ -107,4 +107,11 @@ export const API_ENDPOINTS = {
     DELETE_HISTORY: (id: string) => `/search/history/${id}`,
     CLEAR_HISTORY: '/search/history',
   },
+  NOTIFICATIONS: {
+    LIST: '/notifications',
+    UNREAD_COUNT: '/notifications/unread-count',
+    READ_ALL: '/notifications/read-all',
+    MARK_READ: (id: string) => `/notifications/${id}/read`,
+    DELETE: (id: string) => `/notifications/${id}`,
+  },
 } as const;
