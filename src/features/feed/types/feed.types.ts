@@ -1,6 +1,7 @@
 import { DuaReference, DuaAudio } from '@/types/dua.types';
+import { BloodRequestItem } from '@/features/blood/types/blood.types';
 
-export type PostType = 'TEXT' | 'DUA' | 'QUESTION' | 'ANNOUNCEMENT';
+export type PostType = 'TEXT' | 'DUA' | 'BLOOD_REQUEST' | 'QUESTION' | 'ANNOUNCEMENT';
 export type PostVisibility = 'PUBLIC' | 'FOLLOWERS' | 'GROUP';
 export type PostStatus = 'DRAFT' | 'PUBLISHED' | 'ARCHIVED' | 'HIDDEN';
 
@@ -13,12 +14,12 @@ export interface FeedAuthor {
 
 export interface FeedDua {
   id: string;
-  title: string;
-  fadilah: string;
-  duaBangla: string;
-  meaningBangla: string;
-  arabicText?: string | null;
+  title?: string;
+  fadilah?: string | null;
   transliteration?: string | null;
+  meaning?: string;
+  meaningBangla?: string;
+  arabicText?: string | null;
   category?: {
     id: string;
     name: string;
@@ -32,6 +33,8 @@ export interface FeedDua {
 export interface FeedStats {
   reactionCount: number;
   commentCount: number;
+  saveCount?: number;
+  shareCount?: number;
 }
 
 export interface FeedViewerState {
@@ -43,11 +46,14 @@ export interface FeedItem {
   id: string;
   type: PostType;
   content: string | null;
+  mediaUrls?: string[];
   createdAt: string;
   visibility?: PostVisibility;
   status?: PostStatus;
   author: FeedAuthor;
   dua: FeedDua | null;
+  bloodRequestId?: string | null;
+  bloodRequest?: BloodRequestItem | null;
   stats: FeedStats;
   viewer: FeedViewerState;
 }
@@ -75,13 +81,24 @@ export interface PostComment {
 export interface CreatePostInput {
   type: PostType;
   content?: string;
+  mediaUrls?: string[];
   duaId?: string;
+  duaData?: {
+    title?: string;
+    transliteration?: string;
+    meaning: string;
+    fadilah?: string;
+    arabicText?: string;
+  };
+  bloodRequestId?: string;
+  bloodRequestData?: any;
   visibility?: PostVisibility;
   status?: PostStatus;
 }
 
 export interface UpdatePostInput {
   content?: string;
+  mediaUrls?: string[];
   visibility?: PostVisibility;
   status?: PostStatus;
 }

@@ -123,6 +123,10 @@ export function usePostActions() {
       // Optimistically update
       updateFeedCache(postId, (post) => ({
         ...post,
+        stats: {
+          ...post.stats,
+          saveCount: Math.max(0, (post.stats.saveCount || 0) + (hasSaved ? -1 : 1)),
+        },
         viewer: {
           ...post.viewer,
           hasSaved: !hasSaved,

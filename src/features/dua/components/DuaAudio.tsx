@@ -43,7 +43,7 @@ export function DuaAudio({
           title: duaTitle,
           arabicText: arabicText || '',
           fadilah: '',
-          duaBangla: '',
+          transliteration: '',
           meaningBangla: '',
           categoryId: '',
           createdById: '',

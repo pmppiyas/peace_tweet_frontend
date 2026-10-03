@@ -27,8 +27,9 @@ export function DuaContent({
 
       {/* 2. Bangla Meaning & Transliteration */}
       <DuaMeaning
+        meaning={dua.meaning || dua.meaningBangla}
         meaningBangla={dua.meaningBangla}
-        duaBangla={dua.duaBangla}
+        duaBangla={(dua as any).duaBangla}
         transliteration={dua.transliteration}
       />
 
@@ -48,7 +49,7 @@ export function DuaContent({
         {dua.audios && dua.audios.length > 0 && (
           <DuaAudio
             duaId={dua.id}
-            duaTitle={dua.title}
+            duaTitle={dua.title || dua.meaning || 'Dua'}
             audio={dua.audios[0]}
             audioUrl={dua.audioUrl}
             arabicText={dua.arabicText}

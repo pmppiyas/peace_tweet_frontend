@@ -49,13 +49,13 @@ export function DuaDetail({ dua }: { dua: Dua }) {
     ...(dua.category
       ? [{ label: dua.category.name, href: ROUTES.CATEGORY_DETAIL(dua.category.slug) }]
       : []),
-    { label: dua.title },
+    { label: dua.title || dua.meaning || 'Dua' },
   ];
 
   const fullText = [
-    dua.title,
+    dua.title || dua.meaning,
     dua.fadilah ? `\n\n${t('post.virtueLabel')}\n${dua.fadilah}` : '',
-    `\n\n${t('post.duaLabel')}\n${dua.meaningBangla || dua.duaBangla}`,
+    `\n\n${t('post.duaLabel')}\n${dua.meaningBangla || dua.transliteration || ''}`,
     dua.arabicText ? `\n\nArabic:\n${dua.arabicText}` : '',
     dua.transliteration ? `\n\nPronunciation:\n${dua.transliteration}` : '',
     dua.references?.length
@@ -258,12 +258,12 @@ export function DuaDetail({ dua }: { dua: Dua }) {
                 {t('post.duaLabel')}
               </span>
               <CopyButton
-                text={dua.meaningBangla || dua.duaBangla}
+                text={dua.meaningBangla || dua.transliteration || ''}
                 size="sm"
               />
             </div>
             <p className="text-[15px] text-[#050505] dark:text-[#e4e6eb] font-semibold leading-relaxed">
-              ❝ {dua.meaningBangla || dua.duaBangla} ❞
+              ❝ {dua.meaningBangla || dua.transliteration} ❞
             </p>
           </div>
         </div>
@@ -304,7 +304,7 @@ export function DuaDetail({ dua }: { dua: Dua }) {
             <span className="hidden sm:inline">{t('post.actions.comment')}</span>
           </button>
 
-          <ShareButton title={dua.title} text={dua.meaningBangla} size="sm" variant="ghost" showLabel label={t('post.actions.share')} />
+          <ShareButton title={dua.title || dua.meaning || 'Dua'} text={dua.meaningBangla || dua.meaning} size="sm" variant="ghost" showLabel label={t('post.actions.share')} />
           <CopyButton text={fullText} size="sm" variant="ghost" showLabel label={t('post.actions.copy')} />
           <BookmarkButton duaId={dua.id} initialIsSaved={dua.isSaved} size="sm" variant="ghost" showLabel label={t('post.actions.save')} />
         </div>

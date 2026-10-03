@@ -185,7 +185,7 @@ export function GroupComposer({ group }: GroupComposerProps) {
                       🌙 {selectedDua.title}
                     </p>
                     <p className="text-[11px] text-[#65676b] dark:text-[#b0b3b8] line-clamp-1">
-                      {selectedDua.meaningBangla || selectedDua.duaBangla}
+                      {selectedDua.meaningBangla || selectedDua.transliteration}
                     </p>
                   </div>
                   <button
@@ -325,7 +325,7 @@ export function GroupComposer({ group }: GroupComposerProps) {
                         {d.title}
                       </p>
                       <p className="text-[11px] text-[#65676b] dark:text-[#b0b3b8] line-clamp-1">
-                        {d.meaningBangla || d.duaBangla}
+                        {d.meaningBangla || d.transliteration}
                       </p>
                     </div>
                     {selectedDua?.id === d.id && (

@@ -1,45 +1,98 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
-import { useLanguage } from '@/providers/LanguageProvider';
 import { usePostActions } from '../hooks/usePostActions';
-import { useDuas } from '@/features/dua/hooks/useDuas';
+import { uploadsApi } from '@/features/uploads/api/uploads.api';
 import { PostType } from '../types/feed.types';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { Dua } from '@/types/dua.types';
+import { Input } from '@/components/ui/Input';
+import { BloodGroup } from '@/types/user.types';
+import { BloodRequestUrgency } from '@/features/blood/types/blood.types';
 import {
-  Sparkles,
-  BookOpen,
-  HelpCircle,
   PenTool,
+  BookOpen,
+  Droplet,
+  Image as ImageIcon,
   X,
-  Search,
-  Check,
   Loader2,
+  Calendar,
+  AlertCircle,
 } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
-import Link from 'next/link';
 import { ROUTES } from '@/constants/routes';
+
+const BLOOD_GROUPS: { value: BloodGroup; label: string }[] = [
+  { value: 'A_POSITIVE', label: 'A+' },
+  { value: 'A_NEGATIVE', label: 'A-' },
+  { value: 'B_POSITIVE', label: 'B+' },
+  { value: 'B_NEGATIVE', label: 'B-' },
+  { value: 'AB_POSITIVE', label: 'AB+' },
+  { value: 'AB_NEGATIVE', label: 'AB-' },
+  { value: 'O_POSITIVE', label: 'O+' },
+  { value: 'O_NEGATIVE', label: 'O-' },
+];
+
+const URGENCIES: {
+  value: BloodRequestUrgency;
+  label: string;
+  color: string;
+}[] = [
+  {
+    value: 'REGULAR',
+    label: 'Regular',
+    color:
+      'bg-blue-50 text-blue-700 border-blue-300 dark:bg-blue-900/40 dark:text-blue-300',
+  },
+  {
+    value: 'URGENT',
+    label: 'Urgent',
+    color:
+      'bg-amber-50 text-amber-700 border-amber-300 dark:bg-amber-900/40 dark:text-amber-300',
+  },
+  {
+    value: 'EMERGENCY',
+    label: 'Emergency',
+    color:
+      'bg-red-50 text-red-700 border-red-300 dark:bg-red-900/40 dark:text-red-300',
+  },
+];
 
 export function PostComposer() {
   const { user, isAuthenticated } = useAuth();
-  const { locale } = useLanguage();
   const { createPost, isCreatingPost } = usePostActions();
 
   const [isOpen, setIsOpen] = useState(false);
   const [postType, setPostType] = useState<PostType>('TEXT');
   const [content, setContent] = useState('');
-  const [selectedDua, setSelectedDua] = useState<Dua | null>(null);
-  const [duaSearch, setDuaSearch] = useState('');
-  const [showDuaPicker, setShowDuaPicker] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const { data: duasData, isLoading: isLoadingDuas } = useDuas({
-    search: duaSearch || undefined,
-    limit: 10,
-  });
+  // General Mode State (Images)
+  const [mediaUrls, setMediaUrls] = useState<string[]>([]);
+  const [isUploadingMedia, setIsUploadingMedia] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Dua Mode State (Inline Creation Only)
+  const [duaTransliteration, setDuaTransliteration] = useState('');
+  const [duaMeaning, setDuaMeaning] = useState('');
+  const [duaFadilah, setDuaFadilah] = useState('');
+
+  // Blood Request Mode State
+  const [patientName, setPatientName] = useState('');
+  const [bloodGroup, setBloodGroup] = useState<BloodGroup | ''>('');
+  const [units, setUnits] = useState(1);
+  const [urgency, setUrgency] = useState<BloodRequestUrgency>('REGULAR');
+  const [hospitalName, setHospitalName] = useState('');
+  const [location, setLocation] = useState('');
+  const [contactNumber, setContactNumber] = useState('');
+  const [neededDate, setNeededDate] = useState(
+    () => new Date().toISOString().split('T')[0]
+  );
+  const [problem, setProblem] = useState('');
+  const [bloodNote, setBloodNote] = useState('');
 
   if (!isAuthenticated) {
     return (
@@ -55,44 +108,162 @@ export function PostComposer() {
             />
           </div>
           <p className="text-xs sm:text-sm text-[#65676b] dark:text-[#b0b3b8]">
-            {locale === 'bn'
-              ? 'একটি অর্থপূর্ণ ইসলামিক চিন্তা বা দোয়া শেয়ার করতে সাইন ইন করুন।'
-              : 'Sign in to share a meaningful Islamic reflection or Dua.'}
+            Sign in to share reflections, Duas, or blood donation requests.
           </p>
         </div>
         <Link href={ROUTES.LOGIN}>
-          <Button size="sm" className="rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-xs">
-            {locale === 'bn' ? 'লগইন করুন' : 'Log In'}
+          <Button
+            size="sm"
+            className="rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-xs font-semibold"
+          >
+            Log In
           </Button>
         </Link>
       </Card>
     );
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (postType === 'DUA' && !selectedDua) return;
-    if (postType !== 'DUA' && !content.trim()) return;
+  const resetForm = () => {
+    setContent('');
+    setMediaUrls([]);
+    setDuaTransliteration('');
+    setDuaMeaning('');
+    setDuaFadilah('');
+    setPatientName('');
+    setBloodGroup('');
+    setUnits(1);
+    setUrgency('REGULAR');
+    setHospitalName('');
+    setLocation('');
+    setContactNumber('');
+    setNeededDate(new Date().toISOString().split('T')[0]);
+    setProblem('');
+    setBloodNote('');
+    setErrorMessage(null);
+    setIsOpen(false);
+    setPostType('TEXT');
+  };
+
+  const handleImageFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setIsUploadingMedia(true);
+    setErrorMessage(null);
 
     try {
-      await createPost({
-        type: postType,
-        content: content.trim() || undefined,
-        duaId: selectedDua?.id,
-      });
+      const uploadPromises = Array.from(files).map((file) =>
+        uploadsApi.uploadImage(file)
+      );
+      const results = await Promise.all(uploadPromises);
+      const newUrls = results
+        .map((res) => res.data?.url)
+        .filter((url): url is string => Boolean(url));
 
-      // Reset form
-      setContent('');
-      setSelectedDua(null);
-      setIsOpen(false);
-      setPostType('TEXT');
+      setMediaUrls((prev) => [...prev, ...newUrls]);
     } catch {
-      // Handled by query mutation
+      setErrorMessage('Failed to upload image. Please try again.');
+    } finally {
+      setIsUploadingMedia(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const removeMediaUrl = (index: number) => {
+    setMediaUrls((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMessage(null);
+
+    // Validation per mode
+    if (postType === 'TEXT') {
+      if (!content.trim() && mediaUrls.length === 0) {
+        setErrorMessage('Please enter some text or attach an image.');
+        return;
+      }
+    } else if (postType === 'DUA') {
+      if (!duaMeaning.trim()) {
+        setErrorMessage('Please enter the meaning or translation of the Dua.');
+        return;
+      }
+    } else if (postType === 'BLOOD_REQUEST') {
+      if (!patientName.trim()) {
+        setErrorMessage('Patient name is required.');
+        return;
+      }
+      if (!bloodGroup) {
+        setErrorMessage('Please select a blood group.');
+        return;
+      }
+      if (!hospitalName.trim()) {
+        setErrorMessage('Hospital name is required.');
+        return;
+      }
+      if (!location.trim()) {
+        setErrorMessage('Location / Area is required.');
+        return;
+      }
+      if (!contactNumber.trim()) {
+        setErrorMessage('Contact phone number is required.');
+        return;
+      }
+      if (!neededDate) {
+        setErrorMessage('Date needed is required.');
+        return;
+      }
+    }
+
+    try {
+      if (postType === 'TEXT') {
+        await createPost({
+          type: 'TEXT',
+          content: content.trim() || undefined,
+          mediaUrls: mediaUrls.length > 0 ? mediaUrls : undefined,
+        });
+      } else if (postType === 'DUA') {
+        await createPost({
+          type: 'DUA',
+          duaData: {
+            transliteration: duaTransliteration.trim() || undefined,
+            meaning: duaMeaning.trim(),
+            fadilah: duaFadilah.trim() || undefined,
+          },
+        });
+      } else if (postType === 'BLOOD_REQUEST') {
+        await createPost({
+          type: 'BLOOD_REQUEST',
+          content: content.trim() || undefined,
+          bloodRequestData: {
+            patientName: patientName.trim(),
+            bloodGroup,
+            units: Number(units) || 1,
+            urgency,
+            hospitalName: hospitalName.trim(),
+            location: location.trim(),
+            contactNumber: contactNumber.trim(),
+            neededDate,
+            problem: problem.trim() || undefined,
+            note: bloodNote.trim() || undefined,
+          },
+        });
+      }
+
+      resetForm();
+    } catch (err: any) {
+      const msg =
+        err?.response?.data?.message ||
+        err?.message ||
+        'Failed to create post. Please try again.';
+      setErrorMessage(msg);
     }
   };
 
   return (
-    <Card className="border border-[#e4e6eb] bg-white p-3.5 sm:p-4 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526] rounded-xl">
+    <Card className="border border-[#e4e6eb] bg-white p-3.5 sm:p-4 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526] rounded-xl transition-all">
       {!isOpen ? (
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm select-none">
@@ -104,15 +275,18 @@ export function PostComposer() {
             className="h-10 w-full rounded-full bg-[#f0f2f5] px-4 text-left text-xs sm:text-sm text-[#65676b] hover:bg-[#e4e6eb] transition-colors dark:bg-[#3a3b3c] dark:text-[#b0b3b8] dark:hover:bg-[#4e4f50]"
           >
             {user?.name ? `${user.name.split(' ')[0]}, ` : ''}
-            {locale === 'bn' ? 'একটি দোয়া বা চিন্তা শেয়ার করুন...' : 'Share a Dua or thought...'}
+            Share a reflection, Dua, or Blood Request...
           </button>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-3.5 animate-in fade-in duration-150">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-3.5 animate-in fade-in duration-150"
+        >
           {/* Header */}
           <div className="flex items-center justify-between border-b border-[#e4e6eb] pb-2.5 dark:border-[#393a3b]">
             <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-xs select-none">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-xs select-none">
                 {user?.name ? user.name.charAt(0).toUpperCase() : '🕊️'}
               </div>
               <div>
@@ -120,233 +294,398 @@ export function PostComposer() {
                   {user?.name}
                 </p>
                 <span className="text-[10px] text-primary-600 dark:text-primary-400 font-semibold">
-                  {locale === 'bn' ? 'পাবলিক পোস্ট' : 'Public Post'}
+                  Public Post
                 </span>
               </div>
             </div>
 
             <button
               type="button"
-              onClick={() => {
-                setIsOpen(false);
-                setSelectedDua(null);
-                setContent('');
-              }}
+              onClick={resetForm}
               className="text-[#65676b] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] p-1.5 rounded-full transition-colors"
             >
               <X className="h-4 w-4" />
             </button>
           </div>
 
-          {/* Type Selector Tabs */}
-          <div className="flex flex-wrap gap-1.5">
+          {/* Mode Selector Tabs */}
+          <div className="flex flex-wrap gap-1.5 sm:gap-2">
             <button
               type="button"
               onClick={() => {
                 setPostType('TEXT');
-                setSelectedDua(null);
+                setErrorMessage(null);
               }}
               className={cn(
-                'inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold transition-all',
+                'inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold transition-all',
                 postType === 'TEXT'
-                  ? 'bg-primary-50 text-primary-800 border border-primary-500 dark:bg-primary-900/60 dark:text-primary-300'
-                  : 'bg-[#f0f2f5] text-[#65676b] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:text-[#b0b3b8]',
+                  ? 'bg-primary-50 text-primary-700 border border-primary-500 shadow-2xs dark:bg-primary-900/60 dark:text-primary-300'
+                  : 'bg-[#f0f2f5] text-[#65676b] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:text-[#b0b3b8]'
               )}
             >
-              <PenTool className="h-3.5 w-3.5" />
-              <span>{locale === 'bn' ? 'টেক্সট / স্মরণ' : 'Text / Reflection'}</span>
+              <PenTool className="h-3.5 w-3.5 text-primary-500" />
+              <span>General Post</span>
             </button>
 
             <button
               type="button"
               onClick={() => {
                 setPostType('DUA');
-                setShowDuaPicker(true);
+                setErrorMessage(null);
               }}
               className={cn(
-                'inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold transition-all',
+                'inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold transition-all',
                 postType === 'DUA'
-                  ? 'bg-primary-50 text-primary-800 border border-primary-500 dark:bg-primary-900/60 dark:text-primary-300'
-                  : 'bg-[#f0f2f5] text-[#65676b] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:text-[#b0b3b8]',
+                  ? 'bg-emerald-50 text-emerald-800 border border-emerald-500 shadow-2xs dark:bg-emerald-950/60 dark:text-emerald-300'
+                  : 'bg-[#f0f2f5] text-[#65676b] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:text-[#b0b3b8]'
               )}
             >
-              <BookOpen className="h-3.5 w-3.5" />
-              <span>{locale === 'bn' ? 'দোয়া শেয়ার' : 'Share Dua'}</span>
+              <BookOpen className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+              <span>Dua</span>
             </button>
 
             <button
               type="button"
               onClick={() => {
-                setPostType('QUESTION');
-                setSelectedDua(null);
+                setPostType('BLOOD_REQUEST');
+                setErrorMessage(null);
               }}
               className={cn(
-                'inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold transition-all',
-                postType === 'QUESTION'
-                  ? 'bg-amber-50 text-amber-900 border border-amber-500 dark:bg-amber-950/60 dark:text-amber-300'
-                  : 'bg-[#f0f2f5] text-[#65676b] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:text-[#b0b3b8]',
+                'inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold transition-all',
+                postType === 'BLOOD_REQUEST'
+                  ? 'bg-rose-50 text-rose-800 border border-rose-500 shadow-2xs dark:bg-rose-950/60 dark:text-rose-300'
+                  : 'bg-[#f0f2f5] text-[#65676b] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:text-[#b0b3b8]'
               )}
             >
-              <HelpCircle className="h-3.5 w-3.5" />
-              <span>{locale === 'bn' ? 'প্রশ্ন / জিজ্ঞাসা' : 'Question'}</span>
+              <Droplet className="h-3.5 w-3.5 text-rose-600 dark:text-rose-400 fill-rose-500/20" />
+              <span>Blood Request</span>
             </button>
           </div>
 
-          {/* If DUA type selected, show chosen Dua or trigger picker */}
-          {postType === 'DUA' && (
-            <div className="space-y-2">
-              {selectedDua ? (
-                <div className="flex items-center justify-between rounded-xl bg-primary-50/60 p-3 border border-primary-200 dark:bg-primary-900/40 dark:border-primary-800">
-                  <div>
-                    <span className="text-[10px] font-bold text-primary-600 dark:text-primary-400">
-                      {locale === 'bn' ? 'যুক্ত করা দোয়া:' : 'Selected Dua:'}
-                    </span>
-                    <p className="text-xs font-bold text-[#050505] dark:text-[#e4e6eb]">
-                      🌙 {selectedDua.title}
-                    </p>
-                    <p className="text-[11px] text-[#65676b] dark:text-[#b0b3b8] line-clamp-1">
-                      {selectedDua.meaningBangla || selectedDua.duaBangla}
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setShowDuaPicker(true)}
-                    className="text-xs font-semibold text-primary-600 hover:underline dark:text-primary-400"
-                  >
-                    {locale === 'bn' ? 'পরিবর্তন' : 'Change'}
-                  </button>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setShowDuaPicker(true)}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-primary-300 p-3 text-xs font-semibold text-primary-600 hover:bg-primary-50 transition-colors dark:border-primary-700 dark:text-primary-400 dark:hover:bg-primary-900/40"
-                >
-                  <BookOpen className="h-4 w-4" />
-                  <span>{locale === 'bn' ? 'একটি দোয়া নির্বাচন করুন' : 'Select a Dua'}</span>
-                </button>
-              )}
+          {/* Validation Error Banner */}
+          {errorMessage && (
+            <div className="flex items-center gap-2 rounded-xl bg-red-50 p-2.5 text-xs text-red-600 border border-red-200 dark:bg-red-950/50 dark:border-red-900 dark:text-red-300">
+              <AlertCircle className="h-4 w-4 shrink-0 text-red-500" />
+              <span>{errorMessage}</span>
             </div>
           )}
 
-          {/* Text Input */}
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder={
-              postType === 'DUA'
-                ? locale === 'bn'
-                  ? 'এই দোয়া সম্পর্কে কোনো অতিরিক্ত বার্তা বা আমল শেয়ার করতে পারেন (ঐচ্ছিক)...'
-                  : 'Add an optional note or reflection about this Dua...'
-                : postType === 'QUESTION'
-                  ? locale === 'bn'
-                    ? 'আপনার প্রশ্ন বা জিজ্ঞাসার বিষয়টি স্পষ্ট করে লিখুন...'
-                    : 'Write your question or inquiry clearly...'
-                  : locale === 'bn'
-                    ? 'একটি অর্থপূর্ণ ইসলামিক চিন্তা বা হাদিসের শিক্ষণীয় দিক লিখুন...'
-                    : 'Share a meaningful Islamic reflection or beneficial lesson...'
-            }
-            rows={3}
-            className="w-full resize-none rounded-xl border border-[#e4e6eb] bg-[#f0f2f5] p-3 text-xs sm:text-sm text-[#050505] placeholder:text-[#65676b] focus:border-primary-500 focus:bg-white focus:outline-hidden dark:border-[#393a3b] dark:bg-[#3a3b3c] dark:text-[#e4e6eb] dark:placeholder:text-[#b0b3b8] dark:focus:bg-[#242526]"
-          />
+          {/* ────────────────── 1. GENERAL MODE ────────────────── */}
+          {postType === 'TEXT' && (
+            <div className="space-y-3">
+              <textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder="What's on your mind? Share an Islamic reflection, reminder, or story..."
+                rows={3}
+                className="w-full resize-none rounded-xl border border-[#e4e6eb] bg-[#f0f2f5] p-3 text-xs sm:text-sm text-[#050505] placeholder:text-[#65676b] focus:border-primary-500 focus:bg-white focus:outline-hidden dark:border-[#393a3b] dark:bg-[#3a3b3c] dark:text-[#e4e6eb] dark:placeholder:text-[#b0b3b8] dark:focus:bg-[#242526]"
+              />
+
+              {/* Uploaded Photos Grid */}
+              {mediaUrls.length > 0 && (
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
+                  {mediaUrls.map((url, idx) => (
+                    <div
+                      key={idx}
+                      className="group relative aspect-video overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800"
+                    >
+                      <Image
+                        src={url}
+                        alt={`Attachment ${idx + 1}`}
+                        fill
+                        className="object-cover"
+                        unoptimized
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeMediaUrl(idx)}
+                        className="absolute top-1.5 right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors"
+                        title="Remove photo"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Photo Upload Trigger */}
+              <div className="flex items-center gap-2">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp,image/gif"
+                  multiple
+                  onChange={handleImageFiles}
+                  className="hidden"
+                />
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploadingMedia}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-semibold text-[#65676b] hover:bg-[#f0f2f5] dark:border-gray-700 dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] transition-colors"
+                >
+                  {isUploadingMedia ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin text-primary-500" />
+                  ) : (
+                    <ImageIcon className="h-3.5 w-3.5 text-emerald-500" />
+                  )}
+                  <span>
+                    {isUploadingMedia ? 'Uploading image...' : 'Add Photo'}
+                  </span>
+                </button>
+                {mediaUrls.length > 0 && (
+                  <span className="text-[11px] text-[#65676b] dark:text-[#b0b3b8]">
+                    {mediaUrls.length}{' '}
+                    {mediaUrls.length === 1 ? 'photo' : 'photos'} attached
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* ────────────────── 2. DUA MODE (INLINE ONLY) ────────────────── */}
+          {postType === 'DUA' && (
+            <div className="space-y-2.5 rounded-xl bg-emerald-50/50 p-3 border border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-900/60">
+
+              <Input
+                label="Pronunciation (Bangla/English)"
+                placeholder="e.g. Allahumma bismika amutu wa ahya"
+                value={duaTransliteration}
+                onChange={(e) => setDuaTransliteration(e.target.value)}
+              />
+
+              <div className="space-y-1">
+                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+                  Meaning / Translation *
+                </label>
+                <textarea
+                  value={duaMeaning}
+                  onChange={(e) => setDuaMeaning(e.target.value)}
+                  placeholder="e.g. O Allah, in Your name I die and I live..."
+                  rows={2}
+                  className="w-full resize-none rounded-xl border border-[#e4e6eb] bg-white p-2.5 text-xs sm:text-sm text-[#050505] placeholder:text-[#65676b] focus:border-emerald-500 focus:outline-hidden dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#e4e6eb]"
+                  required
+                />
+              </div>
+
+              <Input
+                label="Fadilah (Optional)"
+                placeholder="e.g. Recite before sleeping for protection throughout the night"
+                value={duaFadilah}
+                onChange={(e) => setDuaFadilah(e.target.value)}
+              />
+            </div>
+          )}
+
+          {/* ────────────────── 3. BLOOD REQUEST MODE ────────────────── */}
+          {postType === 'BLOOD_REQUEST' && (
+            <div className="space-y-3 rounded-xl bg-rose-50/50 p-3 border border-rose-200 dark:bg-rose-950/30 dark:border-rose-900/60">
+              <div className="flex items-center gap-1.5 text-rose-700 dark:text-rose-400 pb-1">
+                <Droplet className="h-4 w-4 fill-rose-600" />
+                <span className="text-xs font-bold uppercase tracking-wider">
+                  Blood Donation Request Details
+                </span>
+              </div>
+
+              {/* Patient Name */}
+              <Input
+                label="Patient Name *"
+                placeholder="e.g. Md. Tariqul Islam"
+                value={patientName}
+                onChange={(e) => setPatientName(e.target.value)}
+                required
+              />
+
+              {/* Blood Group Selector */}
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
+                  Required Blood Group *
+                </label>
+                <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
+                  {BLOOD_GROUPS.map((bg) => {
+                    const isSelected = bloodGroup === bg.value;
+                    return (
+                      <button
+                        key={bg.value}
+                        type="button"
+                        onClick={() => setBloodGroup(bg.value)}
+                        className={cn(
+                          'flex items-center justify-center rounded-xl py-1.5 px-2 text-xs font-bold transition-all border',
+                          isSelected
+                            ? 'border-rose-600 bg-rose-600 text-white shadow-xs'
+                            : 'border-[#e4e6eb] bg-white text-[#050505] hover:bg-rose-50 dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#e4e6eb] dark:hover:bg-[#3a3b3c]'
+                        )}
+                      >
+                        {bg.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Units & Urgency */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                    Units / Bags Needed *
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="10"
+                    value={units}
+                    onChange={(e) =>
+                      setUnits(Math.max(1, parseInt(e.target.value) || 1))
+                    }
+                    className="h-10 w-full rounded-xl border border-[#e4e6eb] bg-white px-3 text-xs sm:text-sm text-[#050505] dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#e4e6eb] focus:border-rose-500 focus:outline-hidden"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                    Urgency Level *
+                  </label>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {URGENCIES.map((u) => {
+                      const isSelected = urgency === u.value;
+                      return (
+                        <button
+                          key={u.value}
+                          type="button"
+                          onClick={() => setUrgency(u.value)}
+                          className={cn(
+                            'rounded-xl py-2 px-1 text-[11px] font-bold border transition-all text-center',
+                            isSelected
+                              ? 'border-rose-600 bg-rose-600 text-white shadow-xs'
+                              : 'border-[#e4e6eb] bg-white text-[#65676b] hover:bg-gray-100 dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#b0b3b8]'
+                          )}
+                        >
+                          {u.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* Hospital & Location */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <Input
+                  label="Hospital Name *"
+                  placeholder="e.g. Dhaka Medical College Hospital"
+                  value={hospitalName}
+                  onChange={(e) => setHospitalName(e.target.value)}
+                  required
+                />
+                <Input
+                  label="Location / Area *"
+                  placeholder="e.g. Shahbagh, Dhaka"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  required
+                />
+              </div>
+
+              {/* Contact & Date */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <Input
+                  label="Contact Phone Number *"
+                  placeholder="e.g. +880 1712 345678"
+                  value={contactNumber}
+                  onChange={(e) => setContactNumber(e.target.value)}
+                  required
+                />
+                <Input
+                  label="Date Needed *"
+                  type="date"
+                  value={neededDate}
+                  onChange={(e) => setNeededDate(e.target.value)}
+                  leftIcon={<Calendar className="h-4 w-4 text-rose-500" />}
+                  required
+                />
+              </div>
+
+              {/* Medical Reason & Notes */}
+              <Input
+                label="Medical Reason / Condition (Optional)"
+                placeholder="e.g. Surgery, Delivery, Dengue, Thalassemia"
+                value={problem}
+                onChange={(e) => setProblem(e.target.value)}
+              />
+
+              <div className="space-y-1">
+                <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300">
+                  Additional Notes (Optional)
+                </label>
+                <textarea
+                  value={bloodNote}
+                  onChange={(e) => setBloodNote(e.target.value)}
+                  placeholder="Any special instructions for donors (e.g. transportation provided, exact ward)..."
+                  rows={2}
+                  className="w-full resize-none rounded-xl border border-[#e4e6eb] bg-white p-2.5 text-xs text-[#050505] placeholder:text-[#65676b] focus:border-rose-500 focus:outline-hidden dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#e4e6eb]"
+                />
+              </div>
+
+              {/* Optional general content caption */}
+              <div className="space-y-1 pt-1">
+                <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300">
+                  Post Caption (Optional)
+                </label>
+                <textarea
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  placeholder="Brief note to your followers on the feed..."
+                  rows={1}
+                  className="w-full resize-none rounded-xl border border-[#e4e6eb] bg-white p-2 text-xs text-[#050505] placeholder:text-[#65676b] focus:border-rose-500 focus:outline-hidden dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#e4e6eb]"
+                />
+              </div>
+            </div>
+          )}
 
           {/* Footer Submit Bar */}
           <div className="flex items-center justify-between pt-1">
             <span className="text-[11px] text-[#65676b] dark:text-[#b0b3b8]">
-              {content.length}/5000 {locale === 'bn' ? 'অক্ষর' : 'characters'}
+              {postType === 'TEXT' && `${content.length}/5000 characters`}
+              {postType === 'DUA' && 'Auto-categorized Dua'}
+              {postType === 'BLOOD_REQUEST' && 'Emergency Donor Request'}
             </span>
 
-            <Button
-              type="submit"
-              disabled={
-                isCreatingPost ||
-                (postType === 'DUA' && !selectedDua) ||
-                (postType !== 'DUA' && !content.trim())
-              }
-              isLoading={isCreatingPost}
-              size="sm"
-              className="rounded-xl bg-primary-500 hover:bg-primary-600 text-white font-bold px-4"
-            >
-              {locale === 'bn' ? 'পোস্ট করুন' : 'Post'}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={resetForm}
+                className="rounded-xl text-xs px-3 text-[#65676b]"
+              >
+                Cancel
+              </Button>
+
+              <Button
+                type="submit"
+                disabled={isCreatingPost || isUploadingMedia}
+                isLoading={isCreatingPost}
+                size="sm"
+                className={cn(
+                  'rounded-xl text-white font-bold px-4 transition-all',
+                  postType === 'BLOOD_REQUEST'
+                    ? 'bg-rose-600 hover:bg-rose-700'
+                    : postType === 'DUA'
+                      ? 'bg-emerald-600 hover:bg-emerald-700'
+                      : 'bg-primary-500 hover:bg-primary-600'
+                )}
+              >
+                {postType === 'BLOOD_REQUEST'
+                  ? 'Post Blood Request'
+                  : postType === 'DUA'
+                    ? 'Post Dua'
+                    : 'Post'}
+              </Button>
+            </div>
           </div>
         </form>
-      )}
-
-      {/* Dua Selector Modal */}
-      {showDuaPicker && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs animate-in fade-in duration-100">
-          <div className="w-full max-w-md rounded-2xl border border-[#e4e6eb] bg-white p-4 shadow-xl dark:border-[#393a3b] dark:bg-[#242526] space-y-3">
-            <div className="flex items-center justify-between border-b border-[#e4e6eb] pb-2 dark:border-[#393a3b]">
-              <h3 className="text-sm font-bold text-[#050505] dark:text-[#e4e6eb]">
-                {locale === 'bn' ? 'দোয়া নির্বাচন করুন' : 'Select Dua'}
-              </h3>
-              <button
-                type="button"
-                onClick={() => setShowDuaPicker(false)}
-                className="text-[#65676b] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] p-1 rounded-full"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-
-            {/* Search */}
-            <div className="relative">
-              <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
-              <input
-                type="text"
-                value={duaSearch}
-                onChange={(e) => setDuaSearch(e.target.value)}
-                placeholder={locale === 'bn' ? 'দোয়ার নাম বা বিষয় দিয়ে খুঁজুন...' : 'Search Duas by title or topic...'}
-                className="h-9 w-full rounded-xl border border-[#e4e6eb] bg-[#f0f2f5] pl-8 pr-3 text-xs text-[#050505] placeholder:text-[#65676b] focus:border-primary-500 focus:bg-white focus:outline-hidden dark:border-[#393a3b] dark:bg-[#3a3b3c] dark:text-[#e4e6eb]"
-              />
-            </div>
-
-            {/* Dua List */}
-            <div className="max-h-60 overflow-y-auto space-y-1.5">
-              {isLoadingDuas ? (
-                <div className="py-6 text-center text-xs text-[#65676b] dark:text-[#b0b3b8]">
-                  <Loader2 className="h-4 w-4 animate-spin mx-auto mb-1 text-primary-500" />
-                  {locale === 'bn' ? 'দোয়া লোড হচ্ছে...' : 'Loading Duas...'}
-                </div>
-              ) : !duasData?.items || duasData.items.length === 0 ? (
-                <div className="py-6 text-center text-xs text-[#65676b] dark:text-[#b0b3b8]">
-                  {locale === 'bn' ? 'কোনো দোয়া পাওয়া যায়নি।' : 'No Duas found.'}
-                </div>
-              ) : (
-                duasData.items.map((d: any) => (
-                  <button
-                    key={d.id}
-                    type="button"
-                    onClick={() => {
-                      setSelectedDua(d);
-                      setPostType('DUA');
-                      setShowDuaPicker(false);
-                    }}
-                    className={cn(
-                      'flex w-full items-start justify-between rounded-xl p-2.5 text-left text-xs transition-colors border',
-                      selectedDua?.id === d.id
-                        ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/60'
-                        : 'border-[#e4e6eb] hover:bg-[#f0f2f5] dark:border-[#393a3b] dark:hover:bg-[#3a3b3c]',
-                    )}
-                  >
-                    <div>
-                      <p className="font-bold text-[#050505] dark:text-[#e4e6eb]">
-                        {d.title}
-                      </p>
-                      <p className="text-[11px] text-[#65676b] dark:text-[#b0b3b8] line-clamp-1">
-                        {d.meaningBangla || d.duaBangla}
-                      </p>
-                    </div>
-                    {selectedDua?.id === d.id && (
-                      <Check className="h-4 w-4 text-primary-500 shrink-0 mt-0.5" />
-                    )}
-                  </button>
-                ))
-              )}
-            </div>
-          </div>
-        </div>
       )}
     </Card>
   );

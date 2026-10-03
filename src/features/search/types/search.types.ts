@@ -37,6 +37,7 @@ export interface SearchDuaItem {
   id: string;
   title: string;
   meaningBangla?: string;
+  transliteration?: string;
   duaBangla?: string;
   arabicText?: string | null;
   category?: {

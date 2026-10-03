@@ -22,17 +22,19 @@ export function DuaPostCard({ post }: DuaPostCardProps) {
         </p>
       )}
 
-      {/* Dua Title Header */}
+      {/* Dua Content */}
       {dua && (
         <div className="space-y-2.5">
-          <Link
-            href={ROUTES.DUA_DETAIL(dua.id)}
-            className="group block"
-          >
-            <h2 className="text-[16px] sm:text-[17px] font-bold text-[#050505] group-hover:text-primary-600 dark:text-[#e4e6eb] dark:group-hover:text-primary-400 transition-colors">
-              🌙 {dua.title}
-            </h2>
-          </Link>
+          {dua.title && (
+            <Link
+              href={ROUTES.DUA_DETAIL(dua.id)}
+              className="group block"
+            >
+              <h2 className="text-[16px] sm:text-[17px] font-bold text-[#050505] group-hover:text-primary-600 dark:text-[#e4e6eb] dark:group-hover:text-primary-400 transition-colors">
+                🌙 {dua.title}
+              </h2>
+            </Link>
+          )}
 
           {/* Composed Reusable Dua Content */}
           <DuaContent dua={dua} showArabicCollapsible={true} />

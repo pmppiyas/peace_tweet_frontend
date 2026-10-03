@@ -38,12 +38,12 @@ export interface DuaAudio {
 
 export interface Dua {
   id: string;
-  title: string;
-  fadilah: string;
-  duaBangla: string;
-  meaningBangla: string;
-  arabicText?: string | null;
+  title?: string;
+  fadilah?: string | null;
   transliteration?: string | null;
+  meaning: string;
+  meaningBangla?: string;
+  arabicText?: string | null;
   categoryId: string;
   createdById: string;
   status: DuaStatus;
