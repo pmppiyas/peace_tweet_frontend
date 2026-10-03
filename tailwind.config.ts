@@ -84,6 +84,15 @@ const config: Config = {
           'sans-serif',
         ],
       },
+      keyframes: {
+        'pulse-fade': {
+          '0%, 100%': { opacity: '0.6' },
+          '50%': { opacity: '1' },
+        },
+      },
+      animation: {
+        'pulse-fade': 'pulse-fade 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
     },
   },
   plugins: [],

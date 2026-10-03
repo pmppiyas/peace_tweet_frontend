@@ -1,6 +1,7 @@
 export const en = {
   nav: {
     home: 'Home Feed',
+    duas: 'Duas',
     categories: 'Categories',
     bookmarks: 'Bookmarks',
     search: 'Search',

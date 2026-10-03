@@ -111,5 +111,20 @@
     scrollbar-width: none !important;
     scrollbar-color: transparent transparent !important;
   }
+
+  /* Fade pulsating animation for loaders (60% to 100% opacity) */
+  @keyframes pulse-fade {
+    0%, 100% {
+      opacity: 0.6;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  .animate-pulse-fade {
+    animation: pulse-fade 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
 }
+
 

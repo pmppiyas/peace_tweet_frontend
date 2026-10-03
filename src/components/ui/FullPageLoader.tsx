@@ -16,9 +16,9 @@ export function FullPageLoader({ className }: FullPageLoaderProps) {
       role="status"
       aria-label="Loading PeaceTweet"
     >
-      {/* 1. Exact Dead Center: Brand Logo with gentle breathing pulse */}
+      {/* 1. Exact Dead Center: Brand Logo with gentle breathing pulse (- to + opacity) */}
       <div className="flex flex-col items-center justify-center">
-        <div className="relative h-20 w-20 sm:h-24 sm:w-24 animate-pulse">
+        <div className="relative h-20 w-20 sm:h-24 sm:w-24 animate-pulse-fade">
           <Image
             src="/p-logo.svg"
             alt="PeaceTweet"

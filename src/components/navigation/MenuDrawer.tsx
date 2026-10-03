@@ -131,7 +131,7 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end select-none">
+    <div className="fixed inset-0 z-50 flex justify-end select-none pb-14">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
@@ -139,7 +139,7 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
       />
 
       {/* Drawer Panel */}
-      <div className="relative z-50 w-80 max-w-[85vw] h-full bg-white dark:bg-[#242526] shadow-2xl flex flex-col transition-all animate-in slide-in-from-right duration-250 border-l border-[#e4e6eb] dark:border-[#393a3b]">
+      <div className="relative z-50 w-80 max-w-[85vw] h-full bg-white dark:bg-[#242526] shadow-2xl flex flex-col transition-all animate-in slide-in-from-right duration-250 border-l border-[#e4e6eb] dark:border-[#393a3b] ">
         {/* Drawer Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-[#e4e6eb] dark:border-[#393a3b]">
           <h2 className="text-lg font-bold text-[#050505] dark:text-[#e4e6eb]">

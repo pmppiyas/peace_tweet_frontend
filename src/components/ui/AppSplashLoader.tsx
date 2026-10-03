@@ -10,11 +10,11 @@ export function AppSplashLoader() {
   useEffect(() => {
     const fadeTimer = setTimeout(() => {
       setFading(true);
-    }, 450);
+    }, 650);
 
     const removeTimer = setTimeout(() => {
       setVisible(false);
-    }, 800);
+    }, 950);
 
     return () => {
       clearTimeout(fadeTimer);
