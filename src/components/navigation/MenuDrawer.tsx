@@ -59,7 +59,6 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
 
   useEffect(() => {
     if (isOpen) onClose();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   if (!isOpen) return null;
@@ -131,7 +130,7 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end select-none pb-14">
+    <div className="fixed inset-0 z-50 flex justify-end select-none pb-14 md:pb-0">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
