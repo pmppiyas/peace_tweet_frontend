@@ -25,6 +25,7 @@ import {
   LayoutGrid,
   SlidersHorizontal,
   Smile,
+  Check,
 } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/constants/routes';
@@ -73,6 +74,7 @@ export function PostComposer() {
   const { isUploadingPost, setIsUploadingPost } = useUiStore();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [postType, setPostType] = useState<PostType>('TEXT');
   const [content, setContent] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -285,6 +287,10 @@ export function PostComposer() {
     setIsUploadingPost(true);
     try {
       await createPost(payload);
+      setIsSuccess(true);
+      setTimeout(() => {
+        setIsSuccess(false);
+      }, 4000);
     } catch (err: any) {
       const msg =
         err?.response?.data?.message ||
@@ -315,6 +321,8 @@ export function PostComposer() {
                 'relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm select-none overflow-hidden shadow-xs transition-all',
                 isUploadingPost &&
                   'ring-2 ring-primary-500 ring-offset-2 ring-offset-white dark:ring-offset-[#242526]',
+                isSuccess &&
+                  'ring-2 ring-emerald-500 ring-offset-2 ring-offset-white dark:ring-offset-[#242526]',
               )}
             >
               {user?.avatarUrl ? (
@@ -330,25 +338,39 @@ export function PostComposer() {
               )}
             </div>
           </div>
-          <button
-            type="button"
-            onClick={() => setIsOpen(true)}
-            className="h-10 w-full rounded-full bg-[#f0f2f5] px-4 text-left text-xs sm:text-sm text-[#65676b] hover:bg-[#e4e6eb] transition-colors dark:bg-[#3a3b3c] dark:text-[#b0b3b8] dark:hover:bg-[#4e4f50] flex items-center justify-between gap-2"
-          >
-            <span className="truncate">
-              {isUploadingPost
-                ? 'Posting your reflection...'
-                : user?.name
-                ? `${user.name.split(' ')[0]}, Share a reflection, Dua, or Blood Request...`
-                : 'Share a reflection, Dua, or Blood Request...'}
-            </span>
-            {isUploadingPost && (
-              <span className="flex items-center gap-1.5 text-xs text-primary-600 dark:text-primary-400 font-semibold shrink-0">
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                <span>Uploading...</span>
+          {isSuccess ? (
+            <div className="h-10 w-full rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-700/60 px-4 text-xs sm:text-sm font-semibold text-emerald-700 dark:text-emerald-300 flex items-center justify-between animate-in fade-in zoom-in-95 duration-200 select-none">
+              <div className="flex items-center gap-2">
+                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-white shrink-0 shadow-xs">
+                  <Check className="h-3.5 w-3.5 stroke-[3]" />
+                </div>
+                <span>Posted successfully!</span>
+              </div>
+              <span className="text-[11px] font-normal text-emerald-600 dark:text-emerald-400 hidden sm:inline">
+                Visible in feed
               </span>
-            )}
-          </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setIsOpen(true)}
+              className="h-10 w-full rounded-full bg-[#f0f2f5] px-4 text-left text-xs sm:text-sm text-[#65676b] hover:bg-[#e4e6eb] transition-colors dark:bg-[#3a3b3c] dark:text-[#b0b3b8] dark:hover:bg-[#4e4f50] flex items-center justify-between gap-2"
+            >
+              <span className="truncate">
+                {isUploadingPost
+                  ? 'Posting your reflection...'
+                  : user?.name
+                  ? `${user.name.split(' ')[0]}, Share a reflection, Dua, or Blood Request...`
+                  : 'Share a reflection, Dua, or Blood Request...'}
+              </span>
+              {isUploadingPost && (
+                <span className="flex items-center gap-1.5 text-xs text-primary-600 dark:text-primary-400 font-semibold shrink-0">
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  <span>Uploading...</span>
+                </span>
+              )}
+            </button>
+          )}
         </div>
       ) : (
         <form

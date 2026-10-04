@@ -153,7 +153,32 @@ export function usePostActions() {
     mutationFn: async (input: CreatePostInput) => {
       return feedApi.createPost(input);
     },
-    onSuccess: () => {
+    onSuccess: (response) => {
+      const newPost = response?.data;
+      if (newPost) {
+        queryClient.setQueriesData<InfiniteData<FeedResponse>>(
+          { queryKey: ['feed'] },
+          (oldData) => {
+            if (!oldData || !oldData.pages || oldData.pages.length === 0) {
+              return oldData;
+            }
+            return {
+              ...oldData,
+              pages: oldData.pages.map((page, idx) => {
+                if (idx === 0) {
+                  const existingItems = page.items || [];
+                  const filtered = existingItems.filter((p) => p.id !== newPost.id);
+                  return {
+                    ...page,
+                    items: [newPost, ...filtered],
+                  };
+                }
+                return page;
+              }),
+            };
+          },
+        );
+      }
       queryClient.invalidateQueries({ queryKey: ['feed'] });
     },
   });
