@@ -9,7 +9,6 @@ export function useFeed(typeFilter?: PostType) {
     queryKey: ['feed', { type: typeFilter }],
     queryFn: async ({ pageParam }) => {
       const filters: FeedFilters = {
-        limit: 20,
         cursor: pageParam ? String(pageParam) : undefined,
         type: typeFilter,
       };

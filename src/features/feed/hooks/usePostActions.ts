@@ -197,11 +197,33 @@ export function usePostActions() {
 
       const removePost = (oldData?: InfiniteData<FeedResponse>) => {
         if (!oldData?.pages) return oldData;
+        let originalPostId: string | null = null;
+        for (const page of oldData.pages) {
+          const found = (page.items || []).find((p) => p.id === postId);
+          if (found?.originalPostId) {
+            originalPostId = found.originalPostId;
+            break;
+          }
+        }
+
         return {
           ...oldData,
           pages: oldData.pages.map((page) => ({
             ...page,
-            items: (page.items || []).filter((p) => p.id !== postId),
+            items: (page.items || [])
+              .filter((p) => p.id !== postId)
+              .map((p) => {
+                if (originalPostId && (p.id === originalPostId || p.originalPostId === originalPostId)) {
+                  return {
+                    ...p,
+                    stats: {
+                      ...p.stats,
+                      shareCount: Math.max(0, (p.stats.shareCount || 0) - 1),
+                    },
+                  };
+                }
+                return p;
+              }),
           })),
         };
       };

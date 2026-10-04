@@ -345,7 +345,11 @@ export default function SearchPage() {
                                 className="py-3 first:pt-1 last:pb-1 space-y-2"
                               >
                                 <div className="flex items-center gap-2">
-                                  <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-700 font-bold text-xs">
+                                  <Link
+                                    href={ROUTES.USER_PROFILE(post.author.username)}
+                                    className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-700 font-bold text-xs hover:opacity-90 active:scale-95 transition-all"
+                                    title={post.author.name}
+                                  >
                                     {post.author.avatarUrl ? (
                                       <Image
                                         src={post.author.avatarUrl}
@@ -361,7 +365,7 @@ export default function SearchPage() {
                                           .toUpperCase()}
                                       </span>
                                     )}
-                                  </div>
+                                  </Link>
                                   <div>
                                     <Link
                                       href={ROUTES.USER_PROFILE(

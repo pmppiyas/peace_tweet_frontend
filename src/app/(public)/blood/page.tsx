@@ -81,51 +81,6 @@ function BloodContent() {
   return (
     <BloodLayout activeTab={activeTab} onSelectTab={setActiveTab}>
       <div className="space-y-4">
-        {/* Header Action Bar: Title + Request Blood CTA */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-[#242526] p-4 rounded-2xl border border-[#e4e6eb] dark:border-[#393a3b] shadow-2xs">
-          <div>
-            <h1 className="text-lg font-bold text-[#050505] dark:text-white flex items-center gap-2">
-              <Heart className="h-5 w-5 text-rose-600 fill-current" />
-              <span>
-                {activeTab === 'all'
-                  ? locale === 'bn'
-                    ? 'জরুরি রক্তের আবেদনসমূহ'
-                    : 'Emergency Blood Requests'
-                  : activeTab === 'donors'
-                    ? locale === 'bn'
-                      ? 'নিবন্ধিত রক্তদাতাদের তালিকা'
-                      : 'Registered Blood Donors'
-                    : activeTab === 'my-requests'
-                      ? locale === 'bn'
-                        ? 'আমার রক্তের আবেদনসমূহ'
-                        : 'My Blood Requests'
-                      : locale === 'bn'
-                        ? 'আমার রক্তদানের রেকর্ড'
-                        : 'My Blood Donations'}
-              </span>
-            </h1>
-            <p className="text-xs text-[#65676b] dark:text-[#b0b3b8] mt-0.5">
-              {activeTab === 'donors'
-                ? locale === 'bn'
-                  ? 'আপনার এলাকায় যেকোনো গ্রুপের রক্তদাতা খুঁজে যোগাযোগ করুন'
-                  : 'Search and connect with available blood donors'
-                : locale === 'bn'
-                  ? 'জরুরি প্রয়োজনে রক্ত দিয়ে মানুষের জীবন রক্ষা করুন'
-                  : 'Respond to urgent blood appeals in your community'}
-            </p>
-          </div>
-
-          <Link
-            href={isAuthenticated ? ROUTES.BLOOD.CREATE : ROUTES.LOGIN}
-            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-rose-600 text-white font-bold text-xs shadow-2xs hover:bg-rose-700 active:scale-95 transition-all self-start sm:self-auto shrink-0"
-          >
-            <PlusCircle className="h-4 w-4" />
-            <span>
-              {locale === 'bn' ? 'রক্তের জন্য আবেদন' : 'Post Blood Request'}
-            </span>
-          </Link>
-        </div>
-
         {/* Filters & Search */}
         <div className="bg-white dark:bg-[#242526] p-3.5 sm:p-4 rounded-2xl border border-[#e4e6eb] dark:border-[#393a3b] shadow-2xs">
           <BloodFilters

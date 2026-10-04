@@ -88,7 +88,8 @@ export function ProfileView({
     !targetUser ||
       (authUser &&
         targetUser &&
-        (authUser.id === targetUser.id || authUser.username === targetUser.username))
+        (authUser.id === targetUser.id ||
+          authUser.username?.toLowerCase() === targetUser.username?.toLowerCase()))
   );
   const isViewAs =
     !isOwner || (isViewAsProp ?? searchParams?.get('view_as') === 'true');
@@ -99,6 +100,14 @@ export function ProfileView({
       : displayUser?.username
         ? `/${displayUser.username}`
         : '/profile');
+
+  const exitViewAsUrl = isOwner
+    ? activeSubTab === 'overview'
+      ? ROUTES.PROFILE
+      : `${ROUTES.PROFILE}?tab=${activeSubTab}`
+    : activeSubTab === 'overview'
+      ? `${effectiveBaseUrl}?from=tab`
+      : `${effectiveBaseUrl}?tab=${activeSubTab}&from=tab`;
 
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [bioInput, setBioInput] = useState(displayUser?.bio || '');
@@ -118,9 +127,7 @@ export function ProfileView({
   };
 
   const viewAsUrl = isViewAs
-    ? activeSubTab === 'overview'
-      ? `${effectiveBaseUrl}?from=tab`
-      : `${effectiveBaseUrl}?tab=${activeSubTab}&from=tab`
+    ? exitViewAsUrl
     : activeSubTab === 'overview'
       ? `${effectiveBaseUrl}?view_as=true`
       : `${effectiveBaseUrl}?tab=${activeSubTab}&from=tab&view_as=true`;
@@ -299,11 +306,7 @@ export function ProfileView({
           </div>
 
           <Link
-            href={
-              activeSubTab === 'overview'
-                ? `${effectiveBaseUrl}?from=tab`
-                : `${effectiveBaseUrl}?tab=${activeSubTab}&from=tab`
-            }
+            href={exitViewAsUrl}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold transition-colors shrink-0 shadow-xs cursor-pointer"
           >
             <X className="h-3.5 w-3.5" />
@@ -675,13 +678,7 @@ export function ProfileView({
             </div>
           ) : isOwner && isViewAs ? (
             <div className="mt-3.5 flex items-center justify-center gap-2.5">
-              <Link
-                href={
-                  activeSubTab === 'overview'
-                    ? `${effectiveBaseUrl}?from=tab`
-                    : `${effectiveBaseUrl}?tab=${activeSubTab}&from=tab`
-                }
-              >
+              <Link href={exitViewAsUrl}>
                 <Button
                   size="sm"
                   variant="outline"

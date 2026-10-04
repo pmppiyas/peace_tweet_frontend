@@ -8,12 +8,14 @@ import { Card } from '@/components/ui/Card';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Button } from '@/components/ui/Button';
 import { useLanguage } from '@/providers/LanguageProvider';
+import { useAuth } from '@/hooks/useAuth';
 import { useUserProfile } from '@/features/friends/hooks/useFriendshipStatus';
 import { ROUTES } from '@/constants/routes';
 import { ProfileView } from './ProfileView';
 import { ProfileLayout } from './ProfileLayout';
 import { ProfileFriendsTab } from './ProfileFriendsTab';
 import { ProfileGroupsTab } from './ProfileGroupsTab';
+import { ProfileSavedTab } from './ProfileSavedTab';
 
 export interface PublicProfileViewProps {
   username: string;
@@ -21,6 +23,7 @@ export interface PublicProfileViewProps {
 
 export function PublicProfileView({ username }: PublicProfileViewProps) {
   const { locale } = useLanguage();
+  const { user: authUser } = useAuth();
   const searchParams = useSearchParams();
   const { data: profile, isLoading, isError, refetch } = useUserProfile(username);
 
@@ -28,11 +31,22 @@ export function PublicProfileView({ username }: PublicProfileViewProps) {
   const from = (searchParams.get('from') || '').toLowerCase();
   const isFromTab = from === 'tab';
 
+  const isOwner = Boolean(
+    authUser &&
+      profile &&
+      (authUser.id === profile.id ||
+        authUser.username?.toLowerCase() === profile.username?.toLowerCase())
+  );
+  const viewAsParam = searchParams.get('view_as');
+  const isViewAs = isOwner ? viewAsParam !== 'false' : true;
+
   let currentTab: 'overview' | 'friend' | 'group' | 'saved' = 'overview';
   if (rawTab === 'friend' || rawTab === 'friends') {
     currentTab = 'friend';
   } else if (rawTab === 'group' || rawTab === 'groups') {
     currentTab = 'group';
+  } else if (rawTab === 'saved' || rawTab === 'bookmarks') {
+    currentTab = 'saved';
   } else {
     currentTab = 'overview';
   }
@@ -141,12 +155,13 @@ export function PublicProfileView({ username }: PublicProfileViewProps) {
           targetUser={profile}
           activeSubTab={currentTab}
           baseUrl={baseUrl}
-          isViewAs={true}
+          isViewAs={isViewAs}
         />
       ) : (
         <>
           {currentTab === 'friend' && <ProfileFriendsTab targetUser={profile} />}
           {currentTab === 'group' && <ProfileGroupsTab />}
+          {currentTab === 'saved' && isOwner && <ProfileSavedTab />}
         </>
       )}
     </ProfileLayout>

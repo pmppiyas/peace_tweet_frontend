@@ -53,6 +53,9 @@ export const API_ENDPOINTS = {
     COMMENTS: (id: string) => `/posts/${id}/comments`,
     CREATE_COMMENT: (id: string) => `/posts/${id}/comments`,
   },
+  SHARES: {
+    CREATE: '/shares',
+  },
   FRIENDS: {
     LIST: '/friends',
     RECEIVED_REQUESTS: '/friends/requests/received',

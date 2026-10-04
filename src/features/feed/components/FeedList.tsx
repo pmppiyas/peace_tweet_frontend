@@ -34,8 +34,8 @@ export function FeedList({
         }
       },
       {
-        rootMargin: '200px',
-        threshold: 0.1,
+        rootMargin: '300px',
+        threshold: 0,
       },
     );
 

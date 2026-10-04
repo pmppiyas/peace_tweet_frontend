@@ -39,6 +39,7 @@ export interface Group {
   isMember?: boolean;
   isPending?: boolean;
   currentUserRole?: GroupMemberRole | null;
+  requiresPostApproval?: boolean;
 }
 
 export interface GroupMembershipInfo {

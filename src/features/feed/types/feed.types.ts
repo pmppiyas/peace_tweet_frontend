@@ -58,6 +58,8 @@ export interface FeedItem {
   bloodRequest?: BloodRequestItem | null;
   stats: FeedStats;
   viewer: FeedViewerState;
+  originalPostId?: string | null;
+  originalPost?: FeedItem | null;
 }
 
 export interface FeedResponse {
@@ -108,3 +110,23 @@ export interface UpdatePostInput {
   visibility?: PostVisibility;
   status?: PostStatus;
 }
+
+export type ShareContentType = 'POST' | 'DUA' | 'BLOOD_REQUEST';
+export type ShareTarget = 'FEED' | 'GROUP' | 'LINK';
+
+export interface CreateShareInput {
+  contentType: ShareContentType;
+  contentId: string;
+  target: ShareTarget;
+  groupId?: string;
+  caption?: string;
+}
+
+export interface ShareResponse {
+  success: boolean;
+  message?: string;
+  pendingApproval?: boolean;
+  shareUrl?: string;
+  post?: FeedItem;
+}
+

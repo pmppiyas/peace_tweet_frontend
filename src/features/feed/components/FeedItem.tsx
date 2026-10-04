@@ -9,6 +9,7 @@ import { TextPostCard } from './TextPostCard';
 import { BloodPostCard } from './BloodPostCard';
 import { QuestionPostCard } from './QuestionPostCard';
 import { AnnouncementCard } from './AnnouncementCard';
+import { ShareModal, SharePreviewData } from './ShareModal';
 import { usePostActions } from '../hooks/usePostActions';
 import { useComments } from '../hooks/useComments';
 import { Card } from '@/components/ui/Card';
@@ -42,10 +43,9 @@ export function FeedItem({ post }: FeedItemProps) {
     usePostActions();
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState('');
-  const [copied, setCopied] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [localShareCount, setLocalShareCount] = useState(post.stats.shareCount || 0);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const feelingItem = getFeelingById(post.feeling);
 
   const {
@@ -55,34 +55,35 @@ export function FeedItem({ post }: FeedItemProps) {
     isAddingComment,
   } = useComments(post.id, showComments);
 
-  const isAuthor = user?.id === post.author.id || user?.role === 'ADMIN';
+  const isAuthor = user?.id === post.author?.id || user?.role === 'ADMIN';
+  const authorUsername =
+    post.author?.username || (isAuthor ? user?.username : '');
+  const authorProfileHref = authorUsername
+    ? ROUTES.USER_PROFILE(authorUsername)
+    : isAuthor
+      ? ROUTES.PROFILE
+      : '#';
 
-  const handleShare = async () => {
-    const postUrl =
-      typeof window !== 'undefined'
-        ? `${window.location.origin}/posts/${post.id}`
-        : '';
-    const shareData = {
-      title: post.dua?.title || 'PeaceTweet Post',
-      text:
-        post.content || post.dua?.meaningBangla || 'PeaceTweet Islamic Post',
-      url: postUrl,
-    };
+  // Target original post if this post is already a shared post
+  const rootPost = post.originalPost || post;
+  const targetPostId = post.originalPostId || post.id;
 
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-      } catch {
-        await navigator.clipboard.writeText(postUrl);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      }
-    } else {
-      await navigator.clipboard.writeText(postUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-    setLocalShareCount((prev) => prev + 1);
+  const sharePreviewData: SharePreviewData = {
+    id: rootPost.id,
+    title: rootPost.dua?.title || undefined,
+    content: rootPost.content,
+    authorName: rootPost.author?.name,
+    authorUsername: rootPost.author?.username,
+    authorAvatar: rootPost.author?.avatar,
+    type: rootPost.type,
+    mediaUrls: rootPost.mediaUrls,
+    duaMeaning: rootPost.dua?.meaningBangla || rootPost.dua?.meaning,
+    bloodGroup: rootPost.bloodRequest?.bloodGroup,
+    hospitalName: rootPost.bloodRequest?.hospitalName,
+  };
+
+  const handleShare = () => {
+    setIsShareModalOpen(true);
   };
 
   const handleCommentSubmit = async (e: React.FormEvent) => {
@@ -100,8 +101,12 @@ export function FeedItem({ post }: FeedItemProps) {
       <div className="p-3.5 sm:p-4 pb-2">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm shadow-xs select-none overflow-hidden">
-              {(post.author.avatar || (isAuthor ? user?.avatarUrl : null)) ? (
+            <Link
+              href={authorProfileHref}
+              className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm shadow-xs select-none overflow-hidden hover:opacity-90 active:scale-95 transition-all"
+              title={post.author.name || 'User Profile'}
+            >
+              {post.author.avatar || (isAuthor ? user?.avatarUrl : null) ? (
                 <Image
                   src={post.author.avatar || user?.avatarUrl || ''}
                   alt={post.author.name || 'User'}
@@ -116,12 +121,15 @@ export function FeedItem({ post }: FeedItemProps) {
                     : '🕊️'}
                 </span>
               )}
-            </div>
+            </Link>
             <div>
               <div className="flex items-center gap-1.5 flex-wrap">
-                <span className="font-bold text-[15px] text-[#050505] dark:text-[#e4e6eb]">
+                <Link
+                  href={authorProfileHref}
+                  className="font-bold text-[15px] text-[#050505] dark:text-[#e4e6eb] dark:hover:text-white transition-colors"
+                >
                   {post.author.name || 'PeaceTweet Scholar'}
-                </span>
+                </Link>
                 <CheckCircle2 className="h-3.5 w-3.5 text-primary-500 fill-primary-100 dark:fill-primary-900 shrink-0" />
                 {feelingItem && (
                   <span className="text-xs text-[#65676b] dark:text-[#b0b3b8] font-normal flex items-center gap-1">
@@ -134,7 +142,12 @@ export function FeedItem({ post }: FeedItemProps) {
                 )}
               </div>
               <div className="flex items-center gap-1.5 text-xs text-[#65676b] dark:text-[#b0b3b8]">
-                <span>@{post.author.username || 'peacetweet'}</span>
+                <Link
+                  href={authorProfileHref}
+                  className="hover:underline hover:text-[#050505] dark:hover:text-[#e4e6eb] transition-colors"
+                >
+                  @{authorUsername || 'peacetweet'}
+                </Link>
                 <span>•</span>
                 <span>
                   {post.createdAt
@@ -183,13 +196,73 @@ export function FeedItem({ post }: FeedItemProps) {
         </div>
 
         {/* 2. Main Post Content Body */}
-        <div className="mt-3">
-          {post.type === 'DUA' && <DuaPostCard post={post} />}
-          {post.type === 'BLOOD_REQUEST' && <BloodPostCard post={post} />}
-          {post.type === 'QUESTION' && <QuestionPostCard post={post} />}
-          {post.type === 'ANNOUNCEMENT' && <AnnouncementCard post={post} />}
-          {post.type === 'TEXT' && <TextPostCard post={post} />}
-        </div>
+        {post.originalPost ? (
+          <div className="mt-3 space-y-3">
+            {/* Sharer's custom commentary/caption */}
+            {post.content && (
+              <p className="text-[15px] sm:text-[16px] font-normal text-[#050505] dark:text-[#e4e6eb] leading-relaxed whitespace-pre-line">
+                {post.content}
+              </p>
+            )}
+
+            {/* Embedded Original Post Card */}
+            <div className="rounded-xl border border-[#e4e6eb] bg-[#f8f9fa] p-3.5 sm:p-4 dark:border-[#393a3b] dark:bg-[#18191a]/70 space-y-3 transition-colors">
+              {/* Original Author Header */}
+              <div className="flex items-center justify-between gap-2.5">
+                <Link
+                  href={
+                    post.originalPost.author?.username
+                      ? ROUTES.USER_PROFILE(post.originalPost.author.username)
+                      : '#'
+                  }
+                  className="flex items-center gap-2.5 min-w-0 group"
+                >
+                  <div className="relative h-8 w-8 rounded-full overflow-hidden bg-gray-200 shrink-0 flex items-center justify-center font-bold text-xs text-gray-700">
+                    {post.originalPost.author?.avatar ? (
+                      <Image
+                        src={post.originalPost.author.avatar}
+                        alt={post.originalPost.author.name}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <span>{post.originalPost.author?.name?.[0] || 'U'}</span>
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="text-xs font-bold text-[#050505] dark:text-[#e4e6eb] truncate group-hover:underline">
+                      {post.originalPost.author?.name}
+                    </h4>
+                    <div className="flex items-center gap-1 text-[11px] text-[#65676b] dark:text-[#b0b3b8]">
+                      {post.originalPost.author?.username && (
+                        <span>@{post.originalPost.author.username}</span>
+                      )}
+                      <span>•</span>
+                      <span>{formatDate(post.originalPost.createdAt)}</span>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+
+              {/* Original Post Content */}
+              <div>
+                {post.originalPost.type === 'DUA' && <DuaPostCard post={post.originalPost} />}
+                {post.originalPost.type === 'BLOOD_REQUEST' && <BloodPostCard post={post.originalPost} />}
+                {post.originalPost.type === 'QUESTION' && <QuestionPostCard post={post.originalPost} />}
+                {post.originalPost.type === 'ANNOUNCEMENT' && <AnnouncementCard post={post.originalPost} />}
+                {post.originalPost.type === 'TEXT' && <TextPostCard post={post.originalPost} />}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="mt-3">
+            {post.type === 'DUA' && <DuaPostCard post={post} />}
+            {post.type === 'BLOOD_REQUEST' && <BloodPostCard post={post} />}
+            {post.type === 'QUESTION' && <QuestionPostCard post={post} />}
+            {post.type === 'ANNOUNCEMENT' && <AnnouncementCard post={post} />}
+            {post.type === 'TEXT' && <TextPostCard post={post} />}
+          </div>
+        )}
 
         {/* Category Hashtag Tag (Below Content) */}
         {post.dua?.category && (
@@ -208,19 +281,19 @@ export function FeedItem({ post }: FeedItemProps) {
         {/* Reaction (LIKE / Ameen) */}
         <button
           type="button"
-          onClick={() => toggleReaction(post.id, post.viewer.hasReacted)}
+          onClick={() => toggleReaction(post.id, !!post.viewer?.hasReacted)}
           className={cn(
             'flex items-center justify-center gap-1 sm:gap-1.5 py-2 px-1 rounded-lg transition-colors select-none whitespace-nowrap',
-            post.viewer.hasReacted
+            post.viewer?.hasReacted
               ? 'text-rose-600 dark:text-rose-400 bg-rose-50/50 dark:bg-rose-950/20'
               : 'text-[#65676b] hover:bg-[#f0f2f5] hover:text-[#050505] dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] dark:hover:text-[#e4e6eb]'
           )}
-          title={`${post.stats.reactionCount || 0} reactions`}
+          title={`${post.stats?.reactionCount || 0} reactions`}
         >
           <Heart
             className={cn(
               'h-4 w-4 shrink-0',
-              post.viewer.hasReacted &&
+              post.viewer?.hasReacted &&
                 'fill-current text-rose-600 dark:text-rose-400'
             )}
           />
@@ -234,7 +307,7 @@ export function FeedItem({ post }: FeedItemProps) {
                 : 'Like'}
           </span>
           <span className="text-[11px] font-bold opacity-80 shrink-0">
-            ({post.stats.reactionCount || 0})
+            ({post.stats?.reactionCount || 0})
           </span>
         </button>
 
@@ -248,36 +321,38 @@ export function FeedItem({ post }: FeedItemProps) {
               ? 'text-primary-600 dark:text-primary-400 bg-primary-50/50 dark:bg-primary-900/20'
               : 'text-[#65676b] hover:bg-[#f0f2f5] hover:text-[#050505] dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] dark:hover:text-[#e4e6eb]'
           )}
-          title={`${post.stats.commentCount || 0} comments`}
+          title={`${post.stats?.commentCount || 0} comments`}
         >
           <MessageCircle className="h-4 w-4 shrink-0" />
-          <span className="truncate">{locale === 'bn' ? 'মন্তব্য' : 'Comment'}</span>
+          <span className="truncate">
+            {locale === 'bn' ? 'মন্তব্য' : 'Comment'}
+          </span>
           <span className="text-[11px] font-bold opacity-80 shrink-0">
-            ({post.stats.commentCount || 0})
+            ({post.stats?.commentCount || 0})
           </span>
         </button>
 
         {/* Save */}
         <button
           type="button"
-          onClick={() => toggleSave(post.id, post.viewer.hasSaved)}
+          onClick={() => toggleSave(post.id, !!post.viewer?.hasSaved)}
           className={cn(
             'flex items-center justify-center gap-1 sm:gap-1.5 py-2 px-1 rounded-lg transition-colors select-none whitespace-nowrap',
-            post.viewer.hasSaved
+            post.viewer?.hasSaved
               ? 'text-amber-600 dark:text-amber-400 bg-amber-50/50 dark:bg-amber-950/20'
               : 'text-[#65676b] hover:bg-[#f0f2f5] hover:text-[#050505] dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] dark:hover:text-[#e4e6eb]'
           )}
-          title={`${post.stats.saveCount || 0} saves`}
+          title={`${post.stats?.saveCount || 0} saves`}
         >
           <Bookmark
             className={cn(
               'h-4 w-4 shrink-0',
-              post.viewer.hasSaved &&
+              post.viewer?.hasSaved &&
                 'fill-current text-amber-600 dark:text-amber-400'
             )}
           />
           <span className="truncate">
-            {post.viewer.hasSaved
+            {post.viewer?.hasSaved
               ? locale === 'bn'
                 ? 'সংরক্ষিত'
                 : 'Saved'
@@ -286,7 +361,7 @@ export function FeedItem({ post }: FeedItemProps) {
                 : 'Save'}
           </span>
           <span className="text-[11px] font-bold opacity-80 shrink-0">
-            ({post.stats.saveCount || 0})
+            ({post.stats?.saveCount || 0})
           </span>
         </button>
 
@@ -295,20 +370,14 @@ export function FeedItem({ post }: FeedItemProps) {
           type="button"
           onClick={handleShare}
           className="flex items-center justify-center gap-1 sm:gap-1.5 py-2 px-1 text-[#65676b] hover:bg-[#f0f2f5] hover:text-[#050505] rounded-lg transition-colors select-none whitespace-nowrap dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] dark:hover:text-[#e4e6eb]"
-          title={`${localShareCount} shares`}
+          title={`${post.stats?.shareCount || 0} shares`}
         >
           <Share2 className="h-4 w-4 shrink-0" />
           <span className="truncate">
-            {copied
-              ? locale === 'bn'
-                ? 'কপি হয়েছে!'
-                : 'Copied!'
-              : locale === 'bn'
-                ? 'শেয়ার'
-                : 'Share'}
+            {locale === 'bn' ? 'শেয়ার' : 'Share'}
           </span>
           <span className="text-[11px] font-bold opacity-80 shrink-0">
-            ({localShareCount})
+            ({post.stats?.shareCount || 0})
           </span>
         </button>
       </div>
@@ -328,7 +397,9 @@ export function FeedItem({ post }: FeedItemProps) {
                   unoptimized
                 />
               ) : (
-                <span>{user?.name ? user.name.charAt(0).toUpperCase() : '🕊️'}</span>
+                <span>
+                  {user?.name ? user.name.charAt(0).toUpperCase() : '🕊️'}
+                </span>
               )}
             </div>
             <div className="relative flex-1">
@@ -371,39 +442,54 @@ export function FeedItem({ post }: FeedItemProps) {
             </div>
           ) : (
             <div className="space-y-2.5 pt-1">
-              {comments.map((comment) => (
-                <div
-                  key={comment.id}
-                  className="flex items-start gap-2 text-xs"
-                >
-                  <div className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gray-200 text-gray-700 font-bold text-[10px] dark:bg-gray-700 dark:text-gray-200 overflow-hidden">
-                    {comment.author.avatar ? (
-                      <Image
-                        src={comment.author.avatar}
-                        alt={comment.author.name || 'User'}
-                        fill
-                        className="object-cover"
-                        unoptimized
-                      />
-                    ) : (
-                      <span>{comment.author.name.charAt(0).toUpperCase()}</span>
-                    )}
-                  </div>
-                  <div className="flex-1 rounded-2xl bg-white p-2.5 border border-[#e4e6eb] dark:border-[#393a3b] dark:bg-[#242526]">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-[#050505] dark:text-[#e4e6eb]">
-                        {comment.author.name}
-                      </span>
-                      <span className="text-[10px] text-[#65676b] dark:text-[#b0b3b8]">
-                        {formatDate(comment.createdAt, locale)}
-                      </span>
+              {comments.map((comment) => {
+                const commentAuthorHref = comment.author.username
+                  ? ROUTES.USER_PROFILE(comment.author.username)
+                  : '#';
+
+                return (
+                  <div
+                    key={comment.id}
+                    className="flex items-start gap-2 text-xs"
+                  >
+                    <Link
+                      href={commentAuthorHref}
+                      className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gray-200 text-gray-700 font-bold text-[10px] dark:bg-gray-700 dark:text-gray-200 overflow-hidden hover:opacity-90 active:scale-95 transition-all"
+                      title={comment.author.name || 'User Profile'}
+                    >
+                      {comment.author.avatar ? (
+                        <Image
+                          src={comment.author.avatar}
+                          alt={comment.author.name || 'User'}
+                          fill
+                          className="object-cover"
+                          unoptimized
+                        />
+                      ) : (
+                        <span>
+                          {comment.author.name.charAt(0).toUpperCase()}
+                        </span>
+                      )}
+                    </Link>
+                    <div className="flex-1 rounded-2xl bg-white p-2.5 border border-[#e4e6eb] dark:border-[#393a3b] dark:bg-[#242526]">
+                      <div className="flex items-center justify-between">
+                        <Link
+                          href={commentAuthorHref}
+                          className="font-bold text-[#050505] hover:underline dark:text-[#e4e6eb] dark:hover:text-white transition-colors"
+                        >
+                          {comment.author.name}
+                        </Link>
+                        <span className="text-[10px] text-[#65676b] dark:text-[#b0b3b8]">
+                          {formatDate(comment.createdAt, locale)}
+                        </span>
+                      </div>
+                      <p className="mt-0.5 text-[#050505] dark:text-[#e4e6eb] leading-relaxed">
+                        {comment.content}
+                      </p>
                     </div>
-                    <p className="mt-0.5 text-[#050505] dark:text-[#e4e6eb] leading-relaxed">
-                      {comment.content}
-                    </p>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -471,6 +557,15 @@ export function FeedItem({ post }: FeedItemProps) {
           </div>
         </div>
       )}
+
+      {/* Share Modal Dialog */}
+      <ShareModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        contentType="POST"
+        contentId={targetPostId}
+        previewData={sharePreviewData}
+      />
     </Card>
   );
 }

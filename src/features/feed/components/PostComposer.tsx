@@ -71,10 +71,20 @@ const URGENCIES: {
 export function PostComposer() {
   const { user, isAuthenticated } = useAuth();
   const { createPost, isCreatingPost } = usePostActions();
-  const { isUploadingPost, setIsUploadingPost } = useUiStore();
+  const {
+    isUploadingPost,
+    setIsUploadingPost,
+    uploadingMessage,
+    isPostUploadSuccess,
+    postSuccessMessage,
+  } = useUiStore();
 
   const [isOpen, setIsOpen] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  const isSuccessActive = isSuccess || isPostUploadSuccess;
+  const successText = postSuccessMessage || 'Posted successfully!';
+  const activeLoadingText = uploadingMessage || 'Posting your reflection...';
   const [postType, setPostType] = useState<PostType>('TEXT');
   const [content, setContent] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -321,7 +331,7 @@ export function PostComposer() {
                 'relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm select-none overflow-hidden shadow-xs transition-all',
                 isUploadingPost &&
                   'ring-2 ring-primary-500 ring-offset-2 ring-offset-white dark:ring-offset-[#242526]',
-                isSuccess &&
+                isSuccessActive &&
                   'ring-2 ring-emerald-500 ring-offset-2 ring-offset-white dark:ring-offset-[#242526]',
               )}
             >
@@ -338,13 +348,13 @@ export function PostComposer() {
               )}
             </div>
           </div>
-          {isSuccess ? (
+          {isSuccessActive ? (
             <div className="h-10 w-full rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-700/60 px-4 text-xs sm:text-sm font-semibold text-emerald-700 dark:text-emerald-300 flex items-center justify-between animate-in fade-in zoom-in-95 duration-200 select-none">
               <div className="flex items-center gap-2">
                 <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-white shrink-0 shadow-xs">
                   <Check className="h-3.5 w-3.5 stroke-[3]" />
                 </div>
-                <span>Posted successfully!</span>
+                <span>{successText}</span>
               </div>
               <span className="text-[11px] font-normal text-emerald-600 dark:text-emerald-400 hidden sm:inline">
                 Visible in feed
@@ -358,7 +368,7 @@ export function PostComposer() {
             >
               <span className="truncate">
                 {isUploadingPost
-                  ? 'Posting your reflection...'
+                  ? activeLoadingText
                   : user?.name
                   ? `${user.name.split(' ')[0]}, Share a reflection, Dua, or Blood Request...`
                   : 'Share a reflection, Dua, or Blood Request...'}
@@ -366,7 +376,7 @@ export function PostComposer() {
               {isUploadingPost && (
                 <span className="flex items-center gap-1.5 text-xs text-primary-600 dark:text-primary-400 font-semibold shrink-0">
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  <span>Uploading...</span>
+                  <span>Processing...</span>
                 </span>
               )}
             </button>
