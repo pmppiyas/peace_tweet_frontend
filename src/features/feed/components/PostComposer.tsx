@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/constants/routes';
+import { useUiStore } from '@/stores/uiStore';
 import { FEELINGS, getFeelingById } from '../constants/feelings';
 
 const BLOOD_GROUPS: { value: BloodGroup; label: string }[] = [
@@ -69,6 +70,7 @@ const URGENCIES: {
 export function PostComposer() {
   const { user, isAuthenticated } = useAuth();
   const { createPost, isCreatingPost } = usePostActions();
+  const { isUploadingPost, setIsUploadingPost } = useUiStore();
 
   const [isOpen, setIsOpen] = useState(false);
   const [postType, setPostType] = useState<PostType>('TEXT');
@@ -237,52 +239,63 @@ export function PostComposer() {
       }
     }
 
-    try {
-      if (postType === 'TEXT') {
-        await createPost({
-          type: 'TEXT',
-          content: content.trim() || undefined,
-          mediaUrls: mediaUrls.length > 0 ? mediaUrls : undefined,
-          mediaLayout: mediaUrls.length > 1 ? mediaLayout : 'COLLAGE',
-          feeling: feeling || undefined,
-        });
-      } else if (postType === 'DUA') {
-        await createPost({
-          type: 'DUA',
-          feeling: feeling || undefined,
-          duaData: {
-            transliteration: duaTransliteration.trim() || undefined,
-            meaning: duaMeaning.trim(),
-            fadilah: duaFadilah.trim() || undefined,
-          },
-        });
-      } else if (postType === 'BLOOD_REQUEST') {
-        await createPost({
-          type: 'BLOOD_REQUEST',
-          content: content.trim() || undefined,
-          feeling: feeling || undefined,
-          bloodRequestData: {
-            patientName: patientName.trim(),
-            bloodGroup,
-            units: Number(units) || 1,
-            urgency,
-            hospitalName: hospitalName.trim(),
-            location: location.trim(),
-            contactNumber: contactNumber.trim(),
-            neededDate,
-            problem: problem.trim() || undefined,
-            note: bloodNote.trim() || undefined,
-          },
-        });
-      }
+    let payload: any;
+    if (postType === 'TEXT') {
+      payload = {
+        type: 'TEXT',
+        content: content.trim() || undefined,
+        mediaUrls: mediaUrls.length > 0 ? mediaUrls : undefined,
+        mediaLayout: mediaUrls.length > 1 ? mediaLayout : 'COLLAGE',
+        feeling: feeling || undefined,
+      };
+    } else if (postType === 'DUA') {
+      payload = {
+        type: 'DUA',
+        feeling: feeling || undefined,
+        duaData: {
+          transliteration: duaTransliteration.trim() || undefined,
+          meaning: duaMeaning.trim(),
+          fadilah: duaFadilah.trim() || undefined,
+        },
+      };
+    } else if (postType === 'BLOOD_REQUEST') {
+      payload = {
+        type: 'BLOOD_REQUEST',
+        content: content.trim() || undefined,
+        feeling: feeling || undefined,
+        bloodRequestData: {
+          patientName: patientName.trim(),
+          bloodGroup,
+          units: Number(units) || 1,
+          urgency,
+          hospitalName: hospitalName.trim(),
+          location: location.trim(),
+          contactNumber: contactNumber.trim(),
+          neededDate,
+          problem: problem.trim() || undefined,
+          note: bloodNote.trim() || undefined,
+        },
+      };
+    }
 
-      resetForm();
+    // 1. Immediately close form & reset form fields so UI responds instantly!
+    resetForm();
+
+    // 2. Start background upload with circle animation
+    setIsUploadingPost(true);
+    try {
+      await createPost(payload);
     } catch (err: any) {
       const msg =
         err?.response?.data?.message ||
         err?.message ||
         'Failed to create post. Please try again.';
-      setErrorMessage(msg);
+      console.error('Post creation error:', msg);
+      if (typeof window !== 'undefined') {
+        window.alert(msg);
+      }
+    } finally {
+      setIsUploadingPost(false);
     }
   };
 
@@ -290,26 +303,51 @@ export function PostComposer() {
     <Card className="border border-[#e4e6eb] bg-white p-3.5 sm:p-4 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526] rounded-xl transition-all">
       {!isOpen ? (
         <div className="flex items-center gap-3">
-          <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm select-none overflow-hidden shadow-xs">
-            {user?.avatarUrl ? (
-              <Image
-                src={user.avatarUrl}
-                alt={user.name || 'User'}
-                fill
-                className="object-cover"
-                unoptimized
-              />
-            ) : (
-              <span>{user?.name ? user.name.charAt(0).toUpperCase() : '🕊️'}</span>
+          <div className="relative flex items-center justify-center shrink-0">
+            {isUploadingPost && (
+              <>
+                <div className="absolute -inset-1.5 rounded-full border-[2.5px] border-transparent border-t-primary-500 border-r-primary-500 animate-spin" />
+                <div className="absolute -inset-2.5 rounded-full border border-primary-400/40 animate-pulse" />
+              </>
             )}
+            <div
+              className={cn(
+                'relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm select-none overflow-hidden shadow-xs transition-all',
+                isUploadingPost &&
+                  'ring-2 ring-primary-500 ring-offset-2 ring-offset-white dark:ring-offset-[#242526]',
+              )}
+            >
+              {user?.avatarUrl ? (
+                <Image
+                  src={user.avatarUrl}
+                  alt={user.name || 'User'}
+                  fill
+                  className="object-cover"
+                  unoptimized
+                />
+              ) : (
+                <span>{user?.name ? user.name.charAt(0).toUpperCase() : '🕊️'}</span>
+              )}
+            </div>
           </div>
           <button
             type="button"
             onClick={() => setIsOpen(true)}
-            className="h-10 w-full rounded-full bg-[#f0f2f5] px-4 text-left text-xs sm:text-sm text-[#65676b] hover:bg-[#e4e6eb] transition-colors dark:bg-[#3a3b3c] dark:text-[#b0b3b8] dark:hover:bg-[#4e4f50]"
+            className="h-10 w-full rounded-full bg-[#f0f2f5] px-4 text-left text-xs sm:text-sm text-[#65676b] hover:bg-[#e4e6eb] transition-colors dark:bg-[#3a3b3c] dark:text-[#b0b3b8] dark:hover:bg-[#4e4f50] flex items-center justify-between gap-2"
           >
-            {user?.name ? `${user.name.split(' ')[0]}, ` : ''}
-            Share a reflection, Dua, or Blood Request...
+            <span className="truncate">
+              {isUploadingPost
+                ? 'Posting your reflection...'
+                : user?.name
+                ? `${user.name.split(' ')[0]}, Share a reflection, Dua, or Blood Request...`
+                : 'Share a reflection, Dua, or Blood Request...'}
+            </span>
+            {isUploadingPost && (
+              <span className="flex items-center gap-1.5 text-xs text-primary-600 dark:text-primary-400 font-semibold shrink-0">
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                <span>Uploading...</span>
+              </span>
+            )}
           </button>
         </div>
       ) : (
