@@ -6,14 +6,11 @@ import Image from 'next/image';
 import { Sun, Moon, Sparkles, Heart, ShieldAlert, Compass, Plus } from 'lucide-react';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { useAuth } from '@/hooks/useAuth';
-import { useUiStore } from '@/stores/uiStore';
-import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/constants/routes';
 
 export function StoryBar() {
   const { t } = useLanguage();
   const { user } = useAuth();
-  const { isUploadingPost } = useUiStore();
 
   const stories = [
     {
@@ -68,32 +65,18 @@ export function StoryBar() {
         className="relative flex flex-col justify-between w-[105px] sm:w-[120px] h-[165px] sm:h-[185px] shrink-0 rounded-xl bg-white dark:bg-[#242526] border border-[#e4e6eb] dark:border-[#393a3b] overflow-hidden shadow-xs hover:shadow-md transition-all group"
       >
         <div className="h-[110px] sm:h-[125px] w-full bg-gradient-to-b from-primary-100 to-primary-50 dark:from-primary-900/60 dark:to-gray-800 flex items-center justify-center overflow-hidden">
-          <div className="relative flex items-center justify-center">
-            {isUploadingPost && (
-              <>
-                <div className="absolute -inset-2 rounded-full border-[3px] border-transparent border-t-primary-500 border-r-primary-500 animate-spin" />
-                <div className="absolute -inset-3 rounded-full border border-primary-400/40 animate-pulse" />
-              </>
+          <div className="relative h-12 w-12 rounded-full bg-primary-500 text-white font-bold text-lg flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform overflow-hidden">
+            {user?.avatarUrl ? (
+              <Image
+                src={user.avatarUrl}
+                alt={user.name || 'User'}
+                fill
+                className="object-cover"
+                unoptimized
+              />
+            ) : (
+              <span>{user?.name?.charAt(0) || '🕊️'}</span>
             )}
-            <div
-              className={cn(
-                'relative h-12 w-12 rounded-full bg-primary-500 text-white font-bold text-lg flex items-center justify-center shadow-sm group-hover:scale-105 transition-all overflow-hidden',
-                isUploadingPost &&
-                  'ring-2 ring-primary-500 ring-offset-2 ring-offset-white dark:ring-offset-[#242526]',
-              )}
-            >
-              {user?.avatarUrl ? (
-                <Image
-                  src={user.avatarUrl}
-                  alt={user.name || 'User'}
-                  fill
-                  className="object-cover"
-                  unoptimized
-                />
-              ) : (
-                <span>{user?.name?.charAt(0) || '🕊️'}</span>
-              )}
-            </div>
           </div>
         </div>
 
@@ -104,8 +87,8 @@ export function StoryBar() {
         </div>
 
         <div className="p-2 pb-2.5 text-center bg-white dark:bg-[#242526]">
-          <span className="text-xs font-semibold text-[#050505] dark:text-[#e4e6eb] leading-tight block truncate">
-            {isUploadingPost ? 'Uploading...' : 'Explore Duas'}
+          <span className="text-xs font-semibold text-[#050505] dark:text-[#e4e6eb] leading-tight block">
+            Explore Duas
           </span>
         </div>
       </Link>
