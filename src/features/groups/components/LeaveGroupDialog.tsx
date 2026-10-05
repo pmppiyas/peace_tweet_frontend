@@ -69,7 +69,8 @@ export function LeaveGroupDialog({
         </Button>
         <Button
           type="button"
-          className="w-full sm:w-auto bg-rose-600 hover:bg-rose-700 text-white"
+          variant="destructive"
+          className="w-full sm:w-auto font-bold"
           onClick={onConfirm}
           isLoading={isLeaving}
         >

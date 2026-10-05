@@ -84,14 +84,16 @@ export function useFriendActions() {
 
       // Optimistically remove from sent requests cache
       queryClient.setQueriesData<InfiniteData<PaginatedFriendRequestsResponse>>(
-        { queryKey: friendsKeys.sentRequests() },
-        (oldData) => {
-          if (!oldData) return oldData;
+        { queryKey: friendsKeys.sentRequests(), exact: true },
+        (oldData: any) => {
+          if (!oldData || !Array.isArray(oldData.pages)) return oldData;
           return {
             ...oldData,
-            pages: oldData.pages.map((page) => ({
+            pages: oldData.pages.map((page: any) => ({
               ...page,
-              items: page.items.filter((item) => item.id !== requestId),
+              items: Array.isArray(page?.items)
+                ? page.items.filter((item: any) => item.id !== requestId && item.receiver?.id !== targetUserId)
+                : [],
             })),
           };
         },
@@ -129,17 +131,25 @@ export function useFriendActions() {
 
       // Optimistically remove from received requests cache
       queryClient.setQueriesData<InfiniteData<PaginatedFriendRequestsResponse>>(
-        { queryKey: friendsKeys.receivedRequests() },
-        (oldData) => {
-          if (!oldData) return oldData;
+        { queryKey: friendsKeys.receivedRequests(), exact: true },
+        (oldData: any) => {
+          if (!oldData || !Array.isArray(oldData.pages)) return oldData;
           return {
             ...oldData,
-            pages: oldData.pages.map((page) => ({
+            pages: oldData.pages.map((page: any) => ({
               ...page,
-              items: page.items.filter((item) => item.id !== requestId),
+              items: Array.isArray(page?.items)
+                ? page.items.filter((item: any) => item.id !== requestId && item.sender?.id !== senderUserId)
+                : [],
             })),
           };
         },
+      );
+
+      // Optimistically decrement count badge
+      queryClient.setQueryData<number>(
+        [...friendsKeys.receivedRequests(), 'count'],
+        (oldCount) => (typeof oldCount === 'number' && oldCount > 0 ? oldCount - 1 : 0),
       );
     },
     onSettled: (_data, _error, vars) => {
@@ -175,17 +185,25 @@ export function useFriendActions() {
 
       // Optimistically remove from received requests cache
       queryClient.setQueriesData<InfiniteData<PaginatedFriendRequestsResponse>>(
-        { queryKey: friendsKeys.receivedRequests() },
-        (oldData) => {
-          if (!oldData) return oldData;
+        { queryKey: friendsKeys.receivedRequests(), exact: true },
+        (oldData: any) => {
+          if (!oldData || !Array.isArray(oldData.pages)) return oldData;
           return {
             ...oldData,
-            pages: oldData.pages.map((page) => ({
+            pages: oldData.pages.map((page: any) => ({
               ...page,
-              items: page.items.filter((item) => item.id !== requestId),
+              items: Array.isArray(page?.items)
+                ? page.items.filter((item: any) => item.id !== requestId && item.sender?.id !== senderUserId)
+                : [],
             })),
           };
         },
+      );
+
+      // Optimistically decrement count badge
+      queryClient.setQueryData<number>(
+        [...friendsKeys.receivedRequests(), 'count'],
+        (oldCount) => (typeof oldCount === 'number' && oldCount > 0 ? oldCount - 1 : 0),
       );
     },
     onSettled: (_data, _error, vars) => {
@@ -213,13 +231,15 @@ export function useFriendActions() {
       // Optimistically remove from friends list cache
       queryClient.setQueriesData<InfiniteData<PaginatedFriendsResponse>>(
         { queryKey: ['friends', 'list'] },
-        (oldData) => {
-          if (!oldData) return oldData;
+        (oldData: any) => {
+          if (!oldData || !Array.isArray(oldData.pages)) return oldData;
           return {
             ...oldData,
-            pages: oldData.pages.map((page) => ({
+            pages: oldData.pages.map((page: any) => ({
               ...page,
-              items: page.items.filter((item) => item.friendId !== targetUserId && item.user?.id !== targetUserId),
+              items: Array.isArray(page?.items)
+                ? page.items.filter((item: any) => item.friendId !== targetUserId && item.user?.id !== targetUserId)
+                : [],
             })),
           };
         },

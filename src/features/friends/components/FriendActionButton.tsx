@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { UserPlus, UserCheck, Clock, Check, X, UserMinus } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
+import { useLanguage } from '@/providers/LanguageProvider';
 import { useFriendActions } from '../hooks/useFriendActions';
 import { FriendshipStatus } from '../types/friends.types';
 
@@ -33,6 +34,7 @@ export function FriendActionButton({
     rejectRequest,
     unfriend,
   } = useFriendActions();
+  const { locale } = useLanguage();
 
   const [localStatus, setLocalStatus] = useState<FriendshipStatus>(status);
   const [localRequestId, setLocalRequestId] = useState<string | null>(requestId || null);
@@ -192,20 +194,20 @@ export function FriendActionButton({
               onClick={handleAccept}
               isLoading={false}
               className={className}
-              aria-label="Accept friend request"
+              aria-label="Confirm friend request"
             >
               <UserCheck className="mr-1.5 h-4 w-4" />
-              <span>Accept</span>
+              <span>{locale === 'bn' ? 'কনফার্ম' : 'Confirm'}</span>
             </Button>
             <Button
               variant="outline"
               size={size}
               onClick={handleReject}
               isLoading={false}
-              aria-label="Reject friend request"
+              aria-label="Delete friend request"
             >
               <X className="h-4 w-4 text-gray-500" />
-              <span className="sr-only sm:not-sr-only sm:ml-1">Reject</span>
+              <span className="sr-only sm:not-sr-only sm:ml-1">{locale === 'bn' ? 'ডিলিট' : 'Delete'}</span>
             </Button>
           </div>
         )}
@@ -230,15 +232,19 @@ export function FriendActionButton({
       <Modal
         isOpen={isUnfriendModalOpen}
         onClose={() => setIsUnfriendModalOpen(false)}
-        title="Remove friend?"
-        description={`Are you sure you want to remove ${username ? `@${username}` : 'this user'} from your friends list?`}
+        title={locale === 'bn' ? 'বন্ধু তালিকা থেকে বাদ দিতে চান?' : 'Remove friend?'}
+        description={
+          locale === 'bn'
+            ? `আপনি কি নিশ্চিত যে ${username ? `@${username}` : 'এই ব্যবহারকারী'}-কে আপনার বন্ধু তালিকা থেকে বাদ দিতে চান?`
+            : `Are you sure you want to remove ${username ? `@${username}` : 'this user'} from your friends list?`
+        }
       >
         <div className="mt-6 flex justify-end gap-3">
           <Button
             variant="outline"
             onClick={() => setIsUnfriendModalOpen(false)}
           >
-            Cancel
+            {locale === 'bn' ? 'ফিরে যান' : 'Cancel'}
           </Button>
           <Button
             variant="destructive"
@@ -246,7 +252,7 @@ export function FriendActionButton({
             isLoading={false}
           >
             <UserMinus className="mr-1.5 h-4 w-4" />
-            <span>Remove Friend</span>
+            <span>{locale === 'bn' ? 'আনফ্রেন্ড করুন' : 'Remove Friend'}</span>
           </Button>
         </div>
       </Modal>

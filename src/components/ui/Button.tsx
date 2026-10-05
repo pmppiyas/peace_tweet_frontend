@@ -32,7 +32,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       ghost:
         'text-gray-700 hover:bg-primary-50/70 hover:text-brand-700 dark:text-gray-300 dark:hover:bg-primary-900/40 dark:hover:text-primary-300',
       destructive:
-        'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 shadow-sm disabled:bg-red-300',
+        'bg-primary-50 text-primary-700 hover:bg-primary-100 active:bg-primary-200 border border-primary-200/90 dark:bg-primary-950/60 dark:text-primary-300 dark:border-primary-800/80 dark:hover:bg-primary-900/60 shadow-xs font-semibold disabled:opacity-50',
       gold:
         'bg-gradient-to-r from-amber-500 to-gold-600 text-white font-medium hover:from-amber-600 hover:to-gold-700 shadow-sm shadow-gold-500/20',
     };

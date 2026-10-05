@@ -42,7 +42,7 @@ export function LogoutConfirmModal({
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-md">
       <div className="flex flex-col items-center text-center space-y-4 pt-1">
         {/* Warning Icon Badge */}
-        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 ring-8 ring-rose-50/50 dark:ring-rose-950/20">
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-50 dark:bg-primary-950/50 text-primary-600 dark:text-primary-400 ring-8 ring-primary-50/50 dark:ring-primary-950/20">
           <LogOut className="h-6 w-6 stroke-[2.2]" />
         </div>
 

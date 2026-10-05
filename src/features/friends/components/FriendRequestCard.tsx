@@ -98,7 +98,7 @@ export function FriendRequestCard({ request, variant }: FriendRequestCardProps) 
           {cardStatus === 'accepted' ? (
             <div className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 font-bold text-xs sm:text-sm">
               <Check className="h-4 w-4" />
-              <span>{locale === 'bn' ? 'রিকোয়েস্ট গ্রহণ করা হয়েছে' : 'Request Accepted'}</span>
+              <span>{locale === 'bn' ? 'কনফার্ম করা হয়েছে' : 'Confirmed'}</span>
             </div>
           ) : cardStatus === 'rejected' ? (
             <div className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-[#65676b] dark:text-[#b0b3b8] font-medium text-xs">
@@ -116,10 +116,10 @@ export function FriendRequestCard({ request, variant }: FriendRequestCardProps) 
                 onClick={handleAccept}
                 isLoading={false}
                 className="w-full font-bold text-sm h-9 rounded-xl shadow-xs"
-                aria-label={`Accept request from ${displayUser.name}`}
+                aria-label={`Confirm request from ${displayUser.name}`}
               >
                 <UserCheck className="mr-1.5 h-4 w-4" />
-                <span>{locale === 'bn' ? 'গ্রহণ করুন' : 'Accept'}</span>
+                <span>{locale === 'bn' ? 'কনফার্ম' : 'Confirm'}</span>
               </Button>
 
               <Button
