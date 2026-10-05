@@ -21,6 +21,7 @@ import { useLanguage } from '@/providers/LanguageProvider';
 import { usePendingRequestsCount } from '@/features/friends/hooks/useFriendRequests';
 import { useUnreadNotificationsCount } from '@/features/notifications/hooks/useNotifications';
 import { NotificationDropdown } from '@/features/notifications/components/NotificationDropdown';
+import { MessengerDropdown, useTotalUnreadCount } from '@/features/chat';
 import { Container } from '@/components/layout/Container';
 import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/constants/routes';
@@ -55,10 +56,13 @@ export function Navbar() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [isMessengerOpen, setIsMessengerOpen] = useState(false);
   const notificationsTriggerRef = useRef<HTMLButtonElement>(null);
+  const messengerTriggerRef = useRef<HTMLButtonElement>(null);
   const { data: requestCount = 0 } = usePendingRequestsCount(isAuthenticated);
   const { data: unreadNotificationsCount = 0 } =
     useUnreadNotificationsCount(isAuthenticated);
+  const unreadMessagesCount = useTotalUnreadCount();
 
   const navCenterLinks = [
     { id: 'nav-home', label: t('nav.home'), href: ROUTES.HOME, icon: Home },
@@ -80,20 +84,50 @@ export function Navbar() {
   const rightActionButtons = (
     <div className="relative flex items-center gap-1.5 sm:gap-2 shrink-0">
       {/* 2. Messenger / Messages */}
-      <Link
-        href={isAuthenticated ? ROUTES.FRIENDS.HOME : ROUTES.LOGIN}
-        className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors"
-        title={t('nav.friends')}
-      >
-        <MessageCircle className="h-5 w-5 stroke-[2.25]" strokeWidth={2.25} />
-      </Link>
+      {isAuthenticated ? (
+        <button
+          ref={messengerTriggerRef}
+          type="button"
+          onClick={() => {
+            setIsMessengerOpen((prev) => !prev);
+            setIsNotificationsOpen(false);
+          }}
+          className={cn(
+            'relative flex h-10 w-10 items-center justify-center rounded-full transition-colors cursor-pointer',
+            isMessengerOpen
+              ? 'bg-primary-50 text-primary-600 dark:bg-primary-950/60 dark:text-primary-400'
+              : 'bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb]'
+          )}
+          title="Messenger"
+          aria-label="Chats"
+          aria-expanded={isMessengerOpen}
+        >
+          <MessageCircle className="h-5 w-5 stroke-[2.25]" strokeWidth={2.25} />
+          {unreadMessagesCount > 0 && (
+            <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-[11px] font-bold text-white shadow-xs">
+              {unreadMessagesCount > 9 ? '9+' : unreadMessagesCount}
+            </span>
+          )}
+        </button>
+      ) : (
+        <Link
+          href={ROUTES.LOGIN}
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors"
+          title={t('nav.friends')}
+        >
+          <MessageCircle className="h-5 w-5 stroke-[2.25]" strokeWidth={2.25} />
+        </Link>
+      )}
 
       {/* 3. Notifications Bell Button */}
       {isAuthenticated ? (
         <button
           ref={notificationsTriggerRef}
           type="button"
-          onClick={() => setIsNotificationsOpen((prev) => !prev)}
+          onClick={() => {
+            setIsNotificationsOpen((prev) => !prev);
+            setIsMessengerOpen(false);
+          }}
           className={cn(
             'relative flex h-10 w-10 items-center justify-center rounded-full transition-colors cursor-pointer',
             isNotificationsOpen
@@ -162,6 +196,15 @@ export function Navbar() {
       >
         <FacebookMenuIcon className="h-5 w-5" />
       </button>
+
+      {/* Messenger Popover Dropdown placed at right: 0 */}
+      {isAuthenticated && (
+        <MessengerDropdown
+          isOpen={isMessengerOpen}
+          onClose={() => setIsMessengerOpen(false)}
+          triggerRef={messengerTriggerRef}
+        />
+      )}
 
       {/* Notifications Popover Dropdown placed at right: 0 */}
       {isAuthenticated && (

@@ -2,12 +2,13 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { UserMinus, User } from 'lucide-react';
+import { UserMinus, User, MessageCircle } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { ROUTES } from '@/constants/routes';
 import { useLanguage } from '@/providers/LanguageProvider';
+import { useChatStore } from '@/stores/useChatStore';
 import { useFriendActions } from '../hooks/useFriendActions';
 import { FriendItem } from '../types/friends.types';
 
@@ -18,6 +19,7 @@ export interface FriendCardProps {
 export function FriendCard({ friend }: FriendCardProps) {
   const { locale } = useLanguage();
   const { unfriend } = useFriendActions();
+  const openChat = useChatStore((state) => state.openChat);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUnfriended, setIsUnfriended] = useState(false);
 
@@ -65,27 +67,39 @@ export function FriendCard({ friend }: FriendCardProps) {
               </div>
             ) : (
               <>
-                <Link href={profileUrl} className="block w-full">
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    className="w-full font-bold text-sm h-9 rounded-xl shadow-xs"
-                  >
-                    <User className="mr-1.5 h-4 w-4" />
-                    <span>{locale === 'bn' ? 'প্রোফাইল দেখুন' : 'View Profile'}</span>
-                  </Button>
-                </Link>
-
                 <Button
-                  variant="secondary"
+                  variant="primary"
                   size="sm"
-                  onClick={() => setIsModalOpen(true)}
-                  className="w-full font-bold text-sm h-9 rounded-xl bg-[#e4e6eb] hover:bg-red-50 hover:text-red-600 dark:bg-[#3a3b3c] dark:hover:bg-red-950/40 dark:hover:text-red-400 text-[#050505] dark:text-[#e4e6eb] transition-colors"
-                  aria-label={`Unfriend ${targetUser.name}`}
+                  onClick={() => openChat(targetUser)}
+                  className="w-full font-bold text-sm h-9 rounded-xl shadow-xs gap-1.5"
                 >
-                  <UserMinus className="mr-1.5 h-3.5 w-3.5" />
-                  <span>{locale === 'bn' ? 'আনফ্রেন্ড' : 'Unfriend'}</span>
+                  <MessageCircle className="h-4 w-4" />
+                  <span>{locale === 'bn' ? 'মেসেজ পাঠান' : 'Message'}</span>
                 </Button>
+
+                <div className="flex items-center gap-2">
+                  <Link href={profileUrl} className="flex-1">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      className="w-full font-bold text-xs h-8 rounded-xl bg-[#e4e6eb] hover:bg-[#d8dadf] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb]"
+                    >
+                      <User className="mr-1 h-3.5 w-3.5" />
+                      <span>{locale === 'bn' ? 'প্রোফাইল' : 'Profile'}</span>
+                    </Button>
+                  </Link>
+
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => setIsModalOpen(true)}
+                    className="h-8 px-2.5 rounded-xl bg-[#e4e6eb] hover:bg-red-50 hover:text-red-600 dark:bg-[#3a3b3c] dark:hover:bg-red-950/40 dark:hover:text-red-400 text-[#050505] dark:text-[#e4e6eb] transition-colors"
+                    title={locale === 'bn' ? 'আনফ্রেন্ড' : 'Unfriend'}
+                    aria-label={`Unfriend ${targetUser.name}`}
+                  >
+                    <UserMinus className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
               </>
             )}
           </div>

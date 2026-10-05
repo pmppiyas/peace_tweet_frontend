@@ -117,4 +117,13 @@ export const API_ENDPOINTS = {
     MARK_READ: (id: string) => `/notifications/${id}/read`,
     DELETE: (id: string) => `/notifications/${id}`,
   },
+  CHAT: {
+    CONVERSATIONS: '/chat/conversations',
+    CONVERSATION_CREATE: '/chat/conversations',
+    MESSAGES: (conversationId: string) => `/chat/messages/${conversationId}`,
+    SEND_MESSAGE: '/chat/messages',
+    EDIT_MESSAGE: (messageId: string) => `/chat/messages/${messageId}`,
+    DELETE_MESSAGE: (messageId: string) => `/chat/messages/${messageId}`,
+    MARK_READ: (conversationId: string) => `/chat/messages/${conversationId}/read`,
+  },
 } as const;

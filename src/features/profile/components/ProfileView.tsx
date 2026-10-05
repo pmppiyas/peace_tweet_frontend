@@ -37,7 +37,9 @@ import {
   Eye,
   Link2,
   Move,
+  MessageCircle,
 } from 'lucide-react';
+import { useChatStore } from '@/stores/useChatStore';
 import { formatDate } from '@/lib/utils/date';
 import { ROUTES } from '@/constants/routes';
 import { BloodGroup, User } from '@/types/user.types';
@@ -82,6 +84,7 @@ export function ProfileView({
   const { user: authUser, isAuthenticated } = useAuth();
   const { setUser } = useAuthStore();
   const { locale } = useLanguage();
+  const openChat = useChatStore((state) => state.openChat);
 
   const displayUser = targetUser || authUser;
   const isOwner = Boolean(
@@ -692,16 +695,37 @@ export function ProfileView({
               </Link>
             </div>
           ) : (
-            /* Another User Profile: Relationship FriendActionButton */
+            /* Another User Profile: Relationship FriendActionButton & Message */
             <div className="mt-3.5 flex items-center justify-center gap-2.5">
               {relationshipStatus !== 'SELF' && (
-                <FriendActionButton
-                  userId={displayUser.id}
-                  username={displayUser.username}
-                  status={relationshipStatus}
-                  requestId={requestId}
-                  size="md"
-                />
+                <>
+                  <FriendActionButton
+                    userId={displayUser.id}
+                    username={displayUser.username}
+                    status={relationshipStatus}
+                    requestId={requestId}
+                    size="md"
+                  />
+                  {isAuthenticated && (
+                    <Button
+                      size="md"
+                      onClick={() =>
+                        openChat({
+                          id: displayUser.id,
+                          name: displayUser.name,
+                          username: displayUser.username,
+                          avatarUrl: displayUser.avatarUrl,
+                          badge: displayUser.badge,
+                          userStatus: displayUser.userStatus,
+                        })
+                      }
+                      className="rounded-xl px-4 py-2 gap-1.5 text-xs font-bold bg-[#e4e6eb] hover:bg-[#d8dadf] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] shadow-xs cursor-pointer"
+                    >
+                      <MessageCircle className="h-4 w-4" />
+                      <span>{locale === 'bn' ? 'মেসেজ' : 'Message'}</span>
+                    </Button>
+                  )}
+                </>
               )}
             </div>
           )}

@@ -7,10 +7,12 @@ import { AuthProvider } from '@/providers/AuthProvider';
 import { ThemeProvider } from '@/providers/ThemeProvider';
 import { LanguageProvider } from '@/providers/LanguageProvider';
 import { AudioProvider } from '@/providers/AudioProvider';
+import { SocketProvider } from '@/providers/SocketProvider';
 import { Navbar } from '@/components/navigation/Navbar';
 import { MobileNav } from '@/components/navigation/MobileNav';
 import { FloatingAudioBar } from '@/features/audio/components/FloatingAudioBar';
 import { AppSplashLoader } from '@/components/ui/AppSplashLoader';
+import { ChatDock } from '@/features/chat/components/ChatDock';
 
 export const metadata: Metadata = {
   title: {
@@ -51,12 +53,15 @@ export default function RootLayout({
           <LanguageProvider>
             <QueryProvider>
               <AuthProvider>
-                <AudioProvider>
-                  <Navbar />
-                  <main className="flex-1">{children}</main>
-                  <FloatingAudioBar />
-                  <MobileNav />
-                </AudioProvider>
+                <SocketProvider>
+                  <AudioProvider>
+                    <Navbar />
+                    <main className="flex-1">{children}</main>
+                    <FloatingAudioBar />
+                    <MobileNav />
+                    <ChatDock />
+                  </AudioProvider>
+                </SocketProvider>
               </AuthProvider>
             </QueryProvider>
           </LanguageProvider>
