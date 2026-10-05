@@ -60,6 +60,7 @@ export interface FeedItem {
   viewer: FeedViewerState;
   originalPostId?: string | null;
   originalPost?: FeedItem | null;
+  isUnavailable?: boolean;
 }
 
 export interface FeedResponse {

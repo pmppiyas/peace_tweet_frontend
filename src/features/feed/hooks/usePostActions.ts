@@ -222,6 +222,15 @@ export function usePostActions() {
                     },
                   };
                 }
+                if (p.originalPostId === postId) {
+                  return {
+                    ...p,
+                    originalPost: {
+                      ...(p.originalPost || ({} as any)),
+                      isUnavailable: true,
+                    },
+                  };
+                }
                 return p;
               }),
           })),

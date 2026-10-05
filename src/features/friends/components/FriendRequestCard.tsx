@@ -2,10 +2,12 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { UserCheck, X, Clock } from 'lucide-react';
+import Image from 'next/image';
+import { UserCheck, X, Clock, Check } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { ROUTES } from '@/constants/routes';
+import { useLanguage } from '@/providers/LanguageProvider';
 import { useFriendActions } from '../hooks/useFriendActions';
 import { FriendRequestItem } from '../types/friends.types';
 
@@ -19,45 +21,41 @@ export function FriendRequestCard({ request, variant }: FriendRequestCardProps) 
     acceptRequest,
     rejectRequest,
     cancelRequest,
-    isAccepting,
-    isRejecting,
-    isCancelling,
   } = useFriendActions();
+  const { locale } = useLanguage();
 
-  const [activeAction, setActiveAction] = useState<'accept' | 'reject' | null>(null);
+  const [cardStatus, setCardStatus] = useState<'idle' | 'accepted' | 'rejected' | 'cancelled'>('idle');
 
   const displayUser = variant === 'received' ? request.sender : request.receiver;
   if (!displayUser) return null;
 
   const profileUrl = ROUTES.USER_PROFILE(displayUser.username);
 
-  // Accept received request immediately without confirmation dialog
-  const handleAccept = async () => {
-    setActiveAction('accept');
-    try {
-      await acceptRequest(request.id, displayUser.id);
-    } finally {
-      setActiveAction(null);
-    }
+  // Accept received request immediately without loading delay
+  const handleAccept = () => {
+    setCardStatus('accepted');
+    acceptRequest(request.id, displayUser.id).catch((err) => {
+      console.error('Failed to accept request:', err);
+      setCardStatus('idle');
+    });
   };
 
-  // Reject received request immediately without confirmation dialog
-  const handleReject = async () => {
-    setActiveAction('reject');
-    try {
-      await rejectRequest(request.id, displayUser.id);
-    } finally {
-      setActiveAction(null);
-    }
+  // Reject received request immediately without loading delay
+  const handleReject = () => {
+    setCardStatus('rejected');
+    rejectRequest(request.id, displayUser.id).catch((err) => {
+      console.error('Failed to reject request:', err);
+      setCardStatus('idle');
+    });
   };
 
-  // Cancel sent request immediately without confirmation dialog
-  const handleCancel = async () => {
-    try {
-      await cancelRequest(request.id, displayUser.id);
-    } catch {
-      // Handled in mutation
-    }
+  // Cancel sent request immediately without loading delay
+  const handleCancel = () => {
+    setCardStatus('cancelled');
+    cancelRequest(request.id, displayUser.id).catch((err) => {
+      console.error('Failed to cancel request:', err);
+      setCardStatus('idle');
+    });
   };
 
   return (
@@ -67,9 +65,18 @@ export function FriendRequestCard({ request, variant }: FriendRequestCardProps) 
         href={profileUrl}
         className="block relative bg-gradient-to-br from-primary-500 via-teal-600 to-primary-700 aspect-[4/3] flex items-center justify-center group overflow-hidden"
       >
-        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/20 backdrop-blur-xs text-white text-3xl font-black shadow-lg group-hover:scale-110 transition-transform">
-          {displayUser.name?.charAt(0) || 'U'}
-        </div>
+        {displayUser.avatar ? (
+          <Image
+            src={displayUser.avatar}
+            alt={displayUser.name}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform"
+          />
+        ) : (
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/20 backdrop-blur-xs text-white text-3xl font-black shadow-lg group-hover:scale-110 transition-transform">
+            {displayUser.name?.charAt(0) || 'U'}
+          </div>
+        )}
       </Link>
 
       {/* Card Body */}
@@ -86,53 +93,63 @@ export function FriendRequestCard({ request, variant }: FriendRequestCardProps) 
           </p>
         </div>
 
-        {/* Action Buttons */}
+        {/* Action Buttons or Immediate Feedback Status */}
         <div className="space-y-2 pt-1">
-          {variant === 'received' ? (
+          {cardStatus === 'accepted' ? (
+            <div className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 font-bold text-xs sm:text-sm">
+              <Check className="h-4 w-4" />
+              <span>{locale === 'bn' ? 'রিকোয়েস্ট গ্রহণ করা হয়েছে' : 'Request Accepted'}</span>
+            </div>
+          ) : cardStatus === 'rejected' ? (
+            <div className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-[#65676b] dark:text-[#b0b3b8] font-medium text-xs">
+              <span>{locale === 'bn' ? 'রিকোয়েস্ট মুছে ফেলা হয়েছে' : 'Request removed'}</span>
+            </div>
+          ) : cardStatus === 'cancelled' ? (
+            <div className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-[#65676b] dark:text-[#b0b3b8] font-medium text-xs">
+              <span>{locale === 'bn' ? 'রিকোয়েস্ট বাতিল করা হয়েছে' : 'Request cancelled'}</span>
+            </div>
+          ) : variant === 'received' ? (
             <>
               <Button
                 variant="primary"
                 size="sm"
                 onClick={handleAccept}
-                isLoading={isAccepting && activeAction === 'accept'}
-                disabled={isAccepting || isRejecting}
+                isLoading={false}
                 className="w-full font-bold text-sm h-9 rounded-xl shadow-xs"
                 aria-label={`Accept request from ${displayUser.name}`}
               >
                 <UserCheck className="mr-1.5 h-4 w-4" />
-                <span>Accept</span>
+                <span>{locale === 'bn' ? 'গ্রহণ করুন' : 'Accept'}</span>
               </Button>
 
               <Button
                 variant="secondary"
                 size="sm"
                 onClick={handleReject}
-                isLoading={isRejecting && activeAction === 'reject'}
-                disabled={isAccepting || isRejecting}
+                isLoading={false}
                 className="w-full font-bold text-sm h-9 rounded-xl bg-[#e4e6eb] hover:bg-[#d8dadf] text-[#050505] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] dark:text-[#e4e6eb]"
                 aria-label={`Delete request from ${displayUser.name}`}
               >
-                <span>Delete</span>
+                <span>{locale === 'bn' ? 'ডিলিট' : 'Delete'}</span>
               </Button>
             </>
           ) : (
             <>
               <div className="flex items-center justify-center gap-1.5 text-xs text-[#65676b] dark:text-[#b0b3b8] py-0.5">
                 <Clock className="h-3.5 w-3.5 text-amber-500" />
-                <span>Request Sent</span>
+                <span>{locale === 'bn' ? 'রিকোয়েস্ট পাঠানো হয়েছে' : 'Request Sent'}</span>
               </div>
 
               <Button
                 variant="outline"
                 size="sm"
                 onClick={handleCancel}
-                isLoading={isCancelling}
-                disabled={isCancelling}
+                isLoading={false}
                 className="w-full text-xs font-semibold text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-950/40 h-9 rounded-xl"
                 aria-label={`Cancel request sent to ${displayUser.name}`}
               >
                 <X className="mr-1.5 h-3.5 w-3.5" />
-                <span>Cancel Request</span>
+                <span>{locale === 'bn' ? 'রিকোয়েস্ট বাতিল' : 'Cancel Request'}</span>
               </Button>
             </>
           )}

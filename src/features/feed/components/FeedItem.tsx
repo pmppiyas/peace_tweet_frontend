@@ -9,6 +9,7 @@ import { TextPostCard } from './TextPostCard';
 import { BloodPostCard } from './BloodPostCard';
 import { QuestionPostCard } from './QuestionPostCard';
 import { AnnouncementCard } from './AnnouncementCard';
+import { PostUnavailableCard } from './PostUnavailableCard';
 import { ShareModal, SharePreviewData } from './ShareModal';
 import { usePostActions } from '../hooks/usePostActions';
 import { useComments } from '../hooks/useComments';
@@ -64,9 +65,14 @@ export function FeedItem({ post }: FeedItemProps) {
       ? ROUTES.PROFILE
       : '#';
 
-  // Target original post if this post is already a shared post
-  const rootPost = post.originalPost || post;
-  const targetPostId = post.originalPostId || post.id;
+  // Target original post if this post is already a shared post and available
+  const isOriginalUnavailable =
+    Boolean(post.originalPost?.isUnavailable) ||
+    Boolean(post.originalPostId && !post.originalPost) ||
+    Boolean(post.originalPost && !post.originalPost.author);
+
+  const rootPost = (!isOriginalUnavailable && post.originalPost) || post;
+  const targetPostId = (!isOriginalUnavailable && post.originalPostId) || post.id;
 
   const sharePreviewData: SharePreviewData = {
     id: rootPost.id,
@@ -196,7 +202,7 @@ export function FeedItem({ post }: FeedItemProps) {
         </div>
 
         {/* 2. Main Post Content Body */}
-        {post.originalPost ? (
+        {post.originalPostId || post.originalPost ? (
           <div className="mt-3 space-y-3">
             {/* Sharer's custom commentary/caption */}
             {post.content && (
@@ -205,54 +211,58 @@ export function FeedItem({ post }: FeedItemProps) {
               </p>
             )}
 
-            {/* Embedded Original Post Card */}
-            <div className="rounded-xl border border-[#e4e6eb] bg-[#f8f9fa] p-3.5 sm:p-4 dark:border-[#393a3b] dark:bg-[#18191a]/70 space-y-3 transition-colors">
-              {/* Original Author Header */}
-              <div className="flex items-center justify-between gap-2.5">
-                <Link
-                  href={
-                    post.originalPost.author?.username
-                      ? ROUTES.USER_PROFILE(post.originalPost.author.username)
-                      : '#'
-                  }
-                  className="flex items-center gap-2.5 min-w-0 group"
-                >
-                  <div className="relative h-8 w-8 rounded-full overflow-hidden bg-gray-200 shrink-0 flex items-center justify-center font-bold text-xs text-gray-700">
-                    {post.originalPost.author?.avatar ? (
-                      <Image
-                        src={post.originalPost.author.avatar}
-                        alt={post.originalPost.author.name}
-                        fill
-                        className="object-cover"
-                      />
-                    ) : (
-                      <span>{post.originalPost.author?.name?.[0] || 'U'}</span>
-                    )}
-                  </div>
-                  <div className="min-w-0">
-                    <h4 className="text-xs font-bold text-[#050505] dark:text-[#e4e6eb] truncate group-hover:underline">
-                      {post.originalPost.author?.name}
-                    </h4>
-                    <div className="flex items-center gap-1 text-[11px] text-[#65676b] dark:text-[#b0b3b8]">
-                      {post.originalPost.author?.username && (
-                        <span>@{post.originalPost.author.username}</span>
+            {isOriginalUnavailable ? (
+              <PostUnavailableCard />
+            ) : post.originalPost ? (
+              /* Embedded Original Post Card */
+              <div className="rounded-xl border border-[#e4e6eb] bg-[#f8f9fa] p-3.5 sm:p-4 dark:border-[#393a3b] dark:bg-[#18191a]/70 space-y-3 transition-colors">
+                {/* Original Author Header */}
+                <div className="flex items-center justify-between gap-2.5">
+                  <Link
+                    href={
+                      post.originalPost.author?.username
+                        ? ROUTES.USER_PROFILE(post.originalPost.author.username)
+                        : '#'
+                    }
+                    className="flex items-center gap-2.5 min-w-0 group"
+                  >
+                    <div className="relative h-8 w-8 rounded-full overflow-hidden bg-gray-200 shrink-0 flex items-center justify-center font-bold text-xs text-gray-700">
+                      {post.originalPost.author?.avatar ? (
+                        <Image
+                          src={post.originalPost.author.avatar}
+                          alt={post.originalPost.author.name}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <span>{post.originalPost.author?.name?.[0] || 'U'}</span>
                       )}
-                      <span>•</span>
-                      <span>{formatDate(post.originalPost.createdAt)}</span>
                     </div>
-                  </div>
-                </Link>
-              </div>
+                    <div className="min-w-0">
+                      <h4 className="text-xs font-bold text-[#050505] dark:text-[#e4e6eb] truncate group-hover:underline">
+                        {post.originalPost.author?.name}
+                      </h4>
+                      <div className="flex items-center gap-1 text-[11px] text-[#65676b] dark:text-[#b0b3b8]">
+                        {post.originalPost.author?.username && (
+                          <span>@{post.originalPost.author.username}</span>
+                        )}
+                        <span>•</span>
+                        <span>{formatDate(post.originalPost.createdAt)}</span>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
 
-              {/* Original Post Content */}
-              <div>
-                {post.originalPost.type === 'DUA' && <DuaPostCard post={post.originalPost} />}
-                {post.originalPost.type === 'BLOOD_REQUEST' && <BloodPostCard post={post.originalPost} />}
-                {post.originalPost.type === 'QUESTION' && <QuestionPostCard post={post.originalPost} />}
-                {post.originalPost.type === 'ANNOUNCEMENT' && <AnnouncementCard post={post.originalPost} />}
-                {post.originalPost.type === 'TEXT' && <TextPostCard post={post.originalPost} />}
+                {/* Original Post Content */}
+                <div>
+                  {post.originalPost.type === 'DUA' && <DuaPostCard post={post.originalPost} />}
+                  {post.originalPost.type === 'BLOOD_REQUEST' && <BloodPostCard post={post.originalPost} />}
+                  {post.originalPost.type === 'QUESTION' && <QuestionPostCard post={post.originalPost} />}
+                  {post.originalPost.type === 'ANNOUNCEMENT' && <AnnouncementCard post={post.originalPost} />}
+                  {post.originalPost.type === 'TEXT' && <TextPostCard post={post.originalPost} />}
+                </div>
               </div>
-            </div>
+            ) : null}
           </div>
         ) : (
           <div className="mt-3">

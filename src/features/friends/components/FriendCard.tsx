@@ -17,19 +17,20 @@ export interface FriendCardProps {
 
 export function FriendCard({ friend }: FriendCardProps) {
   const { locale } = useLanguage();
-  const { unfriend, isUnfriending } = useFriendActions();
+  const { unfriend } = useFriendActions();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUnfriended, setIsUnfriended] = useState(false);
 
   const targetUser = friend.user;
   const profileUrl = ROUTES.USER_PROFILE(targetUser.username);
 
-  const handleConfirmUnfriend = async () => {
-    try {
-      await unfriend(targetUser.id);
-      setIsModalOpen(false);
-    } catch {
-      // Handled in mutation
-    }
+  const handleConfirmUnfriend = () => {
+    setIsModalOpen(false);
+    setIsUnfriended(true);
+    unfriend(targetUser.id).catch((err) => {
+      console.error('Failed to unfriend:', err);
+      setIsUnfriended(false);
+    });
   };
 
   return (
@@ -58,27 +59,35 @@ export function FriendCard({ friend }: FriendCardProps) {
 
           {/* Action Buttons */}
           <div className="space-y-2 pt-1">
-            <Link href={profileUrl} className="block w-full">
-              <Button
-                variant="primary"
-                size="sm"
-                className="w-full font-bold text-sm h-9 rounded-xl shadow-xs"
-              >
-                <User className="mr-1.5 h-4 w-4" />
-                <span>{locale === 'bn' ? 'প্রোফাইল দেখুন' : 'View Profile'}</span>
-              </Button>
-            </Link>
+            {isUnfriended ? (
+              <div className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-[#65676b] dark:text-[#b0b3b8] font-medium text-xs">
+                <span>{locale === 'bn' ? 'বন্ধু তালিকা থেকে সরানো হয়েছে' : 'Unfriended'}</span>
+              </div>
+            ) : (
+              <>
+                <Link href={profileUrl} className="block w-full">
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    className="w-full font-bold text-sm h-9 rounded-xl shadow-xs"
+                  >
+                    <User className="mr-1.5 h-4 w-4" />
+                    <span>{locale === 'bn' ? 'প্রোফাইল দেখুন' : 'View Profile'}</span>
+                  </Button>
+                </Link>
 
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setIsModalOpen(true)}
-              className="w-full font-bold text-sm h-9 rounded-xl bg-[#e4e6eb] hover:bg-red-50 hover:text-red-600 dark:bg-[#3a3b3c] dark:hover:bg-red-950/40 dark:hover:text-red-400 text-[#050505] dark:text-[#e4e6eb] transition-colors"
-              aria-label={`Unfriend ${targetUser.name}`}
-            >
-              <UserMinus className="mr-1.5 h-3.5 w-3.5" />
-              <span>{locale === 'bn' ? 'আনফ্রেন্ড' : 'Unfriend'}</span>
-            </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setIsModalOpen(true)}
+                  className="w-full font-bold text-sm h-9 rounded-xl bg-[#e4e6eb] hover:bg-red-50 hover:text-red-600 dark:bg-[#3a3b3c] dark:hover:bg-red-950/40 dark:hover:text-red-400 text-[#050505] dark:text-[#e4e6eb] transition-colors"
+                  aria-label={`Unfriend ${targetUser.name}`}
+                >
+                  <UserMinus className="mr-1.5 h-3.5 w-3.5" />
+                  <span>{locale === 'bn' ? 'আনফ্রেন্ড' : 'Unfriend'}</span>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </Card>
@@ -98,14 +107,13 @@ export function FriendCard({ friend }: FriendCardProps) {
           <Button
             variant="outline"
             onClick={() => setIsModalOpen(false)}
-            disabled={isUnfriending}
           >
             {locale === 'bn' ? 'ফিরে যান' : 'Cancel'}
           </Button>
           <Button
             variant="destructive"
             onClick={handleConfirmUnfriend}
-            isLoading={isUnfriending}
+            isLoading={false}
           >
             <UserMinus className="mr-1.5 h-4 w-4" />
             <span>{locale === 'bn' ? 'আনফ্রেন্ড করুন' : 'Remove Friend'}</span>

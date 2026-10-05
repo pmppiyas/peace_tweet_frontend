@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { UserPlus, UserCheck, Clock, Check, X, UserMinus } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
@@ -24,6 +24,7 @@ export function FriendActionButton({
   requestId,
   size = 'md',
   className,
+  onStatusChange,
 }: FriendActionButtonProps) {
   const {
     sendRequest,
@@ -31,64 +32,135 @@ export function FriendActionButton({
     acceptRequest,
     rejectRequest,
     unfriend,
-    isSending,
-    isCancelling,
-    isAccepting,
-    isRejecting,
-    isUnfriending,
   } = useFriendActions();
 
+  const [localStatus, setLocalStatus] = useState<FriendshipStatus>(status);
+  const [localRequestId, setLocalRequestId] = useState<string | null>(requestId || null);
   const [isUnfriendModalOpen, setIsUnfriendModalOpen] = useState(false);
 
-  if (status === 'SELF') {
+  // Sync with prop updates from outside
+  useEffect(() => {
+    setLocalStatus(status);
+  }, [status]);
+
+  useEffect(() => {
+    if (requestId !== undefined) {
+      setLocalRequestId(requestId);
+    }
+  }, [requestId]);
+
+  if (localStatus === 'SELF') {
     return null;
   }
 
-  const handleSend = async () => {
-    try {
-      await sendRequest(userId);
-    } catch {}
+  // 1. Send Request: NONE -> PENDING_SENT immediately
+  const handleSend = () => {
+    const prevStatus = localStatus;
+    const prevReqId = localRequestId;
+
+    // Instant optimistic update (zero spinner, immediate text change)
+    setLocalStatus('PENDING_SENT');
+    onStatusChange?.('PENDING_SENT');
+
+    // Run network processing in the background
+    sendRequest(userId)
+      .then((res: any) => {
+        const newId = res?.data?.id || res?.id;
+        if (newId) {
+          setLocalRequestId(newId);
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to send friend request:', err);
+        setLocalStatus(prevStatus);
+        setLocalRequestId(prevReqId);
+        onStatusChange?.(prevStatus);
+      });
   };
 
-  const handleCancel = async () => {
-    if (!requestId) return;
-    try {
-      await cancelRequest(requestId, userId);
-    } catch {}
+  // 2. Cancel Request: PENDING_SENT -> NONE immediately
+  const handleCancel = () => {
+    const prevStatus = localStatus;
+    const prevReqId = localRequestId;
+
+    // Instant optimistic update
+    setLocalStatus('NONE');
+    setLocalRequestId(null);
+    onStatusChange?.('NONE');
+
+    const targetReqId = prevReqId || requestId || userId;
+    cancelRequest(targetReqId, userId).catch((err) => {
+      console.error('Failed to cancel friend request:', err);
+      setLocalStatus(prevStatus);
+      setLocalRequestId(prevReqId);
+      onStatusChange?.(prevStatus);
+    });
   };
 
-  const handleAccept = async () => {
-    if (!requestId) return;
-    try {
-      await acceptRequest(requestId, userId);
-    } catch {}
+  // 3. Accept Request: PENDING_RECEIVED -> FRIENDS immediately
+  const handleAccept = () => {
+    const prevStatus = localStatus;
+    const prevReqId = localRequestId;
+
+    // Instant optimistic update
+    setLocalStatus('FRIENDS');
+    setLocalRequestId(null);
+    onStatusChange?.('FRIENDS');
+
+    const targetReqId = prevReqId || requestId || userId;
+    acceptRequest(targetReqId, userId).catch((err) => {
+      console.error('Failed to accept friend request:', err);
+      setLocalStatus(prevStatus);
+      setLocalRequestId(prevReqId);
+      onStatusChange?.(prevStatus);
+    });
   };
 
-  // Handle Reject Received Request directly without confirmation dialog
-  const handleReject = async () => {
-    if (!requestId) return;
-    try {
-      await rejectRequest(requestId, userId);
-    } catch {}
+  // 4. Reject Request: PENDING_RECEIVED -> NONE immediately
+  const handleReject = () => {
+    const prevStatus = localStatus;
+    const prevReqId = localRequestId;
+
+    // Instant optimistic update
+    setLocalStatus('NONE');
+    setLocalRequestId(null);
+    onStatusChange?.('NONE');
+
+    const targetReqId = prevReqId || requestId || userId;
+    rejectRequest(targetReqId, userId).catch((err) => {
+      console.error('Failed to reject friend request:', err);
+      setLocalStatus(prevStatus);
+      setLocalRequestId(prevReqId);
+      onStatusChange?.(prevStatus);
+    });
   };
 
-  const handleConfirmUnfriend = async () => {
-    try {
-      await unfriend(userId);
-      setIsUnfriendModalOpen(false);
-    } catch {}
+  // 5. Unfriend: FRIENDS -> NONE immediately
+  const handleConfirmUnfriend = () => {
+    setIsUnfriendModalOpen(false);
+    const prevStatus = localStatus;
+
+    // Instant optimistic update
+    setLocalStatus('NONE');
+    setLocalRequestId(null);
+    onStatusChange?.('NONE');
+
+    unfriend(userId).catch((err) => {
+      console.error('Failed to unfriend user:', err);
+      setLocalStatus(prevStatus);
+      onStatusChange?.(prevStatus);
+    });
   };
 
   return (
     <>
       <div className="inline-flex items-center gap-2">
-        {status === 'NONE' && (
+        {localStatus === 'NONE' && (
           <Button
             variant="primary"
             size={size}
             onClick={handleSend}
-            isLoading={isSending}
-            disabled={isSending}
+            isLoading={false}
             className={className}
             aria-label="Send friend request"
           >
@@ -97,13 +169,12 @@ export function FriendActionButton({
           </Button>
         )}
 
-        {status === 'PENDING_SENT' && (
+        {localStatus === 'PENDING_SENT' && (
           <Button
             variant="outline"
             size={size}
             onClick={handleCancel}
-            isLoading={isCancelling}
-            disabled={isCancelling}
+            isLoading={false}
             className={className}
             aria-label="Cancel sent friend request"
             title="Click to cancel request"
@@ -113,14 +184,13 @@ export function FriendActionButton({
           </Button>
         )}
 
-        {status === 'PENDING_RECEIVED' && (
+        {localStatus === 'PENDING_RECEIVED' && (
           <div className="flex items-center gap-1.5">
             <Button
               variant="primary"
               size={size}
               onClick={handleAccept}
-              isLoading={isAccepting}
-              disabled={isAccepting || isRejecting}
+              isLoading={false}
               className={className}
               aria-label="Accept friend request"
             >
@@ -131,8 +201,7 @@ export function FriendActionButton({
               variant="outline"
               size={size}
               onClick={handleReject}
-              isLoading={isRejecting}
-              disabled={isAccepting || isRejecting}
+              isLoading={false}
               aria-label="Reject friend request"
             >
               <X className="h-4 w-4 text-gray-500" />
@@ -141,13 +210,12 @@ export function FriendActionButton({
           </div>
         )}
 
-        {status === 'FRIENDS' && (
+        {localStatus === 'FRIENDS' && (
           <Button
             variant="secondary"
             size={size}
             onClick={() => setIsUnfriendModalOpen(true)}
-            isLoading={isUnfriending}
-            disabled={isUnfriending}
+            isLoading={false}
             className={className}
             aria-label="Remove friend"
             title="Click to unfriend"
@@ -169,14 +237,13 @@ export function FriendActionButton({
           <Button
             variant="outline"
             onClick={() => setIsUnfriendModalOpen(false)}
-            disabled={isUnfriending}
           >
             Cancel
           </Button>
           <Button
             variant="destructive"
             onClick={handleConfirmUnfriend}
-            isLoading={isUnfriending}
+            isLoading={false}
           >
             <UserMinus className="mr-1.5 h-4 w-4" />
             <span>Remove Friend</span>

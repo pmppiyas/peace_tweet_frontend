@@ -113,7 +113,10 @@ export function NotificationDropdown({
   const [activeFilter, setActiveFilter] = useState<NotificationFilter>('ALL');
 
   // Fetch all notifications and keep in client cache
-  const { data: notificationsData, isLoading } = useNotifications(undefined, isOpen);
+  const { data: notificationsData, isLoading } = useNotifications(
+    undefined,
+    isOpen
+  );
 
   const markAsReadMutation = useMarkNotificationAsRead();
   const markAllAsReadMutation = useMarkAllNotificationsAsRead();
@@ -121,7 +124,7 @@ export function NotificationDropdown({
 
   const allNotifications = useMemo(
     () => notificationsData?.data || [],
-    [notificationsData?.data],
+    [notificationsData?.data]
   );
 
   const unreadCount =
@@ -178,24 +181,23 @@ export function NotificationDropdown({
 
     // Determine target route based on notification type and entity
     switch (item.type) {
-      case 'POST_LIKE':
-      case 'POST_COMMENT':
-        if (item.entityId) {
-          router.push(`/?post=${item.entityId}`);
-        } else {
-          router.push(ROUTES.HOME);
-        }
-        break;
-
       case 'FRIEND_REQUEST':
-        router.push(ROUTES.FRIENDS.REQUESTS);
-        break;
-
       case 'FRIEND_ACCEPT':
         if (item.actor?.username) {
           router.push(ROUTES.USER_PROFILE(item.actor.username));
         } else {
-          router.push(ROUTES.FRIENDS.LIST);
+          router.push(ROUTES.FRIENDS.REQUESTS);
+        }
+        break;
+
+      case 'POST_LIKE':
+      case 'POST_COMMENT':
+        if (item.entityId) {
+          router.push(`/?post=${item.entityId}`);
+        } else if (item.actor?.username) {
+          router.push(ROUTES.USER_PROFILE(item.actor.username));
+        } else {
+          router.push(ROUTES.HOME);
         }
         break;
 
@@ -204,7 +206,11 @@ export function NotificationDropdown({
         break;
 
       default:
-        router.push(ROUTES.HOME);
+        if (item.actor?.username) {
+          router.push(ROUTES.USER_PROFILE(item.actor.username));
+        } else {
+          router.push(ROUTES.HOME);
+        }
         break;
     }
   };
@@ -232,7 +238,7 @@ export function NotificationDropdown({
         'border border-[#e4e6eb] dark:border-[#393a3b]',
         'flex flex-col overflow-hidden',
         'animate-in fade-in-0 zoom-in-95 duration-150',
-        className,
+        className
       )}
       style={{ maxHeight: 'calc(100vh - 80px)' }}
     >
@@ -265,7 +271,7 @@ export function NotificationDropdown({
             'px-3.5 py-1 rounded-full text-sm font-semibold transition-all',
             activeFilter === 'ALL'
               ? 'bg-primary-50 text-primary-700 dark:bg-primary-950/60 dark:text-primary-300'
-              : 'text-[#65676b] dark:text-[#b0b3b8] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c]',
+              : 'text-[#65676b] dark:text-[#b0b3b8] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c]'
           )}
         >
           All
@@ -278,7 +284,7 @@ export function NotificationDropdown({
             'flex items-center gap-1.5 px-3.5 py-1 rounded-full text-sm font-semibold transition-all',
             activeFilter === 'UNREAD'
               ? 'bg-primary-50 text-primary-700 dark:bg-primary-950/60 dark:text-primary-300'
-              : 'text-[#65676b] dark:text-[#b0b3b8] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c]',
+              : 'text-[#65676b] dark:text-[#b0b3b8] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c]'
           )}
         >
           <span>Unread</span>
@@ -322,12 +328,20 @@ export function NotificationDropdown({
             return (
               <div
                 key={item.id}
+                role="button"
+                tabIndex={0}
                 onClick={() => handleNotificationClick(item)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleNotificationClick(item);
+                  }
+                }}
                 className={cn(
                   'relative flex items-center gap-3 p-2.5 rounded-xl cursor-pointer transition-colors group select-none',
                   !item.isRead
                     ? 'bg-primary-50/40 dark:bg-primary-950/20 hover:bg-[#e4e6eb]/60 dark:hover:bg-[#3a3b3c]'
-                    : 'hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c]',
+                    : 'hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c]'
                 )}
               >
                 {/* Left: Avatar with type badge */}
@@ -351,7 +365,7 @@ export function NotificationDropdown({
                     className={cn(
                       'absolute -bottom-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full ring-2 ring-white dark:ring-[#242526]',
                       badge.bgColor,
-                      badge.textColor,
+                      badge.textColor
                     )}
                   >
                     <BadgeIcon className="h-3 w-3 stroke-[2.5]" />
@@ -361,9 +375,7 @@ export function NotificationDropdown({
                 {/* Center: Notification Message and Relative Time */}
                 <div className="flex-1 min-w-0 pr-1">
                   <p className="text-sm text-[#050505] dark:text-[#e4e6eb] leading-snug line-clamp-3">
-                    <span className="font-semibold hover:underline">
-                      {actorName}
-                    </span>{' '}
+                    <span className="font-semibold">{actorName}</span>{' '}
                     <span>{item.message}</span>
                   </p>
 
@@ -373,7 +385,7 @@ export function NotificationDropdown({
                         'text-xs',
                         !item.isRead
                           ? 'font-semibold text-primary-600 dark:text-primary-400'
-                          : 'text-[#65676b] dark:text-[#b0b3b8]',
+                          : 'text-[#65676b] dark:text-[#b0b3b8]'
                       )}
                     >
                       {formatTimeAgo(item.createdAt)}
