@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useRef } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { Socket } from 'socket.io-client';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
@@ -27,12 +27,14 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
   const { user, isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
   const socketRef = useRef<Socket | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated || !user) {
       if (socketRef.current) {
         disconnectSocket();
         socketRef.current = null;
+        setIsConnected(false);
       }
       return;
     }
@@ -41,9 +43,17 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     socketRef.current = socket;
     if (!socket) return;
 
+    if (socket.connected) {
+      setIsConnected(true);
+    }
+
     // Listeners
     const handleConnect = () => {
-      // Socket connected
+      setIsConnected(true);
+    };
+
+    const handleDisconnect = () => {
+      setIsConnected(false);
     };
 
     const handleOnlineList = (userIds: string[]) => {
@@ -242,6 +252,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     };
 
     socket.on('connect', handleConnect);
+    socket.on('disconnect', handleDisconnect);
     socket.on('users:online_list', handleOnlineList);
     socket.on('user:status', handleUserStatus);
     socket.on('message:received', handleMessageReceived);
@@ -254,6 +265,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
 
     return () => {
       socket.off('connect', handleConnect);
+      socket.off('disconnect', handleDisconnect);
       socket.off('users:online_list', handleOnlineList);
       socket.off('user:status', handleUserStatus);
       socket.off('message:received', handleMessageReceived);
@@ -270,7 +282,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     <SocketContext.Provider
       value={{
         socket: socketRef.current,
-        isConnected: Boolean(socketRef.current?.connected),
+        isConnected,
       }}
     >
       {children}

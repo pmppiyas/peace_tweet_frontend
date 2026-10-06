@@ -158,6 +158,17 @@ export function useChatMessages(conversationId?: string, receiverId?: string) {
       // Try Socket first for real-time delivery
       if (socket && socket.connected) {
         return new Promise<ChatMessage>((resolve, reject) => {
+          let resolved = false;
+          const timer = setTimeout(() => {
+            if (!resolved) {
+              resolved = true;
+              chatApi
+                .sendMessage(receiverId, text.trim(), validConvId || undefined)
+                .then((res) => resolve(res.data))
+                .catch(reject);
+            }
+          }, 3500);
+
           socket.emit(
             'message:send',
             {
@@ -166,14 +177,17 @@ export function useChatMessages(conversationId?: string, receiverId?: string) {
               conversationId: validConvId || undefined,
             },
             (response: any) => {
-              if (response?.success && response.data) {
-                resolve(response.data);
-              } else {
-                // Fallback to REST if socket acknowledgement failed
-                chatApi
-                  .sendMessage(receiverId, text.trim(), validConvId || undefined)
-                  .then((res) => resolve(res.data))
-                  .catch(reject);
+              if (!resolved) {
+                resolved = true;
+                clearTimeout(timer);
+                if (response?.success && response.data) {
+                  resolve(response.data);
+                } else {
+                  chatApi
+                    .sendMessage(receiverId, text.trim(), validConvId || undefined)
+                    .then((res) => resolve(res.data))
+                    .catch(reject);
+                }
               }
             },
           );
@@ -302,14 +316,29 @@ export function useChatMessages(conversationId?: string, receiverId?: string) {
       const socket = getSocket();
       if (socket && socket.connected) {
         return new Promise<ChatMessage>((resolve, reject) => {
-          socket.emit('message:edit', { messageId, text: text.trim() }, (response: any) => {
-            if (response?.success && response.data) {
-              resolve(response.data);
-            } else {
+          let resolved = false;
+          const timer = setTimeout(() => {
+            if (!resolved) {
+              resolved = true;
               chatApi
                 .editMessage(messageId, text.trim())
                 .then((res) => resolve(res.data))
                 .catch(reject);
+            }
+          }, 3500);
+
+          socket.emit('message:edit', { messageId, text: text.trim() }, (response: any) => {
+            if (!resolved) {
+              resolved = true;
+              clearTimeout(timer);
+              if (response?.success && response.data) {
+                resolve(response.data);
+              } else {
+                chatApi
+                  .editMessage(messageId, text.trim())
+                  .then((res) => resolve(res.data))
+                  .catch(reject);
+              }
             }
           });
         });
@@ -393,14 +422,29 @@ export function useChatMessages(conversationId?: string, receiverId?: string) {
       const socket = getSocket();
       if (socket && socket.connected) {
         return new Promise<ChatMessage>((resolve, reject) => {
-          socket.emit('message:delete', { messageId }, (response: any) => {
-            if (response?.success && response.data) {
-              resolve(response.data);
-            } else {
+          let resolved = false;
+          const timer = setTimeout(() => {
+            if (!resolved) {
+              resolved = true;
               chatApi
                 .deleteMessage(messageId)
                 .then((res) => resolve(res.data))
                 .catch(reject);
+            }
+          }, 3500);
+
+          socket.emit('message:delete', { messageId }, (response: any) => {
+            if (!resolved) {
+              resolved = true;
+              clearTimeout(timer);
+              if (response?.success && response.data) {
+                resolve(response.data);
+              } else {
+                chatApi
+                  .deleteMessage(messageId)
+                  .then((res) => resolve(res.data))
+                  .catch(reject);
+              }
             }
           });
         });
