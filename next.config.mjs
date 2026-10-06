@@ -1,8 +1,6 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = (phase) => ({
+const nextConfig = {
   reactStrictMode: true,
-  // Separate dev and build directories so `next build` never corrupts a running `next dev` server
-  distDir: phase === 'phase-development-server' ? '.next' : '.next-build',
   images: {
     remotePatterns: [
       {
@@ -16,9 +14,10 @@ const nextConfig = (phase) => ({
     ],
   },
   async rewrites() {
-    const apiBase =
-      process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/v1\/?$/, '') ||
-      'http://localhost:5000';
+    const apiBase = process.env.NEXT_PUBLIC_API_URL?.replace(
+      /\/api\/v1\/?$/,
+      ''
+    );
     return [
       {
         source: '/uploads/:path*',
@@ -28,11 +27,10 @@ const nextConfig = (phase) => ({
   },
   webpack: (config, { dev }) => {
     if (dev) {
-      // Disable persistent pack cache on Windows to prevent ENOENT vendor-chunks corruption
       config.cache = false;
     }
     return config;
   },
-});
+};
 
 export default nextConfig;

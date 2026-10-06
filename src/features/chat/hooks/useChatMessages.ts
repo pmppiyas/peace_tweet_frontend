@@ -82,6 +82,61 @@ export function useChatMessages(conversationId?: string, receiverId?: string) {
 
   // Send Message Mutation
   const sendMessageMutation = useMutation({
+    onMutate: async (text: string) => {
+      const trimmed = text.trim();
+      const activeKey = MESSAGES_QUERY_KEY(validConvId);
+
+      // Cancel any outgoing refetches so they don't overwrite our optimistic update
+      await queryClient.cancelQueries({ queryKey: activeKey });
+      const previousMessages = queryClient.getQueryData<MessagesResponse>(activeKey);
+
+      const tempId = `temp_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+      const optimisticMsg: ChatMessage = {
+        id: tempId,
+        conversationId: validConvId,
+        senderId: user?.id || '',
+        readAt: null,
+        text: trimmed,
+        isRead: false,
+        isEdited: false,
+        isDeleted: false,
+        createdAt: new Date().toISOString(),
+        sender: {
+          id: user?.id || '',
+          name: user?.name || '',
+          username: user?.username || '',
+          avatarUrl: user?.avatarUrl || null,
+        },
+      };
+
+      // Optimistically insert message into cache
+      queryClient.setQueryData<MessagesResponse>(activeKey, (old) => {
+        const list = old?.messages || old?.items || [];
+        const nextList = [...list, optimisticMsg];
+        return {
+          ...old,
+          messages: nextList,
+          items: nextList,
+          nextCursor: old?.nextCursor || null,
+          hasMore: old?.hasMore || false,
+        };
+      });
+
+      // Optimistically update conversation preview
+      if (validConvId) {
+        queryClient.setQueryData<ConversationItem[]>(
+          CONVERSATIONS_QUERY_KEY,
+          (old = []) =>
+            old.map((c) =>
+              c.id === validConvId
+                ? { ...c, lastMessageText: trimmed, lastMessageAt: optimisticMsg.createdAt }
+                : c,
+            ),
+        );
+      }
+
+      return { previousMessages, tempId, activeKey };
+    },
     mutationFn: async (text: string) => {
       if (!text.trim() || !receiverId) {
         throw new Error('Message text and receiver are required');
@@ -133,42 +188,53 @@ export function useChatMessages(conversationId?: string, receiverId?: string) {
       );
       return res.data;
     },
-    onSuccess: (savedMessage) => {
+    onSuccess: (savedMessage, _variables, context) => {
       const convId = savedMessage.conversationId;
+      const targetKey = MESSAGES_QUERY_KEY(convId);
 
-      // Update message list cache
-      queryClient.setQueryData<MessagesResponse>(
-        MESSAGES_QUERY_KEY(convId),
-        (old) => {
-          const prev = old?.messages || old?.items || [];
-          if (prev.some((m) => m.id === savedMessage.id)) return old!;
-          const nextList = [...prev, savedMessage];
-          return {
-            ...old,
-            messages: nextList,
-            items: nextList,
-            nextCursor: old?.nextCursor || null,
-            hasMore: old?.hasMore || false,
-          };
-        },
-      );
+      // Replace temp optimistic message with actual saved message
+      queryClient.setQueryData<MessagesResponse>(targetKey, (old) => {
+        const list = old?.messages || old?.items || [];
+        const nextList = list.map((m) =>
+          m.id === context?.tempId || m.id === savedMessage.id ? savedMessage : m,
+        );
+        if (!nextList.some((m) => m.id === savedMessage.id)) {
+          nextList.push(savedMessage);
+        }
+        return {
+          ...old,
+          messages: nextList,
+          items: nextList,
+          nextCursor: old?.nextCursor || null,
+          hasMore: old?.hasMore || false,
+        };
+      });
 
       // Update conversations list cache
       queryClient.setQueryData<ConversationItem[]>(
         CONVERSATIONS_QUERY_KEY,
         (old = []) => {
-          return old.map((c) => {
-            if (c.id === convId) {
-              return {
-                ...c,
-                lastMessageText: savedMessage.text,
-                lastMessageAt: savedMessage.createdAt,
-              };
-            }
-            return c;
-          });
+          const exists = old.some((c) => c.id === convId);
+          if (!exists) {
+            queryClient.invalidateQueries({ queryKey: CONVERSATIONS_QUERY_KEY });
+            return old;
+          }
+          return old.map((c) =>
+            c.id === convId
+              ? {
+                  ...c,
+                  lastMessageText: savedMessage.text,
+                  lastMessageAt: savedMessage.createdAt,
+                }
+              : c,
+          );
         },
       );
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.previousMessages && context?.activeKey) {
+        queryClient.setQueryData(context.activeKey, context.previousMessages);
+      }
     },
   });
 
@@ -198,8 +264,40 @@ export function useChatMessages(conversationId?: string, receiverId?: string) {
     }
   }, [validConvId, receiverId, queryClient]);
 
-  // Edit Message Mutation
+  // Edit Message Mutation (Instant Optimistic Update)
   const editMessageMutation = useMutation({
+    onMutate: async ({ messageId, text }: { messageId: string; text: string }) => {
+      const trimmed = text.trim();
+      const targetKey = MESSAGES_QUERY_KEY(validConvId);
+      await queryClient.cancelQueries({ queryKey: targetKey });
+      const previousMessages = queryClient.getQueryData<MessagesResponse>(targetKey);
+
+      // Optimistically update message text and edited flag immediately
+      queryClient.setQueryData<MessagesResponse>(targetKey, (old) => {
+        if (!old) return old!;
+        const list = old.messages || old.items || [];
+        const updated = list.map((m) =>
+          m.id === messageId
+            ? { ...m, text: trimmed, isEdited: true, updatedAt: new Date().toISOString() }
+            : m,
+        );
+        return {
+          ...old,
+          messages: updated,
+          items: updated,
+        };
+      });
+
+      if (validConvId) {
+        queryClient.setQueryData<ConversationItem[]>(
+          CONVERSATIONS_QUERY_KEY,
+          (old = []) =>
+            old.map((c) => (c.id === validConvId ? { ...c, lastMessageText: trimmed } : c)),
+        );
+      }
+
+      return { previousMessages, targetKey };
+    },
     mutationFn: async ({ messageId, text }: { messageId: string; text: string }) => {
       const socket = getSocket();
       if (socket && socket.connected) {
@@ -242,10 +340,55 @@ export function useChatMessages(conversationId?: string, receiverId?: string) {
         },
       );
     },
+    onError: (_err, _vars, context) => {
+      if (context?.previousMessages && context?.targetKey) {
+        queryClient.setQueryData(context.targetKey, context.previousMessages);
+      }
+    },
   });
 
-  // Delete Message Mutation
+  // Delete Message Mutation (Instant Optimistic Update)
   const deleteMessageMutation = useMutation({
+    onMutate: async (messageId: string) => {
+      const targetKey = MESSAGES_QUERY_KEY(validConvId);
+      await queryClient.cancelQueries({ queryKey: targetKey });
+      const previousMessages = queryClient.getQueryData<MessagesResponse>(targetKey);
+
+      const deletedPlaceholder = 'মেসেজটি মুছে ফেলা হয়েছে';
+
+      // Optimistically update message text and deleted flag immediately
+      queryClient.setQueryData<MessagesResponse>(targetKey, (old) => {
+        if (!old) return old!;
+        const list = old.messages || old.items || [];
+        const updated = list.map((m) =>
+          m.id === messageId
+            ? {
+                ...m,
+                text: deletedPlaceholder,
+                isDeleted: true,
+                updatedAt: new Date().toISOString(),
+              }
+            : m,
+        );
+        return {
+          ...old,
+          messages: updated,
+          items: updated,
+        };
+      });
+
+      if (validConvId) {
+        queryClient.setQueryData<ConversationItem[]>(
+          CONVERSATIONS_QUERY_KEY,
+          (old = []) =>
+            old.map((c) =>
+              c.id === validConvId ? { ...c, lastMessageText: deletedPlaceholder } : c,
+            ),
+        );
+      }
+
+      return { previousMessages, targetKey };
+    },
     mutationFn: async (messageId: string) => {
       const socket = getSocket();
       if (socket && socket.connected) {
@@ -289,6 +432,11 @@ export function useChatMessages(conversationId?: string, receiverId?: string) {
           return old.map((c) => (c.id === convId ? { ...c, lastMessageText: deletedMessage.text } : c));
         },
       );
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.previousMessages && context?.targetKey) {
+        queryClient.setQueryData(context.targetKey, context.previousMessages);
+      }
     },
   });
 

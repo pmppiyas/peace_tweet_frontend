@@ -116,30 +116,21 @@ export function ChatBox({ activeChat }: ChatBoxProps) {
     setEditingText('');
   };
 
-  const handleSaveEdit = async (messageId: string) => {
+  const handleSaveEdit = (messageId: string) => {
     const trimmed = editingText.trim();
-    if (!trimmed || isEditing) return;
-    try {
-      await editMessage(messageId, trimmed);
-      setEditingMessageId(null);
-      setEditingText('');
-    } catch (err) {
+    if (!trimmed) return;
+    setEditingMessageId(null);
+    setEditingText('');
+    editMessage(messageId, trimmed).catch((err) => {
       console.error('Failed to edit message:', err);
-    }
+    });
   };
 
-  const handleDeleteMessage = async (messageId: string) => {
-    const confirmPrompt =
-      locale === 'bn'
-        ? 'আপনি কি নিশ্চিত যে মেসেজটি মুছে ফেলতে (আনসেন্ড করতে) চান?'
-        : 'Are you sure you want to unsend this message?';
-    if (window.confirm(confirmPrompt)) {
-      try {
-        await deleteMessage(messageId);
-      } catch (err) {
-        console.error('Failed to delete message:', err);
-      }
-    }
+  const handleDeleteMessage = (messageId: string) => {
+    // Instant delete without confirmation dialog
+    deleteMessage(messageId).catch((err) => {
+      console.error('Failed to delete message:', err);
+    });
   };
 
   // Scroll to bottom on new messages or typing
@@ -164,23 +155,24 @@ export function ChatBox({ activeChat }: ChatBoxProps) {
     handleTyping(val);
   };
 
-  const handleSend = async (e?: React.FormEvent) => {
+  const handleSend = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     const trimmed = text.trim();
     if (!trimmed || isSending) return;
 
     setText('');
-    try {
-      const sent = await sendMessage(trimmed);
-      if (sent?.conversationId && !actualConversationId) {
-        setActualConversationId(sent.conversationId);
-      }
-      setTimeout(() => scrollToBottom('smooth'), 50);
-    } catch (err) {
-      console.error('Failed to send message:', err);
-      // Restore unsent text on failure
-      setText(trimmed);
-    }
+    sendMessage(trimmed)
+      .then((sent) => {
+        if (sent?.conversationId && !actualConversationId) {
+          setActualConversationId(sent.conversationId);
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to send message:', err);
+        setText(trimmed);
+      });
+
+    setTimeout(() => scrollToBottom('smooth'), 20);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -190,17 +182,18 @@ export function ChatBox({ activeChat }: ChatBoxProps) {
     }
   };
 
-  const sendQuickSalam = async () => {
+  const sendQuickSalam = () => {
     const salamText = 'আসসালামু আলাইকুম ওয়ারাহমাতুল্লাহ্';
-    try {
-      const sent = await sendMessage(salamText);
-      if (sent?.conversationId && !actualConversationId) {
-        setActualConversationId(sent.conversationId);
-      }
-      setTimeout(() => scrollToBottom('smooth'), 50);
-    } catch (err) {
-      console.error('Failed to send salam:', err);
-    }
+    sendMessage(salamText)
+      .then((sent) => {
+        if (sent?.conversationId && !actualConversationId) {
+          setActualConversationId(sent.conversationId);
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to send salam:', err);
+      });
+    setTimeout(() => scrollToBottom('smooth'), 20);
   };
 
   const formatMessageTime = (dateStr: string) => {
@@ -214,63 +207,9 @@ export function ChatBox({ activeChat }: ChatBoxProps) {
     });
   };
 
-  // 1. Minimized View (Chat Pill / Header Dock)
+  // 1. Minimized View (Rendered as Floating Chat Head in ChatDock)
   if (activeChat.isMinimized) {
-    return (
-      <div
-        onClick={() => toggleMinimize(activeChat.user.id)}
-        className="w-56 sm:w-64 bg-white dark:bg-[#242526] border border-[#e4e6eb] dark:border-[#393a3b] rounded-t-2xl shadow-xl flex items-center justify-between p-2.5 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#2d2e2f] transition-all select-none"
-      >
-        <div className="flex items-center gap-2 min-w-0">
-          <div className="relative shrink-0">
-            <div className="h-8 w-8 rounded-full overflow-hidden bg-primary-500 text-white font-bold flex items-center justify-center text-xs">
-              {activeChat.user.avatarUrl ? (
-                <Image
-                  src={activeChat.user.avatarUrl}
-                  alt={activeChat.user.name}
-                  fill
-                  className="object-cover"
-                  unoptimized
-                />
-              ) : (
-                <span>{activeChat.user.name?.charAt(0) || 'U'}</span>
-              )}
-            </div>
-            {isOnline && (
-              <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 border border-white dark:border-[#242526]" />
-            )}
-          </div>
-          <span className="text-xs font-bold text-[#050505] dark:text-[#e4e6eb] truncate">
-            {activeChat.user.name}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-1 text-[#65676b] dark:text-[#b0b3b8]">
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              toggleMinimize(activeChat.user.id);
-            }}
-            className="p-1 hover:bg-gray-200 dark:hover:bg-[#3a3b3c] rounded-full transition-colors"
-            title="Expand"
-          >
-            <Maximize2 className="h-3.5 w-3.5" />
-          </button>
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              closeChat(activeChat.user.id);
-            }}
-            className="p-1 hover:bg-gray-200 dark:hover:bg-[#3a3b3c] rounded-full transition-colors"
-            title="Close"
-          >
-            <X className="h-3.5 w-3.5" />
-          </button>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   // 2. Full Active Chat Box View
@@ -437,11 +376,11 @@ export function ChatBox({ activeChat }: ChatBoxProps) {
                         <MoreVertical className="h-4 w-4" />
                       </button>
 
-                      {/* Dropdown Menu - Facebook style: 1 option (Edit) */}
+                      {/* Dropdown Menu - Facebook style: Edit & Delete */}
                       {menuOpenMessageId === msg.id && (
                         <div
                           className={cn(
-                            'absolute z-40 min-w-[120px] bg-white dark:bg-[#242526] border border-[#e4e6eb] dark:border-[#3e4042] rounded-xl shadow-xl p-1 animate-in fade-in-0 zoom-in-95 duration-100',
+                            'absolute z-40 min-w-[130px] bg-white dark:bg-[#242526] border border-[#e4e6eb] dark:border-[#3e4042] rounded-xl shadow-xl p-1 animate-in fade-in-0 zoom-in-95 duration-100',
                             index < 2 ? 'top-full mt-1' : 'bottom-full mb-1',
                             'right-0',
                           )}
@@ -457,6 +396,17 @@ export function ChatBox({ activeChat }: ChatBoxProps) {
                           >
                             <Pencil className="h-3.5 w-3.5 text-[#65676b] dark:text-[#b0b3b8]" />
                             <span>{locale === 'bn' ? 'এডিট করুন' : 'Edit'}</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setMenuOpenMessageId(null);
+                              handleDeleteMessage(msg.id);
+                            }}
+                            className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors cursor-pointer text-left"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                            <span>{locale === 'bn' ? 'মুছে ফেলুন' : 'Delete'}</span>
                           </button>
                         </div>
                       )}

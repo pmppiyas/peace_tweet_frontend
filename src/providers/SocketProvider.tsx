@@ -121,7 +121,19 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
         (old) => {
           const list = old?.messages || old?.items || [];
           if (list.some((m) => m.id === message.id)) return old!;
-          const nextList = [...list, message];
+          const tempIndex = list.findIndex(
+            (m) =>
+              m.id.startsWith('temp_') &&
+              m.senderId === message.senderId &&
+              m.text === message.text,
+          );
+          let nextList: ChatMessage[];
+          if (tempIndex !== -1) {
+            nextList = [...list];
+            nextList[tempIndex] = message;
+          } else {
+            nextList = [...list, message];
+          }
           return {
             ...old,
             messages: nextList,
