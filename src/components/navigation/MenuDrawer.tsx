@@ -156,7 +156,7 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
         </div>
 
         {/* Drawer Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-3.5 space-y-4 pb-8">
+        <div className="flex-1 overflow-y-auto p-3.5 space-y-4 pb-20 md:pb-8">
           {/* User Account / Auth Section */}
           {isAuthenticated ? (
             <Link

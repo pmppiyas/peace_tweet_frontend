@@ -256,7 +256,7 @@ export function SearchDrawer({
         </div>
 
         {/* Search Drawer Body */}
-        <div className="flex-1 overflow-y-auto overscroll-contain py-2 px-2 no-scrollbar scrollbar-none">
+        <div className="flex-1 overflow-y-auto overscroll-contain py-2 px-2 pb-20 md:pb-2 no-scrollbar scrollbar-none">
           {/* STATE 1: Empty Query -> Recent Searches */}
           {isQueryEmpty && (
             <div className="space-y-1">
