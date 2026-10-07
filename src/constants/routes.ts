@@ -10,6 +10,7 @@ export const ROUTES = {
   SAVED: '/saved',
   PROFILE: '/profile',
   SETTINGS: '/settings',
+  MESSAGES: '/messages',
   USER_PROFILE: (username: string) => `/${username}`,
   FRIENDS: {
     HOME: '/friends',

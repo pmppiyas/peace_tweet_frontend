@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { PublicProfileView } from '@/features/profile/components/PublicProfileView';
 
 const RESERVED_ROUTES = new Set([
@@ -13,6 +13,8 @@ const RESERVED_ROUTES = new Set([
   'profile',
   'saved',
   'settings',
+  'messages',
+  'message',
   'login',
   'register',
   'admin',
@@ -52,6 +54,10 @@ export default async function UserProfilePage({
 }) {
   const resolvedParams = await params;
   const username = resolvedParams.username;
+
+  if (username.toLowerCase() === 'message' || username.toLowerCase() === 'messages') {
+    redirect('/messages');
+  }
 
   if (RESERVED_ROUTES.has(username.toLowerCase())) {
     notFound();

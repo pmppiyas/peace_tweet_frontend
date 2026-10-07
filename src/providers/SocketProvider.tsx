@@ -69,10 +69,12 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       playMessageSound();
 
       const convId = message.conversationId;
-      const activeChats = useChatStore.getState().activeChats;
-      const isOpenAndActive = activeChats.some(
-        (c) => c.conversationId === convId && !c.isMinimized,
-      );
+      const chatState = useChatStore.getState();
+      const currentActiveConvId = chatState.currentActiveConversationId;
+      const activeChats = chatState.activeChats;
+      const isOpenAndActive =
+        currentActiveConvId === convId ||
+        activeChats.some((c) => c.conversationId === convId && !c.isMinimized);
 
       // If chat is open and active, mark it as read immediately
       if (isOpenAndActive) {

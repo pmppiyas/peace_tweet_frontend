@@ -316,9 +316,9 @@ export function PostComposer() {
   };
 
   return (
-    <Card className="border border-[#e4e6eb] bg-white p-3.5 sm:p-4 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526] rounded-xl transition-all">
+    <Card className="border border-[#e4e6eb] bg-white p-3 sm:p-4 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526] rounded-xl transition-all overflow-hidden w-full">
       {!isOpen ? (
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 w-full">
           <div className="relative flex items-center justify-center shrink-0">
             {isUploadingPost && (
               <>
@@ -328,7 +328,7 @@ export function PostComposer() {
             )}
             <div
               className={cn(
-                'relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm select-none overflow-hidden shadow-xs transition-all',
+                'relative flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-xs sm:text-sm select-none overflow-hidden shadow-xs transition-all',
                 isUploadingPost &&
                   'ring-2 ring-primary-500 ring-offset-2 ring-offset-white dark:ring-offset-[#242526]',
                 isSuccessActive &&
@@ -349,14 +349,14 @@ export function PostComposer() {
             </div>
           </div>
           {isSuccessActive ? (
-            <div className="h-10 w-full rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-700/60 px-4 text-xs sm:text-sm font-semibold text-emerald-700 dark:text-emerald-300 flex items-center justify-between animate-in fade-in zoom-in-95 duration-200 select-none">
-              <div className="flex items-center gap-2">
+            <div className="h-9 sm:h-10 flex-1 min-w-0 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-700/60 px-3.5 sm:px-4 text-xs sm:text-sm font-semibold text-emerald-700 dark:text-emerald-300 flex items-center justify-between animate-in fade-in zoom-in-95 duration-200 select-none overflow-hidden">
+              <div className="flex items-center gap-2 min-w-0 truncate">
                 <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-white shrink-0 shadow-xs">
                   <Check className="h-3.5 w-3.5 stroke-[3]" />
                 </div>
-                <span>{successText}</span>
+                <span className="truncate">{successText}</span>
               </div>
-              <span className="text-[11px] font-normal text-emerald-600 dark:text-emerald-400 hidden sm:inline">
+              <span className="text-[11px] font-normal text-emerald-600 dark:text-emerald-400 hidden sm:inline shrink-0">
                 Visible in feed
               </span>
             </div>
@@ -364,19 +364,29 @@ export function PostComposer() {
             <button
               type="button"
               onClick={() => setIsOpen(true)}
-              className="h-10 w-full rounded-full bg-[#f0f2f5] px-4 text-left text-xs sm:text-sm text-[#65676b] hover:bg-[#e4e6eb] transition-colors dark:bg-[#3a3b3c] dark:text-[#b0b3b8] dark:hover:bg-[#4e4f50] flex items-center justify-between gap-2"
+              className="h-9 sm:h-10 flex-1 min-w-0 rounded-full bg-[#f0f2f5] px-3.5 sm:px-4 text-left text-xs sm:text-sm text-[#65676b] hover:bg-[#e4e6eb] transition-colors dark:bg-[#3a3b3c] dark:text-[#b0b3b8] dark:hover:bg-[#4e4f50] flex items-center justify-between gap-2 overflow-hidden"
             >
-              <span className="truncate">
-                {isUploadingPost
-                  ? activeLoadingText
-                  : user?.name
-                  ? `${user.name.split(' ')[0]}, Share a reflection, Dua, or Blood Request...`
-                  : 'Share a reflection, Dua, or Blood Request...'}
+              <span className="truncate min-w-0 block">
+                {isUploadingPost ? (
+                  activeLoadingText
+                ) : user?.name ? (
+                  <>
+                    <span className="sm:hidden">{user.name.split(' ')[0]}, what&apos;s on your mind?</span>
+                    <span className="hidden sm:inline">
+                      {user.name.split(' ')[0]}, Share a reflection, Dua, or Blood Request...
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <span className="sm:hidden">What&apos;s on your mind?</span>
+                    <span className="hidden sm:inline">Share a reflection, Dua, or Blood Request...</span>
+                  </>
+                )}
               </span>
               {isUploadingPost && (
                 <span className="flex items-center gap-1.5 text-xs text-primary-600 dark:text-primary-400 font-semibold shrink-0">
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  <span>Processing...</span>
+                  <span className="hidden xs:inline">Processing...</span>
                 </span>
               )}
             </button>
@@ -509,7 +519,7 @@ export function PostComposer() {
               <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                placeholder="What's on your mind? Share an Islamic reflection, reminder, or story..."
+                placeholder="What's on your mind? Share a reflection, reminder, or story..."
                 rows={3}
                 className="w-full resize-none rounded-xl border border-[#e4e6eb] bg-[#f0f2f5] p-3 text-xs sm:text-sm text-[#050505] placeholder:text-[#65676b] focus:border-primary-500 focus:bg-white focus:outline-hidden dark:border-[#393a3b] dark:bg-[#3a3b3c] dark:text-[#e4e6eb] dark:placeholder:text-[#b0b3b8] dark:focus:bg-[#242526]"
               />

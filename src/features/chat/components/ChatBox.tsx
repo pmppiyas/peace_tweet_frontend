@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import Image from 'next/image';
+import { ChatAvatar } from './ChatAvatar';
 import Link from 'next/link';
 import {
   X,
@@ -16,6 +16,7 @@ import {
   Trash2,
   Ban,
   MoreVertical,
+  ArrowLeft,
 } from 'lucide-react';
 import { ActiveChat } from '../types/chat.types';
 import { useChatMessages } from '../hooks/useChatMessages';
@@ -28,9 +29,10 @@ import { cn } from '@/lib/utils/cn';
 
 interface ChatBoxProps {
   activeChat: ActiveChat;
+  isMobileActive?: boolean;
 }
 
-export function ChatBox({ activeChat }: ChatBoxProps) {
+export function ChatBox({ activeChat, isMobileActive = true }: ChatBoxProps) {
   const { user } = useAuth();
   const { locale } = useLanguage();
   const closeChat = useChatStore((state) => state.closeChat);
@@ -214,61 +216,82 @@ export function ChatBox({ activeChat }: ChatBoxProps) {
 
   // 2. Full Active Chat Box View
   return (
-    <div className="w-[320px] sm:w-[340px] h-[430px] bg-white dark:bg-[#242526] border border-[#e4e6eb] dark:border-[#393a3b] rounded-t-2xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-4 duration-200">
+    <div
+      className={cn(
+        'bg-white dark:bg-[#18191a] sm:dark:bg-[#242526] flex flex-col overflow-hidden',
+        // Mobile: Immersive full-screen Messenger view
+        'fixed inset-0 z-50 w-full h-[100dvh]',
+        // Desktop: Docked window at bottom-right with responsive md and lg scaling
+        'sm:static sm:inset-auto sm:z-auto sm:w-[340px] sm:h-[460px] md:w-[365px] md:h-[500px] lg:w-[385px] lg:h-[520px] sm:rounded-2xl sm:shadow-2xl sm:border sm:border-[#e4e6eb] sm:dark:border-[#393a3b] sm:animate-in sm:slide-in-from-bottom-4 duration-150',
+        !isMobileActive && 'hidden sm:flex',
+      )}
+    >
       {/* Header */}
-      <div className="p-2.5 sm:px-3 border-b border-[#e4e6eb] dark:border-[#393a3b] flex items-center justify-between bg-white dark:bg-[#242526] z-10 shadow-2xs">
-        <Link
-          href={ROUTES.USER_PROFILE(activeChat.user.username)}
-          className="flex items-center gap-2 min-w-0 group"
-          title={`View @${activeChat.user.username}`}
-        >
-          <div className="relative shrink-0">
-            <div className="h-9 w-9 rounded-full overflow-hidden bg-primary-500 text-white font-bold flex items-center justify-center text-xs">
-              {activeChat.user.avatarUrl ? (
-                <Image
-                  src={activeChat.user.avatarUrl}
-                  alt={activeChat.user.name}
-                  fill
-                  className="object-cover"
-                  unoptimized
-                />
-              ) : (
-                <span>{activeChat.user.name?.charAt(0) || 'U'}</span>
-              )}
-            </div>
-            {isOnline && (
-              <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 border border-white dark:border-[#242526]" />
-            )}
-          </div>
-
-          <div className="min-w-0">
-            <p className="text-xs font-bold text-[#050505] dark:text-[#e4e6eb] truncate group-hover:underline">
-              {activeChat.user.name}
-            </p>
-            <p className="text-[11px] truncate leading-tight">
-              {isOtherUserTyping ? (
-                <span className="text-primary-600 dark:text-primary-400 font-semibold animate-pulse">
-                  {locale === 'bn' ? 'টাইপ করছেন...' : 'typing...'}
-                </span>
-              ) : isOnline ? (
-                <span className="text-emerald-500 font-medium">
-                  {locale === 'bn' ? 'সক্রিয় আছেন' : 'Active now'}
-                </span>
-              ) : (
-                <span className="text-[#65676b] dark:text-[#b0b3b8]">
-                  {locale === 'bn' ? 'অফলাইন' : 'Offline'}
-                </span>
-              )}
-            </p>
-          </div>
-        </Link>
-
-        {/* Header Controls */}
-        <div className="flex items-center gap-1 text-[#65676b] dark:text-[#b0b3b8]">
+      <div className="h-13 sm:h-12 px-3 sm:px-3.5 border-b border-[#e4e6eb] dark:border-[#393a3b] flex items-center justify-between bg-white dark:bg-[#242526] shrink-0 z-10 shadow-2xs">
+        <div className="flex items-center gap-1 sm:gap-2.5 min-w-0">
+          {/* Mobile Back Arrow to minimize back to floating head */}
           <button
             type="button"
             onClick={() => toggleMinimize(activeChat.user.id)}
-            className="p-1.5 hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] rounded-full transition-colors cursor-pointer"
+            className="sm:hidden p-2 -ml-1 text-[#050505] dark:text-[#e4e6eb] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] rounded-full transition-colors cursor-pointer"
+            title={locale === 'bn' ? 'ফিরে যান' : 'Back'}
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+
+          <Link
+            href={ROUTES.USER_PROFILE(activeChat.user.username)}
+            className="flex items-center gap-2 min-w-0 group"
+            title={`View @${activeChat.user.username}`}
+          >
+            <ChatAvatar
+              src={activeChat.user.avatarUrl}
+              name={activeChat.user.name}
+              size="sm"
+              isOnline={isOnline}
+            />
+
+            <div className="min-w-0">
+              <p className="text-sm sm:text-xs font-bold text-[#050505] dark:text-[#e4e6eb] truncate group-hover:underline">
+                {activeChat.user.name}
+              </p>
+              <p className="text-xs sm:text-[11px] truncate leading-tight">
+                {isOtherUserTyping ? (
+                  <span className="text-primary-600 dark:text-primary-400 font-semibold animate-pulse">
+                    {locale === 'bn' ? 'টাইপ করছেন...' : 'typing...'}
+                  </span>
+                ) : isOnline ? (
+                  <span className="text-emerald-500 font-medium">
+                    {locale === 'bn' ? 'সক্রিয় আছেন' : 'Active now'}
+                  </span>
+                ) : (
+                  <span className="text-[#65676b] dark:text-[#b0b3b8]">
+                    {locale === 'bn' ? 'অফলাইন' : 'Offline'}
+                  </span>
+                )}
+              </p>
+            </div>
+          </Link>
+        </div>
+
+        {/* Header Controls */}
+        <div className="flex items-center gap-1 text-[#65676b] dark:text-[#b0b3b8]">
+          {/* Maximize to full page on desktop */}
+          <Link
+            href={
+              actualConversationId
+                ? `${ROUTES.MESSAGES}?conversationId=${actualConversationId}`
+                : `${ROUTES.MESSAGES}?userId=${activeChat.user.id}`
+            }
+            className="hidden sm:flex p-1.5 hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] rounded-full transition-colors cursor-pointer text-[#65676b] dark:text-[#b0b3b8] hover:text-[#050505] dark:hover:text-[#e4e6eb]"
+            title={locale === 'bn' ? 'মেসেজে বড় করুন' : 'Open in Messages'}
+          >
+            <Maximize2 className="h-4 w-4" />
+          </Link>
+          <button
+            type="button"
+            onClick={() => toggleMinimize(activeChat.user.id)}
+            className="hidden sm:flex p-1.5 hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] rounded-full transition-colors cursor-pointer text-[#65676b] dark:text-[#b0b3b8] hover:text-[#050505] dark:hover:text-[#e4e6eb]"
             title="Minimize"
           >
             <Minus className="h-4 w-4" />
@@ -276,10 +299,10 @@ export function ChatBox({ activeChat }: ChatBoxProps) {
           <button
             type="button"
             onClick={() => closeChat(activeChat.user.id)}
-            className="p-1.5 hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] rounded-full transition-colors cursor-pointer"
+            className="p-2 sm:p-1.5 hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] rounded-full transition-colors cursor-pointer text-[#65676b] dark:text-[#b0b3b8] hover:text-[#050505] dark:hover:text-[#e4e6eb]"
             title="Close"
           >
-            <X className="h-4 w-4" />
+            <X className="h-5 w-5 sm:h-4 sm:w-4" />
           </button>
         </div>
       </div>
@@ -296,19 +319,11 @@ export function ChatBox({ activeChat }: ChatBoxProps) {
         ) : messages.length === 0 ? (
           /* Empty Chat Welcome State */
           <div className="flex flex-col items-center justify-center h-full text-center space-y-2.5 p-4">
-            <div className="relative h-14 w-14 rounded-full overflow-hidden bg-primary-500 text-white font-bold flex items-center justify-center text-xl shadow-md">
-              {activeChat.user.avatarUrl ? (
-                <Image
-                  src={activeChat.user.avatarUrl}
-                  alt={activeChat.user.name}
-                  fill
-                  className="object-cover"
-                  unoptimized
-                />
-              ) : (
-                <span>{activeChat.user.name?.charAt(0) || 'U'}</span>
-              )}
-            </div>
+            <ChatAvatar
+              src={activeChat.user.avatarUrl}
+              name={activeChat.user.name}
+              size="xl"
+            />
             <div>
               <p className="font-bold text-sm text-[#050505] dark:text-[#e4e6eb]">
                 {activeChat.user.name}
@@ -483,24 +498,24 @@ export function ChatBox({ activeChat }: ChatBoxProps) {
                 {/* Sub-meta: Always visible time + (edited) tag + Delivery/Seen status */}
                 <div
                   className={cn(
-                    'flex items-center gap-1 text-[10px] text-[#65676b] dark:text-[#b0b3b8] mt-0.5 select-none px-1',
+                    'flex items-center gap-1 text-[11px] sm:text-[10px] text-[#65676b] dark:text-[#b0b3b8] mt-0.5 select-none px-1 whitespace-nowrap',
                     isMe ? 'justify-end' : 'justify-start',
                   )}
                 >
                   <span>{formatMessageTime(msg.createdAt)}</span>
 
                   {msg.isEdited && !msg.isDeleted && (
-                    <span className="text-[9px] text-[#65676b] dark:text-[#b0b3b8]">
+                    <span className="text-[10px] sm:text-[9px]">
                       • {locale === 'bn' ? 'সম্পাদিত' : 'edited'}
                     </span>
                   )}
 
                   {/* Delivery & Seen Status for Sender */}
                   {isMe && !msg.isDeleted && (
-                    <span className="flex items-center gap-0.5 ml-0.5">
+                    <span className="inline-flex items-center gap-0.5 ml-0.5">
                       {msg.isRead ? (
                         <span
-                          className="flex items-center gap-0.5 text-primary-500 font-medium"
+                          className="inline-flex items-center gap-0.5 text-primary-500 font-medium"
                           title={locale === 'bn' ? 'দেখা হয়েছে (Seen)' : 'Seen'}
                         >
                           <CheckCheck className="h-3 w-3 stroke-[2.2]" />
@@ -510,7 +525,7 @@ export function ChatBox({ activeChat }: ChatBoxProps) {
                         </span>
                       ) : (
                         <span
-                          className="flex items-center gap-0.5 text-gray-400 dark:text-gray-500"
+                          className="inline-flex items-center gap-0.5 text-gray-400 dark:text-gray-500"
                           title={locale === 'bn' ? 'পৌঁছেছে (Delivered)' : 'Delivered'}
                         >
                           <CheckCheck className="h-3 w-3 stroke-[1.8]" />
@@ -552,7 +567,7 @@ export function ChatBox({ activeChat }: ChatBoxProps) {
       {/* Input Form Footer */}
       <form
         onSubmit={handleSend}
-        className="p-2 border-t border-[#e4e6eb] dark:border-[#393a3b] bg-white dark:bg-[#242526] flex items-center gap-1.5"
+        className="p-2 sm:p-2 border-t border-[#e4e6eb] dark:border-[#393a3b] bg-white dark:bg-[#242526] flex items-center gap-1.5 pb-[max(0.65rem,env(safe-area-inset-bottom))] shrink-0 z-10"
       >
         <button
           type="button"
@@ -560,10 +575,10 @@ export function ChatBox({ activeChat }: ChatBoxProps) {
             setText((prev) => prev + ' 🤲 ');
             inputRef.current?.focus();
           }}
-          className="p-2 text-[#65676b] hover:text-[#050505] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] rounded-full transition-colors cursor-pointer"
+          className="p-2 text-[#65676b] hover:text-[#050505] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] rounded-full transition-colors cursor-pointer shrink-0"
           title="Dua Emoji"
         >
-          <Smile className="h-4 w-4" />
+          <Smile className="h-5 w-5 sm:h-4 sm:w-4" />
         </button>
 
         <input
@@ -576,24 +591,24 @@ export function ChatBox({ activeChat }: ChatBoxProps) {
           placeholder={
             locale === 'bn' ? 'মেসেজ লিখুন...' : 'Type a message...'
           }
-          className="flex-1 bg-[#f0f2f5] dark:bg-[#3a3b3c] rounded-full py-1.5 px-3.5 text-xs sm:text-sm text-[#050505] dark:text-[#e4e6eb] placeholder:text-[#65676b] dark:placeholder:text-[#b0b3b8] border-none focus:outline-hidden focus:ring-2 focus:ring-primary-500/20"
+          className="flex-1 bg-[#f0f2f5] dark:bg-[#3a3b3c] rounded-full py-2 sm:py-1.5 px-3.5 text-sm sm:text-xs text-[#050505] dark:text-[#e4e6eb] placeholder:text-[#65676b] dark:placeholder:text-[#b0b3b8] border-none focus:outline-hidden focus:ring-2 focus:ring-primary-500/20"
         />
 
         <button
           type="submit"
           disabled={!text.trim() || isSending}
           className={cn(
-            'p-2 rounded-full transition-all shrink-0',
+            'h-9 w-9 rounded-full flex items-center justify-center transition-all shrink-0',
             text.trim() && !isSending
-              ? 'text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-950/60 cursor-pointer active:scale-90'
-              : 'text-gray-400 cursor-not-allowed opacity-50',
+              ? 'bg-primary-500 text-white shadow-xs hover:bg-primary-600 active:scale-95 cursor-pointer'
+              : 'text-gray-400 opacity-40 cursor-not-allowed',
           )}
           title={locale === 'bn' ? 'পাঠান' : 'Send'}
         >
           {isSending ? (
-            <Loader2 className="h-4 w-4 animate-spin text-primary-500" />
+            <Loader2 className="h-4 w-4 animate-spin text-white" />
           ) : (
-            <Send className="h-4 w-4 stroke-[2.25]" />
+            <Send className="h-4 w-4 stroke-[2.25] -ml-0.5" />
           )}
         </button>
       </form>

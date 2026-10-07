@@ -41,6 +41,42 @@ export function useChatMessages(conversationId?: string, receiverId?: string) {
     },
   });
 
+  // Cursor-based older messages pagination
+  const [isFetchingOlder, setIsFetchingOlder] = useState(false);
+
+  const fetchOlderMessages = useCallback(async () => {
+    const currentData = queryClient.getQueryData<MessagesResponse>(MESSAGES_QUERY_KEY(validConvId));
+    const cursor = currentData?.nextCursor;
+    if (!cursor || !validConvId || isFetchingOlder) return;
+
+    setIsFetchingOlder(true);
+    try {
+      const res = await chatApi.getMessages(validConvId, { cursor, limit: 30 });
+      if (res.data) {
+        const olderList = res.data.messages || res.data.items || [];
+        queryClient.setQueryData<MessagesResponse>(MESSAGES_QUERY_KEY(validConvId), (old) => {
+          if (!old) return res.data;
+          const currentList = old.messages || old.items || [];
+          const existingIds = new Set(currentList.map((m) => m.id));
+          const newOlder = olderList.filter((m) => !existingIds.has(m.id));
+          const combined = [...newOlder, ...currentList].sort(
+            (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+          );
+          return {
+            ...old,
+            messages: combined,
+            items: combined,
+            nextCursor: res.data.nextCursor ?? null,
+          };
+        });
+      }
+    } catch (err) {
+      console.error('Failed to load older messages:', err);
+    } finally {
+      setIsFetchingOlder(false);
+    }
+  }, [validConvId, isFetchingOlder, queryClient]);
+
   // Typing debounce timer ref
   const typingTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isTypingRef = useRef<boolean>(false);
@@ -506,6 +542,9 @@ export function useChatMessages(conversationId?: string, receiverId?: string) {
     isDeleting: deleteMessageMutation.isPending,
     handleTyping,
     markAsRead,
+    hasOlderMessages: Boolean(messagesQuery.data?.nextCursor),
+    isFetchingOlder,
+    fetchOlderMessages,
     refetch: messagesQuery.refetch,
   };
 }

@@ -68,10 +68,10 @@ export function GroupComposer({ group }: GroupComposerProps) {
   };
 
   return (
-    <Card className="border border-[#e4e6eb] bg-white p-3.5 sm:p-4 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526] rounded-2xl">
+    <Card className="border border-[#e4e6eb] bg-white p-3 sm:p-4 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526] rounded-2xl overflow-hidden w-full">
       {!isOpen ? (
-        <div className="flex items-center gap-3">
-          <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm select-none overflow-hidden shadow-xs">
+        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 w-full">
+          <div className="relative flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-xs sm:text-sm select-none overflow-hidden shadow-xs">
             {user?.avatarUrl ? (
               <Image
                 src={user.avatarUrl}
@@ -87,12 +87,29 @@ export function GroupComposer({ group }: GroupComposerProps) {
           <button
             type="button"
             onClick={() => setIsOpen(true)}
-            className="h-10 w-full rounded-full bg-[#f0f2f5] px-4 text-left text-xs sm:text-sm text-[#65676b] hover:bg-[#e4e6eb] transition-colors dark:bg-[#3a3b3c] dark:text-[#b0b3b8] dark:hover:bg-[#4e4f50]"
+            className="h-9 sm:h-10 flex-1 min-w-0 rounded-full bg-[#f0f2f5] px-3.5 sm:px-4 text-left text-xs sm:text-sm text-[#65676b] hover:bg-[#e4e6eb] transition-colors dark:bg-[#3a3b3c] dark:text-[#b0b3b8] dark:hover:bg-[#4e4f50] overflow-hidden"
           >
-            {user?.name ? `${user.name.split(' ')[0]}, ` : ''}
-            {locale === 'bn'
-              ? `"${group.name}" গ্রুপে একটি দোয়া বা চিন্তা শেয়ার করুন...`
-              : `Share an Islamic thought or Dua in "${group.name}"...`}
+            <span className="truncate min-w-0 block">
+              {locale === 'bn' ? (
+                <>
+                  <span className="sm:hidden">
+                    {user?.name ? `${user.name.split(' ')[0]}, ` : ''}কিছু লিখুন...
+                  </span>
+                  <span className="hidden sm:inline">
+                    {user?.name ? `${user.name.split(' ')[0]}, ` : ''}&quot;{group.name}&quot; গ্রুপে শেয়ার করুন...
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="sm:hidden">
+                    {user?.name ? `${user.name.split(' ')[0]}, ` : ''}Write something...
+                  </span>
+                  <span className="hidden sm:inline">
+                    {user?.name ? `${user.name.split(' ')[0]}, ` : ''}Share in &quot;{group.name}&quot;...
+                  </span>
+                </>
+              )}
+            </span>
           </button>
         </div>
       ) : (

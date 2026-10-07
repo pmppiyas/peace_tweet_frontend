@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import Image from 'next/image';
+import { ChatAvatar } from './ChatAvatar';
 import Link from 'next/link';
+import { useRouter, usePathname } from 'next/navigation';
 import { Search, MessageSquare, ExternalLink, X } from 'lucide-react';
 import { useConversations } from '../hooks/useConversations';
 import { useChatStore } from '@/stores/useChatStore';
@@ -22,6 +23,8 @@ export function MessengerDropdown({
   triggerRef,
 }: MessengerDropdownProps) {
   const { locale } = useLanguage();
+  const router = useRouter();
+  const pathname = usePathname();
   const { data: conversations = [], isLoading } = useConversations();
   const openChat = useChatStore((state) => state.openChat);
   const isUserOnline = useChatStore((state) => state.isUserOnline);
@@ -32,11 +35,15 @@ export function MessengerDropdown({
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
       if (!isOpen) return;
+      const targetNode = e.target as Node;
+      const isTriggerClick =
+        (triggerRef.current && triggerRef.current.contains(targetNode)) ||
+        (targetNode instanceof Element && Boolean(targetNode.closest('[data-messenger-trigger="true"]')));
+
       if (
         dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node) &&
-        triggerRef.current &&
-        !triggerRef.current.contains(e.target as Node)
+        !dropdownRef.current.contains(targetNode) &&
+        !isTriggerClick
       ) {
         onClose();
       }
@@ -161,7 +168,11 @@ export function MessengerDropdown({
                 key={conv.id}
                 type="button"
                 onClick={() => {
-                  openChat(participant, conv.id);
+                  if (pathname === '/messages' || pathname.startsWith('/messages/')) {
+                    router.push(`/messages?conversationId=${conv.id}`);
+                  } else {
+                    openChat(participant, conv.id);
+                  }
                   onClose();
                 }}
                 className={cn(
@@ -170,27 +181,12 @@ export function MessengerDropdown({
                 )}
               >
                 {/* Avatar with Online Status Dot */}
-                <div className="relative shrink-0">
-                  <div className="relative h-12 w-12 rounded-full overflow-hidden bg-primary-500 text-white font-bold flex items-center justify-center">
-                    {participant.avatarUrl ? (
-                      <Image
-                        src={participant.avatarUrl}
-                        alt={participant.name || 'User'}
-                        fill
-                        className="object-cover"
-                        unoptimized
-                      />
-                    ) : (
-                      <span>{participant.name?.charAt(0) || 'U'}</span>
-                    )}
-                  </div>
-                  {isOnline && (
-                    <span
-                      className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full bg-emerald-500 border-2 border-white dark:border-[#242526]"
-                      title="Online"
-                    />
-                  )}
-                </div>
+                <ChatAvatar
+                  src={participant.avatarUrl}
+                  name={participant.name}
+                  size="lg"
+                  isOnline={isOnline}
+                />
 
                 {/* Details */}
                 <div className="flex-1 min-w-0">
@@ -247,11 +243,11 @@ export function MessengerDropdown({
       {/* Footer */}
       <div className="p-2.5 border-t border-[#e4e6eb] dark:border-[#393a3b] bg-gray-50/50 dark:bg-[#202122] text-center">
         <Link
-          href={ROUTES.FRIENDS.HOME}
+          href={ROUTES.MESSAGES}
           onClick={onClose}
           className="inline-flex items-center justify-center gap-1.5 text-xs font-bold text-primary-600 dark:text-primary-400 hover:underline"
         >
-          <span>{locale === 'bn' ? 'সকল বন্ধু ও মেসেজ দেখুন' : 'See all in Friends'}</span>
+          <span>{locale === 'bn' ? 'সকল মেসেজ দেখুন' : 'See all in Messages'}</span>
           <ExternalLink className="h-3.5 w-3.5" />
         </Link>
       </div>

@@ -38,7 +38,7 @@ export function Modal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-10">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-10 overflow-y-auto">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
@@ -48,13 +48,13 @@ export function Modal({
       {/* Content */}
       <div
         className={cn(
-          'relative z-10 w-full max-w-lg rounded-3xl border border-primary-100 bg-white p-6 shadow-2xl transition-all animate-in zoom-in-95 duration-200 dark:border-gray-800 dark:bg-gray-900',
+          'relative z-10 w-full max-w-lg my-auto max-h-[calc(100dvh-2rem)] sm:max-h-[calc(100dvh-3rem)] md:max-h-[calc(100dvh-4rem)] lg:max-h-[calc(100dvh-5rem)] rounded-3xl border border-primary-100 bg-white p-6 shadow-2xl transition-all animate-in zoom-in-95 duration-200 dark:border-gray-800 dark:bg-gray-900 flex flex-col',
           className,
         )}
       >
         <button
           onClick={onClose}
-          className="absolute right-5 top-5 rounded-full p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+          className="absolute right-5 top-5 rounded-full p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-200 cursor-pointer"
         >
           <X className="h-5 w-5" />
         </button>
