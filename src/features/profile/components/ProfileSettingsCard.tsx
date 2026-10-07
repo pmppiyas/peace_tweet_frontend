@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
 import { useAuthStore } from '@/stores/authStore';
+import { useLanguage } from '@/providers/LanguageProvider';
 import { usersApi } from '../api/users.api';
 import { uploadsApi } from '@/features/uploads/api/uploads.api';
 import {
@@ -53,6 +54,7 @@ export function ProfileSettingsCard({
 }: ProfileSettingsCardProps) {
   const { user } = useAuth();
   const { setUser } = useAuthStore();
+  const { locale } = useLanguage();
 
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
@@ -114,7 +116,7 @@ export function ProfileSettingsCard({
       .catch(() => {});
   }, [setUser]);
 
-  const hasPassword = user?.hasPassword !== false;
+  const hasPassword = Boolean(user?.hasPassword) && !user?.needPasswordUpdate;
 
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -286,7 +288,7 @@ export function ProfileSettingsCard({
       });
 
       if (user) {
-        setUser({ ...user, hasPassword: true });
+        setUser({ ...user, hasPassword: true, needPasswordUpdate: false });
       }
 
       setPasswordStatus({
@@ -294,8 +296,8 @@ export function ProfileSettingsCard({
         text:
           res?.data?.message ||
           (hasPassword
-            ? 'Password changed successfully!'
-            : 'Password set successfully! You can now also sign in with your email and password.'),
+            ? (locale === 'bn' ? 'পাসওয়ার্ড সফলভাবে পরিবর্তিত হয়েছে!' : 'Password changed successfully!')
+            : (locale === 'bn' ? 'পাসওয়ার্ড সফলভাবে যোগ করা হয়েছে! এখন আপনি পাসওয়ার্ড দিয়েও লগইন করতে পারবেন।' : 'Password added successfully! You can now also sign in with your email and password.')),
       });
       setCurrentPassword('');
       setNewPassword('');
@@ -304,8 +306,8 @@ export function ProfileSettingsCard({
       const msg =
         err?.response?.data?.message ||
         (hasPassword
-          ? 'Failed to change password. Please check your current password.'
-          : 'Failed to set password. Please try again.');
+          ? (locale === 'bn' ? 'পাসওয়ার্ড পরিবর্তনে ব্যর্থ হয়েছে। অনুগ্রহ করে আপনার বর্তমান পাসওয়ার্ড যাচাই করুন।' : 'Failed to change password. Please check your current password.')
+          : (locale === 'bn' ? 'পাসওয়ার্ড যোগ করতে ব্যর্থ হয়েছে। পুনরায় চেষ্টা করুন।' : 'Failed to add password. Please try again.'));
       setPasswordStatus({ type: 'error', text: msg });
     } finally {
       setIsChangingPassword(false);
@@ -583,22 +585,34 @@ export function ProfileSettingsCard({
             <div className="flex items-center gap-1.5">
               <KeyRound className="h-4 w-4 text-primary-500" />
               <CardTitle className="text-sm font-semibold">
-                {hasPassword ? 'Change Password' : 'Set Account Password'}
+                {hasPassword
+                  ? (locale === 'bn' ? 'পাসওয়ার্ড পরিবর্তন করুন' : 'Change Password')
+                  : (locale === 'bn' ? 'পাসওয়ার্ড যোগ করুন' : 'Add Password')}
               </CardTitle>
             </div>
             <CardDescription className="text-xs">
               {hasPassword
-                ? 'Update your account security with a strong, unique password'
-                : 'Set a password so you can also sign in directly using your email or username'}
+                ? (locale === 'bn'
+                    ? 'একটি শক্তিশালী পাসওয়ার্ড দিয়ে আপনার অ্যাকাউন্টের নিরাপত্তা নিশ্চিত করুন'
+                    : 'Update your account security with a strong, unique password')
+                : (locale === 'bn'
+                    ? 'একটি পাসওয়ার্ড যোগ করুন যাতে পরবর্তীতে ইমেইল বা ইউজারনেম দিয়েও সরাসরি লগইন করতে পারেন'
+                    : 'Add a password so you can also sign in directly using your email or username')}
             </CardDescription>
           </CardHeader>
 
           <CardContent>
             {!hasPassword && (
               <div className="mb-4 rounded-xl bg-primary-50/80 dark:bg-primary-950/40 border border-primary-200 dark:border-primary-800/60 p-3 text-xs text-primary-800 dark:text-primary-200">
-                You signed in using your social account. Set a password below to enable
-                signing in with your email (<strong>{user.email}</strong>) or
-                username (<strong>@{user.username}</strong>).
+                {locale === 'bn' ? (
+                  <>
+                    আপনি সোশ্যাল অ্যাকাউন্ট দিয়ে সাইন ইন করেছেন এবং এখনও কোনো পাসওয়ার্ড সেট করেননি। পরবর্তীতে সরাসরি ইমেইল (<strong>{user.email}</strong>) বা ইউজারনেম (<strong>@{user.username}</strong>) দিয়ে লগইন করার সুবিধা পেতে নিচে একটি পাসওয়ার্ড যোগ করুন।
+                  </>
+                ) : (
+                  <>
+                    You signed in using your social account without a password. Add a password below to enable signing in directly using your email (<strong>{user.email}</strong>) or username (<strong>@{user.username}</strong>).
+                  </>
+                )}
               </div>
             )}
 
@@ -625,9 +639,9 @@ export function ProfileSettingsCard({
               {hasPassword && (
                 <div className="relative">
                   <Input
-                    label="Current Password"
+                    label={locale === 'bn' ? 'বর্তমান পাসওয়ার্ড' : 'Current Password'}
                     type={showCurrentPass ? 'text' : 'password'}
-                    placeholder="Enter current password"
+                    placeholder={locale === 'bn' ? 'বর্তমান পাসওয়ার্ড লিখুন' : 'Enter current password'}
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
                     leftIcon={<Lock className="h-4 w-4" />}
@@ -650,9 +664,13 @@ export function ProfileSettingsCard({
               {/* New Password */}
               <div className="relative">
                 <Input
-                  label={hasPassword ? 'New Password' : 'Password'}
+                  label={
+                    hasPassword
+                      ? (locale === 'bn' ? 'নতুন পাসওয়ার্ড' : 'New Password')
+                      : (locale === 'bn' ? 'পাসওয়ার্ড' : 'Password')
+                  }
                   type={showNewPass ? 'text' : 'password'}
-                  placeholder="At least 6 characters"
+                  placeholder={locale === 'bn' ? 'কমপক্ষে ৬ ডিজিটের পাসওয়ার্ড দিন' : 'At least 6 characters'}
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   leftIcon={<Lock className="h-4 w-4" />}
@@ -675,10 +693,12 @@ export function ProfileSettingsCard({
               <div className="relative">
                 <Input
                   label={
-                    hasPassword ? 'Confirm New Password' : 'Confirm Password'
+                    hasPassword
+                      ? (locale === 'bn' ? 'নতুন পাসওয়ার্ড নিশ্চিত করুন' : 'Confirm New Password')
+                      : (locale === 'bn' ? 'পাসওয়ার্ড নিশ্চিত করুন' : 'Confirm Password')
                   }
                   type={showConfirmPass ? 'text' : 'password'}
-                  placeholder="Re-enter password"
+                  placeholder={locale === 'bn' ? 'পাসওয়ার্ডটি পুনরায় লিখুন' : 'Re-enter password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   leftIcon={<Lock className="h-4 w-4" />}
@@ -704,7 +724,9 @@ export function ProfileSettingsCard({
                   isLoading={isChangingPassword}
                   disabled={isChangingPassword}
                 >
-                  {hasPassword ? 'Update Password' : 'Set Password'}
+                  {hasPassword
+                    ? (locale === 'bn' ? 'পাসওয়ার্ড পরিবর্তন করুন' : 'Update Password')
+                    : (locale === 'bn' ? 'পাসওয়ার্ড যোগ করুন' : 'Add Password')}
                 </Button>
               </div>
             </form>

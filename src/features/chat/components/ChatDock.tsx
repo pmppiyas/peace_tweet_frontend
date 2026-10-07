@@ -37,7 +37,7 @@ export function ChatDock() {
     <div className={cn(isMessagesPage && 'hidden')}>
       {/* 1. Open Chat Windows (Mobile: Full-screen Messenger view; Desktop: Bottom-right docked) */}
       {openChats.length > 0 && (
-        <div className="fixed inset-0 z-50 sm:inset-auto sm:bottom-4 md:bottom-6 sm:right-20 md:right-24 lg:right-28 sm:z-50 pointer-events-auto flex items-end sm:gap-3">
+        <div className="fixed inset-0 z-50 sm:inset-auto sm:bottom-4 md:bottom-6 sm:right-20 sm:z-50 pointer-events-auto flex items-end sm:gap-3">
           {openChats.map((activeChat, idx) => (
             <ChatBox
               key={activeChat.user.id}

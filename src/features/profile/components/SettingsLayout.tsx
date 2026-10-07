@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useLanguage } from '@/providers/LanguageProvider';
+import { useAuth } from '@/hooks/useAuth';
 import { SettingsSidebar, SettingsTab } from './SettingsSidebar';
 import { SectionLayout, SectionMobileTab } from '@/components/layout/SectionLayout';
 
@@ -19,6 +20,8 @@ export function SettingsLayout({
   maxWidth = 'max-w-3xl',
 }: SettingsLayoutProps) {
   const { locale } = useLanguage();
+  const { user } = useAuth();
+  const needsPassword = Boolean(user?.needPasswordUpdate) || user?.hasPassword === false;
 
   const mobileTabs: SectionMobileTab[] = [
     {
@@ -28,7 +31,9 @@ export function SettingsLayout({
     },
     {
       id: 'tab-security',
-      label: locale === 'bn' ? 'সিকিউরিটি' : 'Security',
+      label: needsPassword
+        ? (locale === 'bn' ? 'পাসওয়ার্ড যোগ করুন' : 'Add Password')
+        : (locale === 'bn' ? 'সিকিউরিটি' : 'Security'),
       href: '/settings?tab=security',
     },
     {

@@ -67,6 +67,12 @@ export function Navbar() {
     useUnreadNotificationsCount(isAuthenticated);
   const unreadMessagesCount = useTotalUnreadCount();
 
+  const isLoginPage =
+    pathname === ROUTES.LOGIN ||
+    pathname === '/login' ||
+    pathname === ROUTES.REGISTER ||
+    pathname === '/register';
+
   const navCenterLinks = [
     { id: 'nav-home', label: t('nav.home'), href: ROUTES.HOME, icon: Home },
     { id: 'nav-duas', label: t('nav.duas'), href: ROUTES.DUAS, icon: Compass },
@@ -84,7 +90,68 @@ export function Navbar() {
     },
   ];
 
-  const rightActionButtons = (
+  const rightActionButtons = isLoginPage ? (
+    <div className="relative flex items-center gap-1.5 sm:gap-2 shrink-0">
+      {/* 1. Search circular button */}
+      <button
+        type="button"
+        onClick={() => setIsSearchOpen(true)}
+        className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors cursor-pointer"
+        title={locale === 'bn' ? 'অনুসন্ধান' : 'Search'}
+        aria-label="Search"
+      >
+        <Search className="h-5 w-5 stroke-[2.25]" strokeWidth={2.25} />
+      </button>
+
+      {/* 2. User / Login button */}
+      {isAuthenticated ? (
+        <Link
+          href={ROUTES.PROFILE}
+          className="relative flex h-10 w-10 items-center justify-center rounded-full transition-transform active:scale-95"
+          title={user?.name || 'Profile'}
+        >
+          <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-xs shadow-2xs overflow-hidden">
+            {user?.avatarUrl ? (
+              <Image
+                src={user.avatarUrl}
+                alt={user.name || 'User'}
+                fill
+                className="object-cover"
+                unoptimized
+              />
+            ) : (
+              <span>{user?.name?.charAt(0) || 'P'}</span>
+            )}
+          </div>
+        </Link>
+      ) : (
+        <Link
+          href={ROUTES.LOGIN}
+          className={cn(
+            'flex h-10 w-10 items-center justify-center rounded-full transition-colors',
+            pathname === ROUTES.LOGIN
+              ? 'bg-primary-50 text-primary-600 dark:bg-primary-950/60 dark:text-primary-400 font-semibold ring-2 ring-primary-500/20'
+              : 'bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb]',
+          )}
+          title={t('nav.login')}
+          aria-label="Login"
+        >
+          <UserIcon className="h-5 w-5 stroke-[2.25]" strokeWidth={2.25} />
+        </Link>
+      )}
+
+      {/* 3. Facebook 9-dots Menu Drawer button */}
+      <button
+        type="button"
+        onClick={() => setIsDrawerOpen(true)}
+        className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors cursor-pointer"
+        title={locale === 'bn' ? 'মেনু' : 'Menu'}
+        aria-label="Open menu drawer"
+      >
+        <FacebookMenuIcon className="h-5 w-5" />
+      </button>
+    </div>
+  ) : (
     <div className="relative flex items-center gap-1.5 sm:gap-2 shrink-0">
       {/* 2. Messenger / Messages */}
       {isAuthenticated ? (
@@ -210,7 +277,12 @@ export function Navbar() {
       ) : (
         <Link
           href={ROUTES.LOGIN}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors"
+          className={cn(
+            'flex h-10 w-10 items-center justify-center rounded-full transition-colors',
+            pathname === ROUTES.LOGIN
+              ? 'bg-primary-50 text-primary-600 dark:bg-primary-950/60 dark:text-primary-400 font-semibold ring-2 ring-primary-500/20'
+              : 'bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb]',
+          )}
           title={t('nav.login')}
         >
           <UserIcon className="h-5 w-5 stroke-[2.25]" strokeWidth={2.25} />
@@ -271,78 +343,90 @@ export function Navbar() {
                   className="h-full w-full object-cover"
                 />
               </div>
-              <span className="hidden sm:inline-block text-xl font-extrabold tracking-tight text-primary-700 dark:text-white select-none">
+              <span
+                className={cn(
+                  'text-xl font-extrabold tracking-tight text-primary-700 dark:text-white select-none',
+                  isLoginPage ? 'inline-block' : 'hidden sm:inline-block',
+                )}
+              >
                 PeaceTweet
               </span>
             </Link>
 
-            {/* Search input pill on md+, Circular button on mobile */}
-            <button
-              type="button"
-              onClick={() => setIsSearchOpen(true)}
-              className="hidden md:flex h-10 w-44 lg:w-60 items-center gap-2 rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] px-3.5 text-[#65676b] dark:text-[#b0b3b8] transition-colors cursor-pointer text-left"
-              title="Search"
-            >
-              <Search
-                className="h-4 w-4 shrink-0 text-[#65676b] dark:text-[#b0b3b8] stroke-[2.25]"
-                strokeWidth={2.25}
-              />
-              <span className="text-sm select-none truncate">
-                Search PeaceTweet
-              </span>
-            </button>
+            {/* Search input pill on md+, Circular button on mobile (Only when NOT on login page) */}
+            {!isLoginPage && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setIsSearchOpen(true)}
+                  className="hidden md:flex h-10 w-44 lg:w-60 items-center gap-2 rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] px-3.5 text-[#65676b] dark:text-[#b0b3b8] transition-colors cursor-pointer text-left"
+                  title="Search"
+                >
+                  <Search
+                    className="h-4 w-4 shrink-0 text-[#65676b] dark:text-[#b0b3b8] stroke-[2.25]"
+                    strokeWidth={2.25}
+                  />
+                  <span className="text-sm select-none truncate">
+                    Search PeaceTweet
+                  </span>
+                </button>
 
-            {/* Mobile Circular Search Button */}
-            <button
-              type="button"
-              onClick={() => setIsSearchOpen(true)}
-              className="flex md:hidden h-10 w-10 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors"
-              title="Search"
-              aria-label="Open search"
-            >
-              <Search className="h-5 w-5 stroke-[2.25]" strokeWidth={2.25} />
-            </button>
+                <button
+                  type="button"
+                  onClick={() => setIsSearchOpen(true)}
+                  className="flex md:hidden h-10 w-10 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors cursor-pointer"
+                  title="Search"
+                  aria-label="Open search"
+                >
+                  <Search className="h-5 w-5 stroke-[2.25]" strokeWidth={2.25} />
+                </button>
+              </>
+            )}
           </div>
 
-          {/* Center Column: Navigation Tabs (Desktop only: lg:grid) */}
-          <div className="hidden lg:flex flex-1 max-w-2xl justify-center h-full min-w-0 px-2 sm:px-4">
-            <nav className="grid grid-cols-4 w-full h-full gap-1.5">
-              {navCenterLinks.map((item) => {
-                const Icon = item.icon;
-                const isActive =
-                  item.href === '/'
-                    ? pathname === '/'
-                    : pathname.startsWith(item.href);
+          {/* Center Column: Navigation Tabs (Desktop only: lg:grid, hidden on login page) */}
+          {!isLoginPage && (
+            <div className="hidden lg:flex flex-1 max-w-2xl justify-center h-full min-w-0 px-2 sm:px-4">
+              <nav className="grid grid-cols-4 w-full h-full gap-1.5">
+                {navCenterLinks.map((item) => {
+                  const Icon = item.icon;
+                  const isActive =
+                    item.id === 'nav-bookmarks'
+                      ? pathname.startsWith(ROUTES.SAVED)
+                      : item.href === '/'
+                        ? pathname === '/'
+                        : pathname.startsWith(item.href) && item.href !== ROUTES.LOGIN;
 
-                return (
-                  <Link
-                    key={item.id}
-                    href={item.href}
-                    className={cn(
-                      'relative flex h-full items-center justify-center transition-colors px-4 sm:px-6 my-1 rounded-xl',
-                      isActive
-                        ? 'text-primary-500 dark:text-primary-400'
-                        : 'text-[#65676b] hover:bg-[#f0f2f5] dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c]'
-                    )}
-                    title={item.label}
-                  >
-                    <Icon
-                      strokeWidth={isActive ? 2.6 : 2.25}
+                  return (
+                    <Link
+                      key={item.id}
+                      href={item.href}
                       className={cn(
-                        'h-6 w-6',
+                        'relative flex h-full items-center justify-center transition-colors px-4 sm:px-6 my-1 rounded-xl',
                         isActive
-                          ? 'stroke-[2.6] text-primary-500 dark:text-primary-400'
-                          : 'stroke-[2.25]'
+                          ? 'text-primary-500 dark:text-primary-400'
+                          : 'text-[#65676b] hover:bg-[#f0f2f5] dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c]',
                       )}
-                    />
-                    {isActive && (
-                      <span className="absolute -bottom-1 left-2 right-2 h-[3px] bg-primary-500 dark:bg-primary-400 rounded-t-md" />
-                    )}
-                  </Link>
-                );
-              })}
-            </nav>
-          </div>
+                      title={item.label}
+                    >
+                      <Icon
+                        strokeWidth={isActive ? 2.6 : 2.25}
+                        className={cn(
+                          'h-6 w-6',
+                          isActive
+                            ? 'stroke-[2.6] text-primary-500 dark:text-primary-400'
+                            : 'stroke-[2.25]',
+                        )}
+                      />
+                      {isActive && (
+                        <span className="absolute -bottom-1 left-2 right-2 h-[3px] bg-primary-500 dark:bg-primary-400 rounded-t-md" />
+                      )}
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+          )}
 
           {/* Right Column: Circular Action Buttons */}
           {rightActionButtons}

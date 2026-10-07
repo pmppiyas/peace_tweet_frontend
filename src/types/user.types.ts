@@ -28,6 +28,7 @@ export interface User {
   isDonor?: boolean;
   donationCount?: number;
   hasPassword?: boolean;
+  needPasswordUpdate?: boolean;
   createdAt: string;
   updatedAt: string;
 }

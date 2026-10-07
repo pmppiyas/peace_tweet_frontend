@@ -23,8 +23,10 @@ export interface SettingsSidebarProps {
 
 export function SettingsSidebar({ activeTab, onSelectTab }: SettingsSidebarProps) {
   const { locale } = useLanguage();
-  const { isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  const needsPassword = Boolean(user?.needPasswordUpdate) || user?.hasPassword === false;
 
   const navItems: SidebarNavItem[] = [
     {
@@ -41,6 +43,7 @@ export function SettingsSidebar({ activeTab, onSelectTab }: SettingsSidebarProps
       href: '/settings?tab=security',
       icon: KeyRound,
       iconBg: 'bg-blue-600 text-white',
+      badge: needsPassword ? (locale === 'bn' ? 'পাসওয়ার্ড যোগ করুন' : 'Add Password') : undefined,
       onClick: () => onSelectTab('security'),
     },
     {

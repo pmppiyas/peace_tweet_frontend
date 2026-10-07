@@ -44,21 +44,26 @@ export function MobileNav() {
   ];
 
   const isMessagesPage = pathname === '/messages' || pathname.startsWith('/messages/');
+  const isAuthPage = pathname === '/login' || pathname === '/register';
 
   return (
     <div
       className={cn(
         'md:hidden fixed bottom-0 left-0 z-40 w-full border-t border-[#e4e6eb] bg-white/95 backdrop-blur-md dark:border-[#393a3b] dark:bg-[#242526]/95 pb-safe',
-        isMessagesPage && 'hidden',
+        (isMessagesPage || isAuthPage) && 'hidden',
       )}
     >
       <nav className="grid grid-cols-5 h-14 items-center">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive =
-            item.href === '/'
-              ? pathname === '/'
-              : pathname.startsWith(item.href);
+            item.id === 'nav-bookmarks'
+              ? pathname.startsWith(ROUTES.SAVED)
+              : item.id === 'nav-profile'
+                ? pathname.startsWith(ROUTES.PROFILE)
+                : item.href === '/'
+                  ? pathname === '/'
+                  : pathname.startsWith(item.href) && item.href !== ROUTES.LOGIN;
 
           return (
             <Link
