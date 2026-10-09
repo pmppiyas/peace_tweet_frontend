@@ -23,6 +23,10 @@ export interface User {
   bio?: string | null;
   avatarUrl?: string | null;
   coverUrl?: string | null;
+  country?: string | null;
+  countryCode?: string | null;
+  state?: string | null;
+  city?: string | null;
   location?: string | null;
   bloodGroup?: BloodGroup | null;
   isDonor?: boolean;

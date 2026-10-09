@@ -3,6 +3,9 @@
 import React, { useState } from 'react';
 import {
   User,
+  Camera,
+  MapPin,
+  Droplet,
   KeyRound,
   Shield,
   Palette,
@@ -14,7 +17,15 @@ import { useAuth } from '@/hooks/useAuth';
 import { SectionSidebar, SidebarNavItem } from '@/components/navigation/SectionSidebar';
 import { LogoutConfirmModal } from '@/components/common/LogoutConfirmModal';
 
-export type SettingsTab = 'profile' | 'security' | 'privacy' | 'theme' | 'language';
+export type SettingsTab =
+  | 'profile'
+  | 'photos'
+  | 'location'
+  | 'blood'
+  | 'security'
+  | 'privacy'
+  | 'theme'
+  | 'language';
 
 export interface SettingsSidebarProps {
   activeTab: SettingsTab;
@@ -31,11 +42,35 @@ export function SettingsSidebar({ activeTab, onSelectTab }: SettingsSidebarProps
   const navItems: SidebarNavItem[] = [
     {
       id: 'settings-profile',
-      label: locale === 'bn' ? 'প্রোফাইল' : 'Profile',
+      label: locale === 'bn' ? 'সাধারণ তথ্য' : 'Basic Info',
       href: '/settings?tab=profile',
       icon: User,
       iconBg: 'bg-primary-500 text-white',
       onClick: () => onSelectTab('profile'),
+    },
+    {
+      id: 'settings-photos',
+      label: locale === 'bn' ? 'ছবি ও কভার' : 'Photos',
+      href: '/settings?tab=photos',
+      icon: Camera,
+      iconBg: 'bg-purple-600 text-white',
+      onClick: () => onSelectTab('photos'),
+    },
+    {
+      id: 'settings-location',
+      label: locale === 'bn' ? 'অবস্থান ও ঠিকানা' : 'Location',
+      href: '/settings?tab=location',
+      icon: MapPin,
+      iconBg: 'bg-emerald-600 text-white',
+      onClick: () => onSelectTab('location'),
+    },
+    {
+      id: 'settings-blood',
+      label: locale === 'bn' ? 'রক্তদান ও ডোনার' : 'Blood Donation',
+      href: '/settings?tab=blood',
+      icon: Droplet,
+      iconBg: 'bg-rose-600 text-white',
+      onClick: () => onSelectTab('blood'),
     },
     {
       id: 'settings-security',

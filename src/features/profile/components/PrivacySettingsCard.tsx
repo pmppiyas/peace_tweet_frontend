@@ -127,7 +127,7 @@ export function PrivacySettingsCard() {
         </div>
       </CardHeader>
 
-      <CardContent className="p-4 sm:p-5 space-y-4">
+      <CardContent className="p-4 sm:p-5 pt-4 sm:pt-5 md:pt-5 space-y-4">
         {isSaved && (
           <div className="flex items-center gap-2 rounded-xl border border-teal-200 bg-teal-50 p-3 text-xs font-semibold text-teal-800 dark:border-teal-900/60 dark:bg-teal-950/40 dark:text-teal-200 animate-in fade-in duration-200">
             <CheckCircle2 className="h-4 w-4 text-teal-600 shrink-0" />

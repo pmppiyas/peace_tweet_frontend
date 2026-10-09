@@ -62,7 +62,7 @@ export function LanguageSettingsCard() {
         </div>
       </CardHeader>
 
-      <CardContent className="p-4 sm:p-5 space-y-3">
+      <CardContent className="p-4 sm:p-5 pt-4 sm:pt-5 md:pt-5 space-y-3">
         {LANGUAGE_OPTIONS.map((item) => {
           const isSelected = locale === item.code;
 

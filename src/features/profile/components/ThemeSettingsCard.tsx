@@ -34,7 +34,7 @@ export function ThemeSettingsCard() {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="p-4 sm:p-5">
+        <CardContent className="p-4 sm:p-5 pt-4 sm:pt-5 md:pt-5">
           <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
@@ -96,7 +96,7 @@ export function ThemeSettingsCard() {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="p-4 sm:p-5 space-y-4">
+        <CardContent className="p-4 sm:p-5 pt-4 sm:pt-5 md:pt-5 space-y-4">
           <div className="grid grid-cols-3 gap-2.5">
             {(['normal', 'large', 'extra-large'] as const).map((size) => (
               <button

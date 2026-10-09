@@ -5,6 +5,10 @@ export interface RegisterInput {
   email: string;
   password: string;
   avatarUrl?: string;
+  country?: string;
+  countryCode?: string;
+  state?: string;
+  city?: string;
   location?: string;
   bloodGroup?: BloodGroup;
 }

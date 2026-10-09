@@ -23,6 +23,7 @@ import { useBloodActions } from '../hooks/useBloodActions';
 import { BloodGroup, BloodRequestUrgency } from '../types/blood.types';
 import { BLOOD_GROUPS } from '../utils/blood-helpers';
 import { ROUTES } from '@/constants/routes';
+import { LocationSelector, LocationValue } from '@/components/ui/LocationSelector';
 
 export function CreateBloodRequestForm() {
   const { locale } = useLanguage();
@@ -39,6 +40,13 @@ export function CreateBloodRequestForm() {
   const [hospitalName, setHospitalName] = useState('');
   const [hospitalAddress, setHospitalAddress] = useState('');
   const [location, setLocation] = useState('');
+  const [locationData, setLocationData] = useState<LocationValue>({
+    country: 'Bangladesh',
+    countryCode: 'BD',
+    state: '',
+    city: '',
+    location: '',
+  });
   const [contactNumber, setContactNumber] = useState('');
   const [alternateContact, setAlternateContact] = useState('');
   const [neededDate, setNeededDate] = useState('');
@@ -52,6 +60,29 @@ export function CreateBloodRequestForm() {
       setPatientName(user.name);
     }
   }, [forMyself, user?.name]);
+
+  // Default blood request location to user's saved location, or Bangladesh
+  useEffect(() => {
+    if (user) {
+      const defaultCountry = user.country || 'Bangladesh';
+      const defaultCountryCode = user.countryCode || 'BD';
+      const defaultState = user.state || '';
+      const defaultCity = user.city || '';
+      const defaultLocation = user.location || '';
+
+      setLocationData({
+        country: defaultCountry,
+        countryCode: defaultCountryCode,
+        state: defaultState,
+        city: defaultCity,
+        location: defaultLocation,
+      });
+
+      if (defaultLocation) {
+        setLocation(defaultLocation);
+      }
+    }
+  }, [user]);
 
   useEffect(() => {
     const tomorrow = new Date();
@@ -81,7 +112,9 @@ export function CreateBloodRequestForm() {
       return;
     }
 
-    if (!location.trim()) {
+    const finalLocation = locationData.location.trim() || location.trim();
+
+    if (!finalLocation) {
       setError(
         locale === 'bn'
           ? 'লোকেশন বা জেলা উল্লেখ করুন।'
@@ -118,7 +151,11 @@ export function CreateBloodRequestForm() {
         units: units || 1,
         hospitalName: hospitalName.trim(),
         hospitalAddress: hospitalAddress.trim() || undefined,
-        location: location.trim(),
+        country: locationData.country || undefined,
+        countryCode: locationData.countryCode || undefined,
+        state: locationData.state || undefined,
+        city: locationData.city || undefined,
+        location: finalLocation,
         contactNumber: contactNumber.trim(),
         alternateContact: alternateContact.trim() || undefined,
         neededDate,
@@ -346,39 +383,39 @@ export function CreateBloodRequestForm() {
 
           <div>
             <label className="block text-xs font-bold text-[#050505] dark:text-[#e4e6eb] mb-1.5">
-              {locale === 'bn' ? 'এলাকা / জেলা *' : 'Location / District *'}
+              {locale === 'bn'
+                ? 'হাসপাতালের বিস্তারিত ঠিকানা / ওয়ার্ড নং'
+                : 'Hospital Address / Ward No'}
             </label>
             <Input
               type="text"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              value={hospitalAddress}
+              onChange={(e) => setHospitalAddress(e.target.value)}
               placeholder={
                 locale === 'bn'
-                  ? 'উদা: ঢাকা, ধানমন্ডি / চট্টগ্রাম'
-                  : 'e.g. Dhanmondi, Dhaka'
+                  ? 'উদা: ৫ম তলা, ওয়ার্ড নং ৮, বেড নং ১২'
+                  : 'e.g. 5th Floor, Ward 8, Bed 12'
               }
-              required
               className="h-10"
             />
           </div>
         </div>
 
-        <div>
-          <label className="block text-xs font-bold text-[#050505] dark:text-[#e4e6eb] mb-1.5">
-            {locale === 'bn'
-              ? 'হাসপাতালের বিস্তারিত ঠিকানা / ওয়ার্ড নং'
-              : 'Hospital Address / Ward No'}
-          </label>
-          <Input
-            type="text"
-            value={hospitalAddress}
-            onChange={(e) => setHospitalAddress(e.target.value)}
-            placeholder={
-              locale === 'bn'
-                ? 'উদা: ৫ম তলা, ওয়ার্ড নং ৮, বেড নং ১২'
-                : 'e.g. 5th Floor, Ward 8, Bed 12'
-            }
-            className="h-10"
+        {/* Global Cascading Location Selector */}
+        <div className="rounded-2xl p-4 bg-[#f0f2f5]/60 dark:bg-[#3a3b3c]/40 border border-[#e4e6eb] dark:border-[#393a3b]">
+          <div className="flex items-center gap-2 mb-2">
+            <MapPin className="h-4 w-4 text-rose-500" />
+            <span className="text-xs font-bold text-[#050505] dark:text-[#e4e6eb]">
+              {locale === 'bn' ? 'রক্তের প্রয়োজনস্থল (দেশ ও এলাকা নির্বাচন) *' : 'Location of Blood Need *'}
+            </span>
+          </div>
+          <LocationSelector
+            value={locationData}
+            onChange={(val) => {
+              setLocationData(val);
+              setLocation(val.location);
+            }}
+            locale={locale}
           />
         </div>
 

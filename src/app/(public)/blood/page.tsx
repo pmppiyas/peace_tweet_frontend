@@ -19,6 +19,7 @@ import {
 import { useLanguage } from '@/providers/LanguageProvider';
 import { useAuth } from '@/hooks/useAuth';
 import { ROUTES } from '@/constants/routes';
+import { LocationValue } from '@/components/ui/LocationSelector';
 
 function BloodContent() {
   const { locale } = useLanguage();
@@ -32,6 +33,13 @@ function BloodContent() {
   );
   const [search, setSearch] = useState('');
   const [location, setLocation] = useState('');
+  const [locationValue, setLocationValue] = useState<LocationValue>({
+    country: '',
+    countryCode: '',
+    state: '',
+    city: '',
+    location: '',
+  });
   const [selectedRequest, setSelectedRequest] =
     useState<BloodRequestItem | null>(null);
 
@@ -47,10 +55,49 @@ function BloodContent() {
     }
   }, [tabParam]);
 
+  // Default location from user profile if available, otherwise default country to Bangladesh
+  useEffect(() => {
+    if (user) {
+      if (user.location || user.city || user.state) {
+        setLocationValue({
+          country: user.country || 'Bangladesh',
+          countryCode: user.countryCode || 'BD',
+          state: user.state || '',
+          city: user.city || '',
+          location: user.location || '',
+        });
+      } else {
+        setLocationValue({
+          country: 'Bangladesh',
+          countryCode: 'BD',
+          state: '',
+          city: '',
+          location: '',
+        });
+      }
+    } else {
+      setLocationValue((prev) => {
+        if (!prev.countryCode) {
+          return {
+            country: 'Bangladesh',
+            countryCode: 'BD',
+            state: '',
+            city: '',
+            location: '',
+          };
+        }
+        return prev;
+      });
+    }
+  }, [user]);
+
   const requestParams = {
     bloodGroup: selectedGroup,
     search: search.trim() || undefined,
-    location: location.trim() || undefined,
+    countryCode: locationValue.countryCode || undefined,
+    state: locationValue.state || undefined,
+    city: locationValue.city || undefined,
+    location: locationValue.location || location.trim() || undefined,
     requesterId: activeTab === 'my-requests' ? user?.id : undefined,
     donorId: activeTab === 'my-donations' ? user?.id : undefined,
   };
@@ -64,7 +111,10 @@ function BloodContent() {
       ? {
           bloodGroup: selectedGroup,
           search: search.trim() || undefined,
-          location: location.trim() || undefined,
+          countryCode: locationValue.countryCode || undefined,
+          state: locationValue.state || undefined,
+          city: locationValue.city || undefined,
+          location: locationValue.location || location.trim() || undefined,
         }
       : undefined
   );
@@ -76,6 +126,7 @@ function BloodContent() {
     setSelectedGroup(undefined);
     setSearch('');
     setLocation('');
+    setLocationValue({ country: '', countryCode: '', state: '', city: '', location: '' });
   };
 
   return (
@@ -90,6 +141,8 @@ function BloodContent() {
             onSearchChange={setSearch}
             location={location}
             onLocationChange={setLocation}
+            locationValue={locationValue}
+            onLocationValueChange={setLocationValue}
             placeholder={
               activeTab === 'donors'
                 ? locale === 'bn'

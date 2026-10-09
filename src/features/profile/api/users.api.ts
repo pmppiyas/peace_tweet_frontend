@@ -9,11 +9,17 @@ export interface UpdateUserInput {
   email?: string;
   avatarUrl?: string | null;
   coverUrl?: string | null;
+  country?: string | null;
+  countryCode?: string | null;
+  state?: string | null;
+  city?: string | null;
   location?: string | null;
   bloodGroup?: BloodGroup | null;
   bio?: string | null;
   badge?: string;
   userStatus?: UserStatus;
+  isDonor?: boolean;
+  donationCount?: number;
 }
 
 export interface ChangePasswordInput {

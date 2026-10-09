@@ -126,3 +126,20 @@ export function getDonationStatusInfo(status: BloodDonationStatus, locale: strin
       };
   }
 }
+
+export function getCountryFlag(countryCode?: string | null): string {
+  if (!countryCode) return '';
+  const upper = countryCode.toUpperCase();
+  // Safe emoji flag from ISO code
+  if (upper.length === 2) {
+    const codePoints = upper.split('').map((c) => 127397 + c.charCodeAt(0));
+    return String.fromCodePoint(...codePoints);
+  }
+  return '';
+}
+
+export function formatLocationWithFlag(location?: string | null, countryCode?: string | null): string {
+  if (!location) return '';
+  const flag = getCountryFlag(countryCode);
+  return flag ? `${flag} ${location}` : location;
+}

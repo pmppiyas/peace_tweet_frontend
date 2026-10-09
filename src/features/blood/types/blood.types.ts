@@ -33,6 +33,10 @@ export interface BloodDonorUser {
   username: string;
   avatarUrl?: string | null;
   bloodGroup?: BloodGroup | null;
+  country?: string | null;
+  countryCode?: string | null;
+  state?: string | null;
+  city?: string | null;
   location?: string | null;
   bio?: string | null;
   isDonor?: boolean;
@@ -65,6 +69,10 @@ export interface BloodRequestItem {
   unitsFulfilled: number;
   hospitalName: string;
   hospitalAddress?: string | null;
+  country?: string | null;
+  countryCode?: string | null;
+  state?: string | null;
+  city?: string | null;
   location: string;
   contactNumber: string;
   alternateContact?: string | null;
@@ -86,6 +94,10 @@ export interface CreateBloodRequestInput {
   units?: number;
   hospitalName: string;
   hospitalAddress?: string;
+  country?: string;
+  countryCode?: string;
+  state?: string;
+  city?: string;
   location: string;
   contactNumber: string;
   alternateContact?: string;
@@ -106,6 +118,9 @@ export interface BloodRequestQueryParams {
   bloodGroup?: BloodGroup;
   status?: BloodRequestStatus;
   urgency?: BloodRequestUrgency;
+  countryCode?: string;
+  state?: string;
+  city?: string;
   location?: string;
   search?: string;
   requesterId?: string;
@@ -116,6 +131,9 @@ export interface BloodRequestQueryParams {
 
 export interface DonorQueryParams {
   bloodGroup?: BloodGroup;
+  countryCode?: string;
+  state?: string;
+  city?: string;
   location?: string;
   search?: string;
   page?: number;

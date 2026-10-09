@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
 import { cn } from '@/lib/utils/cn';
+import { LocationSelector, LocationValue } from '@/components/ui/LocationSelector';
 
 const BLOOD_GROUPS: { value: BloodGroup; label: string }[] = [
   { value: 'A_POSITIVE', label: 'A+' },
@@ -34,15 +35,6 @@ const BLOOD_GROUPS: { value: BloodGroup; label: string }[] = [
   { value: 'AB_NEGATIVE', label: 'AB-' },
   { value: 'O_POSITIVE', label: 'O+' },
   { value: 'O_NEGATIVE', label: 'O-' },
-];
-
-const POPULAR_LOCATIONS = [
-  'Dhaka',
-  'Chittagong',
-  'Sylhet',
-  'Rajshahi',
-  'Khulna',
-  'Barisal',
 ];
 
 export function RegisterView() {
@@ -71,7 +63,13 @@ export function RegisterView() {
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
   // Step 4: Location
-  const [location, setLocation] = useState('');
+  const [locationData, setLocationData] = useState<LocationValue>({
+    country: 'Bangladesh',
+    countryCode: 'BD',
+    state: '',
+    city: '',
+    location: '',
+  });
 
   // Step 5: Blood Group
   const [bloodGroup, setBloodGroup] = useState<BloodGroup | undefined>(undefined);
@@ -196,7 +194,11 @@ export function RegisterView() {
         email: email.trim().toLowerCase(),
         password,
         avatarUrl: uploadedAvatarUrl,
-        location: location.trim() ? location.trim() : undefined,
+        country: locationData.location ? locationData.country : undefined,
+        countryCode: locationData.location ? locationData.countryCode : undefined,
+        state: locationData.location ? locationData.state : undefined,
+        city: locationData.location ? locationData.city : undefined,
+        location: locationData.location?.trim() ? locationData.location.trim() : undefined,
         bloodGroup: includeBloodGroup ? bloodGroup : undefined,
       });
     } catch (err: any) {
@@ -521,51 +523,24 @@ export function RegisterView() {
                 STEP 4: Location (Optional / Skip)
             ═════════════════════════════════════════════════════════ */}
             {step === 4 && (
-              <div className="space-y-4">
+              <div className="space-y-3.5">
                 <div className="text-center">
                   <h3 className="text-base font-bold text-[#050505] dark:text-[#e4e6eb]">
                     {locale === 'bn' ? 'আপনার লোকেশন' : 'Your Location'}
                   </h3>
                   <p className="text-xs text-[#65676b] dark:text-[#b0b3b8] mt-0.5">
                     {locale === 'bn'
-                      ? 'আপনার এলাকা বা শহরের নাম লিখুন (ঐচ্ছিক)'
-                      : 'Where are you from? (optional)'}
+                      ? 'আপনার দেশ ও বিভাগ/এলাকা নির্বাচন করুন (ঐচ্ছিক)'
+                      : 'Select your country and area (optional)'}
                   </p>
                 </div>
 
-                <div className="space-y-2">
-                  <Input
-                    label={locale === 'bn' ? 'শহর / ঠিকানা' : 'City or Region'}
-                    placeholder={locale === 'bn' ? 'যেমন: ঢাকা, বাংলাদেশ' : 'e.g. Dhaka, Bangladesh'}
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                    leftIcon={<MapPin className="h-4 w-4 text-primary-500" />}
-                  />
-
-                  {/* Popular Location Quick Tags */}
-                  <div className="pt-1">
-                    <p className="text-[11px] font-semibold text-[#65676b] dark:text-[#b0b3b8] mb-1.5">
-                      {locale === 'bn' ? 'জনপ্রিয় এলাকা:' : 'Quick Select:'}
-                    </p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {POPULAR_LOCATIONS.map((loc) => (
-                        <button
-                          key={loc}
-                          type="button"
-                          onClick={() => setLocation(loc)}
-                          className={cn(
-                            'text-[11px] px-2.5 py-1 rounded-full border transition-all cursor-pointer',
-                            location === loc
-                              ? 'bg-primary-500 text-white border-primary-500 font-bold shadow-2xs'
-                              : 'bg-[#f0f2f5] dark:bg-[#3a3b3c] border-[#e4e6eb] dark:border-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] hover:border-primary-400',
-                          )}
-                        >
-                          {loc}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                {/* Cascading Global & Bangladesh Location Selector */}
+                <LocationSelector
+                  value={locationData}
+                  onChange={setLocationData}
+                  locale={locale}
+                />
 
                 {/* Step 4 Actions */}
                 <div className="grid grid-cols-2 gap-2.5 pt-1">
@@ -574,6 +549,8 @@ export function RegisterView() {
                     variant="outline"
                     onClick={() => {
                       setErrorMessage('');
+                      // Clear location so it's not saved when skipped
+                      setLocationData({ country: '', countryCode: '', state: '', city: '', location: '' });
                       setStep(5);
                     }}
                     className="rounded-xl border-[#e4e6eb] dark:border-[#393a3b] text-xs font-semibold py-2"

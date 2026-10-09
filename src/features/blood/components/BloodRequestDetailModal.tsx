@@ -24,6 +24,7 @@ import {
   getUrgencyInfo,
   getStatusInfo,
   getDonationStatusInfo,
+  formatLocationWithFlag,
 } from '../utils/blood-helpers';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { useAuth } from '@/hooks/useAuth';
@@ -236,7 +237,7 @@ export function BloodRequestDetailModal({
             </span>
             <div className="flex items-center gap-2 font-bold text-[#050505] dark:text-white">
               <MapPin className="h-4 w-4 text-rose-600" />
-              <span>{request.location}</span>
+              <span>{formatLocationWithFlag(request.location, request.countryCode)}</span>
             </div>
           </div>
 

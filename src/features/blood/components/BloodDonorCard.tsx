@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { MapPin, Award, CheckCircle2 } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { BloodDonorUser } from '../types/blood.types';
-import { formatBloodGroup } from '../utils/blood-helpers';
+import { formatBloodGroup, formatLocationWithFlag } from '../utils/blood-helpers';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { ROUTES } from '@/constants/routes';
 import { cn } from '@/lib/utils/cn';
@@ -75,7 +75,7 @@ export function BloodDonorCard({ donor, className }: BloodDonorCardProps) {
           {donor.location && (
             <div className="flex items-center gap-1.5 truncate">
               <MapPin className="h-3.5 w-3.5 shrink-0 text-rose-500" />
-              <span className="truncate">{donor.location}</span>
+              <span className="truncate">{formatLocationWithFlag(donor.location, donor.countryCode)}</span>
             </div>
           )}
 

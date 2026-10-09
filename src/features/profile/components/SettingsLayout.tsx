@@ -4,7 +4,10 @@ import React from 'react';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { useAuth } from '@/hooks/useAuth';
 import { SettingsSidebar, SettingsTab } from './SettingsSidebar';
-import { SectionLayout, SectionMobileTab } from '@/components/layout/SectionLayout';
+import {
+  SectionLayout,
+  SectionMobileTab,
+} from '@/components/layout/SectionLayout';
 
 export interface SettingsLayoutProps {
   children: React.ReactNode;
@@ -17,23 +20,43 @@ export function SettingsLayout({
   children,
   activeTab,
   onSelectTab,
-  maxWidth = 'max-w-3xl',
+  maxWidth = '',
 }: SettingsLayoutProps) {
   const { locale } = useLanguage();
   const { user } = useAuth();
-  const needsPassword = Boolean(user?.needPasswordUpdate) || user?.hasPassword === false;
+  const needsPassword =
+    Boolean(user?.needPasswordUpdate) || user?.hasPassword === false;
 
   const mobileTabs: SectionMobileTab[] = [
     {
       id: 'tab-profile',
-      label: locale === 'bn' ? 'প্রোফাইল' : 'Profile',
+      label: locale === 'bn' ? 'সাধারণ তথ্য' : 'Basic Info',
       href: '/settings?tab=profile',
+    },
+    {
+      id: 'tab-photos',
+      label: locale === 'bn' ? 'ছবি ও কভার' : 'Photos',
+      href: '/settings?tab=photos',
+    },
+    {
+      id: 'tab-location',
+      label: locale === 'bn' ? 'অবস্থান' : 'Location',
+      href: '/settings?tab=location',
+    },
+    {
+      id: 'tab-blood',
+      label: locale === 'bn' ? 'রক্তদান' : 'Blood',
+      href: '/settings?tab=blood',
     },
     {
       id: 'tab-security',
       label: needsPassword
-        ? (locale === 'bn' ? 'পাসওয়ার্ড যোগ করুন' : 'Add Password')
-        : (locale === 'bn' ? 'সিকিউরিটি' : 'Security'),
+        ? locale === 'bn'
+          ? 'পাসওয়ার্ড যোগ করুন'
+          : 'Add Password'
+        : locale === 'bn'
+          ? 'সিকিউরিটি'
+          : 'Security',
       href: '/settings?tab=security',
     },
     {
@@ -56,10 +79,7 @@ export function SettingsLayout({
   return (
     <SectionLayout
       sidebar={
-        <SettingsSidebar
-          activeTab={activeTab}
-          onSelectTab={onSelectTab}
-        />
+        <SettingsSidebar activeTab={activeTab} onSelectTab={onSelectTab} />
       }
       backHref="/profile"
       mobileTabs={mobileTabs}
