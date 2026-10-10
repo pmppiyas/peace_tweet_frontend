@@ -17,6 +17,7 @@ import { ConversationSidebar } from './ConversationSidebar';
 import { ChatView } from './ChatView';
 import { EmptyChatPlaceholder } from './EmptyChatPlaceholder';
 import { NewMessageModal } from './NewMessageModal';
+import { MessagesSkeleton, ChatViewSkeleton } from './MessagesSkeleton';
 import { cn } from '@/lib/utils/cn';
 
 export function MessagesLayout() {
@@ -110,13 +111,25 @@ export function MessagesLayout() {
     router.replace('/messages', { scroll: false });
   };
 
+  const isConvLoading = Boolean(
+    (urlConvId || urlUserId) && !selectedConversation && isLoading
+  );
+
+  if (isAuthLoading) {
+    return (
+      <MessagesSkeleton
+        hasSelectedConversation={Boolean(urlConvId || urlUserId)}
+      />
+    );
+  }
+
   return (
     <div className="w-full h-[100dvh] md:h-[calc(100vh-56px)] flex bg-white dark:bg-[#18191a] overflow-hidden">
       {/* 1. Left Column: Conversations Sidebar */}
       <div
         className={cn(
           'w-full md:w-[320px] lg:w-[360px] xl:w-[380px] h-full shrink-0 flex flex-col',
-          selectedConversation ? 'hidden md:flex' : 'flex'
+          selectedConversation || isConvLoading ? 'hidden md:flex' : 'flex'
         )}
       >
         <ConversationSidebar
@@ -130,11 +143,11 @@ export function MessagesLayout() {
         />
       </div>
 
-      {/* 2. Center Column: Active Chat or Empty Placeholder */}
+      {/* 2. Center Column: Active Chat, Skeleton, or Empty Placeholder */}
       <div
         className={cn(
           'flex-1 h-full flex flex-col min-w-0 overflow-hidden',
-          selectedConversation ? 'flex' : 'hidden md:flex'
+          selectedConversation || isConvLoading ? 'flex' : 'hidden md:flex'
         )}
       >
         {selectedConversation ? (
@@ -143,6 +156,8 @@ export function MessagesLayout() {
             conversation={selectedConversation}
             onBack={handleBackToSidebar}
           />
+        ) : isConvLoading ? (
+          <ChatViewSkeleton onBack={handleBackToSidebar} />
         ) : (
           <EmptyChatPlaceholder
             onOpenNewMessage={() => setIsNewMessageModalOpen(true)}

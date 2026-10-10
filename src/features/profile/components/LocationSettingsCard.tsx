@@ -8,7 +8,6 @@ import {
   CardTitle,
   CardDescription,
 } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import {
   LocationSelector,
@@ -94,7 +93,7 @@ export function LocationSettingsCard() {
     <Card className="border border-gray-100 dark:border-gray-800 rounded-2xl shadow-2xs">
       <CardHeader className="pb-3 border-b border-[#e4e6eb] dark:border-[#393a3b]">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary-100 text-primary-600 dark:bg-primary-950/60 dark:text-primary-400">
             <MapPin className="h-4 w-4" />
           </div>
           <div>
@@ -112,27 +111,29 @@ export function LocationSettingsCard() {
 
       <CardContent className="p-4 sm:p-5 pt-4 sm:pt-5 md:pt-5 space-y-5">
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Detailed Street / House Address Field (Read-only, auto-generated) */}
+          {/* Detailed Street / House Address Field (Read-only Display Box) */}
           <div>
-            <label className="flex items-center justify-start text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5 gap-1">
-              <MapPin className="h-4 w-4 text-purple-500" />
+            <label className="flex items-center justify-start text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2 gap-1.5">
+              <MapPin className="h-4 w-4 text-primary-500" />
 
               {locale === 'bn'
                 ? 'সম্পূর্ণ অবস্থান বা বিস্তারিত ঠিকানা'
                 : 'Current Location & Address'}
             </label>
-            <Input
-              type="text"
-              readOnly
-              placeholder={
-                locale === 'bn'
-                  ? 'নিচের ড্রপডাউনগুলো থেকে অবস্থান নির্বাচন করুন'
-                  : 'Select location from dropdowns below'
-              }
-              value={location}
-              leftIcon={<MapPin className="h-4 w-4 text-gray-400" />}
-              className="cursor-default bg-gray-100/90 dark:bg-[#323334] text-[#050505] dark:text-[#e4e6eb] font-medium border-[#e4e6eb] dark:border-[#393a3b] focus:border-[#e4e6eb] dark:focus:border-[#393a3b] focus:ring-0 focus:bg-gray-100/90 dark:focus:bg-[#323334] select-all"
-            />
+            <div className="flex h-10 w-full items-center rounded-xl border border-[#e4e6eb] bg-[#f0f2f5] px-3.5 text-sm dark:border-[#393a3b] dark:bg-[#3a3b3c] cursor-default select-none">
+              <MapPin className="h-4 w-4 mr-2.5 text-primary-500/80 dark:text-primary-400 shrink-0" />
+              {location ? (
+                <span className="font-medium text-[#050505] dark:text-[#e4e6eb] truncate">
+                  {location}
+                </span>
+              ) : (
+                <span className="text-[#65676b] dark:text-[#b0b3b8] truncate">
+                  {locale === 'bn'
+                    ? 'নিচের ড্রপডাউনগুলো থেকে অবস্থান নির্বাচন করুন'
+                    : 'Select location from dropdowns below'}
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Cascading Location Selector Component */}

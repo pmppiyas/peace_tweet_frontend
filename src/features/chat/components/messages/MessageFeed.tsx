@@ -132,9 +132,21 @@ export function MessageFeed({
 
         {/* Loading state for entire feed */}
         {isLoading && messages.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center gap-2 text-[#65676b] dark:text-[#b0b3b8]">
-            <Loader2 className="h-8 w-8 animate-spin text-primary-500" />
-            <p className="text-xs">{locale === 'bn' ? 'মেসেজ লোড হচ্ছে...' : 'Loading messages...'}</p>
+          <div className="h-full flex flex-col justify-end p-3 sm:p-5 space-y-4">
+            <div className="flex items-end gap-2 max-w-[80%] sm:max-w-[70%]">
+              <div className="h-7 w-7 rounded-full bg-gray-200 dark:bg-gray-700/60 animate-pulse shrink-0" />
+              <div className="h-12 w-52 sm:w-64 rounded-2xl rounded-bl-xs bg-gray-200 dark:bg-gray-700/60 animate-pulse" />
+            </div>
+            <div className="flex items-end justify-end">
+              <div className="h-10 w-40 sm:w-48 rounded-2xl rounded-br-xs bg-primary-100 dark:bg-primary-950/40 animate-pulse" />
+            </div>
+            <div className="flex items-end gap-2 max-w-[80%] sm:max-w-[70%]">
+              <div className="h-7 w-7 rounded-full bg-gray-200 dark:bg-gray-700/60 animate-pulse shrink-0" />
+              <div className="h-16 w-60 sm:w-72 rounded-2xl rounded-bl-xs bg-gray-200 dark:bg-gray-700/60 animate-pulse" />
+            </div>
+            <div className="flex items-end justify-end">
+              <div className="h-12 w-52 sm:w-60 rounded-2xl rounded-br-xs bg-primary-100 dark:bg-primary-950/40 animate-pulse" />
+            </div>
           </div>
         ) : messages.length === 0 ? (
           /* Empty Conversation State */

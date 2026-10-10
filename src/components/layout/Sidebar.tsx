@@ -12,9 +12,11 @@ import {
   Users2,
   Shield,
   Droplet,
+  MessageCircle,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/providers/LanguageProvider';
+import { useTotalUnreadCount } from '@/features/chat';
 import { ROUTES } from '@/constants/routes';
 import {
   SectionSidebar,
@@ -24,6 +26,7 @@ import {
 export function Sidebar() {
   const { isAuthenticated, isAdmin } = useAuth();
   const { t, locale } = useLanguage();
+  const unreadMessagesCount = useTotalUnreadCount();
 
   const menuItems: SidebarNavItem[] = [
     {
@@ -33,6 +36,17 @@ export function Sidebar() {
       icon: Home,
       iconBg: 'bg-primary-500 text-white',
       exact: true,
+    },
+    {
+      id: 'sidebar-messages',
+      label: t('nav.messages'),
+      href: isAuthenticated ? ROUTES.MESSAGES : ROUTES.LOGIN,
+      icon: MessageCircle,
+      iconBg: 'bg-sky-500 text-white',
+      count:
+        isAuthenticated && unreadMessagesCount > 0
+          ? unreadMessagesCount
+          : undefined,
     },
     {
       id: 'sidebar-categories',
@@ -96,5 +110,11 @@ export function Sidebar() {
       : []),
   ];
 
-  return <SectionSidebar items={menuItems} showUserProfile={true} />;
+  return (
+    <SectionSidebar
+      items={menuItems}
+      showUserProfile={true}
+      className="w-72 xl:w-80"
+    />
+  );
 }

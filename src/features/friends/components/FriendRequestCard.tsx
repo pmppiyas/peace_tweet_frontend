@@ -30,6 +30,7 @@ export function FriendRequestCard({ request, variant }: FriendRequestCardProps) 
   if (!displayUser) return null;
 
   const profileUrl = ROUTES.USER_PROFILE(displayUser.username);
+  const avatarSrc = displayUser.avatarUrl || displayUser.avatar;
 
   // Accept received request immediately without loading delay
   const handleAccept = () => {
@@ -65,12 +66,13 @@ export function FriendRequestCard({ request, variant }: FriendRequestCardProps) 
         href={profileUrl}
         className="block relative bg-gradient-to-br from-primary-500 via-teal-600 to-primary-700 aspect-[4/3] flex items-center justify-center group overflow-hidden"
       >
-        {displayUser.avatar ? (
+        {avatarSrc ? (
           <Image
-            src={displayUser.avatar}
+            src={avatarSrc}
             alt={displayUser.name}
             fill
-            className="object-cover group-hover:scale-105 transition-transform"
+            className="object-cover group-hover:scale-105 transition-transform duration-200"
+            unoptimized
           />
         ) : (
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/20 backdrop-blur-xs text-white text-3xl font-black shadow-lg group-hover:scale-110 transition-transform">

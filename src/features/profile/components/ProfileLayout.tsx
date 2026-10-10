@@ -4,7 +4,7 @@ import React from 'react';
 import { ROUTES } from '@/constants/routes';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { useAuth } from '@/hooks/useAuth';
-import { useFriends } from '@/features/friends/hooks/useFriends';
+import { usePendingRequestsCount } from '@/features/friends/hooks/useFriendRequests';
 import { useBookmarks } from '@/features/bookmark/hooks/useBookmarks';
 import { useMyGroups } from '@/features/groups/hooks/useMyGroups';
 import { UserProfileResponse } from '@/features/friends/types/friends.types';
@@ -51,12 +51,12 @@ export function ProfileLayout({
         ? `/${displayUser.username}`
         : '/profile');
 
-  const { data: friendsData } = useFriends(undefined, isAuthenticated && isOwner);
+  const { data: pendingRequestsCount } = usePendingRequestsCount(
+    Boolean(isAuthenticated && isOwner)
+  );
   const { data: bookmarkData } = useBookmarks({ limit: 1 });
   const { data: myGroupsData } = useMyGroups({ limit: 10 });
 
-  const totalFriends =
-    friendsData?.pages.flatMap((page) => page?.items || []).length;
   const totalBookmarks = bookmarkData?.meta?.total;
   const myGroups =
     myGroupsData?.pages.flatMap((page) => page?.items || []) || [];
@@ -72,8 +72,8 @@ export function ProfileLayout({
       label: locale === 'bn' ? 'বন্ধুরা' : 'Friends',
       href: `${effectiveBaseUrl}?tab=friend&from=nav`,
       count:
-        isOwner && typeof totalFriends === 'number' && totalFriends > 0
-          ? totalFriends
+        isOwner && typeof pendingRequestsCount === 'number' && pendingRequestsCount > 0
+          ? pendingRequestsCount
           : undefined,
     },
     {

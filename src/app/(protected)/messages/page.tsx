@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { Metadata } from 'next';
-import { MessagesLayout } from '@/features/chat';
+import { MessagesLayout, MessagesSkeleton } from '@/features/chat';
 
 export const metadata: Metadata = {
   title: 'Messages | PeaceTweet',
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function MessagesPage() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<MessagesSkeleton />}>
       <MessagesLayout />
     </Suspense>
   );

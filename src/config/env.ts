@@ -1,13 +1,25 @@
 // Helper to normalize and ensure API URL ends with /api/v1
 const normalizeApiUrl = (url?: string): string => {
-  if (!url) return '';
-  const clean = url.trim().replace(/\/+$/, '');
+  let clean = (url || '').trim().replace(/\/+$/, '');
+
+  // Guard against localhost on live production domain (e.g. peacetweet.vercel.app)
+  if (typeof window !== 'undefined') {
+    const isLocalhost =
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1';
+    if (
+      !isLocalhost &&
+      (!clean || clean.includes('localhost') || clean.includes('127.0.0.1'))
+    ) {
+      clean = 'https://peace-tweet-backned.onrender.com';
+    }
+  }
+
   if (!clean) return '';
-  // If the URL already ends with /api/v1, use it
+  clean = clean.replace('peace-tweet-backend', 'peace-tweet-backned');
   if (clean.endsWith('/api/v1')) {
     return clean;
   }
-  // If the user provided the domain without /api/v1 (e.g. https://peace-tweet-backned.onrender.com)
   return `${clean}/api/v1`;
 };
 

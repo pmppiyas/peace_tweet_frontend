@@ -21,11 +21,13 @@ import {
   UserPlus,
   ChevronRight,
   Droplet,
+  MessageCircle,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { useTheme } from '@/providers/ThemeProvider';
 import { usePendingRequestsCount } from '@/features/friends/hooks/useFriendRequests';
+import { useTotalUnreadCount } from '@/features/chat';
 import { ROUTES } from '@/constants/routes';
 import { cn } from '@/lib/utils/cn';
 import { CardTitle } from '@/components/ui/Card';
@@ -41,6 +43,7 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
   const { locale, setLocale, t } = useLanguage();
   const { theme, setTheme } = useTheme();
   const { data: requestCount = 0 } = usePendingRequestsCount(isAuthenticated);
+  const unreadMessagesCount = useTotalUnreadCount();
 
   // Close drawer on escape key
   useEffect(() => {
@@ -72,6 +75,17 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
       iconBg: 'bg-primary-500 text-white',
       exact: true,
     },
+    {
+      id: 'menu-messages',
+      label: locale === 'bn' ? 'কথোপকথন' : 'Conversations',
+      href: isAuthenticated ? ROUTES.MESSAGES : ROUTES.LOGIN,
+      icon: MessageCircle,
+      iconBg: 'bg-sky-500 text-white',
+      count:
+        isAuthenticated && unreadMessagesCount > 0
+          ? unreadMessagesCount
+          : undefined,
+    },
 
     {
       id: 'menu-categories',
@@ -88,6 +102,7 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
       iconBg: 'bg-indigo-600 text-white',
       count: isAuthenticated && requestCount > 0 ? requestCount : undefined,
     },
+
     {
       id: 'menu-groups',
       label: locale === 'bn' ? 'গ্রুপসমূহ' : 'Groups',
@@ -138,7 +153,7 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
       />
 
       {/* Drawer Panel */}
-      <div className="relative z-50 w-80 max-w-[85vw] h-full h-[100dvh] bg-white dark:bg-[#242526] shadow-2xl flex flex-col transition-all animate-in slide-in-from-right duration-250 border-l border-[#e4e6eb] dark:border-[#393a3b]">
+      <div className="relative z-50 w-80 max-w-[85vw] h-[100dvh] bg-white dark:bg-[#242526] shadow-2xl flex flex-col transition-all animate-in slide-in-from-right duration-250 border-l border-[#e4e6eb] dark:border-[#393a3b]">
         {/* Drawer Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-[#e4e6eb] dark:border-[#393a3b]">
           <h2 className="text-lg font-bold text-[#050505] dark:text-[#e4e6eb]">

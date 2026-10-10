@@ -9,3 +9,4 @@ export * from './components/ChatDock';
 export * from './components/ChatAvatar';
 export * from './components/MessengerDropdown';
 export * from './components/messages/MessagesLayout';
+export * from './components/messages/MessagesSkeleton';

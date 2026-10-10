@@ -14,7 +14,7 @@ import {
 import { ROUTES } from '@/constants/routes';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { useAuth } from '@/hooks/useAuth';
-import { useFriends } from '@/features/friends/hooks/useFriends';
+import { usePendingRequestsCount } from '@/features/friends/hooks/useFriendRequests';
 import { useBookmarks } from '@/features/bookmark/hooks/useBookmarks';
 import { useMyGroups } from '@/features/groups/hooks/useMyGroups';
 import { UserProfileResponse } from '@/features/friends/types/friends.types';
@@ -41,9 +41,10 @@ export function ProfileSidebar({
   const displayUser = targetUser || authUser;
   const isOwner = Boolean(
     !targetUser ||
-      (authUser &&
-        targetUser &&
-        (authUser.id === targetUser.id || authUser.username === targetUser.username))
+    (authUser &&
+      targetUser &&
+      (authUser.id === targetUser.id ||
+        authUser.username === targetUser.username))
   );
 
   const effectiveBaseUrl =
@@ -54,12 +55,12 @@ export function ProfileSidebar({
         ? `/${displayUser.username}`
         : '/profile');
 
-  const { data: friendsData } = useFriends(undefined, isAuthenticated && isOwner);
+  const { data: pendingRequestsCount } = usePendingRequestsCount(
+    Boolean(isAuthenticated && isOwner)
+  );
   const { data: bookmarkData } = useBookmarks({ limit: 1 });
   const { data: myGroupsData } = useMyGroups({ limit: 10 });
 
-  const totalFriends =
-    friendsData?.pages.flatMap((page) => page?.items || []).length;
   const totalBookmarks = bookmarkData?.meta?.total;
   const myGroups =
     myGroupsData?.pages.flatMap((page) => page?.items || []) || [];
@@ -76,21 +77,29 @@ export function ProfileSidebar({
     {
       id: 'profile-friends',
       label: isOwner
-        ? (locale === 'bn' ? 'আমার বন্ধুরা' : 'Friends')
-        : (locale === 'bn' ? 'বন্ধুরা' : 'Friends'),
+        ? locale === 'bn'
+          ? 'আমার বন্ধুরা'
+          : 'Friends'
+        : locale === 'bn'
+          ? 'বন্ধুরা'
+          : 'Friends',
       href: `${effectiveBaseUrl}?tab=friend&from=nav`,
       icon: Users,
       iconBg: 'bg-indigo-600 text-white',
       count:
-        isOwner && typeof totalFriends === 'number' && totalFriends > 0
-          ? totalFriends
+        isOwner && typeof pendingRequestsCount === 'number' && pendingRequestsCount > 0
+          ? pendingRequestsCount
           : undefined,
     },
     {
       id: 'profile-groups',
       label: isOwner
-        ? (locale === 'bn' ? 'আমার গ্রুপসমূহ' : 'My Groups')
-        : (locale === 'bn' ? 'গ্রুপসমূহ' : 'Groups'),
+        ? locale === 'bn'
+          ? 'আমার গ্রুপসমূহ'
+          : 'My Groups'
+        : locale === 'bn'
+          ? 'গ্রুপসমূহ'
+          : 'Groups',
       href: `${effectiveBaseUrl}?tab=group&from=nav`,
       icon: Users2,
       iconBg: 'bg-teal-500 text-white',
@@ -122,7 +131,8 @@ export function ProfileSidebar({
             : []),
           {
             id: 'profile-settings',
-            label: locale === 'bn' ? 'অ্যাকাউন্ট ও সেটিংস' : 'Privacy & Settings',
+            label:
+              locale === 'bn' ? 'অ্যাকাউন্ট ও সেটিংস' : 'Privacy & Settings',
             href: ROUTES.SETTINGS,
             icon: Settings,
             iconBg: 'bg-gray-600 text-white',
@@ -134,7 +144,7 @@ export function ProfileSidebar({
   const userHeader = displayUser ? (
     <Link
       href={effectiveBaseUrl}
-      className="items-center gap-3 p-3 rounded-2xl bg-[#e4e6eb]/60 hover:bg-[#e4e6eb] dark:bg-[#3a3b3c]/60 dark:hover:bg-[#3a3b3c] mb-2 shadow-2xs transition-colors block"
+      className="items-center gap-3 p-3 rounded-2xl bg-[#e4e6eb]/60 hover:bg-[#e4e6eb] dark:bg-[#3a3b3c]/60 dark:hover:bg-[#3a3b3c] mb-2 shadow-2xs transition-colors flex "
       title={locale === 'bn' ? 'প্রোফাইল দেখুন' : 'View Profile'}
     >
       <div className="relative h-11 w-11 shrink-0 rounded-full bg-primary-500 text-white font-bold text-base flex items-center justify-center overflow-hidden shadow-xs">
@@ -155,7 +165,9 @@ export function ProfileSidebar({
           {displayUser.name}
         </p>
         <p className="text-xs text-[#65676b] dark:text-[#b0b3b8] truncate">
-          {displayUser.username ? `@${displayUser.username}` : (displayUser as any).email || ''}
+          {displayUser.username
+            ? `@${displayUser.username}`
+            : (displayUser as any).email || ''}
         </p>
       </div>
     </Link>

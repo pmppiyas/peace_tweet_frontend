@@ -13,7 +13,13 @@ const normalizeUploadUrl = (url: string): string => {
   if (url.startsWith('http://') || url.startsWith('https://')) {
     return url;
   }
-  const backendOrigin = siteConfig.apiUrl.replace(/\/api\/v1\/?$/, '');
+  let backendOrigin = siteConfig.apiUrl.replace(/\/api\/v1\/?$/, '');
+  if (
+    backendOrigin.includes('localhost') ||
+    backendOrigin.includes('127.0.0.1')
+  ) {
+    backendOrigin = 'https://peace-tweet-backned.onrender.com';
+  }
   return `${backendOrigin}${url.startsWith('/') ? '' : '/'}${url}`;
 };
 

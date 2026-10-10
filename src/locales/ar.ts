@@ -4,6 +4,7 @@ export const ar = {
     duas: 'جميع الأدعية',
     categories: 'التصنيفات',
     bookmarks: 'المحفوظات',
+    messages: 'المحادثات',
     search: 'بحث',
     login: 'تسجيل الدخول',
     join: 'انضم الآن',
