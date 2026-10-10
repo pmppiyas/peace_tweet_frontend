@@ -77,12 +77,6 @@ export function Navbar() {
 
   const navCenterLinks = [
     { id: 'nav-home', label: t('nav.home'), href: ROUTES.HOME, icon: Home },
-    {
-      id: 'nav-messages',
-      label: t('nav.messages'),
-      href: isAuthenticated ? ROUTES.MESSAGES : ROUTES.LOGIN,
-      icon: MessageCircle,
-    },
     { id: 'nav-duas', label: t('nav.duas'), href: ROUTES.DUAS, icon: Compass },
     {
       id: 'nav-categories',
@@ -351,11 +345,11 @@ export function Navbar() {
           'hidden md:block'
       )}
     >
-      <Container size="xl">
-        {/* Header container */}
-        <div className="relative flex items-center justify-between h-14 gap-2">
-          {/* Left Column: Brand Logo + Search Button (+ Back Button on subroutes) */}
-          <div className="flex items-center gap-2 shrink-0 z-10">
+      <Container size="xl" className="px-1 sm:px-6 lg:px-8">
+        {/* Header container matching 3-column layout of the page */}
+        <div className="flex items-center justify-between xl:justify-center h-14 gap-2 lg:gap-6">
+          {/* Left Column: Brand Logo + Search Button (Matches Sidebar: lg:w-60 xl:w-64) */}
+          <div className="flex items-center gap-2 shrink-0 lg:w-60 xl:w-64 z-10">
             <Link href="/" className="flex items-center gap-2 group">
               <div className="relative h-10 w-10 shrink-0 rounded-full overflow-hidden shadow-xs group-hover:scale-105 transition-transform">
                 <Image
@@ -394,21 +388,19 @@ export function Navbar() {
             )}
           </div>
 
-          {/* Center Column: Navigation Tabs (Desktop only: lg:grid, hidden on login page) */}
+          {/* Center Column: Navigation Tabs (Matches Feed: w-full max-w-2xl min-w-0) */}
           {!isLoginPage && (
-            <div className="absolute inset-x-0 mx-auto hidden lg:flex justify-center h-full max-w-2xl pointer-events-none px-2 sm:px-0">
-              <nav className="grid grid-cols-5 w-full h-full gap-1.5 pointer-events-auto">
+            <div className="hidden lg:flex w-full max-w-2xl min-w-0 h-full">
+              <nav className="grid grid-cols-4 w-full h-full gap-1">
                 {navCenterLinks.map((item) => {
                   const Icon = item.icon;
                   const isActive =
                     item.id === 'nav-bookmarks'
                       ? pathname.startsWith(ROUTES.SAVED)
-                      : item.id === 'nav-messages'
-                        ? isMessagesActive
-                        : item.href === '/'
-                          ? pathname === '/'
-                          : pathname.startsWith(item.href) &&
-                            item.href !== ROUTES.LOGIN;
+                      : item.href === '/'
+                        ? pathname === '/'
+                        : pathname.startsWith(item.href) &&
+                          item.href !== ROUTES.LOGIN;
 
                   return (
                     <Link
@@ -432,11 +424,6 @@ export function Navbar() {
                               : 'stroke-[2.1]'
                           )}
                         />
-                        {item.id === 'nav-messages' && unreadMessagesCount > 0 && (
-                          <span className="absolute -top-1.5 -right-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold text-white shadow-xs">
-                            {unreadMessagesCount > 9 ? '9+' : unreadMessagesCount}
-                          </span>
-                        )}
                       </div>
                       {isActive && (
                         <span className="absolute -bottom-1 left-4 right-4 h-[3px] bg-primary-500 dark:bg-primary-400 rounded-t-md" />
@@ -448,8 +435,10 @@ export function Navbar() {
             </div>
           )}
 
-          {/* Right Column: Circular Action Buttons */}
-          <div className="z-10 shrink-0">{rightActionButtons}</div>
+          {/* Right Column: Circular Action Buttons (Matches RightSidebar: lg:w-60 xl:w-80) */}
+          <div className="flex items-center justify-end shrink-0 lg:w-60 xl:w-80 z-10">
+            {rightActionButtons}
+          </div>
         </div>
       </Container>
 

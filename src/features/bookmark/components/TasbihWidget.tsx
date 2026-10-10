@@ -5,9 +5,6 @@ import {
   RotateCcw,
   Volume2,
   VolumeX,
-  Sparkles,
-  ChevronLeft,
-  ChevronRight,
   CheckCircle2,
 } from 'lucide-react';
 import { useLanguage } from '@/providers/LanguageProvider';
@@ -15,65 +12,6 @@ import { cn } from '@/lib/utils/cn';
 
 export const TASBIH_TARGETS = [3, 7, 11, 15, 33, 100] as const;
 export type TasbihTarget = (typeof TASBIH_TARGETS)[number];
-
-export const DHIKR_PRESETS = [
-  {
-    id: 'subhanallah',
-    arabic: 'سُبْحَانَ اللَّهِ',
-    bn: 'সুবহানাল্লাহ',
-    en: 'SubhanAllah',
-    meaningBn: 'আল্লাহ অতি পবিত্র ও মহিমান্বিত',
-    meaningEn: 'Glory be to Allah',
-  },
-  {
-    id: 'alhamdulillah',
-    arabic: 'الْحَمْدُ لِلَّهِ',
-    bn: 'আলহামদুলিল্লাহ',
-    en: 'Alhamdulillah',
-    meaningBn: 'সকল প্রশংসা আল্লাহর জন্য',
-    meaningEn: 'All praise is due to Allah',
-  },
-  {
-    id: 'allahuakbar',
-    arabic: 'اللَّهُ أَكْبَرُ',
-    bn: 'আল্লাহু আকবার',
-    en: 'Allahu Akbar',
-    meaningBn: 'আল্লাহ সর্বশ্রেষ্ঠ',
-    meaningEn: 'Allah is the Greatest',
-  },
-  {
-    id: 'lailahaillallah',
-    arabic: 'لَا إِلَهَ إِلَّا اللَّهُ',
-    bn: 'লা ইলাহা ইল্লাল্লাহ',
-    en: 'La ilaha illallah',
-    meaningBn: 'আল্লাহ ব্যতীত কোনো উপাস্য নেই',
-    meaningEn: 'There is no god but Allah',
-  },
-  {
-    id: 'astaghfirullah',
-    arabic: 'أَسْتَغْفِرُ اللَّهَ',
-    bn: 'আস্তাগফিরুল্লাহ',
-    en: 'Astaghfirullah',
-    meaningBn: 'আমি আল্লাহর নিকট ক্ষমা প্রার্থনা করছি',
-    meaningEn: 'I seek forgiveness from Allah',
-  },
-  {
-    id: 'darood',
-    arabic: 'اللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ',
-    bn: 'দরূদ শরীফ',
-    en: 'Salawat on Prophet',
-    meaningBn: 'হে আল্লাহ, মুহাম্মাদের ওপর রহমত বর্ষণ করুন',
-    meaningEn: 'O Allah, send blessings upon Muhammad',
-  },
-  {
-    id: 'lahawla',
-    arabic: 'لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ',
-    bn: 'লা হাওলা ওয়া লা কুওয়াতা ইল্লা বিল্লাহ',
-    en: 'La hawla wa la quwwata illa billah',
-    meaningBn: 'আল্লাহ ব্যতীত কোনো শক্তি বা সামর্থ্য নেই',
-    meaningEn: 'There is no power nor strength except with Allah',
-  },
-];
 
 interface TasbihWidgetProps {
   className?: string;
@@ -84,7 +22,6 @@ export function TasbihWidget({ className }: TasbihWidgetProps) {
   const [target, setTarget] = useState<TasbihTarget>(33);
   const [count, setCount] = useState<number>(0);
   const [lap, setLap] = useState<number>(1);
-  const [selectedZikrIndex, setSelectedZikrIndex] = useState<number>(0);
   const [isSoundEnabled, setIsSoundEnabled] = useState<boolean>(true);
   const [totalToday, setTotalToday] = useState<number>(0);
   const [isTargetReached, setIsTargetReached] = useState<boolean>(false);
@@ -206,8 +143,6 @@ export function TasbihWidget({ className }: TasbihWidgetProps) {
     setIsTargetReached(false);
   };
 
-  const currentZikr = DHIKR_PRESETS[selectedZikrIndex];
-
   // Circle progress calculation
   const radius = 64;
   const circumference = 2 * Math.PI * radius;
@@ -291,43 +226,6 @@ export function TasbihWidget({ className }: TasbihWidgetProps) {
                 </button>
               );
             })}
-          </div>
-        </div>
-
-        {/* Dhikr Switcher */}
-        <div className="mt-3.5 p-2.5 rounded-2xl bg-[#f0f2f5]/60 dark:bg-[#3a3b3c]/40 border border-[#e4e6eb]/80 dark:border-[#393a3b]">
-          <div className="flex items-center justify-between">
-            <button
-              type="button"
-              onClick={() =>
-                setSelectedZikrIndex(
-                  (prev) => (prev - 1 + DHIKR_PRESETS.length) % DHIKR_PRESETS.length
-                )
-              }
-              className="p-1 rounded-full text-[#65676b] hover:bg-white dark:text-[#b0b3b8] dark:hover:bg-[#242526] transition-colors"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-            <div className="text-center px-1">
-              <p className="font-arabic text-base sm:text-lg font-bold text-[#050505] dark:text-[#e4e6eb]">
-                {currentZikr.arabic}
-              </p>
-              <p className="text-xs font-semibold text-primary-600 dark:text-primary-400">
-                {locale === 'bn' ? currentZikr.bn : currentZikr.en}
-              </p>
-              <p className="text-[10px] text-[#65676b] dark:text-[#b0b3b8] line-clamp-1 mt-0.5">
-                {locale === 'bn' ? currentZikr.meaningBn : currentZikr.meaningEn}
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() =>
-                setSelectedZikrIndex((prev) => (prev + 1) % DHIKR_PRESETS.length)
-              }
-              className="p-1 rounded-full text-[#65676b] hover:bg-white dark:text-[#b0b3b8] dark:hover:bg-[#242526] transition-colors"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </button>
           </div>
         </div>
       </div>

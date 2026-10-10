@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { ROUTES } from '@/constants/routes';
 import { useSavedItems, useUpdateTimeSlotMutation } from '../hooks/useBookmarks';
 import { bookmarkApi } from '../api/bookmark.api';
@@ -34,7 +34,6 @@ export function BookmarkList({
   initialType = 'ALL',
 }: BookmarkListProps = {}) {
   const { locale } = useLanguage();
-  const router = useRouter();
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const urlSlot = searchParams?.get('slot') as TimeSlot | 'all' | null;
@@ -66,11 +65,31 @@ export function BookmarkList({
     initialType
   );
 
-  const { data, isLoading, isError } = useSavedItems({
+  const isRoutineSlot = selectedSlot !== 'all';
+
+  // 1. Primary Query for currently selected routine slot
+  const slotQuery = useSavedItems({
     search: effectiveSearch || undefined,
     timeSlot: selectedSlot,
     type: selectedType,
   });
+
+  // 2. Query for 'all' saved items to fallback if routine slot is empty
+  const allQuery = useSavedItems({
+    search: effectiveSearch || undefined,
+    timeSlot: 'all',
+    type: selectedType,
+  });
+
+  const isSlotEmpty =
+    isRoutineSlot &&
+    !slotQuery.isLoading &&
+    !slotQuery.isError &&
+    (slotQuery.data?.items?.length || 0) === 0 &&
+    !effectiveSearch;
+
+  const shouldFallbackToAll =
+    isSlotEmpty && (allQuery.data?.items?.length || 0) > 0;
 
   const updateTimeSlotMutation = useUpdateTimeSlotMutation();
 
@@ -94,7 +113,11 @@ export function BookmarkList({
     }
   };
 
-  const savedItems = (data?.items || []) as SavedFeedItem[];
+  const isLoading =
+    slotQuery.isLoading || (isSlotEmpty && allQuery.isLoading);
+  const isError = shouldFallbackToAll ? allQuery.isError : slotQuery.isError;
+  const savedItems =
+    (shouldFallbackToAll ? allQuery.data?.items : slotQuery.data?.items) || [];
 
   return (
     <div className="space-y-4">
@@ -173,6 +196,18 @@ export function BookmarkList({
           {locale === 'bn' ? 'পোস্টসমূহ' : 'Posts'}
         </button>
       </div>
+
+      {/* Fallback Banner when routine time has no items */}
+      {shouldFallbackToAll && (
+        <div className="flex items-center gap-2.5 p-3 sm:p-3.5 rounded-2xl bg-amber-50/90 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-900/60 text-amber-900 dark:text-amber-200 text-xs sm:text-sm animate-in fade-in duration-200">
+          <span className="text-base sm:text-lg shrink-0">✨</span>
+          <p className="leading-snug font-medium">
+            {locale === 'bn'
+              ? `${TIME_SLOTS.find((s) => s.id === selectedSlot)?.labelBn || 'এই'} রুটিন সময়ে কোনো সংরক্ষিত পোস্ট নেই — আপনার সকল সংরক্ষিত তালিকা দেখানো হচ্ছে।`
+              : `No saved items found for ${TIME_SLOTS.find((s) => s.id === selectedSlot)?.labelEn || 'this'} routine slot — showing all saved items.`}
+          </p>
+        </div>
+      )}
 
       {/* 3. Main Reading Feed of Saved Items */}
       {isLoading ? (

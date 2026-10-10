@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LucideIcon, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
-import { soundEffects } from '@/lib/sound/soundEffects';
 
 export interface SidebarNavItem {
   id: string;
@@ -103,10 +102,7 @@ export function SectionSidebar({
             <Link
               key={item.id}
               href={item.href}
-              onClick={(e) => {
-                if (!isActive) soundEffects.playTab();
-                item.onClick?.();
-              }}
+              onClick={item.onClick}
               className={cn(
                 'flex items-center justify-between rounded-xl px-2.5 py-2 transition-colors',
                 isActive

@@ -11,7 +11,6 @@ import { SavedSidebar } from './SavedSidebar';
 import { TasbihWidget } from './TasbihWidget';
 import { TIME_SLOTS, getCurrentTimeSlot } from '@/types/saved.types';
 import { cn } from '@/lib/utils/cn';
-import { soundEffects } from '@/lib/sound/soundEffects';
 
 export interface SavedLayoutProps {
   children: React.ReactNode;
@@ -78,9 +77,6 @@ export function SavedLayout({ children }: SavedLayoutProps) {
                   <Link
                     key={tab.id}
                     href={tab.href}
-                    onClick={() => {
-                      if (!isActive) soundEffects.playTab();
-                    }}
                     className={cn(
                       'flex items-center gap-1.5 py-1.5 px-3.5 rounded-full text-xs font-bold whitespace-nowrap transition-colors',
                       isActive
