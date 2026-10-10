@@ -9,6 +9,7 @@ import { PostType } from '../types/feed.types';
 import { AlertCircle, RefreshCw, Sparkles, BookOpen, PenTool, HelpCircle, Megaphone } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { useLanguage } from '@/providers/LanguageProvider';
+import { soundEffects } from '@/lib/sound/soundEffects';
 
 export function Feed() {
   const [activeType, setActiveType] = useState<PostType | undefined>(undefined);
@@ -68,7 +69,10 @@ export function Feed() {
             <button
               key={tab.label}
               type="button"
-              onClick={() => setActiveType(tab.type)}
+              onClick={() => {
+                if (activeType !== tab.type) soundEffects.playTab();
+                setActiveType(tab.type);
+              }}
               className={cn(
                 'inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition-all select-none',
                 isActive

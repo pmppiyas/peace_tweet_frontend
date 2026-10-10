@@ -306,7 +306,15 @@ export function DuaDetail({ dua }: { dua: Dua }) {
 
           <ShareButton title={dua.title || dua.meaning || 'Dua'} text={dua.meaningBangla || dua.meaning} size="sm" variant="ghost" showLabel label={t('post.actions.share')} />
           <CopyButton text={fullText} size="sm" variant="ghost" showLabel label={t('post.actions.copy')} />
-          <BookmarkButton duaId={dua.id} initialIsSaved={dua.isSaved} size="sm" variant="ghost" showLabel label={t('post.actions.save')} />
+          <BookmarkButton
+            duaId={dua.id}
+            initialIsSaved={dua.isSaved}
+            duaTitle={dua.title || dua.meaning}
+            size="sm"
+            variant="ghost"
+            showLabel
+            label={t('post.actions.save')}
+          />
         </div>
 
         {showComments && (

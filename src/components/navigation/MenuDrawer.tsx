@@ -119,7 +119,7 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
     },
     {
       id: 'menu-bookmarks',
-      label: locale === 'bn' ? 'সংরক্ষিত আইটেম' : 'Saved Bookmarks',
+      label: locale === 'bn' ? 'সংরক্ষিত আইটেম' : 'Saved',
       href: isAuthenticated ? ROUTES.SAVED : ROUTES.LOGIN,
       icon: Bookmark,
       iconBg: 'bg-purple-600 text-white',

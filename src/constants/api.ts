@@ -11,6 +11,8 @@ export const API_ENDPOINTS = {
     ME: '/users/me',
     CHANGE_PASSWORD: '/users/change-password',
     SAVED_DUAS: '/users/me/saved-duas',
+    SAVED: '/users/me/saved',
+    UPDATE_TIME_SLOT: '/saved/time-slot',
     PROFILE: (username: string) => `/users/${username}`,
   },
   DUAS: {

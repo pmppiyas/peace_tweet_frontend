@@ -17,6 +17,7 @@ import {
 import { ROUTES } from '@/constants/routes';
 import { useSearchHistory } from '../hooks/useSearchHistory';
 import { useSearchGlobal } from '../hooks/useSearchGlobal';
+import { soundEffects } from '@/lib/sound/soundEffects';
 import {
   SearchEntityType,
   SearchHistoryItem,
@@ -357,6 +358,7 @@ export function SearchDrawer({
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
+                          soundEffects.playDelete();
                           deleteHistoryItem(item.id);
                         }}
                         aria-label="Remove search"

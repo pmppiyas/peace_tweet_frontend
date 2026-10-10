@@ -3,7 +3,6 @@
 import React from 'react';
 import {
   Home,
-  Compass,
   Bookmark,
   Layers,
   Settings,
@@ -114,7 +113,7 @@ export function Sidebar() {
     <SectionSidebar
       items={menuItems}
       showUserProfile={true}
-      className="w-72 xl:w-80"
+      className="sticky top-14 h-[calc(100vh-3.5rem)]"
     />
   );
 }

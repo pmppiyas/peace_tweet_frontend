@@ -11,6 +11,7 @@ import {
   PaginatedFriendsResponse,
 } from '../types/friends.types';
 import { friendsKeys } from './useFriends';
+import { soundEffects } from '@/lib/sound/soundEffects';
 
 export function useFriendActions() {
   const queryClient = useQueryClient();
@@ -32,6 +33,7 @@ export function useFriendActions() {
       return friendsApi.sendFriendRequest(receiverId);
     },
     onMutate: async ({ receiverId }) => {
+      soundEffects.playFriendRequest();
       await queryClient.cancelQueries({ queryKey: friendsKeys.status(receiverId) });
 
       const previousStatus = queryClient.getQueryData<FriendshipStatusResponse>(
@@ -74,6 +76,7 @@ export function useFriendActions() {
       return friendsApi.cancelFriendRequest(requestId);
     },
     onMutate: async ({ requestId, targetUserId }) => {
+      soundEffects.playCancel();
       if (targetUserId) {
         await queryClient.cancelQueries({ queryKey: friendsKeys.status(targetUserId) });
         queryClient.setQueryData<FriendshipStatusResponse>(
@@ -121,6 +124,7 @@ export function useFriendActions() {
       return friendsApi.acceptFriendRequest(requestId);
     },
     onMutate: async ({ requestId, senderUserId }) => {
+      soundEffects.playFriendAccept();
       if (senderUserId) {
         await queryClient.cancelQueries({ queryKey: friendsKeys.status(senderUserId) });
         queryClient.setQueryData<FriendshipStatusResponse>(
@@ -175,6 +179,7 @@ export function useFriendActions() {
       return friendsApi.rejectFriendRequest(requestId);
     },
     onMutate: async ({ requestId, senderUserId }) => {
+      soundEffects.playCancel();
       if (senderUserId) {
         await queryClient.cancelQueries({ queryKey: friendsKeys.status(senderUserId) });
         queryClient.setQueryData<FriendshipStatusResponse>(
@@ -222,6 +227,7 @@ export function useFriendActions() {
       return friendsApi.unfriend(targetUserId);
     },
     onMutate: async ({ targetUserId }) => {
+      soundEffects.playCancel();
       await queryClient.cancelQueries({ queryKey: friendsKeys.status(targetUserId) });
       queryClient.setQueryData<FriendshipStatusResponse>(
         friendsKeys.status(targetUserId),

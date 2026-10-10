@@ -31,6 +31,7 @@ import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/constants/routes';
 import { useUiStore } from '@/stores/uiStore';
 import { FEELINGS, getFeelingById } from '../constants/feelings';
+import { soundEffects } from '@/lib/sound/soundEffects';
 
 const BLOOD_GROUPS: { value: BloodGroup; label: string }[] = [
   { value: 'A_POSITIVE', label: 'A+' },
@@ -363,7 +364,10 @@ export function PostComposer() {
           ) : (
             <button
               type="button"
-              onClick={() => setIsOpen(true)}
+              onClick={() => {
+                soundEffects.playTab();
+                setIsOpen(true);
+              }}
               className="h-9 sm:h-10 flex-1 min-w-0 rounded-full bg-[#f0f2f5] px-3.5 sm:px-4 text-left text-xs sm:text-sm text-[#65676b] hover:bg-[#e4e6eb] transition-colors dark:bg-[#3a3b3c] dark:text-[#b0b3b8] dark:hover:bg-[#4e4f50] flex items-center justify-between gap-2 overflow-hidden"
             >
               <span className="truncate min-w-0 block">
@@ -456,6 +460,7 @@ export function PostComposer() {
             <button
               type="button"
               onClick={() => {
+                if (postType !== 'TEXT') soundEffects.playTab();
                 setPostType('TEXT');
                 setErrorMessage(null);
               }}
@@ -473,6 +478,7 @@ export function PostComposer() {
             <button
               type="button"
               onClick={() => {
+                if (postType !== 'DUA') soundEffects.playTab();
                 setPostType('DUA');
                 setErrorMessage(null);
               }}
@@ -490,6 +496,7 @@ export function PostComposer() {
             <button
               type="button"
               onClick={() => {
+                if (postType !== 'BLOOD_REQUEST') soundEffects.playTab();
                 setPostType('BLOOD_REQUEST');
                 setErrorMessage(null);
               }}

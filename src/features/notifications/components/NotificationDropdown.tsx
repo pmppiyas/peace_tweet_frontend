@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/constants/routes';
+import { soundEffects } from '@/lib/sound/soundEffects';
 import {
   NotificationFilter,
   NotificationItem,
@@ -222,6 +223,7 @@ export function NotificationDropdown({
 
   const handleDelete = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
+    soundEffects.playDelete();
     deleteMutation.mutate(id);
   };
 

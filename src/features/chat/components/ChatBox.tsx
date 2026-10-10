@@ -26,6 +26,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { ROUTES } from '@/constants/routes';
 import { cn } from '@/lib/utils/cn';
+import { soundEffects } from '@/lib/sound/soundEffects';
 
 interface ChatBoxProps {
   activeChat: ActiveChat;
@@ -129,6 +130,7 @@ export function ChatBox({ activeChat, isMobileActive = true }: ChatBoxProps) {
   };
 
   const handleDeleteMessage = (messageId: string) => {
+    soundEffects.playDelete();
     // Instant delete without confirmation dialog
     deleteMessage(messageId).catch((err) => {
       console.error('Failed to delete message:', err);

@@ -6,6 +6,7 @@ import { CreatePostInput, FeedItem, FeedResponse } from '../types/feed.types';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import { ROUTES } from '@/constants/routes';
+import { soundEffects } from '@/lib/sound/soundEffects';
 
 export function usePostActions() {
   const queryClient = useQueryClient();
@@ -60,6 +61,9 @@ export function usePostActions() {
       }
     },
     onMutate: async ({ postId, hasReacted }) => {
+      if (!hasReacted) {
+        soundEffects.playReaction();
+      }
       await queryClient.cancelQueries({ queryKey: ['feed'] });
 
       // Snapshot previous feed state
@@ -116,6 +120,9 @@ export function usePostActions() {
       }
     },
     onMutate: async ({ postId, hasSaved }) => {
+      if (!hasSaved) {
+        soundEffects.playSave();
+      }
       await queryClient.cancelQueries({ queryKey: ['feed'] });
 
       const previousFeed = queryClient.getQueriesData({ queryKey: ['feed'] });
@@ -145,6 +152,8 @@ export function usePostActions() {
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['feed'] });
       queryClient.invalidateQueries({ queryKey: ['bookmarks'] });
+      queryClient.invalidateQueries({ queryKey: ['saved-items'] });
+      queryClient.invalidateQueries({ queryKey: ['saved-duas'] });
     },
   });
 
@@ -154,6 +163,7 @@ export function usePostActions() {
       return feedApi.createPost(input);
     },
     onSuccess: (response) => {
+      soundEffects.playPost();
       const newPost = response?.data;
       if (newPost) {
         queryClient.setQueriesData<InfiniteData<FeedResponse>>(
@@ -189,6 +199,7 @@ export function usePostActions() {
       return feedApi.deletePost(postId);
     },
     onMutate: async (postId: string) => {
+      soundEffects.playDelete();
       await queryClient.cancelQueries({ queryKey: ['feed'] });
       await queryClient.cancelQueries({ queryKey: ['groups'] });
 

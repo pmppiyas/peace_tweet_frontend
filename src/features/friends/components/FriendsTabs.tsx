@@ -5,6 +5,7 @@ import { Users, UserPlus, Send } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { usePendingRequestsCount } from '../hooks/useFriendRequests';
+import { soundEffects } from '@/lib/sound/soundEffects';
 
 export type FriendsTabValue = 'friends' | 'requests' | 'sent';
 
@@ -54,7 +55,12 @@ export function FriendsTabs({ activeTab, onTabChange }: FriendsTabsProps) {
         return (
           <button
             key={tab.id}
-            onClick={() => onTabChange(tab.id)}
+            onClick={() => {
+              if (activeTab !== tab.id) {
+                soundEffects.playTab();
+              }
+              onTabChange(tab.id);
+            }}
             className={cn(
               'flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap min-h-[40px]',
               isActive

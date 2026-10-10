@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import { ROUTES } from '@/constants/routes';
 import { useUiStore } from '@/stores/uiStore';
+import { soundEffects } from '@/lib/sound/soundEffects';
 
 export function useShare() {
   const queryClient = useQueryClient();
@@ -81,6 +82,7 @@ export function useShare() {
       }
     },
     onSuccess: (data, variables) => {
+      soundEffects.playPost();
       setIsUploadingPost(false);
       triggerPostSuccess(
         variables.target === 'GROUP'

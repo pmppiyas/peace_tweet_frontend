@@ -40,6 +40,7 @@ export interface FeedStats {
 export interface FeedViewerState {
   hasReacted: boolean;
   hasSaved: boolean;
+  timeSlot?: 'morning' | 'noon' | 'afternoon' | 'evening' | 'night' | null;
 }
 
 export interface FeedItem {

@@ -5,6 +5,7 @@ import { feedApi } from '../api/feed.api';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import { ROUTES } from '@/constants/routes';
+import { soundEffects } from '@/lib/sound/soundEffects';
 
 export function useComments(postId: string, isEnabled = false) {
   const queryClient = useQueryClient();
@@ -30,6 +31,7 @@ export function useComments(postId: string, isEnabled = false) {
       return feedApi.createComment(postId, content);
     },
     onSuccess: (res) => {
+      soundEffects.playPost();
       // Invalidate comments for this post
       queryClient.invalidateQueries({ queryKey: ['comments', postId] });
       // Invalidate feed to update comment counts

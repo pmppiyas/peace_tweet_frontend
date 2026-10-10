@@ -77,13 +77,14 @@ export const feedApi = {
     return data;
   },
 
-  // Save a post to bookmarks
+  // Save a post to saved collection
   savePost: async (
     postId: string,
-  ): Promise<ApiResponse<{ hasSaved: boolean }>> => {
-    const { data } = await apiClient.post<ApiResponse<{ hasSaved: boolean }>>(
-      API_ENDPOINTS.POSTS.SAVE(postId),
-    );
+    timeSlot?: string,
+  ): Promise<ApiResponse<{ hasSaved: boolean; timeSlot?: string }>> => {
+    const { data } = await apiClient.post<
+      ApiResponse<{ hasSaved: boolean; timeSlot?: string }>
+    >(API_ENDPOINTS.POSTS.SAVE(postId), { timeSlot });
     return data;
   },
 

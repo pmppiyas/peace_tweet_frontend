@@ -30,14 +30,19 @@ import {
   MoreHorizontal,
   Trash2,
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/constants/routes';
+import { TimeSlotPicker, useUpdateTimeSlotMutation, bookmarkApi } from '@/features/bookmark';
+import { TimeSlot } from '@/types/saved.types';
+import { soundEffects } from '@/lib/sound/soundEffects';
 
 interface FeedItemProps {
   post: FeedItemType;
 }
 
 export function FeedItem({ post }: FeedItemProps) {
+  const router = useRouter();
   const { t, locale } = useLanguage();
   const { user } = useAuth();
   const { toggleReaction, toggleSave, deletePost, isDeletingPost } =
@@ -47,6 +52,44 @@ export function FeedItem({ post }: FeedItemProps) {
   const [showMenu, setShowMenu] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isTimePickerOpen, setIsTimePickerOpen] = useState(false);
+
+  const updateTimeSlotMutation = useUpdateTimeSlotMutation();
+  const currentTimeSlot =
+    (post as any).timeSlot || post.viewer?.timeSlot || null;
+
+  const isDuaContent =
+    (post as any).savedType === 'DUA' ||
+    ((post.type as any) === 'DUA' && (post as any).dua?.id === post.id);
+
+  const handleToggleSave = () => {
+    if (!user) {
+      router.push(ROUTES.LOGIN);
+      return;
+    }
+    if (post.viewer?.hasSaved) {
+      setIsTimePickerOpen(true);
+    } else {
+      toggleSave(post.id, false);
+      setIsTimePickerOpen(true);
+    }
+  };
+
+  const handleSelectTimeSlot = (slot: TimeSlot | null) => {
+    updateTimeSlotMutation.mutate({
+      id: post.id,
+      type: isDuaContent ? 'DUA' : 'POST',
+      timeSlot: slot,
+    });
+  };
+
+  const handleRemoveFromSaved = () => {
+    if (isDuaContent) {
+      bookmarkApi.unsaveDua(post.id);
+    }
+    toggleSave(post.id, true);
+  };
+
   const feelingItem = getFeelingById(post.feeling);
 
   const {
@@ -345,9 +388,9 @@ export function FeedItem({ post }: FeedItemProps) {
         {/* Save */}
         <button
           type="button"
-          onClick={() => toggleSave(post.id, !!post.viewer?.hasSaved)}
+          onClick={handleToggleSave}
           className={cn(
-            'flex items-center justify-center gap-1 sm:gap-1.5 py-2 px-1 rounded-lg transition-colors select-none whitespace-nowrap',
+            'flex items-center justify-center gap-1 sm:gap-1.5 py-2 px-1 rounded-lg transition-colors select-none whitespace-nowrap cursor-pointer',
             post.viewer?.hasSaved
               ? 'text-amber-600 dark:text-amber-400 bg-amber-50/50 dark:bg-amber-950/20'
               : 'text-[#65676b] hover:bg-[#f0f2f5] hover:text-[#050505] dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] dark:hover:text-[#e4e6eb]'
@@ -547,6 +590,7 @@ export function FeedItem({ post }: FeedItemProps) {
                 disabled={isDeletingPost}
                 onClick={() => {
                   setShowDeleteConfirm(false);
+                  soundEffects.playDelete();
                   deletePost(post.id);
                 }}
                 className="inline-flex items-center gap-1.5 rounded-xl bg-rose-600 px-4 py-2 text-xs font-semibold text-white hover:bg-rose-700 disabled:opacity-50 transition-colors shadow-xs"
@@ -575,6 +619,16 @@ export function FeedItem({ post }: FeedItemProps) {
         contentType="POST"
         contentId={targetPostId}
         previewData={sharePreviewData}
+      />
+
+      {/* Routine Time Slot Picker Modal */}
+      <TimeSlotPicker
+        isOpen={isTimePickerOpen}
+        onClose={() => setIsTimePickerOpen(false)}
+        selectedSlot={currentTimeSlot}
+        onSelectSlot={handleSelectTimeSlot}
+        onRemove={post.viewer?.hasSaved ? handleRemoveFromSaved : undefined}
+        itemTitle={post.dua?.title || post.content?.slice(0, 40) || undefined}
       />
     </Card>
   );
