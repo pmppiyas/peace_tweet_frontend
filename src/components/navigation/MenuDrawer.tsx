@@ -348,6 +348,27 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
                 </button>
               </div>
             </div>
+
+            {/* Legal / Policy Links */}
+            <div className="pt-2 px-2 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[11px] text-[#65676b] dark:text-[#b0b3b8]">
+              <Link
+                href="/terms?tab=terms"
+                onClick={onClose}
+                className="hover:underline hover:text-primary-600 dark:hover:text-primary-400"
+              >
+                {locale === 'bn' ? 'ব্যবহারের শর্তাবলী' : 'Terms of Service'}
+              </Link>
+              <span>•</span>
+              <Link
+                href="/terms?tab=privacy"
+                onClick={onClose}
+                className="hover:underline hover:text-primary-600 dark:hover:text-primary-400"
+              >
+                {locale === 'bn' ? 'গোপনীয়তা নীতি' : 'Privacy Policy'}
+              </Link>
+              <span>•</span>
+              <span>PeaceTweet © 2026</span>
+            </div>
           </div>
         </div>
       </div>

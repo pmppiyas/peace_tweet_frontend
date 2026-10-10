@@ -296,6 +296,24 @@ export function RegisterForm() {
               Continue with Google
             </button>
 
+            <p className="text-center text-[11px] text-gray-500 dark:text-gray-400 px-2 leading-relaxed">
+              By registering, you agree to our{' '}
+              <Link
+                href={ROUTES.TERMS}
+                className="text-primary-600 dark:text-primary-400 hover:underline font-semibold"
+              >
+                Terms of Service
+              </Link>{' '}
+              &amp;{' '}
+              <Link
+                href={ROUTES.PRIVACY}
+                className="text-primary-600 dark:text-primary-400 hover:underline font-semibold"
+              >
+                Privacy Policy
+              </Link>
+              .
+            </p>
+
             <p className="text-center text-xs text-gray-500 dark:text-gray-400 pt-1">
               Already have an account?{' '}
               <Link
