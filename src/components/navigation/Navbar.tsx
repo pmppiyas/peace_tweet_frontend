@@ -69,11 +69,17 @@ export function Navbar() {
     useUnreadNotificationsCount(isAuthenticated);
   const unreadMessagesCount = useTotalUnreadCount();
 
-  const isLoginPage =
+  const isAuthPage =
     pathname === ROUTES.LOGIN ||
     pathname === '/login' ||
     pathname === ROUTES.REGISTER ||
     pathname === '/register';
+
+  if (isAuthPage) {
+    return null;
+  }
+
+  const isLoginPage = false;
 
   const navCenterLinks = [
     { id: 'nav-home', label: t('nav.home'), href: ROUTES.HOME, icon: Home },

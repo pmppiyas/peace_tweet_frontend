@@ -32,6 +32,18 @@ export const authApi = {
     return data;
   },
 
+  googleLogin: async (
+    payload: string | { code?: string; idToken?: string; accessToken?: string; redirectUri?: string },
+  ): Promise<ApiResponse<AuthResponse>> => {
+    const body = typeof payload === 'string' ? { code: payload } : payload;
+    const { data } = await apiClient.post<ApiResponse<AuthResponse>>(
+      API_ENDPOINTS.AUTH.GOOGLE,
+      body,
+    );
+    return data;
+  },
+
+
   logout: async (): Promise<ApiResponse<{ message: string }>> => {
     const { data } = await apiClient.post<ApiResponse<{ message: string }>>(
       API_ENDPOINTS.AUTH.LOGOUT,

@@ -215,13 +215,15 @@ export function RegisterView() {
   const isSubmitting = isRegistering || isUploadingPhoto;
 
   return (
-    <div className="h-[calc(100dvh-3.5rem)] max-h-[calc(100dvh-3.5rem)] w-full overflow-hidden flex items-center justify-center bg-[#f0f2f5] dark:bg-[#18191a] px-4 sm:px-8 xl:px-14">
+    <div className="min-h-screen w-full flex items-center justify-center bg-[#f0f2f5] dark:bg-[#18191a] px-4 sm:px-8 xl:px-14 py-1 sm:py-2 lg:py-3">
       <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 xl:gap-16 items-center">
         {/* ================= LEFT SIDE: Minimalist & Iconic Brand ================= */}
         <div className="hidden lg:flex lg:col-span-7 flex-col justify-center pr-4 xl:pr-12 select-none">
-          <h1 className="text-5xl xl:text-6xl font-black tracking-tight text-primary-600 dark:text-primary-400 mb-3">
-            PeaceTweet
-          </h1>
+          <Link href="/" className="inline-block group w-fit">
+            <h1 className="text-5xl xl:text-6xl font-black tracking-tight text-primary-600 dark:text-primary-400 mb-3 group-hover:opacity-90 transition-opacity">
+              PeaceTweet
+            </h1>
+          </Link>
           <p className="text-2xl xl:text-[28px] font-normal text-[#1c1e21] dark:text-[#e4e6eb] leading-snug max-w-lg">
             {locale === 'bn'
               ? 'PeaceTweet-এ যুক্ত হয়ে পবিত্র ইসলামিক ভাবগাম্ভীর্যপূর্ণ পরিবেশে সহিহ দোয়া ও আত্মশুদ্ধিকর আলোচনায় অংশ নিন।'
@@ -232,8 +234,13 @@ export function RegisterView() {
         {/* ================= RIGHT SIDE: Scroll-free Step Card ================= */}
         <div className="w-full lg:col-span-5 flex flex-col items-center lg:items-end justify-center">
           {/* Mobile-only compact header */}
-          <div className="lg:hidden text-center mb-2">
-            <h2 className="text-base sm:text-lg font-bold text-[#1c1e21] dark:text-[#e4e6eb]">
+          <div className="lg:hidden text-center mb-4">
+            <Link href="/" className="inline-block mb-1">
+              <h1 className="text-3xl font-black text-primary-600 dark:text-primary-400">
+                PeaceTweet
+              </h1>
+            </Link>
+            <h2 className="text-sm font-semibold text-[#65676b] dark:text-[#b0b3b8]">
               {locale === 'bn' ? 'নতুন অ্যাকাউন্ট তৈরি করুন' : 'Create an Account'}
             </h2>
           </div>
