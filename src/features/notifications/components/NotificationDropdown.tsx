@@ -416,19 +416,6 @@ export function NotificationDropdown({
           })
         )}
       </div>
-
-      {/* Bottom Footer */}
-      <div className="border-t border-[#e4e6eb]/60 dark:border-[#393a3b]/60 px-4 py-2.5 bg-[#f7f8fa]/50 dark:bg-[#18191a]/40 flex items-center justify-between text-xs text-[#65676b] dark:text-[#b0b3b8]">
-        <Link
-          href={ROUTES.FRIENDS.REQUESTS}
-          onClick={onClose}
-          className="flex items-center gap-1 font-semibold text-primary-600 dark:text-primary-400 hover:underline"
-        >
-          <span>Friend requests</span>
-          <ExternalLink className="h-3 w-3" />
-        </Link>
-        <span>PeaceTweet Notifications</span>
-      </div>
     </div>
   );
 }

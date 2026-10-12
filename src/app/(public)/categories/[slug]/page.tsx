@@ -21,12 +21,12 @@ export default function CategoryDetailPage() {
   const { data: category, isLoading } = useCategory(slug);
 
   return (
-    <div className="h-[calc(100vh-3.5rem)] overflow-hidden bg-[#f0f2f5] dark:bg-[#18191a]">
-      <Container size="xl" className="h-full px-0 sm:px-4">
-        <div className="flex h-full justify-center gap-4 lg:gap-6">
+    <div className="h-[calc(100vh-3.5rem)] overflow-hidden bg-white dark:bg-[#18191a] sm:bg-[#f0f2f5]">
+      <Container size="2xl" className="h-full px-0 sm:px-4 lg:px-6 2xl:px-8">
+        <div className="flex h-full justify-between gap-4 lg:gap-6 2xl:gap-8">
           <Sidebar />
 
-          <main className="w-full max-w-2xl min-w-0 h-full overflow-y-auto overscroll-contain no-scrollbar scrollbar-none py-4 pb-20 sm:pb-8 space-y-4 px-2 sm:px-0">
+          <main className="flex-1 w-full min-w-0 h-full overflow-y-auto overscroll-contain no-scrollbar scrollbar-none py-4 pb-20 sm:pb-8 space-y-4 px-2 sm:px-0">
             <Breadcrumbs
               items={[
                 { label: 'Categories', href: ROUTES.CATEGORIES },
@@ -71,9 +71,13 @@ function CategoryDuaList({ categoryId }: { categoryId: string }) {
   }
 
   return (
-    <div className="space-y-4">
-      {data.items.map((dua: any) => (
-        <FeedItem
+    <div className="w-full bg-white dark:bg-[#242526] sm:rounded-2xl sm:border sm:border-[#e4e6eb] sm:dark:border-[#393a3b] sm:shadow-2xs overflow-hidden">
+      {data.items.map((dua: any, index: number) => (
+        <React.Fragment key={dua.id}>
+          {index > 0 && (
+            <hr className="border-0 border-t border-[#e4e6eb] dark:border-[#393a3b]" />
+          )}
+          <FeedItem
           key={dua.id}
           post={{
             id: dua.id,
@@ -108,6 +112,7 @@ function CategoryDuaList({ categoryId }: { categoryId: string }) {
             },
           }}
         />
+        </React.Fragment>
       ))}
     </div>
   );

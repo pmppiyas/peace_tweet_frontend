@@ -19,14 +19,14 @@ export default function AdminPage() {
 
   if (isLoading || !isAdmin) {
     return (
-      <Container size="lg" className="py-12 text-center text-sm text-gray-500">
+      <Container size="2xl" className="py-12 text-center text-sm text-gray-500 max-w-7xl 2xl:max-w-[1600px]">
         Verifying administrator permissions...
       </Container>
     );
   }
 
   return (
-    <Container size="lg" className="py-8">
+    <Container size="2xl" className="py-8 px-4 sm:px-6 lg:px-8 2xl:px-10 max-w-7xl 2xl:max-w-[1600px]">
       <AdminDashboard />
     </Container>
   );

@@ -68,11 +68,11 @@ export default function GroupMembersPage() {
 
   return (
     <div className="h-[calc(100vh-3.5rem)] overflow-hidden bg-[#f0f2f5] dark:bg-[#18191a]">
-      <Container size="xl" className="h-full px-0 sm:px-4">
-        <div className="flex h-full justify-center gap-4 lg:gap-6">
+      <Container size="2xl" className="h-full px-0 sm:px-4 lg:px-6 2xl:px-8">
+        <div className="flex h-full justify-between gap-4 lg:gap-6 2xl:gap-8">
           <Sidebar />
 
-          <main className="w-full max-w-2xl min-w-0 h-full overflow-y-auto overscroll-contain no-scrollbar scrollbar-none py-4 pb-20 sm:pb-8 space-y-4 px-2 sm:px-0">
+          <main className="flex-1 w-full min-w-0 h-full overflow-y-auto overscroll-contain no-scrollbar scrollbar-none py-4 pb-20 sm:pb-8 space-y-4 px-2 sm:px-0">
             {content}
           </main>
 

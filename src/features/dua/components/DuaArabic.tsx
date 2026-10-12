@@ -26,10 +26,7 @@ export function DuaArabic({
     return (
       <div
         dir="rtl"
-        className={cn(
-          'rounded-xl bg-[#f0f2f5] p-3.5 sm:p-4 dark:bg-[#3a3b3c] border border-[#e4e6eb] dark:border-[#393a3b] text-right',
-          className,
-        )}
+        className={cn('text-right py-2', className)}
       >
         <ArabicText text={arabicText} />
       </div>
@@ -37,20 +34,18 @@ export function DuaArabic({
   }
 
   return (
-    <div className={cn('rounded-xl border border-[#e4e6eb] bg-[#f0f2f5]/50 dark:border-[#393a3b] dark:bg-[#3a3b3c]/30 overflow-hidden', className)}>
+    <div className={cn('space-y-2', className)}>
       <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="flex w-full items-center justify-between px-3.5 py-2 text-xs font-semibold text-[#050505] hover:text-primary-600 dark:text-[#e4e6eb] dark:hover:text-primary-400 transition-colors"
+        className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 py-1 transition-colors cursor-pointer"
       >
-        <div className="flex items-center gap-1.5">
-          <Languages className="h-3.5 w-3.5 text-[#65676b] dark:text-[#b0b3b8]" />
-          <span>{isExpanded ? 'আরবি লুকান' : 'আরবি টেক্সট দেখুন (Arabic Text)'}</span>
-        </div>
+        <Languages className="h-3.5 w-3.5" />
+        <span>{isExpanded ? 'আরবি লুকান' : 'আরবি টেক্সট দেখুন (Arabic Text)'}</span>
         <ChevronDown
           className={cn(
-            'h-3.5 w-3.5 text-[#65676b] dark:text-[#b0b3b8] transition-transform duration-200',
-            isExpanded && 'rotate-180 text-primary-500',
+            'h-3.5 w-3.5 transition-transform duration-200',
+            isExpanded && 'rotate-180',
           )}
         />
       </button>
@@ -58,7 +53,7 @@ export function DuaArabic({
       {isExpanded && (
         <div
           dir="rtl"
-          className="border-t border-[#e4e6eb] dark:border-[#393a3b] bg-[#f0f2f5] p-3.5 sm:p-4 dark:bg-[#3a3b3c] text-right animate-in fade-in duration-150"
+          className="text-right py-2 animate-in fade-in duration-150"
         >
           <ArabicText text={arabicText} />
         </div>

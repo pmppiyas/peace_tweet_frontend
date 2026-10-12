@@ -45,7 +45,7 @@ export function DuaDetail({ dua }: { dua: Dua }) {
   ]);
 
   const breadcrumbItems = [
-    { label: t('nav.duas'), href: ROUTES.DUAS },
+    { label: t('nav.home'), href: ROUTES.HOME },
     ...(dua.category
       ? [{ label: dua.category.name, href: ROUTES.CATEGORY_DETAIL(dua.category.slug) }]
       : []),

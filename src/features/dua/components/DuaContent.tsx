@@ -22,16 +22,16 @@ export function DuaContent({
 }: DuaContentProps) {
   return (
     <div className={cn('space-y-3.5', className)}>
-      {/* 1. Virtue / Fadilah */}
-      {dua.fadilah && <DuaFadilah fadilah={dua.fadilah} />}
-
-      {/* 2. Bangla Meaning & Transliteration */}
+      {/* 1. Pronunciation & Meaning (Same style as SavedContentCard) */}
       <DuaMeaning
         meaning={dua.meaning || dua.meaningBangla}
         meaningBangla={dua.meaningBangla}
         duaBangla={(dua as any).duaBangla}
         transliteration={dua.transliteration}
       />
+
+      {/* 2. Virtue / Fadilah (Benefit: ...) */}
+      {dua.fadilah && <DuaFadilah fadilah={dua.fadilah} />}
 
       {/* 3. Arabic Calligraphy */}
       {dua.arabicText && (

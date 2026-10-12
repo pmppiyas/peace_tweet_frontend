@@ -51,8 +51,8 @@ export function FriendsPageSkeleton() {
 
       <Skeleton className="h-10 w-full rounded-xl" />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 pt-2">
-        {Array.from({ length: 8 }).map((_, i) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 pt-2">
+        {Array.from({ length: 10 }).map((_, i) => (
           <FriendCardSkeleton key={i} />
         ))}
       </div>

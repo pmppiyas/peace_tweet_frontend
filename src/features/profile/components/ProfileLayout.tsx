@@ -28,10 +28,11 @@ export function ProfileLayout({
   children,
   activeId = 'profile-overview',
   activeMobileTabId = 'tab-overview',
-  maxWidth = 'max-w-4xl',
+  maxWidth = 'w-full max-w-7xl 2xl:max-w-[1600px]',
   targetUser,
   baseUrl,
 }: ProfileLayoutProps) {
+
   const { locale } = useLanguage();
   const { user: authUser, isAuthenticated } = useAuth();
 

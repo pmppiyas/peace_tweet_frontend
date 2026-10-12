@@ -56,24 +56,29 @@ export function FeedList({
   }
 
   return (
-    <div className="space-y-4">
-      {items.map((post) => (
-        <FeedItem key={post.id} post={post} />
+    <div className="w-full">
+      {items.map((post, index) => (
+        <React.Fragment key={post.id}>
+          {index > 0 && (
+            <hr className="border-0 border-t border-[#e4e6eb] dark:border-[#393a3b]" />
+          )}
+          <FeedItem post={post} />
+        </React.Fragment>
       ))}
 
       {/* Infinite Scroll Sentinel */}
-      <div ref={loadMoreRef} className="h-4 w-full" />
+      <div ref={loadMoreRef} className="h-px w-full pointer-events-none" />
 
       {/* Loading More Skeleton */}
       {isFetchingNextPage && (
-        <div className="pt-2">
+        <div className="border-t border-[#e4e6eb] dark:border-[#393a3b]">
           <FeedSkeleton />
         </div>
       )}
 
       {/* End of Feed */}
       {!hasNextPage && items.length > 5 && (
-        <div className="py-6 text-center text-xs text-[#65676b] dark:text-[#b0b3b8]">
+        <div className="py-6 text-center text-xs text-[#65676b] dark:text-[#b0b3b8] border-t border-[#e4e6eb] dark:border-[#393a3b]">
           {locale === 'bn'
             ? '✨ আপনি সকল সাম্প্রতিক পোস্ট দেখে ফেলেছেন'
             : "✨ You're all caught up with the latest posts"}

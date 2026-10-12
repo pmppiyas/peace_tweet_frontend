@@ -321,7 +321,8 @@ export function ProfileView({
       {/* 1. Profile Hero Card */}
       <div className="relative z-20 rounded-2xl border border-[#e4e6eb] bg-white shadow-2xs dark:border-[#393a3b] dark:bg-[#242526]">
         {/* Cover Photo Banner */}
-        <div className="relative h-44 sm:h-56 md:h-64 rounded-t-2xl bg-gradient-to-r from-emerald-800 via-teal-700 to-primary-800 overflow-hidden">
+        <div className="relative h-44 sm:h-56 md:h-64 lg:h-72 xl:h-80 2xl:h-96 rounded-t-2xl bg-gradient-to-r from-emerald-800 via-teal-700 to-primary-800 overflow-hidden">
+
           {displayUser.coverUrl ? (
             <Image
               src={displayUser.coverUrl}
@@ -921,7 +922,8 @@ export function ProfileView({
       {activeSubTab === 'overview' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
           {/* Left Column: Intro & Summary Cards */}
-          <div className="lg:col-span-5 space-y-4">
+          <div className="lg:col-span-5 xl:col-span-4 2xl:col-span-4 space-y-4">
+
             {/* Intro Card */}
             <div className="rounded-2xl border border-[#e4e6eb] bg-white p-4 sm:p-5 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526] space-y-3.5">
               <h2 className="text-base font-bold text-[#050505] dark:text-white">
@@ -1161,7 +1163,8 @@ export function ProfileView({
           </div>
 
           {/* Right Column: Post Composer & Timeline */}
-          <div className="lg:col-span-7 space-y-4">
+          <div className="lg:col-span-7 xl:col-span-8 2xl:col-span-8 space-y-4">
+
             {/* Post Composer (Hidden in View As mode or when not owner) */}
             {isOwner && !isViewAs && <PostComposer />}
 

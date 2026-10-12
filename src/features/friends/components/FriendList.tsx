@@ -58,8 +58,8 @@ export function FriendList({
   // Initial loading state
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-        {Array.from({ length: 8 }).map((_, i) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+        {Array.from({ length: 10 }).map((_, i) => (
           <FriendCardSkeleton key={i} />
         ))}
       </div>
@@ -100,7 +100,7 @@ export function FriendList({
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
         {items.map((friend) => (
           <FriendCard key={friend.id} friend={friend} />
         ))}

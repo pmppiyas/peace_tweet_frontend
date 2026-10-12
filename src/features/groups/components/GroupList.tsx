@@ -52,7 +52,7 @@ export function GroupList({
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
         {Array.from({ length: 6 }).map((_, i) => (
           <GroupCardSkeleton key={i} />
         ))}
@@ -66,7 +66,7 @@ export function GroupList({
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
         {groups.map((group) => (
           <GroupCard key={group.id} group={group} />
         ))}

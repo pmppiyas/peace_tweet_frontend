@@ -8,12 +8,14 @@ interface UiState {
   uploadingMessage?: string;
   isPostUploadSuccess: boolean;
   postSuccessMessage?: string;
+  isMobileComposerOpen: boolean;
   toggleSidebar: () => void;
   setSidebarOpen: (isOpen: boolean) => void;
   setSearchModalOpen: (isOpen: boolean) => void;
   setFontSize: (size: 'normal' | 'large' | 'extra-large') => void;
   setIsUploadingPost: (isUploadingPost: boolean, message?: string) => void;
   triggerPostSuccess: (message?: string) => void;
+  setMobileComposerOpen: (isOpen: boolean) => void;
 }
 
 export const useUiStore = create<UiState>((set) => ({
@@ -24,6 +26,7 @@ export const useUiStore = create<UiState>((set) => ({
   uploadingMessage: undefined,
   isPostUploadSuccess: false,
   postSuccessMessage: undefined,
+  isMobileComposerOpen: false,
 
   toggleSidebar: () =>
     set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
@@ -38,4 +41,5 @@ export const useUiStore = create<UiState>((set) => ({
       set({ isPostUploadSuccess: false, postSuccessMessage: undefined });
     }, 4000);
   },
+  setMobileComposerOpen: (isMobileComposerOpen) => set({ isMobileComposerOpen }),
 }));

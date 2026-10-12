@@ -23,8 +23,8 @@ export function BloodRequestList({
 }: BloodRequestListProps) {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {Array.from({ length: 4 }).map((_, i) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        {Array.from({ length: 6 }).map((_, i) => (
           <BloodRequestSkeleton key={i} />
         ))}
       </div>
@@ -36,7 +36,7 @@ export function BloodRequestList({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
       {requests.map((request) => (
         <BloodRequestCard
           key={request.id}

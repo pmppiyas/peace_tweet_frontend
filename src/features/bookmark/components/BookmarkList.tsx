@@ -7,8 +7,7 @@ import { useSavedItems, useUpdateTimeSlotMutation } from '../hooks/useBookmarks'
 import { bookmarkApi } from '../api/bookmark.api';
 import { SavedContentCard } from './SavedContentCard';
 import { FeedSkeleton } from '@/features/feed/components/FeedSkeleton';
-import { Bookmark, Search, X } from 'lucide-react';
-import { useDebounce } from '@/hooks/useDebounce';
+import { Bookmark } from 'lucide-react';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -40,11 +39,7 @@ export function BookmarkList({
 
   const currentRoutineSlot = getCurrentTimeSlot();
 
-  const [internalSearch, setInternalSearch] = useState('');
-  const debouncedInternalSearch = useDebounce(internalSearch, 350);
-
-  const effectiveSearch =
-    searchQuery !== undefined ? searchQuery : debouncedInternalSearch;
+  const effectiveSearch = searchQuery;
 
   // Default to current routine time if no slot is in the URL
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | 'all'>(
@@ -121,81 +116,9 @@ export function BookmarkList({
 
   return (
     <div className="space-y-4">
-      {/* 1. Search Bar (if not hidden) */}
-      {!hideSearch && (
-        <div className="relative">
-          <Search className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <input
-            type="text"
-            value={internalSearch}
-            onChange={(e) => setInternalSearch(e.target.value)}
-            placeholder={
-              locale === 'bn'
-                ? 'সংরক্ষিত দোয়া ও পোস্টের মধ্যে খুঁজুন...'
-                : 'Search within your saved collection...'
-            }
-            className="h-10 w-full rounded-2xl border border-[#e4e6eb] bg-white pl-10 pr-9 text-xs sm:text-sm text-[#050505] placeholder:text-[#65676b] focus:border-primary-500 focus:outline-hidden dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#e4e6eb] dark:placeholder:text-[#b0b3b8] transition-all"
-          />
-          {internalSearch && (
-            <button
-              type="button"
-              onClick={() => setInternalSearch('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
-          )}
-        </div>
-      )}
 
-      {/* 2. Content Type Filter (All / Duas / Posts) */}
-      <div className="flex items-center gap-2 border-b border-[#e4e6eb] dark:border-[#393a3b] pb-2 select-none">
-        <button
-          type="button"
-          onClick={() => {
-            if (selectedType !== 'ALL') soundEffects.playTab();
-            setSelectedType('ALL');
-          }}
-          className={cn(
-            'px-3 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer',
-            selectedType === 'ALL'
-              ? 'bg-[#e4e6eb] dark:bg-[#3a3b3c] text-[#050505] dark:text-white'
-              : 'text-[#65676b] dark:text-[#b0b3b8] hover:text-[#050505] dark:hover:text-white'
-          )}
-        >
-          {locale === 'bn' ? 'সকল সংরক্ষিত' : 'All Items'}
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            if (selectedType !== 'DUA') soundEffects.playTab();
-            setSelectedType('DUA');
-          }}
-          className={cn(
-            'px-3 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer',
-            selectedType === 'DUA'
-              ? 'bg-[#e4e6eb] dark:bg-[#3a3b3c] text-[#050505] dark:text-white'
-              : 'text-[#65676b] dark:text-[#b0b3b8] hover:text-[#050505] dark:hover:text-white'
-          )}
-        >
-          {locale === 'bn' ? 'দোয়া' : 'Duas'}
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            if (selectedType !== 'POST') soundEffects.playTab();
-            setSelectedType('POST');
-          }}
-          className={cn(
-            'px-3 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer',
-            selectedType === 'POST'
-              ? 'bg-[#e4e6eb] dark:bg-[#3a3b3c] text-[#050505] dark:text-white'
-              : 'text-[#65676b] dark:text-[#b0b3b8] hover:text-[#050505] dark:hover:text-white'
-          )}
-        >
-          {locale === 'bn' ? 'পোস্টসমূহ' : 'Posts'}
-        </button>
-      </div>
+
+
 
       {/* Fallback Banner when routine time has no items */}
       {shouldFallbackToAll && (
@@ -243,14 +166,19 @@ export function BookmarkList({
           </p>
         </div>
       ) : (
-        <div className="space-y-3.5">
-          {savedItems.map((item) => (
-            <SavedContentCard
-              key={item.savedId || item.id}
-              item={item}
-              onUpdateSlot={handleUpdateSlot}
-              onRemove={handleRemove}
-            />
+        <div className="w-full bg-white dark:bg-[#242526] sm:rounded-2xl sm:border sm:border-[#e4e6eb] sm:dark:border-[#393a3b] sm:shadow-2xs overflow-hidden">
+          {savedItems.map((item, index) => (
+            <React.Fragment key={item.savedId || item.id}>
+              {index > 0 && (
+                <hr className="border-0 border-t border-[#e4e6eb] dark:border-[#393a3b]" />
+              )}
+              <SavedContentCard
+                item={item}
+                onUpdateSlot={handleUpdateSlot}
+                onRemove={handleRemove}
+                fallbackSlot={selectedSlot}
+              />
+            </React.Fragment>
           ))}
         </div>
       )}

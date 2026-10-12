@@ -46,7 +46,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={raleway.variable} suppressHydrationWarning>
       <body
-        className={`${raleway.variable} font-sans min-h-screen flex flex-col antialiased bg-[#f0f2f5] text-[#050505] dark:bg-[#18191a] dark:text-[#e4e6eb]`}
+        className={`${raleway.variable} font-sans min-h-screen flex flex-col antialiased bg-[#f0f2f5] text-[#050505] dark:bg-[#18191a] dark:text-[#e4e6eb] overflow-x-hidden`}
       >
         <ThemeProvider>
           <AppSplashLoader />
@@ -56,7 +56,7 @@ export default function RootLayout({
                 <SocketProvider>
                   <AudioProvider>
                     <Navbar />
-                    <main className="flex-1">{children}</main>
+                    <main className="flex-1 min-h-0">{children}</main>
                     <FloatingAudioBar />
                     <MobileNav />
                     <ChatDock />

@@ -22,7 +22,7 @@ export default function BloodRequestDetailPage() {
 
   return (
     <BloodLayout>
-      <div className="space-y-4 max-w-2xl mx-auto">
+      <div className="space-y-4 max-w-4xl 2xl:max-w-5xl mx-auto">
         <Breadcrumbs
           items={[
             {

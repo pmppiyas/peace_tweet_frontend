@@ -47,7 +47,7 @@ export function SectionSidebar({
   return (
     <aside
       className={cn(
-        'hidden lg:block w-60 xl:w-64 shrink-0 space-y-2 h-full overflow-y-auto overscroll-contain py-4 pr-2 select-none',
+        'hidden lg:block w-60 xl:w-64 2xl:w-72 shrink-0 space-y-2 h-full overflow-y-auto overscroll-contain no-scrollbar scrollbar-none py-4 pr-2 select-none',
         className
       )}
     >

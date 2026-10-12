@@ -9,6 +9,7 @@ export const ar = {
     login: 'تسجيل الدخول',
     join: 'انضم الآن',
     profile: 'الملف الشخصي',
+    notifications: 'الإشعارات',
     friends: 'الأصدقاء',
     groups: 'المجموعات',
     settings: 'الإعدادات',

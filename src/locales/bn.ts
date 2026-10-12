@@ -9,6 +9,7 @@ export const bn = {
     login: 'লগইন',
     join: 'জয়েন করুন',
     profile: 'প্রোফাইল',
+    notifications: 'বিজ্ঞপ্তি',
     friends: 'বন্ধুরা',
     groups: 'গ্রুপ',
     settings: 'সেটিংস',

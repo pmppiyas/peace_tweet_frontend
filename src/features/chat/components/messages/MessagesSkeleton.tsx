@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { ArrowLeft } from 'lucide-react';
+import { Container } from '@/components/layout/Container';
 import { cn } from '@/lib/utils/cn';
 
 export interface MessagesSkeletonProps {
@@ -145,26 +146,30 @@ export function MessagesSkeleton({
   hasSelectedConversation = false,
 }: MessagesSkeletonProps) {
   return (
-    <div className="w-full h-[100dvh] md:h-[calc(100vh-56px)] flex bg-white dark:bg-[#18191a] overflow-hidden">
-      {/* 1. Left Column: Conversations Sidebar */}
-      <div
-        className={cn(
-          'w-full md:w-[320px] lg:w-[360px] xl:w-[380px] h-full shrink-0 flex flex-col',
-          hasSelectedConversation ? 'hidden md:flex' : 'flex'
-        )}
-      >
-        <ConversationSidebarSkeleton />
-      </div>
+    <div className="h-[100dvh] md:h-[calc(100vh-3.5rem)] overflow-hidden bg-[#f0f2f5] dark:bg-[#18191a]">
+      <Container size="2xl" className="h-full px-0 sm:px-4 lg:px-6 2xl:px-8">
+        <div className="w-full h-full flex bg-white dark:bg-[#18191a] border-x border-[#e4e6eb] dark:border-[#393a3b] shadow-xs overflow-hidden">
+          {/* 1. Left Column: Conversations Sidebar */}
+          <div
+            className={cn(
+              'w-full md:w-[320px] lg:w-[360px] xl:w-[380px] 2xl:w-[400px] h-full shrink-0 flex flex-col',
+              hasSelectedConversation ? 'hidden md:flex' : 'flex'
+            )}
+          >
+            <ConversationSidebarSkeleton />
+          </div>
 
-      {/* 2. Center Column: Chat View Skeleton */}
-      <div
-        className={cn(
-          'flex-1 h-full flex flex-col min-w-0 overflow-hidden',
-          hasSelectedConversation ? 'flex' : 'hidden md:flex'
-        )}
-      >
-        <ChatViewSkeleton />
-      </div>
+          {/* 2. Center Column: Chat View Skeleton */}
+          <div
+            className={cn(
+              'flex-1 h-full flex flex-col min-w-0 overflow-hidden',
+              hasSelectedConversation ? 'flex' : 'hidden md:flex'
+            )}
+          >
+            <ChatViewSkeleton />
+          </div>
+        </div>
+      </Container>
     </div>
   );
 }

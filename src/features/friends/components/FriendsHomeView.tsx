@@ -59,15 +59,15 @@ export function FriendsHomeView() {
         </div>
 
         {isRequestsLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-            {Array.from({ length: 4 }).map((_, i) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+            {Array.from({ length: 5 }).map((_, i) => (
               <FriendRequestSkeleton key={i} />
             ))}
           </div>
         ) : receivedRequests.length === 0 ? (
           <FriendsEmptyState type="received" />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
             {topRequests.map((request) => (
               <FriendRequestCard
                 key={request.id}
@@ -98,15 +98,15 @@ export function FriendsHomeView() {
         </div>
 
         {isFriendsLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-            {Array.from({ length: 4 }).map((_, i) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+            {Array.from({ length: 5 }).map((_, i) => (
               <FriendCardSkeleton key={i} />
             ))}
           </div>
         ) : friends.length === 0 ? (
           <FriendsEmptyState type="friends" />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
             {topFriends.map((friend) => (
               <FriendCard key={friend.id} friend={friend} />
             ))}

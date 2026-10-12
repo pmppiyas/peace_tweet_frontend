@@ -34,3 +34,6 @@ export const envConfig = {
   googleRedirectUri: process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI || '',
 } as const;
 
+
+
+

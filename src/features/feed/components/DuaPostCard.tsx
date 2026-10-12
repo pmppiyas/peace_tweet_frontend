@@ -14,10 +14,10 @@ export function DuaPostCard({ post }: DuaPostCardProps) {
   const { dua, content } = post;
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2 sm:space-y-2.5">
       {/* Optional Editorial/Author note above Dua */}
       {content && (
-        <p className="text-[14px] text-[#050505] dark:text-[#e4e6eb] leading-relaxed">
+        <p className="text-[15px] sm:text-[16px] text-[#050505] dark:text-[#e4e6eb] leading-relaxed whitespace-pre-line">
           {content}
         </p>
       )}

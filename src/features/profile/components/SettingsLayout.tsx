@@ -20,8 +20,9 @@ export function SettingsLayout({
   children,
   activeTab,
   onSelectTab,
-  maxWidth = '',
+  maxWidth = 'w-full max-w-7xl 2xl:max-w-[1600px]',
 }: SettingsLayoutProps) {
+
   const { locale } = useLanguage();
   const { user } = useAuth();
   const needsPassword =

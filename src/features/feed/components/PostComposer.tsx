@@ -8,7 +8,6 @@ import { usePostActions } from '../hooks/usePostActions';
 import { uploadsApi } from '@/features/uploads/api/uploads.api';
 import { PostType } from '../types/feed.types';
 import { PostMediaGallery } from './PostMediaGallery';
-import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { BloodGroup } from '@/types/user.types';
@@ -69,7 +68,19 @@ const URGENCIES: {
   },
 ];
 
-export function PostComposer() {
+export interface PostComposerProps {
+  defaultOpen?: boolean;
+  isModal?: boolean;
+  onClose?: () => void;
+  className?: string;
+}
+
+export function PostComposer({
+  defaultOpen = false,
+  isModal = false,
+  onClose,
+  className,
+}: PostComposerProps = {}) {
   const { user, isAuthenticated } = useAuth();
   const { createPost, isCreatingPost } = usePostActions();
   const {
@@ -80,7 +91,7 @@ export function PostComposer() {
     postSuccessMessage,
   } = useUiStore();
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(isModal || defaultOpen);
   const [isSuccess, setIsSuccess] = useState(false);
 
   const isSuccessActive = isSuccess || isPostUploadSuccess;
@@ -122,7 +133,7 @@ export function PostComposer() {
 
   if (!isAuthenticated) {
     return (
-      <Card className="border border-[#e4e6eb] bg-white p-3.5 sm:p-4 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526] rounded-xl flex items-center justify-between gap-3">
+      <div className="w-full bg-white px-2 py-3 sm:px-3 dark:bg-[#242526] flex items-center justify-between gap-3 transition-colors">
         <div className="flex items-center gap-2.5">
           <div className="relative h-9 w-9 shrink-0">
             <Image
@@ -145,7 +156,7 @@ export function PostComposer() {
             Log In
           </Button>
         </Link>
-      </Card>
+      </div>
     );
   }
 
@@ -169,8 +180,11 @@ export function PostComposer() {
     setProblem('');
     setBloodNote('');
     setErrorMessage(null);
-    setIsOpen(false);
+    if (!isModal) {
+      setIsOpen(defaultOpen);
+    }
     setPostType('TEXT');
+    onClose?.();
   };
 
   const handleImageFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -317,7 +331,13 @@ export function PostComposer() {
   };
 
   return (
-    <Card className="border border-[#e4e6eb] bg-white p-3 sm:p-4 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526] rounded-xl transition-all overflow-hidden w-full">
+    <div
+      className={cn(
+        'w-full bg-white px-2 py-3 sm:px-3 dark:bg-[#242526] transition-colors',
+        isModal && 'p-0 sm:p-0 bg-transparent dark:bg-transparent',
+        className
+      )}
+    >
       {!isOpen ? (
         <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 w-full">
           <div className="relative flex items-center justify-center shrink-0">
@@ -944,6 +964,6 @@ export function PostComposer() {
           </div>
         </form>
       )}
-    </Card>
+    </div>
   );
 }

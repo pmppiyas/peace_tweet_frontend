@@ -32,6 +32,11 @@ const nextConfig = {
         destination: '/messages',
         permanent: true,
       },
+      {
+        source: '/duas',
+        destination: '/',
+        permanent: true,
+      },
     ];
   },
   webpack: (config, { dev }) => {

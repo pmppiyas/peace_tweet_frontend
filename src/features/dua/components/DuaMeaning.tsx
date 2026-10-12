@@ -23,24 +23,24 @@ export function DuaMeaning({
   if (!resolvedMeaning && !pronunciation) return null;
 
   return (
-    <div className={cn('space-y-2.5 rounded-xl bg-[#f0f2f5]/70 p-3.5 dark:bg-[#3a3b3c]/60 border border-[#e4e6eb] dark:border-[#393a3b]', className)}>
+    <div className={cn('space-y-3', className)}>
       {pronunciation && (
         <div className="space-y-1">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-primary-600 dark:text-primary-400">
-            উচ্চারণ
+          <span className="text-[11px] font-bold uppercase tracking-wider text-primary-600 dark:text-primary-400 block">
+            Pronunciation:
           </span>
-          <p className="text-[15px] font-medium text-[#050505] dark:text-[#e4e6eb] leading-relaxed" lang="bn">
+          <p className="text-sm sm:text-base font-medium text-[#050505] dark:text-[#e4e6eb] leading-relaxed select-text">
             {pronunciation}
           </p>
         </div>
       )}
 
       {resolvedMeaning && (
-        <div className={cn('space-y-1', pronunciation && 'pt-2 border-t border-[#e4e6eb]/60 dark:border-[#393a3b]/60')}>
-          <span className="text-[11px] font-bold uppercase tracking-wider text-[#65676b] dark:text-[#b0b3b8]">
-            অর্থ
+        <div className="space-y-1">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-primary-600 dark:text-primary-400 block">
+            Meaning:
           </span>
-          <p className="text-[14px] text-[#050505] dark:text-[#e4e6eb] leading-relaxed" lang="bn">
+          <p className="text-sm sm:text-base font-medium text-[#050505] dark:text-[#e4e6eb] leading-relaxed select-text">
             {resolvedMeaning}
           </p>
         </div>

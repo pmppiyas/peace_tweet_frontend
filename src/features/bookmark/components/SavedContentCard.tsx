@@ -10,9 +10,11 @@ import {
   VolumeX,
   BookOpen,
   Share2,
+  X,
 } from 'lucide-react';
 import { SavedFeedItem, TimeSlot } from '@/types/saved.types';
 import { TimeSlotBadge, TimeSlotPicker } from './TimeSlotPicker';
+import { TasbihWidget } from './TasbihWidget';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { cn } from '@/lib/utils/cn';
 import { soundEffects } from '@/lib/sound/soundEffects';
@@ -21,16 +23,19 @@ interface SavedContentCardProps {
   item: SavedFeedItem;
   onUpdateSlot: (id: string, type: 'DUA' | 'POST', slot: TimeSlot | null) => void;
   onRemove: (id: string, type: 'DUA' | 'POST') => void;
+  fallbackSlot?: TimeSlot | 'all';
 }
 
 export function SavedContentCard({
   item,
   onUpdateSlot,
   onRemove,
+  fallbackSlot,
 }: SavedContentCardProps) {
   const { locale } = useLanguage();
   const [isCopied, setIsCopied] = useState(false);
   const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const [isTasbihOpen, setIsTasbihOpen] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
 
@@ -79,32 +84,16 @@ export function SavedContentCard({
   const itemType: 'DUA' | 'POST' = item.savedType === 'DUA' ? 'DUA' : 'POST';
 
   return (
-    <article className="rounded-2xl border border-[#e4e6eb] bg-white p-4 sm:p-5 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526] transition-all hover:border-primary-200 dark:hover:border-primary-900/60">
+    <article className="w-full bg-white dark:bg-[#242526] p-3 sm:p-4 transition-colors">
       {/* 1. Header with Routine Slot & Action Buttons */}
       <div className="flex items-center justify-between pb-3 border-b border-[#e4e6eb]/80 dark:border-[#393a3b]/80 gap-2">
         <div className="flex items-center gap-2 flex-wrap">
-          {item.timeSlot ? (
-            <TimeSlotBadge
-              timeSlot={item.timeSlot}
-              onClick={() => setIsPickerOpen(true)}
-              size="md"
-            />
-          ) : (
-            <button
-              type="button"
-              onClick={() => setIsPickerOpen(true)}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-primary-950/40 transition-colors cursor-pointer"
-            >
-              <Clock className="h-3.5 w-3.5" />
-              <span>{locale === 'bn' ? 'রুটিন নির্ধারণ' : 'Set Routine'}</span>
-            </button>
-          )}
-
-          {categoryName && (
-            <span className="text-xs font-semibold text-primary-600 dark:text-primary-400 bg-primary-50/70 dark:bg-primary-950/50 px-2.5 py-0.5 rounded-full">
-              #{categoryName}
-            </span>
-          )}
+          <TimeSlotBadge
+            timeSlot={item.timeSlot || (fallbackSlot && fallbackSlot !== 'all' ? fallbackSlot : null)}
+            onClick={() => setIsPickerOpen(true)}
+            size="md"
+            fallbackLabel={locale === 'bn' ? 'নিত্যদিনের রুটিন' : 'Daily Routine'}
+          />
         </div>
 
         {/* Action Buttons: Audio, Copy, Change Slot, Delete */}
@@ -162,6 +151,17 @@ export function SavedContentCard({
           >
             <Trash2 className="h-4 w-4" />
           </button>
+
+          {/* Top-most Right: Tasbih with Icon Blue Badge */}
+          <button
+            type="button"
+            onClick={() => setIsTasbihOpen(true)}
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-950/60 dark:text-blue-300 dark:hover:bg-blue-900/60 border border-blue-200/80 dark:border-blue-800/80 shadow-2xs transition-all active:scale-95 cursor-pointer select-none ml-1"
+            title={locale === 'bn' ? 'তাসবীহ কাউন্ট করুন' : 'Count Tasbih'}
+          >
+            <span className="text-sm leading-none">📿</span>
+            <span>{locale === 'bn' ? 'তাসবীহ' : 'Tasbih'}</span>
+          </button>
         </div>
       </div>
 
@@ -173,20 +173,30 @@ export function SavedContentCard({
           </h3>
         )}
 
-        {/* Arabic Text */}
+        {/* Main Dua (Arabic Text) */}
         {arabicText && (
-          <p
-            dir="rtl"
-            className="font-arabic text-xl sm:text-2xl text-right text-[#050505] dark:text-primary-200 leading-loose select-text tracking-wide pt-1"
-          >
-            {arabicText}
-          </p>
+          <div className="space-y-1">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-primary-600 dark:text-primary-400 block">
+              {locale === 'bn' ? 'মূল দোয়া:' : 'Main Dua:'}
+            </span>
+            <p
+              dir="rtl"
+              className="font-arabic text-xl sm:text-2xl text-right text-[#050505] dark:text-primary-200 leading-loose select-text tracking-wide"
+            >
+              {arabicText}
+            </p>
+          </div>
         )}
 
         {/* Transliteration (উচ্চারণ) */}
         {transliteration && (
-          <div className="rounded-xl bg-[#f0f2f5]/60 dark:bg-[#3a3b3c]/40 p-2.5 text-xs sm:text-sm text-[#4b4f56] dark:text-[#b0b3b8] italic select-text leading-relaxed">
-            “{transliteration}”
+          <div className="space-y-1">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-primary-600 dark:text-primary-400 block">
+              Pronunciation:
+            </span>
+            <p className="text-sm sm:text-base font-medium text-[#050505] dark:text-[#e4e6eb] leading-relaxed select-text">
+              {transliteration}
+            </p>
           </div>
         )}
 
@@ -194,7 +204,7 @@ export function SavedContentCard({
         {meaning && (
           <div className="space-y-1">
             <span className="text-[11px] font-bold uppercase tracking-wider text-primary-600 dark:text-primary-400 block">
-              {locale === 'bn' ? 'অর্থ:' : 'Meaning:'}
+              {dua ? 'Meaning:' : 'Post:'}
             </span>
             <p className="text-sm sm:text-base font-medium text-[#050505] dark:text-[#e4e6eb] leading-relaxed select-text">
               {meaning}
@@ -206,7 +216,7 @@ export function SavedContentCard({
         {dua?.fadilah && (
           <div className="text-xs text-[#65676b] dark:text-[#b0b3b8] pt-1">
             <span className="font-semibold text-[#050505] dark:text-[#e4e6eb]">
-              {locale === 'bn' ? 'ফযিলত: ' : 'Benefit: '}
+              Benefit:{' '}
             </span>
             {dua.fadilah}
           </div>
@@ -237,6 +247,28 @@ export function SavedContentCard({
         }}
         itemTitle={dua?.title || meaning?.slice(0, 40)}
       />
+
+      {/* Digital Tasbih Modal for this Dua */}
+      {isTasbihOpen && (
+        <div
+          className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center bg-black/60 p-0 sm:p-4 backdrop-blur-xs animate-in fade-in duration-150 select-none"
+          onClick={() => setIsTasbihOpen(false)}
+        >
+          <div
+            className="w-full sm:max-w-md rounded-t-3xl rounded-b-none sm:rounded-3xl border-t sm:border border-[#e4e6eb] bg-white p-4 sm:p-5 pb-5 sm:pb-5 shadow-2xl dark:border-[#393a3b] dark:bg-[#242526] animate-in slide-in-from-bottom sm:zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <TasbihWidget
+              duaTitle={dua?.title}
+              arabicText={arabicText || undefined}
+              transliteration={transliteration || undefined}
+              showCloseButton={true}
+              onClose={() => setIsTasbihOpen(false)}
+              className="border-0 shadow-none p-0 bg-transparent rounded-none"
+            />
+          </div>
+        </div>
+      )}
     </article>
   );
 }

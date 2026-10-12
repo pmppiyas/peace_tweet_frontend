@@ -57,8 +57,8 @@ export function FriendRequestList({
   // Loading skeleton
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-        {Array.from({ length: 8 }).map((_, i) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+        {Array.from({ length: 10 }).map((_, i) => (
           <FriendRequestSkeleton key={i} />
         ))}
       </div>
@@ -88,7 +88,7 @@ export function FriendRequestList({
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
         {items.map((request) => (
           <FriendRequestCard key={request.id} request={request} variant={variant} />
         ))}

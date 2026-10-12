@@ -1,6 +1,6 @@
 export const ROUTES = {
   HOME: '/',
-  DUAS: '/duas',
+  DUAS: '/',
   DUA_DETAIL: (id: string) => `/duas/${id}`,
   CATEGORIES: '/categories',
   CATEGORY_DETAIL: (slug: string) => `/categories/${slug}`,
@@ -9,6 +9,7 @@ export const ROUTES = {
   REGISTER: '/register',
   SAVED: '/saved',
   PROFILE: '/profile',
+  NOTIFICATIONS: '/notifications',
   SETTINGS: '/settings',
   TERMS: '/terms',
   PRIVACY: '/privacy',

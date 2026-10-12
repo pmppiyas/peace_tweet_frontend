@@ -17,10 +17,15 @@ export function useGoogleSDK() {
   }, []);
 
   const redirectToGoogleOAuth = useCallback(() => {
-    setIsLoading(true);
-
     const clientId = envConfig.googleClientId;
     const redirectUri = getRedirectUri();
+
+    if (!clientId) {
+      console.error('Google Client ID is missing. Configure NEXT_PUBLIC_GOOGLE_CLIENT_ID.');
+      return;
+    }
+
+    setIsLoading(true);
 
     const oauthUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
     oauthUrl.searchParams.set('client_id', clientId);
@@ -32,6 +37,7 @@ export function useGoogleSDK() {
 
     window.location.href = oauthUrl.toString();
   }, [getRedirectUri]);
+
 
   return {
     isLoading,

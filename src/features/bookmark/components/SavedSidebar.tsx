@@ -73,13 +73,6 @@ export function SavedSidebar({ activeId }: SavedSidebarProps) {
       iconBg: 'bg-purple-600 text-white',
     },
     ...routineItems,
-    {
-      id: 'saved-explore',
-      label: locale === 'bn' ? 'আরো দেখুন' : 'Explore More',
-      href: ROUTES.DUAS,
-      icon: Sparkles,
-      iconBg: 'bg-teal-500 text-white',
-    },
   ];
 
   const computedActiveId =
@@ -95,7 +88,6 @@ export function SavedSidebar({ activeId }: SavedSidebarProps) {
       items={navItems}
       showUserProfile={true}
       activeId={computedActiveId}
-      className="sticky top-14 h-[calc(100vh-3.5rem)]"
     />
   );
 }

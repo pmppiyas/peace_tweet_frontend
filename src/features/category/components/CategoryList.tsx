@@ -10,7 +10,7 @@ export function CategoryList() {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-4">
         {[1, 2, 3, 4, 5, 6].map((i) => (
           <Skeleton key={i} className="h-36 rounded-2xl" />
         ))}
@@ -27,7 +27,7 @@ export function CategoryList() {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-4">
       {categories.map((category) => (
         <CategoryCard key={category.id} category={category} />
       ))}

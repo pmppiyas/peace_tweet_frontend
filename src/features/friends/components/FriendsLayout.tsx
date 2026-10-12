@@ -47,7 +47,7 @@ export function FriendsLayout({ children }: FriendsLayoutProps) {
       sidebar={<FriendsSidebar />}
       backHref={pathname === ROUTES.FRIENDS.HOME ? '/' : ROUTES.FRIENDS.HOME}
       mobileTabs={mobileTabs}
-      maxWidth="max-w-6xl"
+      maxWidth="w-full max-w-7xl 2xl:max-w-[1600px]"
     >
       {children}
     </SectionLayout>

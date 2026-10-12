@@ -44,7 +44,7 @@ export function ProfilePageContent() {
     <ProfileLayout
       activeId={activeIdMap[currentTab]}
       activeMobileTabId={mobileTabIdMap[currentTab]}
-      maxWidth="max-w-4xl"
+      maxWidth="w-full max-w-7xl 2xl:max-w-[1600px]"
     >
       {isFromTab || isViewAs || currentTab === 'overview' ? (
         <ProfileView activeSubTab={currentTab} isViewAs={isViewAs} />

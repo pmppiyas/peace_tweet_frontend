@@ -18,8 +18,8 @@ export function BloodDonorList({
 }: BloodDonorListProps) {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {Array.from({ length: 4 }).map((_, i) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+        {Array.from({ length: 8 }).map((_, i) => (
           <div
             key={i}
             className="rounded-2xl border border-[#e4e6eb] bg-white p-4 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526] animate-pulse"
@@ -44,7 +44,7 @@ export function BloodDonorList({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
       {donors.map((donor) => (
         <BloodDonorCard key={donor.id} donor={donor} />
       ))}

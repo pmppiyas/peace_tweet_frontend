@@ -30,7 +30,7 @@ export function ProfileSavedTab() {
         onSearchChange={setSearch}
         searchPlaceholder={locale === 'bn' ? 'বুকমার্ক খুঁজুন...' : 'Search bookmarks...'}
         action={
-          <Link href={ROUTES.DUAS}>
+          <Link href={ROUTES.CATEGORIES}>
             <Button size="sm" variant="outline" className="rounded-xl gap-1.5 text-xs font-bold whitespace-nowrap">
               <Compass className="h-3.5 w-3.5" />
               <span>{locale === 'bn' ? 'দোয়া খুঁজুন' : 'Explore Duas'}</span>

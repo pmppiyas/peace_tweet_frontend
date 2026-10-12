@@ -24,6 +24,7 @@ export interface SectionLayoutProps {
   maxWidth?: string;
   className?: string;
   contentClassName?: string;
+  containerSize?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
 }
 
 export function SectionLayout({
@@ -32,9 +33,10 @@ export function SectionLayout({
   mobileTabs = [],
   activeMobileTabId,
   children,
-  maxWidth = 'max-w-6xl',
+  maxWidth = 'w-full max-w-7xl 2xl:max-w-[1600px]',
   className,
   contentClassName,
+  containerSize = '2xl',
 }: SectionLayoutProps) {
   const pathname = usePathname();
 
@@ -45,7 +47,8 @@ export function SectionLayout({
         className
       )}
     >
-      <Container size="xl" className="h-full px-0 sm:px-4">
+      <Container size={containerSize} className="h-full px-0 sm:px-4 lg:px-6 2xl:px-8">
+
         <div className="flex flex-col lg:flex-row h-full">
           {/* Dedicated Section Sidebar */}
           {sidebar}
@@ -92,11 +95,12 @@ export function SectionLayout({
           {/* Main Content Area */}
           <main
             className={cn(
-              'flex-1 min-w-0 h-full overflow-y-auto overscroll-contain no-scrollbar scrollbar-none p-4 pb-20 sm:p-6 lg:p-8',
+              'flex-1 min-w-0 h-full overflow-y-auto overscroll-contain no-scrollbar scrollbar-none px-2 py-4 pb-20 sm:p-6 lg:p-8',
               contentClassName
             )}
           >
-            <div className={cn('mx-auto', maxWidth)}>{children}</div>
+            <div className={cn('mx-auto w-full', maxWidth)}>{children}</div>
+
           </main>
         </div>
       </Container>

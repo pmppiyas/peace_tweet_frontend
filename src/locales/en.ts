@@ -9,6 +9,7 @@ export const en = {
     login: 'Log In',
     join: 'Join Now',
     profile: 'My Profile',
+    notifications: 'Notifications',
     friends: 'Friends',
     groups: 'Groups',
     settings: 'Settings',

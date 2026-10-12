@@ -61,7 +61,7 @@ export function TermsAndPrivacyView() {
 
   return (
     <div className="min-h-screen bg-[#f0f2f5] dark:bg-[#18191a] py-6 sm:py-10 text-[#050505] dark:text-[#e4e6eb]">
-      <Container size="lg" className="px-4 sm:px-6">
+      <Container size="2xl" className="px-4 sm:px-6 lg:px-8 2xl:px-10 max-w-7xl 2xl:max-w-[1600px]">
         {/* Top Back Nav & Brand */}
         <div className="flex items-center justify-between mb-6">
           <Link

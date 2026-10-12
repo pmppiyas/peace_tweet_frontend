@@ -10,17 +10,14 @@ interface DuaFadilahProps {
   showIcon?: boolean;
 }
 
-export function DuaFadilah({ fadilah, className, showIcon = false }: DuaFadilahProps) {
+export function DuaFadilah({ fadilah, className }: DuaFadilahProps) {
   if (!fadilah) return null;
 
   return (
-    <div className={cn('text-[15px] text-[#050505] dark:text-[#e4e6eb] leading-relaxed font-normal', className)}>
-      {showIcon && (
-        <span className="inline-flex items-center gap-1 text-primary-500 dark:text-primary-400 font-semibold mr-1.5">
-          <Sparkles className="h-3.5 w-3.5 inline" />
-          ফজিলত:
-        </span>
-      )}
+    <div className={cn('text-xs text-[#65676b] dark:text-[#b0b3b8] pt-1 leading-relaxed', className)}>
+      <span className="font-semibold text-[#050505] dark:text-[#e4e6eb]">
+        Benefit:{' '}
+      </span>
       {fadilah}
     </div>
   );

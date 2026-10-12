@@ -172,17 +172,41 @@ export function TimeSlotBadge({
   onClick,
   className,
   size = 'md',
+  fallbackLabel,
 }: {
   timeSlot?: TimeSlot | string | null;
   onClick?: () => void;
   className?: string;
   size?: 'sm' | 'md';
+  fallbackLabel?: string;
 }) {
   const { locale } = useLanguage();
-  if (!timeSlot) return null;
 
-  const config = TIME_SLOTS.find((s) => s.id === timeSlot);
-  if (!config) return null;
+  const config = timeSlot ? TIME_SLOTS.find((s) => s.id === timeSlot) : null;
+
+  if (!config) {
+    if (!fallbackLabel) return null;
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        className={cn(
+          'inline-flex items-center gap-1 rounded-full font-bold transition-all shadow-2xs cursor-pointer hover:opacity-90 active:scale-95 select-none',
+          size === 'sm' ? 'px-2 py-0.5 text-[10px]' : 'px-2.5 py-1 text-[11px]',
+          'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300 border border-gray-200/80 dark:border-gray-700/80',
+          className
+        )}
+        title={
+          locale === 'bn'
+            ? 'রুটিন সময় পরিবর্তন করতে ক্লিক করুন'
+            : 'Click to change routine slot'
+        }
+      >
+        <span>📌</span>
+        <span>{fallbackLabel}</span>
+      </button>
+    );
+  }
 
   return (
     <button

@@ -1,18 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useFeed } from '../hooks/useFeed';
 import { FeedList } from './FeedList';
 import { FeedSkeleton } from './FeedSkeleton';
 import { PostComposer } from './PostComposer';
-import { PostType } from '../types/feed.types';
-import { AlertCircle, RefreshCw, Sparkles, BookOpen, PenTool, HelpCircle, Megaphone } from 'lucide-react';
-import { cn } from '@/lib/utils/cn';
+import { AlertCircle, RefreshCw } from 'lucide-react';
 import { useLanguage } from '@/providers/LanguageProvider';
-import { soundEffects } from '@/lib/sound/soundEffects';
 
 export function Feed() {
-  const [activeType, setActiveType] = useState<PostType | undefined>(undefined);
   const { locale } = useLanguage();
 
   const {
@@ -23,75 +19,24 @@ export function Feed() {
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-  } = useFeed(activeType);
+  } = useFeed();
 
   // Flatten all paginated items
   const allPosts = data?.pages.flatMap((page) => page?.items || []) || [];
 
-  const filterTabs: Array<{ label: string; type?: PostType; icon: React.ReactNode }> = [
-    {
-      label: locale === 'bn' ? 'সকল পোস্ট' : locale === 'ar' ? 'جميع المنشورات' : 'All Posts',
-      type: undefined,
-      icon: <Sparkles className="h-3.5 w-3.5" />,
-    },
-    {
-      label: locale === 'bn' ? 'দোয়া' : locale === 'ar' ? 'أدعية' : 'Dua',
-      type: 'DUA',
-      icon: <BookOpen className="h-3.5 w-3.5" />,
-    },
-    {
-      label: locale === 'bn' ? 'স্মরণ ও চিন্তা' : locale === 'ar' ? 'تأملات' : 'Reflections',
-      type: 'TEXT',
-      icon: <PenTool className="h-3.5 w-3.5" />,
-    },
-    {
-      label: locale === 'bn' ? 'জিজ্ঞাসা' : locale === 'ar' ? 'أسئلة' : 'Questions',
-      type: 'QUESTION',
-      icon: <HelpCircle className="h-3.5 w-3.5" />,
-    },
-    {
-      label: locale === 'bn' ? 'ঘোষণা' : locale === 'ar' ? 'إعلانات' : 'Announcements',
-      type: 'ANNOUNCEMENT',
-      icon: <Megaphone className="h-3.5 w-3.5" />,
-    },
-  ];
-
   return (
-    <div className="space-y-4">
-      {/* 1. Post Composer */}
-      <PostComposer />
-
-      {/* 2. Type Filter Navigation Tabs */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-        {filterTabs.map((tab) => {
-          const isActive = activeType === tab.type;
-          return (
-            <button
-              key={tab.label}
-              type="button"
-              onClick={() => {
-                if (activeType !== tab.type) soundEffects.playTab();
-                setActiveType(tab.type);
-              }}
-              className={cn(
-                'inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition-all select-none',
-                isActive
-                  ? 'bg-primary-500 text-white shadow-2xs'
-                  : 'bg-white border border-[#e4e6eb] text-[#65676b] hover:border-gray-300 hover:text-[#050505] dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#b0b3b8] dark:hover:text-[#e4e6eb]',
-              )}
-            >
-              {tab.icon}
-              <span>{tab.label}</span>
-            </button>
-          );
-        })}
+    <div className="w-full bg-white dark:bg-[#242526] sm:rounded-2xl sm:border sm:border-[#e4e6eb] sm:dark:border-[#393a3b] sm:shadow-2xs overflow-hidden">
+      {/* 1. Post Composer (hidden on mobile, shown on sm+) */}
+      <div className="hidden sm:block">
+        <PostComposer />
+        <hr className="border-0 border-t border-[#e4e6eb] dark:border-[#393a3b]" />
       </div>
 
-      {/* 3. Feed Content States */}
+      {/* 2. Feed Content States */}
       {isLoading ? (
         <FeedSkeleton />
       ) : isError ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-rose-200 bg-rose-50/70 p-8 text-center dark:border-rose-900/60 dark:bg-rose-950/30">
+        <div className="flex flex-col items-center justify-center p-8 text-center bg-rose-50/70 dark:bg-rose-950/30">
           <AlertCircle className="h-8 w-8 text-rose-600 dark:text-rose-400" />
           <h3 className="mt-2 text-sm font-bold text-rose-800 dark:text-rose-300">
             {locale === 'bn' ? 'ফিড লোড করা যাচ্ছে না' : 'Unable to load feed'}

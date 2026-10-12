@@ -107,7 +107,7 @@ export function ChatDock() {
           data-messenger-trigger="true"
           onClick={() => setIsMessengerOpen((prev) => !prev)}
           className={cn(
-            'relative h-12 w-12 sm:h-13 sm:w-13 rounded-full bg-white dark:bg-[#242526] border border-[#e4e6eb] dark:border-[#393a3b] shadow-xl hover:shadow-2xl flex items-center justify-center transition-all hover:scale-105 active:scale-95 cursor-pointer text-[#050505] dark:text-[#e4e6eb] group',
+            'relative hidden md:flex h-12 w-12 sm:h-13 sm:w-13 rounded-full bg-white dark:bg-[#242526] border border-[#e4e6eb] dark:border-[#393a3b] shadow-xl hover:shadow-2xl items-center justify-center transition-all hover:scale-105 active:scale-95 cursor-pointer text-[#050505] dark:text-[#e4e6eb] group',
             isMessengerOpen && 'ring-2 ring-primary-500/50 bg-gray-50 dark:bg-[#2d2e2f]',
           )}
           title={locale === 'bn' ? 'মেসেজ' : 'Messages'}

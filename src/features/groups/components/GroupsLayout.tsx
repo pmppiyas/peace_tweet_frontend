@@ -70,7 +70,7 @@ export function GroupsLayout({
       backHref={pathname === ROUTES.GROUPS.HOME ? '/' : ROUTES.GROUPS.HOME}
       mobileTabs={mobileTabs}
       activeMobileTabId={activeMobileTabId}
-      maxWidth="max-w-6xl"
+      maxWidth="w-full max-w-7xl 2xl:max-w-[1600px]"
     >
       {children}
     </SectionLayout>

@@ -13,7 +13,6 @@ import { PostUnavailableCard } from './PostUnavailableCard';
 import { ShareModal, SharePreviewData } from './ShareModal';
 import { usePostActions } from '../hooks/usePostActions';
 import { useComments } from '../hooks/useComments';
-import { Card } from '@/components/ui/Card';
 import { formatDate } from '@/lib/utils/date';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { useAuth } from '@/hooks/useAuth';
@@ -145,9 +144,9 @@ export function FeedItem({ post }: FeedItemProps) {
   };
 
   return (
-    <Card className="border border-[#e4e6eb] bg-white shadow-2xs dark:border-[#393a3b] dark:bg-[#242526] rounded-xl overflow-hidden transition-all">
+    <article className="w-full bg-white dark:bg-[#242526] transition-colors">
       {/* 1. Author & Post Meta Header */}
-      <div className="p-3.5 sm:p-4 pb-2">
+      <div className="px-2 pt-3 pb-1.5 sm:px-3 sm:pt-3.5 sm:pb-2">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <Link
@@ -246,7 +245,7 @@ export function FeedItem({ post }: FeedItemProps) {
 
         {/* 2. Main Post Content Body */}
         {post.originalPostId || post.originalPost ? (
-          <div className="mt-3 space-y-3">
+          <div className="mt-2 space-y-2.5">
             {/* Sharer's custom commentary/caption */}
             {post.content && (
               <p className="text-[15px] sm:text-[16px] font-normal text-[#050505] dark:text-[#e4e6eb] leading-relaxed whitespace-pre-line">
@@ -258,7 +257,7 @@ export function FeedItem({ post }: FeedItemProps) {
               <PostUnavailableCard />
             ) : post.originalPost ? (
               /* Embedded Original Post Card */
-              <div className="rounded-xl border border-[#e4e6eb] bg-[#f8f9fa] p-3.5 sm:p-4 dark:border-[#393a3b] dark:bg-[#18191a]/70 space-y-3 transition-colors">
+              <div className="rounded-xl border border-[#e4e6eb] bg-[#f8f9fa] px-2.5 py-3 sm:px-3 dark:border-[#393a3b] dark:bg-[#18191a]/70 space-y-2.5 transition-colors">
                 {/* Original Author Header */}
                 <div className="flex items-center justify-between gap-2.5">
                   <Link
@@ -308,7 +307,7 @@ export function FeedItem({ post }: FeedItemProps) {
             ) : null}
           </div>
         ) : (
-          <div className="mt-3">
+          <div className="mt-2">
             {post.type === 'DUA' && <DuaPostCard post={post} />}
             {post.type === 'BLOOD_REQUEST' && <BloodPostCard post={post} />}
             {post.type === 'QUESTION' && <QuestionPostCard post={post} />}
@@ -316,27 +315,16 @@ export function FeedItem({ post }: FeedItemProps) {
             {post.type === 'TEXT' && <TextPostCard post={post} />}
           </div>
         )}
-
-        {/* Category Hashtag Tag (Below Content) */}
-        {post.dua?.category && (
-          <div>
-            <Link href={ROUTES.CATEGORY_DETAIL(post.dua.category.slug)}>
-              <span className="inline-flex items-center text-xs font-semibold text-primary-600 bg-primary-50 hover:bg-primary-100 px-2.5 py-1 rounded-full dark:bg-primary-900/60 dark:text-primary-300 transition-colors">
-                #{post.dua.category.name}
-              </span>
-            </Link>
-          </div>
-        )}
       </div>
 
       {/* Action Buttons Bar with Counts in a Single Line beside the Icons */}
-      <div className="grid grid-cols-4 border-t border-[#e4e6eb] px-1 sm:px-2 py-1 text-xs font-semibold dark:border-[#393a3b]">
+      <div className="grid grid-cols-4 px-1 sm:px-2 py-1 text-xs font-semibold">
         {/* Reaction (LIKE / Ameen) */}
         <button
           type="button"
           onClick={() => toggleReaction(post.id, !!post.viewer?.hasReacted)}
           className={cn(
-            'flex items-center justify-center gap-1 sm:gap-1.5 py-2 px-1 rounded-lg transition-colors select-none whitespace-nowrap',
+            'flex items-center justify-center gap-1 sm:gap-1.5 py-1.5 sm:py-2 px-1 rounded-lg transition-colors select-none whitespace-nowrap',
             post.viewer?.hasReacted
               ? 'text-rose-600 dark:text-rose-400 bg-rose-50/50 dark:bg-rose-950/20'
               : 'text-[#65676b] hover:bg-[#f0f2f5] hover:text-[#050505] dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] dark:hover:text-[#e4e6eb]'
@@ -369,7 +357,7 @@ export function FeedItem({ post }: FeedItemProps) {
           type="button"
           onClick={() => setShowComments(!showComments)}
           className={cn(
-            'flex items-center justify-center gap-1 sm:gap-1.5 py-2 px-1 rounded-lg transition-colors select-none whitespace-nowrap',
+            'flex items-center justify-center gap-1 sm:gap-1.5 py-1.5 sm:py-2 px-1 rounded-lg transition-colors select-none whitespace-nowrap',
             showComments
               ? 'text-primary-600 dark:text-primary-400 bg-primary-50/50 dark:bg-primary-900/20'
               : 'text-[#65676b] hover:bg-[#f0f2f5] hover:text-[#050505] dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] dark:hover:text-[#e4e6eb]'
@@ -390,7 +378,7 @@ export function FeedItem({ post }: FeedItemProps) {
           type="button"
           onClick={handleToggleSave}
           className={cn(
-            'flex items-center justify-center gap-1 sm:gap-1.5 py-2 px-1 rounded-lg transition-colors select-none whitespace-nowrap cursor-pointer',
+            'flex items-center justify-center gap-1 sm:gap-1.5 py-1.5 sm:py-2 px-1 rounded-lg transition-colors select-none whitespace-nowrap cursor-pointer',
             post.viewer?.hasSaved
               ? 'text-amber-600 dark:text-amber-400 bg-amber-50/50 dark:bg-amber-950/20'
               : 'text-[#65676b] hover:bg-[#f0f2f5] hover:text-[#050505] dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] dark:hover:text-[#e4e6eb]'
@@ -422,7 +410,7 @@ export function FeedItem({ post }: FeedItemProps) {
         <button
           type="button"
           onClick={handleShare}
-          className="flex items-center justify-center gap-1 sm:gap-1.5 py-2 px-1 text-[#65676b] hover:bg-[#f0f2f5] hover:text-[#050505] rounded-lg transition-colors select-none whitespace-nowrap dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] dark:hover:text-[#e4e6eb]"
+          className="flex items-center justify-center gap-1 sm:gap-1.5 py-1.5 sm:py-2 px-1 text-[#65676b] hover:bg-[#f0f2f5] hover:text-[#050505] rounded-lg transition-colors select-none whitespace-nowrap dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] dark:hover:text-[#e4e6eb]"
           title={`${post.stats?.shareCount || 0} shares`}
         >
           <Share2 className="h-4 w-4 shrink-0" />
@@ -437,7 +425,7 @@ export function FeedItem({ post }: FeedItemProps) {
 
       {/* 5. Inline Comments Section */}
       {showComments && (
-        <div className="border-t border-[#e4e6eb] bg-[#f0f2f5]/40 p-3.5 sm:p-4 space-y-3 dark:border-[#393a3b] dark:bg-[#3a3b3c]/20 animate-in fade-in duration-150">
+        <div className="border-t border-[#e4e6eb] bg-[#f0f2f5]/40 px-2 py-3 sm:px-3 space-y-3 dark:border-[#393a3b] dark:bg-[#3a3b3c]/20 animate-in fade-in duration-150">
           {/* Comment Form */}
           <form onSubmit={handleCommentSubmit} className="flex gap-2">
             <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-xs select-none overflow-hidden shadow-xs">
@@ -630,6 +618,6 @@ export function FeedItem({ post }: FeedItemProps) {
         onRemove={post.viewer?.hasSaved ? handleRemoveFromSaved : undefined}
         itemTitle={post.dua?.title || post.content?.slice(0, 40) || undefined}
       />
-    </Card>
+    </article>
   );
 }

@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
   Home,
-  Compass,
   Bookmark,
   Search,
   Layers,
@@ -83,7 +82,6 @@ export function Navbar() {
 
   const navCenterLinks = [
     { id: 'nav-home', label: t('nav.home'), href: ROUTES.HOME, icon: Home },
-    { id: 'nav-duas', label: t('nav.duas'), href: ROUTES.DUAS, icon: Compass },
     {
       id: 'nav-categories',
       label: t('nav.categories'),
@@ -99,7 +97,7 @@ export function Navbar() {
   ];
 
   const rightActionButtons = isLoginPage ? (
-    <div className="relative flex items-center gap-1.5 sm:gap-2 shrink-0">
+    <div className="relative flex items-center gap-2.5 sm:gap-3 lg:gap-3.5 shrink-0">
       {/* 1. Search circular button */}
       <button
         type="button"
@@ -115,7 +113,7 @@ export function Navbar() {
       {isAuthenticated ? (
         <Link
           href={ROUTES.PROFILE}
-          className="relative flex h-10 w-10 items-center justify-center rounded-full transition-transform active:scale-95"
+          className="relative hidden md:flex h-10 w-10 items-center justify-center rounded-full transition-transform active:scale-95"
           title={user?.name || 'Profile'}
         >
           <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-xs shadow-2xs overflow-hidden">
@@ -136,7 +134,7 @@ export function Navbar() {
         <Link
           href={ROUTES.LOGIN}
           className={cn(
-            'flex h-10 w-10 items-center justify-center rounded-full transition-colors',
+            'hidden md:flex h-10 w-10 items-center justify-center rounded-full transition-colors',
             pathname === ROUTES.LOGIN
               ? 'bg-primary-50 text-primary-600 dark:bg-primary-950/60 dark:text-primary-400 font-semibold ring-2 ring-primary-500/20'
               : 'bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb]'
@@ -163,7 +161,18 @@ export function Navbar() {
       </button>
     </div>
   ) : (
-    <div className="relative flex items-center gap-1.5 sm:gap-2 shrink-0">
+    <div className="relative flex items-center gap-2.5 sm:gap-3 lg:gap-3.5 shrink-0">
+      {/* 1. Mobile Search circular button (Shown on mobile right side) */}
+      <button
+        type="button"
+        onClick={() => setIsSearchOpen(true)}
+        className="flex md:hidden h-10 w-10 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors cursor-pointer"
+        title={locale === 'bn' ? 'অনুসন্ধান' : 'Search'}
+        aria-label="Search"
+      >
+        <Search className="h-[19px] w-[19px] stroke-[2.2]" strokeWidth={2.2} />
+      </button>
+
       {/* 2. Messenger / Messages */}
       {isAuthenticated ? (
         <>
@@ -247,7 +256,7 @@ export function Navbar() {
             setIsMessengerOpen(false);
           }}
           className={cn(
-            'relative flex h-10 w-10 items-center justify-center rounded-full transition-colors cursor-pointer',
+            'relative hidden md:flex h-10 w-10 items-center justify-center rounded-full transition-colors cursor-pointer',
             isNotificationsOpen
               ? 'bg-primary-50 text-primary-600 dark:bg-primary-950/60 dark:text-primary-400'
               : 'bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb]'
@@ -266,7 +275,7 @@ export function Navbar() {
       ) : (
         <Link
           href={ROUTES.LOGIN}
-          className="relative flex h-10 w-10 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors"
+          className="relative hidden md:flex h-10 w-10 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors"
           title="Notifications"
         >
           <Bell className="h-[19px] w-[19px] stroke-[2.2]" strokeWidth={2.2} />
@@ -277,7 +286,7 @@ export function Navbar() {
       {isAuthenticated ? (
         <Link
           href={ROUTES.PROFILE}
-          className="relative flex h-12 w-12 items-center justify-center rounded-full transition-transform active:scale-95"
+          className="relative hidden md:flex h-12 w-12 items-center justify-center rounded-full transition-transform active:scale-95"
           title={user?.name || 'Profile'}
         >
           <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-xs shadow-2xs overflow-hidden">
@@ -298,7 +307,7 @@ export function Navbar() {
         <Link
           href={ROUTES.LOGIN}
           className={cn(
-            'flex h-10 w-10 items-center justify-center rounded-full transition-colors',
+            'hidden md:flex h-10 w-10 items-center justify-center rounded-full transition-colors',
             pathname === ROUTES.LOGIN
               ? 'bg-primary-50 text-primary-600 dark:bg-primary-950/60 dark:text-primary-400 font-semibold ring-2 ring-primary-500/20'
               : 'bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb]'
@@ -346,18 +355,18 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        'sticky top-0 z-40 w-full border-b border-[#e4e6eb] bg-white dark:border-[#393a3b] dark:bg-[#242526] shadow-2xs select-none',
+        'sticky top-0 z-40 w-full h-14 box-border border-b border-[#e4e6eb] bg-white dark:border-[#393a3b] dark:bg-[#242526] shadow-2xs select-none px-2 sm:px-0',
         (pathname === '/messages' || pathname.startsWith('/messages/')) &&
           'hidden md:block'
       )}
     >
-      <Container size="xl" className="px-1 sm:px-6 lg:px-8">
-        {/* Header container matching 3-column layout of the page */}
-        <div className="flex items-center justify-between xl:justify-center h-14 gap-2 lg:gap-6">
-          {/* Left Column: Brand Logo + Search Button (Matches Sidebar: lg:w-60 xl:w-64) */}
-          <div className="flex items-center gap-2 shrink-0 lg:w-60 xl:w-64 z-10">
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="relative h-10 w-10 shrink-0 rounded-full overflow-hidden shadow-xs group-hover:scale-105 transition-transform">
+      <Container size="2xl" className="h-full px-0 sm:px-4 lg:px-6 2xl:px-8">
+        {/* Header container matching layout of the page */}
+        <div className="flex items-center justify-between h-full gap-4 lg:gap-6 2xl:gap-8 w-full">
+          {/* Left Column: Brand Logo + Search Button (Matches Sidebar: lg:w-60 xl:w-64 2xl:w-72) */}
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0 lg:w-60 xl:w-64 2xl:w-72 z-10">
+            <Link href="/" className="flex items-center gap-2.5">
+              <div className="relative h-10 w-10 shrink-0 rounded-full overflow-hidden shadow-xs">
                 <Image
                   src="/p-logo.svg"
                   alt="PeaceTweet Logo"
@@ -367,12 +376,7 @@ export function Navbar() {
                   className="h-full w-full object-cover"
                 />
               </div>
-              <span
-                className={cn(
-                  'text-xl font-extrabold tracking-tight text-primary-700 dark:text-white select-none',
-                  isLoginPage ? 'inline-block' : 'hidden sm:inline-block'
-                )}
-              >
+              <span className="h-10 flex items-center text-2xl sm:text-[27px] font-black tracking-tight text-primary-700 dark:text-white select-none leading-none">
                 PeaceTweet
               </span>
             </Link>
@@ -382,7 +386,7 @@ export function Navbar() {
               <button
                 type="button"
                 onClick={() => setIsSearchOpen(true)}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors cursor-pointer"
+                className="hidden md:flex h-10 w-10 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors cursor-pointer"
                 title={locale === 'bn' ? 'অনুসন্ধান' : 'Search'}
                 aria-label="Search"
               >
@@ -394,10 +398,10 @@ export function Navbar() {
             )}
           </div>
 
-          {/* Center Column: Navigation Tabs (Matches Feed: w-full max-w-2xl min-w-0) */}
+          {/* Center Column: Navigation Tabs (Matches Feed width with justify-between) */}
           {!isLoginPage && (
-            <div className="hidden lg:flex w-full max-w-2xl min-w-0 h-full">
-              <nav className="grid grid-cols-4 w-full h-full gap-1">
+            <div className="hidden lg:flex flex-1 min-w-0 h-full">
+              <nav className="flex items-center justify-between w-full h-full gap-1 sm:gap-2">
                 {navCenterLinks.map((item) => {
                   const Icon = item.icon;
                   const isActive =
@@ -413,7 +417,7 @@ export function Navbar() {
                       key={item.id}
                       href={item.href}
                       className={cn(
-                        'relative flex h-full items-center justify-center transition-colors px-2 sm:px-4 rounded-xl',
+                        'relative flex h-full flex-1 items-center justify-center transition-colors px-2 sm:px-4 rounded-xl',
                         isActive
                           ? 'text-primary-500 dark:text-primary-400'
                           : 'text-[#65676b] hover:bg-[#f0f2f5] dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c]'
@@ -432,7 +436,7 @@ export function Navbar() {
                         />
                       </div>
                       {isActive && (
-                        <span className="absolute -bottom-1 left-4 right-4 h-[3px] bg-primary-500 dark:bg-primary-400 rounded-t-md" />
+                        <span className="absolute -bottom-1 w-24 sm:w-28 md:w-36 max-w-[80%] h-[3px] bg-primary-500 dark:bg-primary-400 rounded-t-md mx-auto inset-x-0" />
                       )}
                     </Link>
                   );
@@ -441,8 +445,8 @@ export function Navbar() {
             </div>
           )}
 
-          {/* Right Column: Circular Action Buttons (Matches RightSidebar: lg:w-60 xl:w-80) */}
-          <div className="flex items-center justify-end shrink-0 lg:w-60 xl:w-80 z-10">
+          {/* Right Column: Circular Action Buttons (Matches RightSidebar: lg:w-auto xl:w-80 2xl:w-88) */}
+          <div className="flex items-center justify-end shrink-0 lg:w-auto xl:w-80 2xl:w-88 z-10">
             {rightActionButtons}
           </div>
         </div>
