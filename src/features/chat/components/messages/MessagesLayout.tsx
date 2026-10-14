@@ -116,7 +116,7 @@ export function MessagesLayout() {
     (urlConvId || urlUserId) && !selectedConversation && isLoading
   );
 
-  if (isAuthLoading) {
+  if (isAuthLoading || (isLoading && conversations.length === 0)) {
     return (
       <MessagesSkeleton
         hasSelectedConversation={Boolean(urlConvId || urlUserId)}
@@ -125,13 +125,13 @@ export function MessagesLayout() {
   }
 
   return (
-    <div className="h-[100dvh] md:h-[calc(100vh-3.5rem)] overflow-hidden bg-[#f0f2f5] dark:bg-[#18191a]">
+    <div className="h-[100dvh] md:h-[calc(100vh-3.5rem)] overflow-hidden bg-white dark:bg-[#18191a] sm:bg-[#f0f2f5]">
       <Container size="2xl" className="h-full px-0 sm:px-4 lg:px-6 2xl:px-8">
-        <div className="w-full h-full flex bg-white dark:bg-[#18191a] border-x border-[#e4e6eb] dark:border-[#393a3b] shadow-xs overflow-hidden">
-          {/* 1. Left Column: Conversations Sidebar */}
+        <div className="flex h-full gap-4 lg:gap-6 2xl:gap-8">
+          {/* 1. Left Sidebar: Chats / Conversations Sidebar (In place of main menu sidebar) */}
           <div
             className={cn(
-              'w-full md:w-[320px] lg:w-[360px] xl:w-[380px] 2xl:w-[400px] h-full shrink-0 flex flex-col',
+              'w-full md:w-60 lg:w-60 xl:w-64 2xl:w-72 h-full shrink-0 flex flex-col',
               selectedConversation || isConvLoading ? 'hidden md:flex' : 'flex'
             )}
           >
@@ -146,27 +146,29 @@ export function MessagesLayout() {
             />
           </div>
 
-          {/* 2. Center Column: Active Chat, Skeleton, or Empty Placeholder */}
-          <div
+          {/* 2. Main Area: Active Chat Window or Empty Placeholder */}
+          <main
             className={cn(
-              'flex-1 h-full flex flex-col min-w-0 overflow-hidden',
+              'flex-1 w-full min-w-0 h-full py-0 sm:py-3 lg:py-4 px-0',
               selectedConversation || isConvLoading ? 'flex' : 'hidden md:flex'
             )}
           >
-            {selectedConversation ? (
-              <ChatView
-                key={selectedConversation.id}
-                conversation={selectedConversation}
-                onBack={handleBackToSidebar}
-              />
-            ) : isConvLoading ? (
-              <ChatViewSkeleton onBack={handleBackToSidebar} />
-            ) : (
-              <EmptyChatPlaceholder
-                onOpenNewMessage={() => setIsNewMessageModalOpen(true)}
-              />
-            )}
-          </div>
+            <div className="w-full h-full flex bg-white dark:bg-[#242526] sm:rounded-2xl sm:border sm:border-[#e4e6eb] sm:dark:border-[#393a3b] sm:shadow-2xs overflow-hidden">
+              {selectedConversation ? (
+                <ChatView
+                  key={selectedConversation.id}
+                  conversation={selectedConversation}
+                  onBack={handleBackToSidebar}
+                />
+              ) : isConvLoading ? (
+                <ChatViewSkeleton onBack={handleBackToSidebar} />
+              ) : (
+                <EmptyChatPlaceholder
+                  onOpenNewMessage={() => setIsNewMessageModalOpen(true)}
+                />
+              )}
+            </div>
+          </main>
 
           {/* 3. New Message User Search Modal */}
           <NewMessageModal
@@ -179,3 +181,5 @@ export function MessagesLayout() {
     </div>
   );
 }
+
+export default MessagesLayout;

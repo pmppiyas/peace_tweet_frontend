@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/providers/LanguageProvider';
-import { useTotalUnreadCount } from '@/features/chat';
+import { useTotalUnreadCount } from '@/features/chat/hooks/useConversations';
 import { ROUTES } from '@/constants/routes';
 import {
   SectionSidebar,

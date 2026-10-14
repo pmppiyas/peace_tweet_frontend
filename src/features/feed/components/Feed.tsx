@@ -21,8 +21,16 @@ export function Feed() {
     fetchNextPage,
   } = useFeed();
 
-  // Flatten all paginated items
-  const allPosts = data?.pages.flatMap((page) => page?.items || []) || [];
+  // Flatten and deduplicate all paginated items by post ID
+  const allPosts = React.useMemo(() => {
+    const raw = data?.pages.flatMap((page) => page?.items || []) || [];
+    const seen = new Set<string>();
+    return raw.filter((post) => {
+      if (!post?.id || seen.has(post.id)) return false;
+      seen.add(post.id);
+      return true;
+    });
+  }, [data]);
 
   return (
     <div className="w-full bg-white dark:bg-[#242526] sm:rounded-2xl sm:border sm:border-[#e4e6eb] sm:dark:border-[#393a3b] sm:shadow-2xs overflow-hidden">

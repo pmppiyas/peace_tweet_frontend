@@ -349,7 +349,7 @@ export function MobileComposerModal({
           onClick={() => handleSubmit()}
           disabled={!isPostValid || isCreatingPost || isUploadingMedia || isUploadingPost}
           className={cn(
-            'flex items-center gap-1.5 px-4.5 py-1.5 rounded-full text-xs font-bold transition-all select-none active:scale-95 shadow-xs',
+            'shrink-0 flex items-center justify-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all select-none active:scale-95 shadow-xs',
             isPostValid && !isCreatingPost && !isUploadingMedia && !isUploadingPost
               ? postType === 'BLOOD_REQUEST'
                 ? 'bg-rose-600 text-white hover:bg-rose-700 shadow-rose-500/25 ring-2 ring-rose-500/20'
@@ -360,11 +360,11 @@ export function MobileComposerModal({
           )}
         >
           {isCreatingPost || isUploadingPost ? (
-            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin" />
           ) : (
-            <Send className="h-3.5 w-3.5" />
+            <Send className="h-3.5 w-3.5 shrink-0" />
           )}
-          <span>
+          <span className="shrink-0">
             {isCreatingPost || isUploadingPost
               ? locale === 'bn'
                 ? 'পোস্ট হচ্ছে...'
@@ -795,43 +795,72 @@ export function MobileComposerModal({
           </div>
         )}
 
-        {/* ────────────── FEELINGS POPOVER GRID ────────────── */}
+        {/* ────────────── FEELINGS CENTERED MODAL DIALOGUE ────────────── */}
         {showFeelingPicker && (
-          <div className="rounded-2xl border border-[#e4e6eb] bg-white p-3.5 shadow-xl dark:border-[#393a3b] dark:bg-[#242526] animate-in fade-in zoom-in-95 duration-150 space-y-2.5">
-            <div className="flex items-center justify-between pb-1.5 border-b border-[#e4e6eb] dark:border-[#393a3b]">
-              <span className="text-xs font-bold text-[#050505] dark:text-[#e4e6eb] flex items-center gap-1.5">
-                <Smile className="h-4 w-4 text-amber-500" />
-                <span>{locale === 'bn' ? 'কেমন অনুভব করছেন?' : 'How are you feeling?'}</span>
-              </span>
-              <button
-                type="button"
-                onClick={() => setShowFeelingPicker(false)}
-                className="text-gray-400 hover:text-gray-600 p-0.5 rounded-full"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-            <div className="grid grid-cols-3 gap-1.5 max-h-48 overflow-y-auto">
-              {FEELINGS.map((item) => (
+          <div
+            className="fixed inset-0 z-[110] flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-in fade-in duration-150 select-none"
+            onClick={() => setShowFeelingPicker(false)}
+          >
+            <div
+              className="w-full max-w-sm rounded-3xl border border-[#e4e6eb] bg-white p-4 sm:p-5 shadow-2xl dark:border-[#393a3b] dark:bg-[#242526] animate-in zoom-in-95 duration-150"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#e4e6eb] dark:border-[#393a3b]">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400">
+                    <Smile className="h-4 w-4" />
+                  </div>
+                  <h3 className="text-sm font-bold text-[#050505] dark:text-[#e4e6eb]">
+                    {locale === 'bn' ? 'কেমন অনুভব করছেন?' : 'How are you feeling?'}
+                  </h3>
+                </div>
                 <button
-                  key={item.id}
                   type="button"
-                  onClick={() => {
-                    setFeeling(item.id);
-                    setShowFeelingPicker(false);
-                    soundEffects.playTab();
-                  }}
-                  className={cn(
-                    'flex items-center gap-1.5 px-2.5 py-2 rounded-xl text-xs font-semibold text-left transition-colors',
-                    feeling === item.id
-                      ? 'bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200 shadow-2xs'
-                      : 'hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] text-[#050505] dark:text-[#e4e6eb]'
-                  )}
+                  onClick={() => setShowFeelingPicker(false)}
+                  className="p-1 rounded-full text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+                  title={locale === 'bn' ? 'বন্ধ করুন' : 'Close'}
                 >
-                  <span className="text-base">{item.emoji}</span>
-                  <span className="truncate capitalize">{item.label}</span>
+                  <X className="h-5 w-5" />
                 </button>
-              ))}
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-[55vh] overflow-y-auto p-0.5">
+                {FEELINGS.map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => {
+                      setFeeling(item.id);
+                      setShowFeelingPicker(false);
+                      soundEffects.playTab();
+                    }}
+                    className={cn(
+                      'flex items-center gap-2.5 p-2.5 rounded-2xl text-xs sm:text-sm font-semibold text-left transition-all border cursor-pointer select-none active:scale-95',
+                      feeling === item.id
+                        ? 'bg-amber-50 text-amber-900 border-amber-300 dark:bg-amber-950/60 dark:text-amber-200 dark:border-amber-700 shadow-xs'
+                        : 'border-transparent hover:border-[#e4e6eb] dark:hover:border-[#393a3b] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] text-[#050505] dark:text-[#e4e6eb]'
+                    )}
+                  >
+                    <span className="text-xl select-none shrink-0">{item.emoji}</span>
+                    <span className="truncate capitalize">{item.label}</span>
+                  </button>
+                ))}
+              </div>
+
+              {feeling && (
+                <div className="mt-3 pt-3 border-t border-[#e4e6eb] dark:border-[#393a3b] flex justify-end">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFeeling(null);
+                      setShowFeelingPicker(false);
+                    }}
+                    className="text-xs font-bold text-rose-600 hover:underline cursor-pointer"
+                  >
+                    {locale === 'bn' ? 'অনুভূতি মুছুন' : 'Remove Feeling'}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}

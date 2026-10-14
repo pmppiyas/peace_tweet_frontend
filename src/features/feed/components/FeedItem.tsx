@@ -146,7 +146,7 @@ export function FeedItem({ post }: FeedItemProps) {
   return (
     <article className="w-full bg-white dark:bg-[#242526] transition-colors">
       {/* 1. Author & Post Meta Header */}
-      <div className="px-2 pt-3 pb-1.5 sm:px-3 sm:pt-3.5 sm:pb-2">
+      <div className="px-3.5 pt-3.5 pb-2.5 sm:px-5 sm:pt-4 sm:pb-3">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <Link
@@ -245,7 +245,7 @@ export function FeedItem({ post }: FeedItemProps) {
 
         {/* 2. Main Post Content Body */}
         {post.originalPostId || post.originalPost ? (
-          <div className="mt-2 space-y-2.5">
+          <div className="mt-3 sm:mt-3.5 space-y-3">
             {/* Sharer's custom commentary/caption */}
             {post.content && (
               <p className="text-[15px] sm:text-[16px] font-normal text-[#050505] dark:text-[#e4e6eb] leading-relaxed whitespace-pre-line">
@@ -307,7 +307,7 @@ export function FeedItem({ post }: FeedItemProps) {
             ) : null}
           </div>
         ) : (
-          <div className="mt-2">
+          <div className="mt-3 sm:mt-3.5">
             {post.type === 'DUA' && <DuaPostCard post={post} />}
             {post.type === 'BLOOD_REQUEST' && <BloodPostCard post={post} />}
             {post.type === 'QUESTION' && <QuestionPostCard post={post} />}
@@ -318,7 +318,7 @@ export function FeedItem({ post }: FeedItemProps) {
       </div>
 
       {/* Action Buttons Bar with Counts in a Single Line beside the Icons */}
-      <div className="grid grid-cols-4 px-1 sm:px-2 py-1 text-xs font-semibold">
+      <div className="grid grid-cols-4 px-2 sm:px-4 py-1.5 sm:py-2 text-xs font-semibold border-t border-[#e4e6eb]/70 dark:border-[#393a3b]/70">
         {/* Reaction (LIKE / Ameen) */}
         <button
           type="button"

@@ -9,8 +9,6 @@ import {
   Volume2,
   VolumeX,
   BookOpen,
-  Share2,
-  X,
 } from 'lucide-react';
 import { SavedFeedItem, TimeSlot } from '@/types/saved.types';
 import { TimeSlotBadge, TimeSlotPicker } from './TimeSlotPicker';
@@ -21,7 +19,11 @@ import { soundEffects } from '@/lib/sound/soundEffects';
 
 interface SavedContentCardProps {
   item: SavedFeedItem;
-  onUpdateSlot: (id: string, type: 'DUA' | 'POST', slot: TimeSlot | null) => void;
+  onUpdateSlot: (
+    id: string,
+    type: 'DUA' | 'POST',
+    slot: TimeSlot | null
+  ) => void;
   onRemove: (id: string, type: 'DUA' | 'POST') => void;
   fallbackSlot?: TimeSlot | 'all';
 }
@@ -37,18 +39,16 @@ export function SavedContentCard({
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [isTasbihOpen, setIsTasbihOpen] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
+  const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(
+    null
+  );
 
   const dua = item.dua;
-  const isDuaItem =
-    item.savedType === 'DUA' ||
-    (item.type === 'DUA' && (!item.content || item.content === dua?.meaning));
 
   const meaning = dua?.meaningBangla || dua?.meaning || item.content;
   const arabicText = dua?.arabicText;
   const transliteration = dua?.transliteration;
   const audioUrl = dua?.audioUrl || dua?.audios?.[0]?.audioUrl;
-  const categoryName = dua?.category?.name;
 
   const handleCopy = () => {
     const parts: string[] = [];
@@ -89,10 +89,15 @@ export function SavedContentCard({
       <div className="flex items-center justify-between pb-3 border-b border-[#e4e6eb]/80 dark:border-[#393a3b]/80 gap-2">
         <div className="flex items-center gap-2 flex-wrap">
           <TimeSlotBadge
-            timeSlot={item.timeSlot || (fallbackSlot && fallbackSlot !== 'all' ? fallbackSlot : null)}
+            timeSlot={
+              item.timeSlot ||
+              (fallbackSlot && fallbackSlot !== 'all' ? fallbackSlot : null)
+            }
             onClick={() => setIsPickerOpen(true)}
             size="md"
-            fallbackLabel={locale === 'bn' ? 'নিত্যদিনের রুটিন' : 'Daily Routine'}
+            fallbackLabel={
+              locale === 'bn' ? 'নিত্যদিনের রুটিন' : 'Daily Routine'
+            }
           />
         </div>
 
@@ -147,7 +152,11 @@ export function SavedContentCard({
               onRemove(item.id, itemType);
             }}
             className="p-1.5 rounded-xl text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer"
-            title={locale === 'bn' ? 'সংরক্ষণ তালিকা থেকে মুছুন' : 'Remove from Saved'}
+            title={
+              locale === 'bn'
+                ? 'সংরক্ষণ তালিকা থেকে মুছুন'
+                : 'Remove from Saved'
+            }
           >
             <Trash2 className="h-4 w-4" />
           </button>
@@ -226,7 +235,9 @@ export function SavedContentCard({
           <div className="flex items-center gap-1.5 pt-1 text-[11px] text-[#65676b] dark:text-[#b0b3b8]">
             <BookOpen className="h-3.5 w-3.5 shrink-0" />
             <span>
-              {dua.references.map((r) => r.reference || r.source?.name).join(', ')}
+              {dua.references
+                .map((r) => r.reference || r.source?.name)
+                .join(', ')}
             </span>
           </div>
         )}

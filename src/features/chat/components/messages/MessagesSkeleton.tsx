@@ -17,44 +17,43 @@ export function ConversationSidebarSkeleton({
   return (
     <aside
       className={cn(
-        'w-full h-full flex flex-col bg-white dark:bg-[#1f2021] border-r border-[#e4e6eb] dark:border-[#393a3b] overflow-hidden select-none',
+        'w-full h-full flex flex-col bg-white dark:bg-[#18191a] md:bg-transparent overflow-hidden select-none py-2 sm:py-3 lg:py-4 pr-0 md:pr-1',
         className
       )}
     >
       {/* Top Header */}
-      <div className="p-3.5 sm:p-4 border-b border-[#e4e6eb] dark:border-[#393a3b] flex items-center justify-between gap-2 shrink-0">
+      <div className="px-2 pb-2.5 flex items-center justify-between gap-2 shrink-0">
         <div className="flex items-center gap-2 min-w-0">
-          <div className="md:hidden h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700/60 animate-pulse shrink-0" />
-          <div className="h-7 w-28 rounded-lg bg-gray-200 dark:bg-gray-700/60 animate-pulse" />
-          <div className="h-5 w-6 rounded-full bg-gray-200 dark:bg-gray-700/60 animate-pulse" />
+          <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700/60 animate-pulse shrink-0" />
+          <div className="h-7 w-24 rounded-lg bg-gray-200 dark:bg-gray-700/60 animate-pulse" />
         </div>
-        <div className="h-9 w-9 rounded-full bg-gray-200 dark:bg-gray-700/60 animate-pulse shrink-0" />
+        <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700/60 animate-pulse shrink-0" />
       </div>
 
       {/* Search Input Bar */}
-      <div className="p-3 border-b border-[#e4e6eb]/60 dark:border-[#393a3b]/60 shrink-0">
-        <div className="h-10 w-full rounded-xl bg-gray-200/80 dark:bg-gray-700/50 animate-pulse" />
+      <div className="px-2 pb-2 shrink-0">
+        <div className="h-9 w-full rounded-xl bg-gray-200/80 dark:bg-gray-700/50 animate-pulse" />
       </div>
 
       {/* Conversation List */}
-      <div className="flex-1 overflow-y-auto p-2 space-y-1.5 overscroll-contain">
+      <div className="flex-1 overflow-y-auto px-1 space-y-1.5 overscroll-contain">
         {Array.from({ length: 8 }).map((_, i) => (
           <div
             key={i}
-            className="flex items-center gap-3 p-3 rounded-2xl animate-pulse"
+            className="flex items-center gap-3 px-2.5 py-2 rounded-xl animate-pulse"
           >
-            <div className="h-12 w-12 rounded-full bg-gray-200 dark:bg-gray-700/60 shrink-0" />
-            <div className="flex-1 space-y-2 min-w-0">
+            <div className="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700/60 shrink-0" />
+            <div className="flex-1 space-y-1.5 min-w-0">
               <div className="flex items-center justify-between gap-2">
                 <div
                   className="h-4 bg-gray-200 dark:bg-gray-700/60 rounded-md"
-                  style={{ width: `${60 - (i % 3) * 10}%` }}
+                  style={{ width: `${50 - (i % 3) * 10}%` }}
                 />
-                <div className="h-3 w-10 bg-gray-200 dark:bg-gray-700/60 rounded-md shrink-0" />
+                <div className="h-3 w-8 bg-gray-200 dark:bg-gray-700/60 rounded-md shrink-0" />
               </div>
               <div
                 className="h-3 bg-gray-200 dark:bg-gray-700/60 rounded-md"
-                style={{ width: `${80 - (i % 4) * 12}%` }}
+                style={{ width: `${75 - (i % 4) * 12}%` }}
               />
             </div>
           </div>
@@ -142,32 +141,49 @@ export function ChatViewSkeleton({
   );
 }
 
+export function EmptyPlaceholderSkeleton() {
+  return (
+    <div className="h-full flex-1 flex flex-col items-center justify-center p-6 text-center bg-[#f8f9fa] dark:bg-[#18191a] select-none">
+      <div className="h-20 w-20 rounded-3xl bg-gray-200 dark:bg-gray-700/60 animate-pulse mb-4" />
+      <div className="h-6 w-44 rounded-lg bg-gray-200 dark:bg-gray-700/60 animate-pulse mb-2" />
+      <div className="h-4 w-64 rounded-md bg-gray-200 dark:bg-gray-700/60 animate-pulse mb-6" />
+      <div className="h-10 w-36 rounded-2xl bg-gray-200 dark:bg-gray-700/60 animate-pulse" />
+    </div>
+  );
+}
+
 export function MessagesSkeleton({
   hasSelectedConversation = false,
 }: MessagesSkeletonProps) {
   return (
-    <div className="h-[100dvh] md:h-[calc(100vh-3.5rem)] overflow-hidden bg-[#f0f2f5] dark:bg-[#18191a]">
+    <div className="h-[100dvh] md:h-[calc(100vh-3.5rem)] overflow-hidden bg-white dark:bg-[#18191a] sm:bg-[#f0f2f5]">
       <Container size="2xl" className="h-full px-0 sm:px-4 lg:px-6 2xl:px-8">
-        <div className="w-full h-full flex bg-white dark:bg-[#18191a] border-x border-[#e4e6eb] dark:border-[#393a3b] shadow-xs overflow-hidden">
-          {/* 1. Left Column: Conversations Sidebar */}
+        <div className="flex h-full gap-4 lg:gap-6 2xl:gap-8">
+          {/* 1. Left Column: Conversations Sidebar Skeleton */}
           <div
             className={cn(
-              'w-full md:w-[320px] lg:w-[360px] xl:w-[380px] 2xl:w-[400px] h-full shrink-0 flex flex-col',
+              'w-full md:w-60 lg:w-60 xl:w-64 2xl:w-72 h-full shrink-0 flex flex-col',
               hasSelectedConversation ? 'hidden md:flex' : 'flex'
             )}
           >
             <ConversationSidebarSkeleton />
           </div>
 
-          {/* 2. Center Column: Chat View Skeleton */}
-          <div
+          {/* 2. Main Area: Chat View Skeleton or Empty Placeholder Skeleton */}
+          <main
             className={cn(
-              'flex-1 h-full flex flex-col min-w-0 overflow-hidden',
+              'flex-1 w-full min-w-0 h-full py-0 sm:py-3 lg:py-4 px-0',
               hasSelectedConversation ? 'flex' : 'hidden md:flex'
             )}
           >
-            <ChatViewSkeleton />
-          </div>
+            <div className="w-full h-full flex bg-white dark:bg-[#242526] sm:rounded-2xl sm:border sm:border-[#e4e6eb] sm:dark:border-[#393a3b] sm:shadow-2xs overflow-hidden">
+              {hasSelectedConversation ? (
+                <ChatViewSkeleton />
+              ) : (
+                <EmptyPlaceholderSkeleton />
+              )}
+            </div>
+          </main>
         </div>
       </Container>
     </div>

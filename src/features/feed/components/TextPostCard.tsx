@@ -12,9 +12,9 @@ export function TextPostCard({ post }: TextPostCardProps) {
   const images = post.mediaUrls || [];
 
   return (
-    <div className="space-y-2 sm:space-y-2.5">
+    <div className="space-y-3 sm:space-y-3.5">
       {post.content && (
-        <p className="text-[15px] sm:text-[16px] font-normal text-[#050505] dark:text-[#e4e6eb] leading-relaxed whitespace-pre-line">
+        <p className="text-[15px] sm:text-[16px] font-normal text-[#050505] dark:text-[#e4e6eb] leading-relaxed sm:leading-[1.7] whitespace-pre-line">
           {post.content}
         </p>
       )}

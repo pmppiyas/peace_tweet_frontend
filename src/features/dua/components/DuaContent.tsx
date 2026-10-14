@@ -21,17 +21,17 @@ export function DuaContent({
   className,
 }: DuaContentProps) {
   return (
-    <div className={cn('space-y-3.5', className)}>
-      {/* 1. Pronunciation & Meaning (Same style as SavedContentCard) */}
+    <div className={cn('space-y-4 sm:space-y-4.5', className)}>
+      {/* 1. Benefit / Virtue (without label, in pronunciation's text style) */}
+      {dua.fadilah && <DuaFadilah fadilah={dua.fadilah} showLabel={false} />}
+
+      {/* 2. Middle: Pronunciation & Bottom: Meaning */}
       <DuaMeaning
         meaning={dua.meaning || dua.meaningBangla}
         meaningBangla={dua.meaningBangla}
         duaBangla={(dua as any).duaBangla}
         transliteration={dua.transliteration}
       />
-
-      {/* 2. Virtue / Fadilah (Benefit: ...) */}
-      {dua.fadilah && <DuaFadilah fadilah={dua.fadilah} />}
 
       {/* 3. Arabic Calligraphy */}
       {dua.arabicText && (
@@ -43,7 +43,7 @@ export function DuaContent({
       )}
 
       {/* 4. Audio Recitation & References Bottom Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+      <div className="flex flex-wrap items-center justify-between gap-2 pt-1.5 sm:pt-2">
         <DuaReference references={dua.references} />
 
         {dua.audios && dua.audios.length > 0 && (

@@ -175,12 +175,12 @@ export function ConversationDetailsPanel({
   return (
     <>
       {/* Desktop Column */}
-      <aside className="hidden lg:block w-[300px] xl:w-[320px] h-full border-l border-[#e4e6eb] dark:border-[#393a3b] shrink-0">
+      <aside className="hidden xl:block w-[300px] xl:w-[320px] h-full border-l border-[#e4e6eb] dark:border-[#393a3b] shrink-0">
         {content}
       </aside>
 
-      {/* Mobile / Tablet Slide-over Drawer */}
-      <div className="lg:hidden">
+      {/* Mobile / Tablet / Laptop Slide-over Drawer */}
+      <div className="xl:hidden">
         {/* Backdrop */}
         <div
           className="fixed inset-0 bg-black/50 z-50 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"

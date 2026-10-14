@@ -4,6 +4,7 @@ import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
+import { useLanguage } from '@/providers/LanguageProvider';
 import { usePostActions } from '../hooks/usePostActions';
 import { uploadsApi } from '@/features/uploads/api/uploads.api';
 import { PostType } from '../types/feed.types';
@@ -82,6 +83,7 @@ export function PostComposer({
   className,
 }: PostComposerProps = {}) {
   const { user, isAuthenticated } = useAuth();
+  const { locale } = useLanguage();
   const { createPost, isCreatingPost } = usePostActions();
   const {
     isUploadingPost,
@@ -677,44 +679,74 @@ export function PostComposer({
                 )}
               </div>
 
-              {/* Feeling Picker Popover Grid */}
+              {/* Feeling Picker Modal Dialogue (Centered in display for full, clear view) */}
               {showFeelingPicker && (
-                <div className="rounded-xl border border-gray-200 bg-white p-3 shadow-md dark:border-gray-700 dark:bg-[#242526] animate-in fade-in zoom-in-95 duration-100">
-                  <div className="flex items-center justify-between pb-2 mb-2 border-b border-gray-100 dark:border-gray-800">
-                    <span className="text-xs font-bold text-gray-700 dark:text-gray-200">
-                      How are you feeling?
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setShowFeelingPicker(false)}
-                      className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-0.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
-                    >
-                      <X className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-1.5 max-h-48 overflow-y-auto">
-                    {FEELINGS.map((item) => {
-                      const isSelected = feeling === item.id;
-                      return (
+                <div
+                  className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-in fade-in duration-150 select-none"
+                  onClick={() => setShowFeelingPicker(false)}
+                >
+                  <div
+                    className="w-full max-w-sm sm:max-w-md rounded-2xl sm:rounded-3xl border border-[#e4e6eb] bg-white p-4 sm:p-5 shadow-2xl dark:border-[#393a3b] dark:bg-[#242526] animate-in zoom-in-95 duration-150"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#e4e6eb] dark:border-[#393a3b]">
+                      <div className="flex items-center gap-2">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400">
+                          <Smile className="h-4 w-4" />
+                        </div>
+                        <h3 className="text-sm sm:text-base font-bold text-[#050505] dark:text-[#e4e6eb]">
+                          {locale === 'bn' ? 'কেমন অনুভব করছেন?' : 'How are you feeling?'}
+                        </h3>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setShowFeelingPicker(false)}
+                        className="p-1.5 rounded-full text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+                        title={locale === 'bn' ? 'বন্ধ করুন' : 'Close'}
+                      >
+                        <X className="h-5 w-5" />
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-[60vh] overflow-y-auto p-0.5">
+                      {FEELINGS.map((item) => {
+                        const isSelected = feeling === item.id;
+                        return (
+                          <button
+                            key={item.id}
+                            type="button"
+                            onClick={() => {
+                              setFeeling(item.id);
+                              setShowFeelingPicker(false);
+                            }}
+                            className={cn(
+                              'flex items-center gap-2.5 p-2.5 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-semibold text-left transition-all border cursor-pointer select-none active:scale-95',
+                              isSelected
+                                ? 'bg-amber-50 text-amber-900 border-amber-300 dark:bg-amber-950/60 dark:text-amber-200 dark:border-amber-700 shadow-xs'
+                                : 'border-transparent hover:border-[#e4e6eb] dark:hover:border-[#393a3b] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] text-[#050505] dark:text-[#e4e6eb]'
+                            )}
+                          >
+                            <span className="text-xl sm:text-2xl select-none shrink-0">{item.emoji}</span>
+                            <span className="truncate capitalize">{item.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {feeling && (
+                      <div className="mt-3 pt-3 border-t border-[#e4e6eb] dark:border-[#393a3b] flex justify-end">
                         <button
-                          key={item.id}
                           type="button"
                           onClick={() => {
-                            setFeeling(item.id);
+                            setFeeling(null);
                             setShowFeelingPicker(false);
                           }}
-                          className={cn(
-                            'flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium text-left transition-colors',
-                            isSelected
-                              ? 'bg-primary-50 text-primary-700 border border-primary-300 dark:bg-primary-950 dark:text-primary-300 dark:border-primary-800'
-                              : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'
-                          )}
+                          className="text-xs font-bold text-rose-600 hover:underline cursor-pointer"
                         >
-                          <span className="text-base select-none">{item.emoji}</span>
-                          <span className="truncate capitalize">{item.label}</span>
+                          {locale === 'bn' ? 'অনুভূতি মুছুন' : 'Remove Feeling'}
                         </button>
-                      );
-                    })}
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

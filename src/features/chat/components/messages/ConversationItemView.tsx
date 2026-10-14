@@ -70,30 +70,32 @@ export function ConversationItemView({
       type="button"
       onClick={() => onSelect(conversation)}
       className={cn(
-        'w-full flex items-center gap-3 p-3 rounded-2xl transition-all duration-150 text-left select-none cursor-pointer group',
+        'w-full flex items-center gap-2.5 px-2 py-2 rounded-xl transition-colors text-left select-none cursor-pointer group',
         isSelected
-          ? 'bg-primary-50 dark:bg-primary-950/40 text-primary-900 dark:text-primary-100 shadow-2xs'
-          : 'hover:bg-[#f0f2f5] dark:hover:bg-[#2a2b2c] text-[#050505] dark:text-[#e4e6eb]',
+          ? 'bg-[#e4e6eb] dark:bg-[#3a3b3c]'
+          : 'hover:bg-[#e4e6eb]/70 dark:hover:bg-[#3a3b3c]/60'
       )}
     >
       {/* Avatar Container */}
       <ChatAvatar
         src={participant?.avatarUrl}
         name={displayName}
-        size="lg"
+        size="sm"
         isOnline={isOnline}
-        className="transition-transform group-hover:scale-105"
+        className="shrink-0 transition-transform group-hover:scale-105"
       />
 
       {/* Conversation Info */}
       <div className="flex-1 min-w-0">
-        <div className="flex items-center justify-between gap-1 mb-0.5">
+        <div className="flex items-center justify-between gap-1">
           <p
             className={cn(
-              'text-sm truncate font-bold',
+              'text-[15px] truncate leading-tight',
               isSelected
-                ? 'text-primary-900 dark:text-primary-200'
-                : 'text-[#050505] dark:text-[#e4e6eb]',
+                ? 'font-bold text-primary-700 dark:text-primary-400'
+                : hasUnread
+                  ? 'font-bold text-[#050505] dark:text-white'
+                  : 'font-semibold text-[#050505] dark:text-[#e4e6eb]'
             )}
           >
             {displayName}
@@ -103,22 +105,22 @@ export function ConversationItemView({
               'text-[11px] shrink-0',
               hasUnread
                 ? 'font-bold text-primary-600 dark:text-primary-400'
-                : 'text-[#65676b] dark:text-[#b0b3b8]',
+                : 'text-[#65676b] dark:text-[#b0b3b8]'
             )}
           >
             {formatTimestamp(conversation.lastMessageAt)}
           </span>
         </div>
 
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center justify-between gap-2 mt-0.5">
           <p
             className={cn(
-              'text-xs truncate leading-normal',
+              'text-xs truncate leading-tight',
               isTyping
                 ? 'text-primary-600 dark:text-primary-400 font-semibold italic animate-pulse'
                 : hasUnread
                   ? 'font-bold text-[#050505] dark:text-[#f0f2f5]'
-                  : 'text-[#65676b] dark:text-[#b0b3b8]',
+                  : 'text-[#65676b] dark:text-[#b0b3b8]'
             )}
           >
             {isTyping

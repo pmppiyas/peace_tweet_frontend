@@ -193,6 +193,55 @@ export function usePostActions() {
     },
   });
 
+  // Helper to remove a post and update share references across cached infinite data
+  const removePostFromInfiniteData = (
+    oldData: InfiniteData<FeedResponse> | undefined,
+    postId: string,
+  ): InfiniteData<FeedResponse> | undefined => {
+    if (!oldData?.pages) return oldData;
+    let originalPostId: string | null = null;
+    for (const page of oldData.pages) {
+      const found = (page.items || []).find((p) => p.id === postId);
+      if (found?.originalPostId) {
+        originalPostId = found.originalPostId;
+        break;
+      }
+    }
+
+    return {
+      ...oldData,
+      pages: oldData.pages.map((page) => ({
+        ...page,
+        items: (page.items || [])
+          .filter((p) => p.id !== postId)
+          .map((p) => {
+            if (
+              originalPostId &&
+              (p.id === originalPostId || p.originalPostId === originalPostId)
+            ) {
+              return {
+                ...p,
+                stats: {
+                  ...p.stats,
+                  shareCount: Math.max(0, (p.stats.shareCount || 0) - 1),
+                },
+              };
+            }
+            if (p.originalPostId === postId) {
+              return {
+                ...p,
+                originalPost: {
+                  ...(p.originalPost || ({} as any)),
+                  isUnavailable: true,
+                },
+              };
+            }
+            return p;
+          }),
+      })),
+    };
+  };
+
   // Delete Post Mutation (optimistic: hide immediately, roll back on failure)
   const deletePostMutation = useMutation({
     mutationFn: async (postId: string) => {
@@ -206,55 +255,39 @@ export function usePostActions() {
       const previousFeed = queryClient.getQueriesData({ queryKey: ['feed'] });
       const previousGroups = queryClient.getQueriesData({ queryKey: ['groups'] });
 
-      const removePost = (oldData?: InfiniteData<FeedResponse>) => {
-        if (!oldData?.pages) return oldData;
-        let originalPostId: string | null = null;
-        for (const page of oldData.pages) {
-          const found = (page.items || []).find((p) => p.id === postId);
-          if (found?.originalPostId) {
-            originalPostId = found.originalPostId;
-            break;
-          }
-        }
-
-        return {
-          ...oldData,
-          pages: oldData.pages.map((page) => ({
-            ...page,
-            items: (page.items || [])
-              .filter((p) => p.id !== postId)
-              .map((p) => {
-                if (originalPostId && (p.id === originalPostId || p.originalPostId === originalPostId)) {
-                  return {
-                    ...p,
-                    stats: {
-                      ...p.stats,
-                      shareCount: Math.max(0, (p.stats.shareCount || 0) - 1),
-                    },
-                  };
-                }
-                if (p.originalPostId === postId) {
-                  return {
-                    ...p,
-                    originalPost: {
-                      ...(p.originalPost || ({} as any)),
-                      isUnavailable: true,
-                    },
-                  };
-                }
-                return p;
-              }),
-          })),
-        };
-      };
-
-      queryClient.setQueriesData<InfiniteData<FeedResponse>>({ queryKey: ['feed'] }, removePost);
-      queryClient.setQueriesData<InfiniteData<FeedResponse>>({ queryKey: ['groups'] }, removePost);
+      queryClient.setQueriesData<InfiniteData<FeedResponse>>(
+        { queryKey: ['feed'] },
+        (old) => removePostFromInfiniteData(old, postId),
+      );
+      queryClient.setQueriesData<InfiniteData<FeedResponse>>(
+        { queryKey: ['groups'] },
+        (old) => removePostFromInfiniteData(old, postId),
+      );
 
       return { previousFeed, previousGroups };
     },
-    onError: (err: any, _postId, context) => {
-      // Restore the post if the delete failed
+    onSuccess: (_data, postId) => {
+      // Re-enforce removal across feed and groups
+      queryClient.setQueriesData<InfiniteData<FeedResponse>>(
+        { queryKey: ['feed'] },
+        (old) => removePostFromInfiniteData(old, postId),
+      );
+      queryClient.setQueriesData<InfiniteData<FeedResponse>>(
+        { queryKey: ['groups'] },
+        (old) => removePostFromInfiniteData(old, postId),
+      );
+    },
+    onError: (err: any, postId, context) => {
+      // If 404, post was already deleted on server! Do NOT restore or alert.
+      if (err?.response?.status === 404) {
+        queryClient.setQueriesData<InfiniteData<FeedResponse>>(
+          { queryKey: ['feed'] },
+          (old) => removePostFromInfiniteData(old, postId),
+        );
+        return;
+      }
+
+      // Restore previous feed if deletion truly failed (e.g. 403 Forbidden or network issue)
       context?.previousFeed?.forEach(([queryKey, data]) => {
         queryClient.setQueryData(queryKey, data);
       });
@@ -273,6 +306,8 @@ export function usePostActions() {
       queryClient.invalidateQueries({ queryKey: ['feed'] });
       queryClient.invalidateQueries({ queryKey: ['groups'] });
       queryClient.invalidateQueries({ queryKey: ['bookmarks'] });
+      queryClient.invalidateQueries({ queryKey: ['saved-items'] });
+      queryClient.invalidateQueries({ queryKey: ['saved-duas'] });
     },
   });
 
