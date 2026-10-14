@@ -7,9 +7,19 @@ import { FriendItem } from '../types/friends.types';
 
 export interface MyFriendsProps {
   searchQuery: string;
+  userId?: string;
+  layout?: 'list' | 'grid';
+  showUnfriend?: boolean;
+  header?: React.ReactNode;
 }
 
-export function MyFriends({ searchQuery }: MyFriendsProps) {
+export function MyFriends({
+  searchQuery,
+  userId,
+  layout = 'list',
+  showUnfriend,
+  header,
+}: MyFriendsProps) {
   const {
     data,
     isLoading,
@@ -19,7 +29,7 @@ export function MyFriends({ searchQuery }: MyFriendsProps) {
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-  } = useFriends(searchQuery);
+  } = useFriends(searchQuery, userId);
 
   // Flatten all pages
   const items: FriendItem[] =
@@ -36,6 +46,9 @@ export function MyFriends({ searchQuery }: MyFriendsProps) {
       isFetchingNextPage={isFetchingNextPage}
       fetchNextPage={fetchNextPage}
       isSearching={Boolean(searchQuery.trim())}
+      layout={layout}
+      showUnfriend={showUnfriend ?? !userId}
+      header={header}
     />
   );
 }

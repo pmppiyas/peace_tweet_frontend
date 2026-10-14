@@ -28,7 +28,7 @@ export function ProfileNavPills({ activeTab, onSelectTab }: ProfileNavPillsProps
     },
     {
       id: 'location' as SettingsTab,
-      label: locale === 'bn' ? 'অবস্থান ও ঠিকানা' : 'Location',
+      label: locale === 'bn' ? 'বর্তমান বাসস্থান' : 'Lives in',
       icon: MapPin,
     },
     {

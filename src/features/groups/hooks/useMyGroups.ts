@@ -6,11 +6,12 @@ import { groupsKeys } from './query-keys';
 import { GroupQueryParams } from '../types/groups.types';
 import { useAuth } from '@/hooks/useAuth';
 
-export function useMyGroups(params?: { search?: string; limit?: number }) {
+export function useMyGroups(params?: { search?: string; limit?: number; userId?: string }) {
   const { isAuthenticated } = useAuth();
   const queryParams: GroupQueryParams = {
     search: params?.search?.trim() || undefined,
     limit: params?.limit || 20,
+    userId: params?.userId,
   };
 
   return useInfiniteQuery({
@@ -24,7 +25,7 @@ export function useMyGroups(params?: { search?: string; limit?: number }) {
     },
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
-    enabled: isAuthenticated,
+    enabled: Boolean(params?.userId || isAuthenticated),
     staleTime: 1000 * 60 * 2,
   });
 }

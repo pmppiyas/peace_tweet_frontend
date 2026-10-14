@@ -14,6 +14,7 @@ export * from './components/FriendsLayout';
 export * from './components/FriendsSidebar';
 export * from './components/FriendsHomeView';
 export * from './components/FriendCard';
+export * from './components/FriendListItem';
 export * from './components/FriendRequestCard';
 export * from './components/FriendList';
 export * from './components/FriendRequestList';

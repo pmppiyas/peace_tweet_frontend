@@ -43,7 +43,7 @@ export function SectionLayout({
   return (
     <div
       className={cn(
-        'h-[calc(100vh-3.5rem)] overflow-hidden bg-[#f0f2f5] dark:bg-[#18191a]',
+        'h-screen md:h-[calc(100vh-3.5rem)] overflow-hidden bg-[#f0f2f5] dark:bg-[#18191a]',
         className
       )}
     >

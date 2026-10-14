@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import {
@@ -38,9 +39,14 @@ export function SearchDrawer({
   initialQuery = '',
 }: SearchDrawerProps) {
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
   const [query, setQuery] = useState(initialQuery);
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const {
     history,
@@ -202,18 +208,21 @@ export function SearchDrawer({
 
   const isQueryEmpty = query.trim().length === 0;
 
-  return (
+  if (!mounted || !isOpen) return null;
+
+  return createPortal(
     <>
       {/* Backdrop for desktop & mobile */}
       <div
-        className="fixed inset-0 z-50 bg-black/40 backdrop-blur-[2px] transition-opacity md:bg-black/20"
+        className="fixed inset-0 z-[100] bg-black/40 backdrop-blur-[2px] transition-opacity md:bg-black/20"
         aria-hidden="true"
+        onClick={onClose}
       />
 
       {/* Global Search Drawer Container */}
       <div
         ref={containerRef}
-        className="fixed inset-x-0 top-0 z-50 flex flex-col bg-white shadow-[0_12px_28px_0_rgba(0,0,0,0.2),0_2px_4px_0_rgba(0,0,0,0.1)] transition-all dark:bg-[#242526] md:left-0 md:right-auto md:w-[360px] lg:w-[380px] md:max-h-[88vh] md:rounded-br-2xl md:border-r md:border-b md:border-[#e4e6eb] dark:md:border-[#393a3b] h-full md:h-auto overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+        className="fixed inset-x-0 top-0 z-[100] flex flex-col bg-white shadow-[0_12px_28px_0_rgba(0,0,0,0.2),0_2px_4px_0_rgba(0,0,0,0.1)] transition-all dark:bg-[#242526] md:left-0 md:right-auto md:w-[360px] lg:w-[380px] md:max-h-[88vh] md:rounded-br-2xl md:border-r md:border-b md:border-[#e4e6eb] dark:md:border-[#393a3b] h-full md:h-auto overflow-hidden animate-in fade-in zoom-in-95 duration-150"
       >
         {/* Top Header: Back Arrow + Quick Search Pill Input */}
         <div className="flex h-14 items-center gap-2 px-3 border-b border-[#e4e6eb] dark:border-[#393a3b] shrink-0">
@@ -534,6 +543,7 @@ export function SearchDrawer({
           )}
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
 }

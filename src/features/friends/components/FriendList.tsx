@@ -3,6 +3,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Loader2 } from 'lucide-react';
 import { FriendCard } from './FriendCard';
+import { FriendListItem } from './FriendListItem';
 import { FriendCardSkeleton } from './FriendsPageSkeleton';
 import { FriendsEmptyState } from './FriendsEmptyState';
 import { FriendItem } from '../types/friends.types';
@@ -19,6 +20,9 @@ export interface FriendListProps {
   isFetchingNextPage?: boolean;
   fetchNextPage: () => void;
   isSearching?: boolean;
+  layout?: 'list' | 'grid';
+  showUnfriend?: boolean;
+  header?: React.ReactNode;
 }
 
 export function FriendList({
@@ -30,6 +34,9 @@ export function FriendList({
   isFetchingNextPage,
   fetchNextPage,
   isSearching,
+  layout = 'list',
+  showUnfriend = true,
+  header,
 }: FriendListProps) {
   const { locale } = useLanguage();
   const loadMoreRef = useRef<HTMLDivElement>(null);
@@ -57,6 +64,30 @@ export function FriendList({
 
   // Initial loading state
   if (isLoading) {
+    if (layout === 'list') {
+      return (
+        <div className="rounded-2xl border border-[#e4e6eb] bg-white dark:border-[#393a3b] dark:bg-[#242526] overflow-hidden shadow-2xs">
+          {header}
+          <div className="divide-y divide-[#e4e6eb] dark:divide-[#393a3b]">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                className="flex items-center justify-between p-3.5 sm:p-4 animate-pulse"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 rounded-full bg-black/10 dark:bg-white/10" />
+                  <div className="space-y-2">
+                    <div className="h-4 w-28 rounded bg-black/10 dark:bg-white/10" />
+                    <div className="h-3 w-36 rounded bg-black/10 dark:bg-white/10" />
+                  </div>
+                </div>
+                <div className="h-8 w-20 rounded-xl bg-black/10 dark:bg-white/10" />
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
         {Array.from({ length: 10 }).map((_, i) => (
@@ -84,6 +115,25 @@ export function FriendList({
 
   // Empty state
   if (items.length === 0) {
+    if (layout === 'list') {
+      return (
+        <div className="rounded-2xl border border-[#e4e6eb] bg-white dark:border-[#393a3b] dark:bg-[#242526] overflow-hidden shadow-2xs">
+          {header}
+          <div className="p-6">
+            <FriendsEmptyState
+              type="friends"
+              message={
+                isSearching
+                  ? locale === 'bn'
+                    ? 'এই নামে কোনো বন্ধু পাওয়া যায়নি'
+                    : 'No friends found matching your search'
+                  : undefined
+              }
+            />
+          </div>
+        </div>
+      );
+    }
     return (
       <FriendsEmptyState
         type="friends"
@@ -100,11 +150,26 @@ export function FriendList({
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
-        {items.map((friend) => (
-          <FriendCard key={friend.id} friend={friend} />
-        ))}
-      </div>
+      {layout === 'grid' ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+          {items.map((friend) => (
+            <FriendCard key={friend.id} friend={friend} />
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-[#e4e6eb] bg-white dark:border-[#393a3b] dark:bg-[#242526] overflow-hidden shadow-2xs">
+          {header}
+          <div className="divide-y divide-[#e4e6eb] dark:divide-[#393a3b]">
+            {items.map((friend) => (
+              <FriendListItem
+                key={friend.id}
+                friend={friend}
+                showUnfriend={showUnfriend}
+              />
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Infinite Scroll Trigger */}
       {hasNextPage && (

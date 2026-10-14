@@ -146,7 +146,7 @@ export function FeedItem({ post }: FeedItemProps) {
   return (
     <article className="w-full bg-white dark:bg-[#242526] transition-colors">
       {/* 1. Author & Post Meta Header */}
-      <div className="px-3.5 pt-3.5 pb-2.5 sm:px-5 sm:pt-4 sm:pb-3">
+      <div className="px-3.5 pt-3.5 pb-1.5 sm:px-5 sm:pt-4 sm:pb-2">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <Link
@@ -318,7 +318,7 @@ export function FeedItem({ post }: FeedItemProps) {
       </div>
 
       {/* Action Buttons Bar with Counts in a Single Line beside the Icons */}
-      <div className="grid grid-cols-4 px-2 sm:px-4 py-1.5 sm:py-2 text-xs font-semibold border-t border-[#e4e6eb]/70 dark:border-[#393a3b]/70">
+      <div className="grid grid-cols-4 px-2 sm:px-4 py-1 sm:py-1.5 text-xs font-semibold border-t border-[#e4e6eb]/70 dark:border-[#393a3b]/70">
         {/* Reaction (LIKE / Ameen) */}
         <button
           type="button"

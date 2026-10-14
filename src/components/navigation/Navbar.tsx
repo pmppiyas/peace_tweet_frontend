@@ -19,6 +19,7 @@ import { useUnreadNotificationsCount } from '@/features/notifications/hooks/useN
 import { NotificationDropdown } from '@/features/notifications/components/NotificationDropdown';
 import { MessengerDropdown, useTotalUnreadCount } from '@/features/chat';
 import { useChatStore } from '@/stores/useChatStore';
+import { useUiStore } from '@/stores/uiStore';
 import { Container } from '@/components/layout/Container';
 import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/constants/routes';
@@ -50,8 +51,10 @@ export function Navbar() {
   const pathname = usePathname();
   const { user, isAuthenticated } = useAuth();
   const { t, locale } = useLanguage();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const isDrawerOpen = useUiStore((state) => state.isMenuDrawerOpen);
+  const setIsDrawerOpen = useUiStore((state) => state.setMenuDrawerOpen);
+  const isSearchOpen = useUiStore((state) => state.isSearchModalOpen);
+  const setIsSearchOpen = useUiStore((state) => state.setSearchModalOpen);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const isMessengerOpen = useChatStore(
     (state) => state.isMessengerDropdownOpen
@@ -67,7 +70,6 @@ export function Navbar() {
   const { data: unreadNotificationsCount = 0 } =
     useUnreadNotificationsCount(isAuthenticated);
   const unreadMessagesCount = useTotalUnreadCount();
-
   const isAuthPage =
     pathname === ROUTES.LOGIN ||
     pathname === '/login' ||
@@ -77,6 +79,34 @@ export function Navbar() {
   if (isAuthPage) {
     return null;
   }
+
+  const RESERVED_FIRST_SEGMENTS = new Set([
+    '',
+    'categories',
+    'duas',
+    'friends',
+    'groups',
+    'search',
+    'users',
+    'profile',
+    'saved',
+    'settings',
+    'messages',
+    'message',
+    'login',
+    'register',
+    'admin',
+    'auth',
+    'api',
+    'terms',
+    'blood',
+  ]);
+
+  const firstPathSegment = pathname.slice(1).split('/')[0]?.toLowerCase() || '';
+  const isProfilePage =
+    pathname === '/profile' ||
+    pathname.startsWith('/profile/') ||
+    (!isAuthPage && !isMessagesActive && Boolean(firstPathSegment) && !RESERVED_FIRST_SEGMENTS.has(firstPathSegment));
 
   const isLoginPage = false;
 
@@ -356,8 +386,7 @@ export function Navbar() {
     <header
       className={cn(
         'sticky top-0 z-40 w-full h-14 box-border border-b border-[#e4e6eb] bg-white dark:border-[#393a3b] dark:bg-[#242526] shadow-2xs select-none px-2 sm:px-0',
-        (pathname === '/messages' || pathname.startsWith('/messages/')) &&
-          'hidden md:block'
+        (isMessagesActive || isProfilePage) && 'hidden md:block'
       )}
     >
       <Container size="2xl" className="h-full px-0 sm:px-4 lg:px-6 2xl:px-8">

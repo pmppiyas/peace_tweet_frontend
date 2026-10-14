@@ -27,6 +27,9 @@ export interface FriendUser {
   bio?: string | null;
   badge?: string;
   userStatus?: UserStatus;
+  friendsCount?: number;
+  friendCount?: number;
+  postCount?: number;
 }
 
 // Friend list item
@@ -63,6 +66,7 @@ export interface FriendQueryParams {
   limit?: number;
   cursor?: string;
   search?: string;
+  userId?: string;
 }
 
 // Query parameters for friend requests

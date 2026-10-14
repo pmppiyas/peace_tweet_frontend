@@ -4,15 +4,19 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { feedApi } from '../api/feed.api';
 import { FeedFilters, PostType } from '../types/feed.types';
 
-export function useFeed(typeFilter?: PostType) {
+export function useFeed(filtersOrType?: PostType | FeedFilters) {
+  const filters: FeedFilters =
+    typeof filtersOrType === 'string'
+      ? { type: filtersOrType }
+      : filtersOrType || {};
+
   return useInfiniteQuery({
-    queryKey: ['feed', { type: typeFilter }],
+    queryKey: ['feed', filters],
     queryFn: async ({ pageParam }) => {
-      const filters: FeedFilters = {
+      const response = await feedApi.getFeed({
+        ...filters,
         cursor: pageParam ? String(pageParam) : undefined,
-        type: typeFilter,
-      };
-      const response = await feedApi.getFeed(filters);
+      });
       return response.data;
     },
     initialPageParam: undefined as string | undefined,

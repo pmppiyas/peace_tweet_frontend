@@ -14,6 +14,7 @@ export * from './utils/group-membership-status';
 export * from './components/GroupMembershipBadge';
 export * from './components/GroupActionButton';
 export * from './components/GroupCard';
+export * from './components/GroupListItem';
 export * from './components/GroupList';
 export * from './components/GroupHeader';
 export * from './components/GroupFeed';

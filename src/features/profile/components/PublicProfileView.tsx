@@ -40,8 +40,10 @@ export function PublicProfileView({ username }: PublicProfileViewProps) {
   const viewAsParam = searchParams.get('view_as');
   const isViewAs = isOwner ? viewAsParam !== 'false' : true;
 
-  let currentTab: 'overview' | 'friend' | 'group' | 'saved' = 'overview';
-  if (rawTab === 'friend' || rawTab === 'friends') {
+  let currentTab: 'overview' | 'post' | 'friend' | 'group' | 'saved' = 'overview';
+  if (rawTab === 'post' || rawTab === 'posts') {
+    currentTab = 'post';
+  } else if (rawTab === 'friend' || rawTab === 'friends') {
     currentTab = 'friend';
   } else if (rawTab === 'group' || rawTab === 'groups') {
     currentTab = 'group';
@@ -53,6 +55,7 @@ export function PublicProfileView({ username }: PublicProfileViewProps) {
 
   const activeIdMap = {
     overview: 'profile-overview',
+    post: 'profile-overview',
     friend: isFromTab ? 'profile-overview' : 'profile-friends',
     group: isFromTab ? 'profile-overview' : 'profile-groups',
     saved: isFromTab ? 'profile-overview' : 'profile-saved',
@@ -60,6 +63,7 @@ export function PublicProfileView({ username }: PublicProfileViewProps) {
 
   const mobileTabIdMap = {
     overview: 'tab-overview',
+    post: 'tab-overview',
     friend: isFromTab ? 'tab-overview' : 'tab-friends',
     group: isFromTab ? 'tab-overview' : 'tab-groups',
     saved: isFromTab ? 'tab-overview' : 'tab-saved',
@@ -74,7 +78,7 @@ export function PublicProfileView({ username }: PublicProfileViewProps) {
         baseUrl={baseUrl}
         activeId={activeIdMap[currentTab]}
         activeMobileTabId={mobileTabIdMap[currentTab]}
-        maxWidth="max-w-4xl"
+        maxWidth="w-full max-w-7xl 2xl:max-w-[1600px]"
       >
         <div className="space-y-4 animate-pulse">
           <div className="rounded-2xl border border-[#e4e6eb] bg-white dark:border-[#393a3b] dark:bg-[#242526] overflow-hidden">
@@ -113,7 +117,7 @@ export function PublicProfileView({ username }: PublicProfileViewProps) {
         baseUrl={baseUrl}
         activeId={activeIdMap[currentTab]}
         activeMobileTabId={mobileTabIdMap[currentTab]}
-        maxWidth="max-w-4xl"
+        maxWidth="w-full max-w-7xl 2xl:max-w-[1600px]"
       >
         <Card className="flex flex-col items-center justify-center p-12 text-center border border-dashed border-[#e4e6eb] bg-white rounded-3xl dark:border-[#393a3b] dark:bg-[#242526]">
           <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-600 dark:bg-red-950/50 dark:text-red-400">
@@ -148,22 +152,14 @@ export function PublicProfileView({ username }: PublicProfileViewProps) {
       baseUrl={baseUrl}
       activeId={activeIdMap[currentTab]}
       activeMobileTabId={mobileTabIdMap[currentTab]}
-      maxWidth="max-w-4xl"
+      maxWidth="w-full max-w-7xl 2xl:max-w-[1600px]"
     >
-      {isFromTab || currentTab === 'overview' ? (
-        <ProfileView
-          targetUser={profile}
-          activeSubTab={currentTab}
-          baseUrl={baseUrl}
-          isViewAs={isViewAs}
-        />
-      ) : (
-        <>
-          {currentTab === 'friend' && <ProfileFriendsTab targetUser={profile} />}
-          {currentTab === 'group' && <ProfileGroupsTab />}
-          {currentTab === 'saved' && isOwner && <ProfileSavedTab />}
-        </>
-      )}
+      <ProfileView
+        targetUser={profile}
+        activeSubTab={currentTab}
+        baseUrl={baseUrl}
+        isViewAs={isViewAs}
+      />
     </ProfileLayout>
   );
 }

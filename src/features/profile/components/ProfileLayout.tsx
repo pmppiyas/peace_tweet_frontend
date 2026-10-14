@@ -113,7 +113,7 @@ export function ProfileLayout({
         />
       }
       backHref="/"
-      mobileTabs={mobileTabs}
+      mobileTabs={[]}
       activeMobileTabId={activeMobileTabId}
       maxWidth={maxWidth}
     >

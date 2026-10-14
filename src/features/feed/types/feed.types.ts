@@ -73,6 +73,7 @@ export interface FeedFilters {
   cursor?: string;
   limit?: number;
   type?: PostType;
+  authorId?: string;
 }
 
 export interface PostComment {

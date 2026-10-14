@@ -89,6 +89,7 @@ export interface GroupQueryParams {
   search?: string;
   cursor?: string;
   limit?: number;
+  userId?: string;
 }
 
 export interface MemberQueryParams {

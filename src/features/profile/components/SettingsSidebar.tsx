@@ -58,7 +58,7 @@ export function SettingsSidebar({ activeTab, onSelectTab }: SettingsSidebarProps
     },
     {
       id: 'settings-location',
-      label: locale === 'bn' ? 'অবস্থান ও ঠিকানা' : 'Location',
+      label: locale === 'bn' ? 'বর্তমান বাসস্থান' : 'Lives in',
       href: '/settings?tab=location',
       icon: MapPin,
       iconBg: 'bg-emerald-600 text-white',

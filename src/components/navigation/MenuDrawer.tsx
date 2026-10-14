@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -45,6 +46,12 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
   const { data: requestCount = 0 } = usePendingRequestsCount(isAuthenticated);
   const unreadMessagesCount = useTotalUnreadCount();
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Close drawer on escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -64,7 +71,7 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
     if (isOpen) onClose();
   }, [pathname]);
 
-  if (!isOpen) return null;
+  if (!mounted || !isOpen) return null;
 
   const menuItems = [
     {
@@ -144,8 +151,8 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
       : []),
   ];
 
-  return (
-    <div className="fixed inset-0 z-50 flex justify-end select-none">
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex justify-end select-none">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
@@ -153,7 +160,7 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
       />
 
       {/* Drawer Panel */}
-      <div className="relative z-50 w-80 max-w-[85vw] h-[100dvh] bg-white dark:bg-[#242526] shadow-2xl flex flex-col transition-all animate-in slide-in-from-right duration-250 border-l border-[#e4e6eb] dark:border-[#393a3b]">
+      <div className="relative z-10 w-80 max-w-[85vw] h-[100dvh] bg-white dark:bg-[#242526] shadow-2xl flex flex-col transition-all animate-in slide-in-from-right duration-250 border-l border-[#e4e6eb] dark:border-[#393a3b]">
         {/* Drawer Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-[#e4e6eb] dark:border-[#393a3b]">
           <h2 className="text-lg font-bold text-[#050505] dark:text-[#e4e6eb]">
@@ -171,7 +178,7 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
         </div>
 
         {/* Drawer Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-3.5 space-y-4 pb-20 md:pb-8">
+        <div className="flex-1 overflow-y-auto p-3.5 space-y-3 pb-8 md:pb-6">
           {/* User Account / Auth Section */}
           {isAuthenticated ? (
             <Link
@@ -283,7 +290,7 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
           </div>
 
           {/* Quick Preferences Card */}
-          <div className="pt-2 border-t border-[#e4e6eb] dark:border-[#393a3b] space-y-2">
+          <div className="!mt-1 pt-1.5 border-t border-[#e4e6eb] dark:border-[#393a3b] space-y-2">
             <p className="px-2 text-[11px] font-bold text-[#65676b] dark:text-[#b0b3b8] uppercase tracking-wider">
               {locale === 'bn' ? 'পছন্দ ও সেটিংস' : 'Preferences'}
             </p>
@@ -372,6 +379,7 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

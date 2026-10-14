@@ -20,8 +20,12 @@ export function DuaContent({
   showArabicCollapsible = true,
   className,
 }: DuaContentProps) {
+  const hasReferences = Boolean(dua.references && dua.references.length > 0);
+  const hasAudios = Boolean(dua.audios && dua.audios.length > 0);
+  const hasBottomBar = hasReferences || hasAudios;
+
   return (
-    <div className={cn('space-y-4 sm:space-y-4.5', className)}>
+    <div className={cn('space-y-3.5 sm:space-y-4', className)}>
       {/* 1. Benefit / Virtue (without label, in pronunciation's text style) */}
       {dua.fadilah && <DuaFadilah fadilah={dua.fadilah} showLabel={false} />}
 
@@ -43,19 +47,21 @@ export function DuaContent({
       )}
 
       {/* 4. Audio Recitation & References Bottom Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-2 pt-1.5 sm:pt-2">
-        <DuaReference references={dua.references} />
+      {hasBottomBar && (
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-1 sm:pt-1.5">
+          {hasReferences && <DuaReference references={dua.references} />}
 
-        {dua.audios && dua.audios.length > 0 && (
-          <DuaAudio
-            duaId={dua.id}
-            duaTitle={dua.title || dua.meaning || 'Dua'}
-            audio={dua.audios[0]}
-            audioUrl={dua.audioUrl}
-            arabicText={dua.arabicText}
-          />
-        )}
-      </div>
+          {hasAudios && dua.audios && (
+            <DuaAudio
+              duaId={dua.id}
+              duaTitle={dua.title || dua.meaning || 'Dua'}
+              audio={dua.audios[0]}
+              audioUrl={dua.audioUrl}
+              arabicText={dua.arabicText}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 }

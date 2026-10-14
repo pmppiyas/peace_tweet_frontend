@@ -32,6 +32,8 @@ export function MobileNav() {
     setMobileComposerOpen,
     isUploadingPost,
     isPostUploadSuccess,
+    isMenuDrawerOpen,
+    isSearchModalOpen,
   } = useUiStore();
   const { data: unreadNotificationsCount = 0 } =
     useUnreadNotificationsCount(isAuthenticated);
@@ -93,7 +95,11 @@ export function MobileNav() {
     <div
       className={cn(
         'md:hidden fixed bottom-0 left-0 z-50 w-full border-t border-[#e4e6eb] bg-white/95 backdrop-blur-md dark:border-[#393a3b] dark:bg-[#242526]/95 pb-safe',
-        (isMessagesPage || isAuthPage) && 'hidden'
+        (isMessagesPage ||
+          isAuthPage ||
+          isMenuDrawerOpen ||
+          isSearchModalOpen) &&
+          'hidden'
       )}
     >
       <nav className="grid grid-cols-5 h-14 items-center">

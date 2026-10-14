@@ -58,7 +58,7 @@ export function ConversationSidebar({
           >
             <ArrowLeft className="h-4.5 w-4.5" />
           </Link>
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#050505] dark:text-white truncate">
+          <h1 className="text-xl font-bold tracking-tight text-[#050505] dark:text-white truncate">
             {locale === 'bn' ? 'মেসেজ' : 'Chats'}
           </h1>
           {totalUnreadCount > 0 && (

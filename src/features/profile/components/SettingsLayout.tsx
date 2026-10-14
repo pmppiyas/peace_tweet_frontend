@@ -41,7 +41,7 @@ export function SettingsLayout({
     },
     {
       id: 'tab-location',
-      label: locale === 'bn' ? 'অবস্থান' : 'Location',
+      label: locale === 'bn' ? 'বর্তমান বাসস্থান' : 'Lives in',
       href: '/settings?tab=location',
     },
     {

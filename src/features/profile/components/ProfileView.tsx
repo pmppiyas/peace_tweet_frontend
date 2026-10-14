@@ -38,6 +38,7 @@ import {
   Link2,
   Move,
   MessageCircle,
+  ArrowLeft,
 } from 'lucide-react';
 import { useChatStore } from '@/stores/useChatStore';
 import { formatDate } from '@/lib/utils/date';
@@ -50,6 +51,7 @@ import { cn } from '@/lib/utils/cn';
 import { ProfileFriendsTab } from './ProfileFriendsTab';
 import { ProfileGroupsTab } from './ProfileGroupsTab';
 import { ProfileSavedTab } from './ProfileSavedTab';
+import { ProfilePostsTab } from './ProfilePostsTab';
 import { CoverPhotoEditorModal } from './CoverPhotoEditorModal';
 
 const formatBloodGroup = (bg?: BloodGroup | null) => {
@@ -68,7 +70,7 @@ const formatBloodGroup = (bg?: BloodGroup | null) => {
 };
 
 export interface ProfileViewProps {
-  activeSubTab?: 'overview' | 'friend' | 'group' | 'saved';
+  activeSubTab?: 'overview' | 'post' | 'posts' | 'friend' | 'friends' | 'group' | 'groups' | 'saved';
   isViewAs?: boolean;
   targetUser?: UserProfileResponse | User | null;
   baseUrl?: string;
@@ -85,6 +87,18 @@ export function ProfileView({
   const { setUser } = useAuthStore();
   const { locale } = useLanguage();
   const openChat = useChatStore((state) => state.openChat);
+
+  const rawTab = (activeSubTab || searchParams?.get('tab') || 'overview').toLowerCase();
+  const currentTab: 'overview' | 'post' | 'friend' | 'group' | 'saved' =
+    rawTab === 'posts' || rawTab === 'post'
+      ? 'post'
+      : rawTab === 'friends' || rawTab === 'friend'
+        ? 'friend'
+        : rawTab === 'groups' || rawTab === 'group'
+          ? 'group'
+          : rawTab === 'saved'
+            ? 'saved'
+            : 'overview';
 
   const displayUser = targetUser || authUser;
   const isOwner = Boolean(
@@ -105,12 +119,12 @@ export function ProfileView({
         : '/profile');
 
   const exitViewAsUrl = isOwner
-    ? activeSubTab === 'overview'
+    ? currentTab === 'overview'
       ? ROUTES.PROFILE
-      : `${ROUTES.PROFILE}?tab=${activeSubTab}`
-    : activeSubTab === 'overview'
+      : `${ROUTES.PROFILE}?tab=${currentTab}`
+    : currentTab === 'overview'
       ? `${effectiveBaseUrl}?from=tab`
-      : `${effectiveBaseUrl}?tab=${activeSubTab}&from=tab`;
+      : `${effectiveBaseUrl}?tab=${currentTab}&from=tab`;
 
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [bioInput, setBioInput] = useState(displayUser?.bio || '');
@@ -123,19 +137,24 @@ export function ProfileView({
 
   const buildTabUrl = (tab?: string) => {
     const params = new URLSearchParams();
-    if (tab) params.set('tab', tab);
+    if (tab && tab !== 'overview') params.set('tab', tab);
     params.set('from', 'tab');
     if (isOwner && isViewAs) params.set('view_as', 'true');
-    return `${effectiveBaseUrl}?${params.toString()}`;
+    const qs = params.toString();
+    return qs ? `${effectiveBaseUrl}?${qs}` : effectiveBaseUrl;
   };
 
   const viewAsUrl = isViewAs
     ? exitViewAsUrl
-    : activeSubTab === 'overview'
+    : currentTab === 'overview'
       ? `${effectiveBaseUrl}?view_as=true`
-      : `${effectiveBaseUrl}?tab=${activeSubTab}&from=tab&view_as=true`;
+      : `${effectiveBaseUrl}?tab=${currentTab}&from=tab&view_as=true`;
 
-  const { data: friendsData } = useFriends(undefined, isAuthenticated && isOwner);
+  const { data: friendsData } = useFriends(
+    undefined,
+    undefined,
+    Boolean(isAuthenticated && isOwner)
+  );
   const { data: myGroupsData } = useMyGroups({ limit: 4 });
   const { data: bookmarkData } = useBookmarks({ limit: 1 });
 
@@ -322,6 +341,16 @@ export function ProfileView({
       <div className="relative z-20 rounded-2xl border border-[#e4e6eb] bg-white shadow-2xs dark:border-[#393a3b] dark:bg-[#242526]">
         {/* Cover Photo Banner */}
         <div className="relative h-44 sm:h-56 md:h-64 lg:h-72 xl:h-80 2xl:h-96 rounded-t-2xl bg-gradient-to-r from-emerald-800 via-teal-700 to-primary-800 overflow-hidden">
+
+          {/* Floating Mobile Back Button */}
+          <Link
+            href={ROUTES.HOME}
+            className="md:hidden absolute top-3 left-3 z-30 flex h-9 w-9 items-center justify-center rounded-full bg-black/40 hover:bg-black/60 text-white backdrop-blur-xs transition-all shadow-md active:scale-95"
+            title={locale === 'bn' ? 'ফিরে যান' : 'Go back'}
+            aria-label={locale === 'bn' ? 'ফিরে যান' : 'Go back'}
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Link>
 
           {displayUser.coverUrl ? (
             <Image
@@ -739,27 +768,39 @@ export function ProfileView({
             {/* Sub-Navigation Tabs (Centered) */}
             <div className="flex items-center justify-center gap-1 sm:gap-2 overflow-x-auto scrollbar-none text-xs sm:text-sm font-bold flex-1 sm:flex-initial">
               <Link
-                href={buildTabUrl()}
+                href={buildTabUrl('overview')}
                 className={cn(
                   'py-2 px-3 sm:px-4 rounded-xl transition-colors whitespace-nowrap',
-                  activeSubTab === 'overview'
+                  currentTab === 'overview'
                     ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/50'
                     : 'text-[#65676b] dark:text-[#b0b3b8] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c]'
                 )}
               >
-                {locale === 'bn' ? 'পোস্ট ও পরিচিতি' : 'Overview'}
+                {locale === 'bn' ? 'পরিচিতি' : 'Overview'}
+              </Link>
+
+              <Link
+                href={buildTabUrl('post')}
+                className={cn(
+                  'py-2 px-3 sm:px-4 rounded-xl transition-colors whitespace-nowrap',
+                  currentTab === 'post'
+                    ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/50'
+                    : 'text-[#65676b] dark:text-[#b0b3b8] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c]'
+                )}
+              >
+                {locale === 'bn' ? 'পোস্ট' : 'Posts'}
               </Link>
 
               <Link
                 href={buildTabUrl('friend')}
                 className={cn(
                   'py-2 px-3 sm:px-4 rounded-xl transition-colors whitespace-nowrap',
-                  activeSubTab === 'friend'
+                  currentTab === 'friend'
                     ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/50'
                     : 'text-[#65676b] dark:text-[#b0b3b8] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c]'
                 )}
               >
-                <span>{locale === 'bn' ? 'বন্ধুরা' : 'Friends'}</span>
+                <span>{locale === 'bn' ? 'বন্ধু' : 'Friends'}</span>
                 {isOwner && totalFriends > 0 && (
                   <span className="ml-1.5 text-xs font-semibold opacity-80">
                     {totalFriends}
@@ -771,46 +812,18 @@ export function ProfileView({
                 href={buildTabUrl('group')}
                 className={cn(
                   'py-2 px-3 sm:px-4 rounded-xl transition-colors whitespace-nowrap',
-                  activeSubTab === 'group'
+                  currentTab === 'group'
                     ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/50'
                     : 'text-[#65676b] dark:text-[#b0b3b8] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c]'
                 )}
               >
-                <span>
-                  {isOwner
-                    ? locale === 'bn'
-                      ? 'গ্রুপসমূহ'
-                      : 'My Groups'
-                    : locale === 'bn'
-                      ? 'গ্রুপসমূহ'
-                      : 'Groups'}
-                </span>
+                <span>{locale === 'bn' ? 'গ্রুপ' : 'Groups'}</span>
                 {isOwner && myGroups.length > 0 && (
                   <span className="ml-1.5 text-xs font-semibold opacity-80">
                     {myGroups.length}
                   </span>
                 )}
               </Link>
-
-              {/* Saved Tab - ONLY FOR OWNER */}
-              {isOwner && (
-                <Link
-                  href={buildTabUrl('saved')}
-                  className={cn(
-                    'py-2 px-3 sm:px-4 rounded-xl transition-colors whitespace-nowrap',
-                    activeSubTab === 'saved'
-                      ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/50'
-                      : 'text-[#65676b] dark:text-[#b0b3b8] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c]'
-                  )}
-                >
-                  <span>{locale === 'bn' ? 'সংরক্ষিত' : 'Saved'}</span>
-                  {totalBookmarks > 0 && (
-                    <span className="ml-1.5 text-xs font-semibold opacity-80">
-                      {totalBookmarks}
-                    </span>
-                  )}
-                </Link>
-              )}
             </div>
 
             {/* 3-Dot More Menu at the Far Right */}
@@ -893,6 +906,30 @@ export function ProfileView({
                       )}
                     </button>
 
+                    {/* Saved Tab Option (Only for owner) */}
+                    {isOwner && (
+                      <Link
+                        href={buildTabUrl('saved')}
+                        onClick={() => setShowMoreMenu(false)}
+                        className={cn(
+                          'py-2 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-bold transition-colors whitespace-nowrap flex items-center justify-between w-full',
+                          currentTab === 'saved'
+                            ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/50'
+                            : 'text-[#65676b] dark:text-[#b0b3b8] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c]'
+                        )}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <Bookmark className="h-4 w-4 shrink-0" />
+                          <span>{locale === 'bn' ? 'সংরক্ষিত' : 'Saved'}</span>
+                        </div>
+                        {totalBookmarks > 0 && (
+                          <span className="text-xs font-semibold opacity-80">
+                            {totalBookmarks}
+                          </span>
+                        )}
+                      </Link>
+                    )}
+
                     {/* Settings Option (Only for owner) */}
                     {isOwner && (
                       <Link
@@ -912,14 +949,23 @@ export function ProfileView({
         </div>
       </div>
 
-      {/* 2. Sub-tab Content or Default Two-Column Overview */}
-      {activeSubTab === 'friend' && (
+      {/* 2. Sub-tab Content */}
+      {currentTab === 'friend' && (
         <ProfileFriendsTab targetUser={!isOwner ? displayUser : undefined} />
       )}
-      {activeSubTab === 'group' && <ProfileGroupsTab />}
-      {activeSubTab === 'saved' && isOwner && <ProfileSavedTab />}
+      {currentTab === 'group' && (
+        <ProfileGroupsTab targetUser={!isOwner ? displayUser : undefined} />
+      )}
+      {currentTab === 'saved' && isOwner && <ProfileSavedTab />}
+      {currentTab === 'post' && (
+        <ProfilePostsTab
+          userId={displayUser?.id}
+          isOwner={isOwner}
+          isViewAs={isViewAs}
+        />
+      )}
 
-      {activeSubTab === 'overview' && (
+      {currentTab === 'overview' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
           {/* Left Column: Intro & Summary Cards */}
           <div className="lg:col-span-5 xl:col-span-4 2xl:col-span-4 space-y-4">
@@ -1166,7 +1212,11 @@ export function ProfileView({
           <div className="lg:col-span-7 xl:col-span-8 2xl:col-span-8 space-y-4">
 
             {/* Post Composer (Hidden in View As mode or when not owner) */}
-            {isOwner && !isViewAs && <PostComposer />}
+            {isOwner && !isViewAs && (
+              <div className="bg-white dark:bg-[#242526] rounded-2xl border border-[#e4e6eb] dark:border-[#393a3b] shadow-2xs overflow-hidden">
+                <PostComposer />
+              </div>
+            )}
 
             {/* Quick Shortcuts Card (Only for owner in normal mode) */}
             {isOwner && !isViewAs && (
@@ -1213,22 +1263,12 @@ export function ProfileView({
               </div>
             )}
 
-            {/* Public Activity / Timeline Card for View As or Other Users */}
-            {(!isOwner || isViewAs) && (
-              <div className="rounded-2xl border border-[#e4e6eb] bg-white p-8 sm:p-10 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526] text-center">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-50 dark:bg-primary-950/50 text-primary-600 dark:text-primary-400 mb-3">
-                  <Users className="h-6 w-6" />
-                </div>
-                <h3 className="text-base font-bold text-[#050505] dark:text-white mb-1">
-                  {locale === 'bn' ? 'টাইমলাইন' : 'Timeline'}
-                </h3>
-                <p className="text-xs text-[#65676b] dark:text-[#b0b3b8] max-w-sm mx-auto">
-                  {locale === 'bn'
-                    ? `${displayUser.name}-এর সাম্প্রতিক কোনো পাবলিক পোস্ট নেই`
-                    : `No recent public posts to show from ${displayUser.name}.`}
-                </p>
-              </div>
-            )}
+            {/* User's Posts Feed in Overview */}
+            <ProfilePostsTab
+              userId={displayUser?.id}
+              isOwner={false}
+              isViewAs={isViewAs}
+            />
           </div>
         </div>
       )}

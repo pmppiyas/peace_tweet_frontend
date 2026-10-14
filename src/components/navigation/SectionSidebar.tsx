@@ -58,7 +58,7 @@ export function SectionSidebar({
             {backHref ? (
               <Link
                 href={backHref}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e4e6eb]/70 hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors"
                 title="Back"
               >
                 <ArrowLeft className="h-4.5 w-4.5" />
@@ -67,7 +67,7 @@ export function SectionSidebar({
               <button
                 type="button"
                 onClick={onBack}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e4e6eb]/70 hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors"
                 title="Back"
               >
                 <ArrowLeft className="h-4.5 w-4.5" />

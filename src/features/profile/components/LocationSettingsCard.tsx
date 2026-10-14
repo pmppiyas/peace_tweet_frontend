@@ -74,14 +74,14 @@ export function LocationSettingsCard() {
         type: 'success',
         text:
           locale === 'bn'
-            ? 'অবস্থান তথ্য সফলভাবে সংরক্ষিত হয়েছে!'
-            : 'Location details saved successfully!',
+            ? 'বাসস্থানের তথ্য সফলভাবে সংরক্ষিত হয়েছে!'
+            : 'Lives in details saved successfully!',
       });
     } catch (err: any) {
       const msg =
         err?.response?.data?.message ||
         (locale === 'bn'
-          ? 'অবস্থান আপডেট করতে সমস্যা হয়েছে।'
+          ? 'তথ্য আপডেট করতে সমস্যা হয়েছে।'
           : 'Failed to update location.');
       setStatus({ type: 'error', text: msg });
     } finally {
@@ -98,12 +98,12 @@ export function LocationSettingsCard() {
           </div>
           <div>
             <CardTitle className="text-sm font-bold text-[#050505] dark:text-white">
-              {locale === 'bn' ? 'অবস্থান ও ঠিকানা' : 'Location & Address'}
+              {locale === 'bn' ? 'বর্তমান বাসস্থান' : 'Lives in'}
             </CardTitle>
             <CardDescription className="text-xs">
               {locale === 'bn'
-                ? 'আপনার দেশ, বিভাগ/স্টেট, জেলা/শহর ও বিস্তারিত ঠিকানা নির্ধারণ করুন'
-                : 'Select your country, region, city and specific address'}
+                ? 'আপনি কোথায় থাকেন তা নির্ধারণ করুন (দেশ, বিভাগ/স্টেট, জেলা/শহর)'
+                : 'Select where you live (country, region, city and specific address)'}
             </CardDescription>
           </div>
         </div>
@@ -117,8 +117,8 @@ export function LocationSettingsCard() {
               <MapPin className="h-4 w-4 text-primary-500" />
 
               {locale === 'bn'
-                ? 'সম্পূর্ণ অবস্থান বা বিস্তারিত ঠিকানা'
-                : 'Current Location & Address'}
+                ? 'বর্তমান বাসস্থান (Lives in)'
+                : 'Current Residence (Lives in)'}
             </label>
             <div className="flex h-10 w-full items-center rounded-xl border border-[#e4e6eb] bg-[#f0f2f5] px-3.5 text-sm dark:border-[#393a3b] dark:bg-[#3a3b3c] cursor-default select-none">
               <MapPin className="h-4 w-4 mr-2.5 text-primary-500/80 dark:text-primary-400 shrink-0" />
@@ -129,8 +129,8 @@ export function LocationSettingsCard() {
               ) : (
                 <span className="text-[#65676b] dark:text-[#b0b3b8] truncate">
                   {locale === 'bn'
-                    ? 'নিচের ড্রপডাউনগুলো থেকে অবস্থান নির্বাচন করুন'
-                    : 'Select location from dropdowns below'}
+                    ? 'নিচের ড্রপডাউনগুলো থেকে নির্বাচন করুন'
+                    : 'Select where you live from dropdowns below'}
                 </span>
               )}
             </div>
@@ -141,7 +141,7 @@ export function LocationSettingsCard() {
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-[#050505] dark:text-[#e4e6eb] flex items-center gap-1.5">
                 <MapPin className="h-4 w-4 text-primary-500" />
-                {locale === 'bn' ? 'অবস্থান নির্বাচন করুন' : 'Select Location'}
+                {locale === 'bn' ? 'বাসস্থান নির্বাচন করুন' : 'Select Where You Live'}
               </span>
               {location && (
                 <span className="text-[11px] text-primary-600 dark:text-primary-400 font-medium truncate max-w-[200px] sm:max-w-xs">
@@ -167,7 +167,7 @@ export function LocationSettingsCard() {
               disabled={isSaving}
               className="rounded-xl px-6 py-2 bg-primary-500 hover:bg-primary-600 text-white font-semibold text-xs h-9.5"
             >
-              {locale === 'bn' ? 'অবস্থান সংরক্ষণ করুন' : 'Save Location'}
+              {locale === 'bn' ? 'সংরক্ষণ করুন' : 'Save Changes'}
             </Button>
           </div>
         </form>

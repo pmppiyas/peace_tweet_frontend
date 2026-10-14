@@ -1,21 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Users } from 'lucide-react';
 import { useLanguage } from '@/providers/LanguageProvider';
-import { useDebounce } from '@/hooks/useDebounce';
 import { MyFriends } from '@/features/friends/components/MyFriends';
 import { UserProfileResponse } from '@/features/friends/types/friends.types';
 import { User } from '@/types/user.types';
-import { ProfileTabHeader } from './ProfileTabHeader';
 
 export interface ProfileFriendsTabProps {
   targetUser?: UserProfileResponse | User | null;
 }
 
 export function ProfileFriendsTab({ targetUser }: ProfileFriendsTabProps = {}) {
-  const [search, setSearch] = useState('');
-  const debouncedSearch = useDebounce(search, 300);
   const { locale } = useLanguage();
 
   const title = targetUser
@@ -34,19 +30,28 @@ export function ProfileFriendsTab({ targetUser }: ProfileFriendsTabProps = {}) {
       ? 'আপনার সকল যুক্ত বন্ধুদের তালিকা'
       : 'All your connected friends on PeaceTweet';
 
-  return (
-    <div className="space-y-4">
-      <ProfileTabHeader
-        icon={Users}
-        iconColor="text-indigo-600 dark:text-indigo-400"
-        title={title}
-        description={description}
-        searchValue={search}
-        onSearchChange={setSearch}
-        searchPlaceholder={locale === 'bn' ? 'বন্ধু খুঁজুন...' : 'Search friends...'}
-      />
+  const header = (
+    <div className="px-4 py-3.5 sm:px-5 sm:py-4 border-b border-[#e4e6eb] dark:border-[#393a3b]">
+      <h2 className="text-base sm:text-lg font-bold text-[#050505] dark:text-white flex items-center gap-2">
+        <Users className="h-5 w-5 text-indigo-600 dark:text-indigo-400 shrink-0" />
+        <span>{title}</span>
+      </h2>
+      {description && (
+        <p className="text-xs text-[#65676b] dark:text-[#b0b3b8] mt-0.5">
+          {description}
+        </p>
+      )}
+    </div>
+  );
 
-      <MyFriends searchQuery={debouncedSearch} />
+  return (
+    <div className="w-full">
+      <MyFriends
+        searchQuery=""
+        userId={targetUser?.id}
+        layout="list"
+        header={header}
+      />
     </div>
   );
 }

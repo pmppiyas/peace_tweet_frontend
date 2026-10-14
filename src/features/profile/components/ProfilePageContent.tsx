@@ -15,8 +15,10 @@ export function ProfilePageContent() {
   const isFromTab = from === 'tab';
   const isViewAs = searchParams.get('view_as') === 'true';
 
-  let currentTab: 'overview' | 'friend' | 'group' | 'saved' = 'overview';
-  if (rawTab === 'friend' || rawTab === 'friends') {
+  let currentTab: 'overview' | 'post' | 'friend' | 'group' | 'saved' = 'overview';
+  if (rawTab === 'post' || rawTab === 'posts') {
+    currentTab = 'post';
+  } else if (rawTab === 'friend' || rawTab === 'friends') {
     currentTab = 'friend';
   } else if (rawTab === 'group' || rawTab === 'groups') {
     currentTab = 'group';
@@ -28,6 +30,7 @@ export function ProfilePageContent() {
 
   const activeIdMap = {
     overview: 'profile-overview',
+    post: 'profile-overview',
     friend: isFromTab ? 'profile-overview' : 'profile-friends',
     group: isFromTab ? 'profile-overview' : 'profile-groups',
     saved: isFromTab ? 'profile-overview' : 'profile-saved',
@@ -35,6 +38,7 @@ export function ProfilePageContent() {
 
   const mobileTabIdMap = {
     overview: 'tab-overview',
+    post: 'tab-overview',
     friend: isFromTab ? 'tab-overview' : 'tab-friends',
     group: isFromTab ? 'tab-overview' : 'tab-groups',
     saved: isFromTab ? 'tab-overview' : 'tab-saved',
@@ -46,15 +50,7 @@ export function ProfilePageContent() {
       activeMobileTabId={mobileTabIdMap[currentTab]}
       maxWidth="w-full max-w-7xl 2xl:max-w-[1600px]"
     >
-      {isFromTab || isViewAs || currentTab === 'overview' ? (
-        <ProfileView activeSubTab={currentTab} isViewAs={isViewAs} />
-      ) : (
-        <>
-          {currentTab === 'friend' && <ProfileFriendsTab />}
-          {currentTab === 'group' && <ProfileGroupsTab />}
-          {currentTab === 'saved' && <ProfileSavedTab />}
-        </>
-      )}
+      <ProfileView activeSubTab={currentTab} isViewAs={isViewAs} />
     </ProfileLayout>
   );
 }
