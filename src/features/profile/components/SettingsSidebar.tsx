@@ -10,6 +10,7 @@ import {
   Shield,
   Palette,
   Globe,
+  MessageSquarePlus,
   LogOut,
 } from 'lucide-react';
 import { useLanguage } from '@/providers/LanguageProvider';
@@ -104,6 +105,13 @@ export function SettingsSidebar({ activeTab, onSelectTab }: SettingsSidebarProps
       icon: Globe,
       iconBg: 'bg-teal-500 text-white',
       onClick: () => onSelectTab('language'),
+    },
+    {
+      id: 'settings-feedback',
+      label: locale === 'bn' ? 'সহায়তা ও মতামত' : 'Help & Feedback',
+      href: '/feedback',
+      icon: MessageSquarePlus,
+      iconBg: 'bg-teal-600 text-white',
     },
   ];
 

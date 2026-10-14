@@ -10,6 +10,9 @@ import {
 } from '@/features/chat/hooks/useConversations';
 import { chatApi } from '@/features/chat/api/chat.api';
 import { ConversationItem } from '@/features/chat/types/chat.types';
+import { apiClient } from '@/lib/api/client';
+import { API_ENDPOINTS } from '@/constants/api';
+import { ApiResponse } from '@/types/api.types';
 import { useAuth } from '@/hooks/useAuth';
 import { useChatStore } from '@/stores/useChatStore';
 import { ROUTES } from '@/constants/routes';
@@ -28,6 +31,7 @@ export function MessagesLayout() {
   const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
   const urlConvId = searchParams.get('conversationId');
   const urlUserId = searchParams.get('userId');
+  const urlUsername = searchParams.get('user') || searchParams.get('username');
 
   const { data: conversations = [], isLoading, isError } = useConversations();
   const totalUnreadCount = useTotalUnreadCount();
@@ -38,19 +42,43 @@ export function MessagesLayout() {
 
   // Derive currently selected conversation from URL param or immediate selection
   const selectedConversation = useMemo(() => {
-    if (!urlConvId) return directSelectedConv;
-    const match = conversations.find((c) => c.id === urlConvId);
-    return match || directSelectedConv || null;
-  }, [urlConvId, conversations, directSelectedConv]);
+    if (urlConvId) {
+      const match = conversations.find((c) => c.id === urlConvId);
+      return match || directSelectedConv || null;
+    }
+    if (urlUsername) {
+      const target = urlUsername.trim().toLowerCase();
+      const match = conversations.find((c) => {
+        const participant = c.otherUser || c.participant;
+        return (
+          participant?.username?.toLowerCase() === target ||
+          participant?.id?.toLowerCase() === target
+        );
+      });
+      return match || directSelectedConv || null;
+    }
+    if (urlUserId) {
+      const match = conversations.find((c) => {
+        const participant = c.otherUser || c.participant;
+        return (
+          participant?.id === urlUserId ||
+          c.participantOneId === urlUserId ||
+          c.participantTwoId === urlUserId
+        );
+      });
+      return match || directSelectedConv || null;
+    }
+    return directSelectedConv || null;
+  }, [urlConvId, urlUsername, urlUserId, conversations, directSelectedConv]);
 
   // Sync active conversation with global store so navbar badge & socket listeners stay in sync
   useEffect(() => {
-    const activeId = urlConvId || null;
+    const activeId = selectedConversation?.id || urlConvId || null;
     useChatStore.getState().setCurrentActiveConversationId(activeId);
     return () => {
       useChatStore.getState().setCurrentActiveConversationId(null);
     };
-  }, [urlConvId]);
+  }, [selectedConversation?.id, urlConvId]);
 
   // Auth Protection: Redirect to Login if unauthenticated
   useEffect(() => {
@@ -70,14 +98,76 @@ export function MessagesLayout() {
     }
   }, [selectedConversation, queryClient]);
 
-  // Handle ?userId= deep linking
+  // Handle ?user= / ?username= / ?userId= deep linking
   useEffect(() => {
-    if (urlUserId && !urlConvId) {
+    if (urlConvId) return;
+
+    if (urlUsername) {
+      const target = urlUsername.trim().toLowerCase();
+      const match = conversations.find((c) => {
+        const participant = c.otherUser || c.participant;
+        return (
+          participant?.username?.toLowerCase() === target ||
+          participant?.id?.toLowerCase() === target
+        );
+      });
+
+      if (match) {
+        setDirectSelectedConv(match);
+        router.replace(`/messages?conversationId=${match.id}`, {
+          scroll: false,
+        });
+        return;
+      }
+
+      // Wait if conversations are still loading
+      if (isLoading) return;
+
+      // Not found in current conversations: fetch user by username to get ID & open/create conversation
+      let isCancelled = false;
+      apiClient
+        .get<ApiResponse<{ id: string }>>(
+          API_ENDPOINTS.USERS.PROFILE(urlUsername)
+        )
+        .then((userRes) => {
+          const targetId = userRes.data?.data?.id;
+          if (!targetId) throw new Error('User not found');
+          return chatApi.getOrCreateConversation(targetId);
+        })
+        .then((convRes) => {
+          if (!isCancelled && convRes?.data) {
+            setDirectSelectedConv(convRes.data);
+            queryClient.invalidateQueries({
+              queryKey: CONVERSATIONS_QUERY_KEY,
+            });
+            router.replace(`/messages?conversationId=${convRes.data.id}`, {
+              scroll: false,
+            });
+          }
+        })
+        .catch((err) => {
+          console.error(
+            'Failed to resolve conversation for username:',
+            urlUsername,
+            err
+          );
+        });
+
+      return () => {
+        isCancelled = true;
+      };
+    }
+
+    if (urlUserId) {
+      let isCancelled = false;
       chatApi
         .getOrCreateConversation(urlUserId)
         .then((res) => {
-          if (res.data) {
+          if (!isCancelled && res.data) {
             setDirectSelectedConv(res.data);
+            queryClient.invalidateQueries({
+              queryKey: CONVERSATIONS_QUERY_KEY,
+            });
             router.replace(`/messages?conversationId=${res.data.id}`, {
               scroll: false,
             });
@@ -89,8 +179,12 @@ export function MessagesLayout() {
             err
           );
         });
+
+      return () => {
+        isCancelled = true;
+      };
     }
-  }, [urlUserId, urlConvId, router]);
+  }, [urlUsername, urlUserId, urlConvId, conversations, isLoading, queryClient, router]);
 
   const handleSelectConversation = (conversation: ConversationItem) => {
     setDirectSelectedConv(conversation);
@@ -113,13 +207,13 @@ export function MessagesLayout() {
   };
 
   const isConvLoading = Boolean(
-    (urlConvId || urlUserId) && !selectedConversation && isLoading
+    (urlConvId || urlUserId || urlUsername) && !selectedConversation && isLoading
   );
 
   if (isAuthLoading || (isLoading && conversations.length === 0)) {
     return (
       <MessagesSkeleton
-        hasSelectedConversation={Boolean(urlConvId || urlUserId)}
+        hasSelectedConversation={Boolean(urlConvId || urlUserId || urlUsername)}
       />
     );
   }

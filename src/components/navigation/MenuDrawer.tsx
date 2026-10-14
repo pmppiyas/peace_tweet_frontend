@@ -23,6 +23,7 @@ import {
   ChevronRight,
   Droplet,
   MessageCircle,
+  MessageSquarePlus,
   Download,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
@@ -140,6 +141,13 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
       href: ROUTES.SETTINGS,
       icon: Settings,
       iconBg: 'bg-gray-600 text-white',
+    },
+    {
+      id: 'menu-feedback',
+      label: locale === 'bn' ? 'পরামর্শ ও অভিযোগ' : 'Feedback & Report',
+      href: ROUTES.FEEDBACK,
+      icon: MessageSquarePlus,
+      iconBg: 'bg-teal-600 text-white',
     },
     ...(isAdmin
       ? [
@@ -397,6 +405,14 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
                 className="hover:underline hover:text-primary-600 dark:hover:text-primary-400"
               >
                 {locale === 'bn' ? 'গোপনীয়তা নীতি' : 'Privacy Policy'}
+              </Link>
+              <span>•</span>
+              <Link
+                href="/feedback"
+                onClick={onClose}
+                className="hover:underline hover:text-primary-600 dark:hover:text-primary-400"
+              >
+                {locale === 'bn' ? 'মতামত ও অভিযোগ' : 'Feedback'}
               </Link>
               <span>•</span>
               <span>PeaceTweet © 2026</span>

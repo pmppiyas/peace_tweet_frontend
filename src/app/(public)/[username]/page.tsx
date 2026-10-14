@@ -13,6 +13,7 @@ const RESERVED_ROUTES = new Set([
   'profile',
   'saved',
   'settings',
+  'feedback',
   'messages',
   'message',
   'login',
