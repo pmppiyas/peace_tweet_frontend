@@ -95,7 +95,7 @@ export function SectionLayout({
           {/* Main Content Area */}
           <main
             className={cn(
-              'flex-1 min-w-0 h-full overflow-y-auto overscroll-contain no-scrollbar scrollbar-none px-2 py-4 pb-20 sm:p-6 lg:p-8',
+              'flex-1 min-w-0 h-full overflow-y-auto overscroll-contain no-scrollbar scrollbar-none px-3 py-4 pb-20 sm:p-6 lg:p-8',
               contentClassName
             )}
           >

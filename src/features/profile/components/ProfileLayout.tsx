@@ -116,6 +116,8 @@ export function ProfileLayout({
       mobileTabs={[]}
       activeMobileTabId={activeMobileTabId}
       maxWidth={maxWidth}
+      className="bg-white dark:bg-[#18191a] sm:bg-[#f0f2f5]"
+      contentClassName="p-0 pb-20 sm:p-6 lg:p-8"
     >
       {children}
     </SectionLayout>

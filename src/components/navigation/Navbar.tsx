@@ -385,11 +385,11 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        'sticky top-0 z-40 w-full h-14 box-border border-b border-[#e4e6eb] bg-white dark:border-[#393a3b] dark:bg-[#242526] shadow-2xs select-none px-2 sm:px-0',
+        'sticky top-0 z-40 w-full h-14 box-border border-b border-[#e4e6eb] bg-white dark:border-[#393a3b] dark:bg-[#242526] shadow-2xs select-none px-3 sm:px-0',
         (isMessagesActive || isProfilePage) && 'hidden md:block'
       )}
     >
-      <Container size="2xl" className="h-full px-0 sm:px-4 lg:px-6 2xl:px-8">
+      <Container size="2xl" className="h-full px-0 sm:px-0 md:px-0 lg:px-6 2xl:px-8">
         {/* Header container matching layout of the page */}
         <div className="flex items-center justify-between h-full gap-4 lg:gap-6 2xl:gap-8 w-full">
           {/* Left Column: Brand Logo + Search Button (Matches Sidebar: lg:w-60 xl:w-64 2xl:w-72) */}

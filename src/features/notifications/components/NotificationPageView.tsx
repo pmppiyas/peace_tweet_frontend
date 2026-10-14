@@ -20,6 +20,7 @@ import {
 import { Container } from '@/components/layout/Container';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { RightSidebar } from '@/components/layout/RightSidebar';
+import { NotificationSkeleton } from './NotificationSkeleton';
 import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/constants/routes';
 import { soundEffects } from '@/lib/sound/soundEffects';
@@ -182,7 +183,7 @@ export function NotificationPageView() {
         <div className="flex h-full justify-between gap-4 lg:gap-6 2xl:gap-8">
           <Sidebar />
 
-          <main className="flex-1 w-full min-w-0 h-full overflow-y-auto overscroll-contain no-scrollbar scrollbar-none pb-20 sm:pb-8 px-2 sm:px-0">
+          <main className="flex-1 w-full min-w-0 h-full overflow-y-auto overscroll-contain no-scrollbar scrollbar-none pb-20 sm:pb-8 px-3 sm:px-0">
             {/* Flat Content Display: Edge-to-edge on mobile, sleek and unboxed */}
             <div className="w-full bg-white dark:bg-[#242526] sm:rounded-2xl sm:border sm:border-[#e4e6eb] sm:dark:border-[#393a3b] sm:shadow-2xs overflow-hidden sm:my-4">
               {/* Header */}
@@ -254,12 +255,7 @@ export function NotificationPageView() {
               {/* Notifications List - Flat edge-to-edge list */}
               <div className="divide-y divide-[#e4e6eb]/60 dark:divide-[#393a3b]/60">
                 {isLoading && allNotifications.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-16 text-[#65676b] dark:text-[#b0b3b8] gap-3">
-                    <Loader2 className="h-8 w-8 animate-spin text-primary-500" />
-                    <p className="text-sm font-medium">
-                      Loading notifications...
-                    </p>
-                  </div>
+                  <NotificationSkeleton count={7} variant="page" />
                 ) : displayedNotifications.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-16 px-6 text-center text-[#65676b] dark:text-[#b0b3b8]">
                     <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#f0f2f5] dark:bg-[#3a3b3c] mb-3">

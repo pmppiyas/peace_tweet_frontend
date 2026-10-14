@@ -11,7 +11,7 @@ export function FeedSkeleton() {
           {i > 1 && (
             <hr className="border-0 border-t border-[#e4e6eb] dark:border-[#393a3b]" />
           )}
-          <div className="w-full bg-white dark:bg-[#242526] px-2 py-3 sm:px-3">
+          <div className="w-full bg-white dark:bg-[#242526] px-3 py-2 sm:px-4">
             <div className="flex items-center justify-between pb-2">
               <div className="flex items-center gap-2.5">
                 <Skeleton className="h-10 w-10 rounded-full" />

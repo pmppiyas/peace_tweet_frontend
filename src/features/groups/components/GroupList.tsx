@@ -92,7 +92,7 @@ export function GroupList({
   if (!groups || groups.length === 0) {
     if (layout === 'list') {
       return (
-        <div className="rounded-2xl border border-[#e4e6eb] bg-white dark:border-[#393a3b] dark:bg-[#242526] overflow-hidden shadow-2xs">
+        <div className="rounded-none sm:rounded-2xl border-0 sm:border border-[#e4e6eb] bg-white dark:border-[#393a3b] dark:bg-[#242526] overflow-hidden shadow-none sm:shadow-2xs">
           {header}
           <div className="p-4 sm:p-6">
             <GroupsEmptyState type={emptyType} searchQuery={searchQuery} />
@@ -106,7 +106,7 @@ export function GroupList({
   if (layout === 'list') {
     return (
       <div className="space-y-4">
-        <div className="rounded-2xl border border-[#e4e6eb] bg-white dark:border-[#393a3b] dark:bg-[#242526] overflow-hidden shadow-2xs">
+        <div className="rounded-none sm:rounded-2xl border-0 sm:border border-[#e4e6eb] bg-white dark:border-[#393a3b] dark:bg-[#242526] overflow-hidden shadow-none sm:shadow-2xs">
           {header}
           <div className="divide-y divide-[#e4e6eb] dark:divide-[#393a3b]">
             {groups.map((group) => (
@@ -120,7 +120,7 @@ export function GroupList({
 
         {/* Loading next page skeletons */}
         {isFetchingNextPage && (
-          <div className="rounded-2xl border border-[#e4e6eb] bg-white dark:border-[#393a3b] dark:bg-[#242526] divide-y divide-[#e4e6eb] dark:divide-[#393a3b] overflow-hidden shadow-2xs">
+          <div className="rounded-none sm:rounded-2xl border-0 sm:border border-[#e4e6eb] bg-white dark:border-[#393a3b] dark:bg-[#242526] divide-y divide-[#e4e6eb] dark:divide-[#393a3b] overflow-hidden shadow-none sm:shadow-2xs">
             <div className="flex items-center justify-between p-3.5 sm:p-4 animate-pulse">
               <div className="flex items-center gap-3">
                 <div className="h-12 w-12 rounded-2xl bg-black/10 dark:bg-white/10" />

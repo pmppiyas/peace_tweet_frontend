@@ -127,7 +127,7 @@ export default function SearchPage() {
         <div className="flex h-full justify-between gap-4 lg:gap-6 2xl:gap-8">
           <Sidebar />
 
-          <main className="flex-1 w-full min-w-0 h-full overflow-y-auto overscroll-contain no-scrollbar scrollbar-none py-4 pb-20 sm:pb-8 space-y-4 px-2 sm:px-0">
+          <main className="flex-1 w-full min-w-0 h-full overflow-y-auto overscroll-contain no-scrollbar scrollbar-none py-4 pb-20 sm:pb-8 space-y-4 px-3 sm:px-0">
             {/* RESULTS CONTENT */}
             {queryParam.trim() ? (
               <div className="space-y-4">

@@ -115,7 +115,7 @@ export function BookmarkList({
     (shouldFallbackToAll ? allQuery.data?.items : slotQuery.data?.items) || [];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2 sm:space-y-4">
 
 
 

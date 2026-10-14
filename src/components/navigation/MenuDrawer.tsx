@@ -23,12 +23,14 @@ import {
   ChevronRight,
   Droplet,
   MessageCircle,
+  Download,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { useTheme } from '@/providers/ThemeProvider';
 import { usePendingRequestsCount } from '@/features/friends/hooks/useFriendRequests';
 import { useTotalUnreadCount } from '@/features/chat';
+import { usePwaInstall } from '@/hooks/usePwaInstall';
 import { ROUTES } from '@/constants/routes';
 import { cn } from '@/lib/utils/cn';
 import { CardTitle } from '@/components/ui/Card';
@@ -45,6 +47,7 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
   const { theme, setTheme } = useTheme();
   const { data: requestCount = 0 } = usePendingRequestsCount(isAuthenticated);
   const unreadMessagesCount = useTotalUnreadCount();
+  const { isInstallable, isInstalled, promptInstall } = usePwaInstall();
 
   const [mounted, setMounted] = useState(false);
 
@@ -355,6 +358,28 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
                 </button>
               </div>
             </div>
+
+            {/* Install PeaceTweet App Button (if not already installed) */}
+            {!isInstalled && isInstallable && (
+              <button
+                type="button"
+                onClick={() => {
+                  promptInstall();
+                  onClose();
+                }}
+                className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-gradient-to-r from-primary-500/10 to-teal-500/10 hover:from-primary-500/20 hover:to-teal-500/20 text-xs font-bold text-primary-700 dark:text-primary-300 border border-primary-500/20 transition-all cursor-pointer select-none"
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary-600 text-white shadow-2xs">
+                    <Download className="h-4 w-4" />
+                  </div>
+                  <span>{locale === 'bn' ? 'PeaceTweet অ্যাপ ইনস্টল করুন' : 'Install PeaceTweet App'}</span>
+                </div>
+                <span className="text-[10px] font-bold bg-primary-600 text-white px-2 py-0.5 rounded-full shadow-2xs">
+                  {locale === 'bn' ? 'ফ্রি ইনস্টল' : 'PWA'}
+                </span>
+              </button>
+            )}
 
             {/* Legal / Policy Links */}
             <div className="pt-2 px-2 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[11px] text-[#65676b] dark:text-[#b0b3b8]">

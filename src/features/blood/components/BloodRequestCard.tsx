@@ -112,7 +112,7 @@ export function BloodRequestCard({
   return (
     <Card
       className={cn(
-        'group flex flex-col justify-between rounded-2xl border border-[#e4e6eb] bg-white p-4 shadow-2xs transition-all hover:border-rose-300 hover:shadow-xs dark:border-[#393a3b] dark:bg-[#242526] dark:hover:border-rose-800/80',
+        'group flex flex-col justify-between rounded-2xl border border-[#e4e6eb] bg-white px-3 py-3 sm:px-3.5 sm:py-3.5 shadow-2xs transition-all hover:border-rose-300 hover:shadow-xs dark:border-[#393a3b] dark:bg-[#242526] dark:hover:border-rose-800/80',
         request.urgency === 'EMERGENCY' &&
           'border-rose-300/80 bg-rose-50/20 dark:border-rose-900/60 dark:bg-rose-950/10',
         className,

@@ -70,6 +70,28 @@ export function BasicInfoSettingsCard() {
       return;
     }
 
+    if (username.trim().length > 10) {
+      setStatus({
+        type: 'error',
+        text:
+          locale === 'bn'
+            ? 'ইউজারনেম সর্বোচ্চ ১০ অক্ষরের হতে হবে।'
+            : 'Username must not exceed 10 characters.',
+      });
+      return;
+    }
+
+    if (!/^[a-zA-Z0-9_-]+$/.test(username.trim())) {
+      setStatus({
+        type: 'error',
+        text:
+          locale === 'bn'
+            ? 'ইউজারনেমে শুধুমাত্র ইংরেজি অক্ষর, সংখ্যা, আন্ডারস্কোর (_) এবং হাইফেন (-) থাকতে পারবে।'
+            : 'Username can only contain letters, numbers, underscores and hyphens.',
+      });
+      return;
+    }
+
     if (!email.trim()) {
       setStatus({
         type: 'error',
@@ -163,10 +185,22 @@ export function BasicInfoSettingsCard() {
             />
 
             <Input
-              label={locale === 'bn' ? 'ইউজারনেম *' : 'Username *'}
-              placeholder="e.g. abdullah99"
+              label={
+                locale === 'bn'
+                  ? 'ইউজারনেম (সর্বোচ্চ ১০ অক্ষর) *'
+                  : 'Username (Max 10 chars) *'
+              }
+              placeholder="e.g. mamun99"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              maxLength={10}
+              onChange={(e) =>
+                setUsername(
+                  e.target.value
+                    .toLowerCase()
+                    .replace(/[^a-z0-9_-]/g, '')
+                    .slice(0, 10)
+                )
+              }
               leftIcon={<AtSign className="h-4 w-4" />}
               required
             />

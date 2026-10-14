@@ -59,10 +59,10 @@ export function SavedLayout({ children }: SavedLayoutProps) {
           <SavedSidebar />
 
           {/* 2. Middle Column: Saved Content Feed (Matching HomePage Width) */}
-          <main className="flex-1 w-full min-w-0 h-full overflow-y-auto overscroll-contain no-scrollbar scrollbar-none pt-3 sm:pt-4 pb-[68px] sm:pb-8 space-y-4 px-2 sm:px-0">
+          <main className="flex-1 w-full min-w-0 h-full overflow-y-auto overscroll-contain no-scrollbar scrollbar-none pt-1.5 sm:pt-4 pb-[68px] sm:pb-8 space-y-2 sm:space-y-4 px-3 sm:px-0">
             {/* Mobile / Tablet Routine Filter Bar (Scroll-less & Ultra Clean) */}
-            <div className="lg:hidden shrink-0 bg-white dark:bg-[#242526] border border-[#e4e6eb] dark:border-[#393a3b] rounded-2xl p-1.5 shadow-2xs select-none">
-              <div className="grid grid-cols-6 gap-1">
+            <div className="lg:hidden shrink-0 bg-white dark:bg-[#242526] border border-[#e4e6eb] dark:border-[#393a3b] rounded-xl sm:rounded-2xl p-1 sm:p-1.5 shadow-2xs select-none">
+              <div className="grid grid-cols-6 gap-0.5 sm:gap-1">
                 {mobileTabs.map((tab) => {
                   const isActive = tab.id === activeMobileTabId;
                   return (
@@ -70,14 +70,14 @@ export function SavedLayout({ children }: SavedLayoutProps) {
                       key={tab.id}
                       href={tab.href}
                       className={cn(
-                        'flex flex-col items-center justify-center py-2 px-0.5 rounded-xl text-center transition-all select-none',
+                        'flex flex-col items-center justify-center py-1 sm:py-2 px-0.5 rounded-lg sm:rounded-xl text-center transition-all select-none',
                         isActive
                           ? 'bg-primary-500 text-white font-bold shadow-xs'
                           : 'text-[#65676b] dark:text-[#b0b3b8] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] hover:text-[#050505] dark:hover:text-[#e4e6eb]'
                       )}
                     >
-                      <span className="text-sm leading-none">{tab.icon}</span>
-                      <span className="text-[11px] leading-tight font-semibold truncate max-w-full mt-1">
+                      <span className="text-xs sm:text-sm leading-none">{tab.icon}</span>
+                      <span className="text-[10px] sm:text-[11px] leading-tight font-semibold truncate max-w-full mt-0.5 sm:mt-1">
                         {tab.label}
                       </span>
                     </Link>

@@ -48,7 +48,7 @@ export function ProfileGroupsTab({ targetUser }: ProfileGroupsTabProps = {}) {
       : 'All groups you have joined or created';
 
   const header = (
-    <div className="px-4 py-3.5 sm:px-5 sm:py-4 border-b border-[#e4e6eb] dark:border-[#393a3b] flex items-center justify-between gap-3">
+    <div className="px-3.5 py-3 sm:px-5 sm:py-4 border-b border-[#e4e6eb] dark:border-[#393a3b] flex items-center justify-between gap-3">
       <div>
         <h2 className="text-base sm:text-lg font-bold text-[#050505] dark:text-white flex items-center gap-2">
           <Users2 className="h-5 w-5 text-teal-600 dark:text-teal-400 shrink-0" />

@@ -335,7 +335,7 @@ export function PostComposer({
   return (
     <div
       className={cn(
-        'w-full bg-white px-2 py-3 sm:px-3 dark:bg-[#242526] transition-colors',
+        'w-full bg-white px-3 py-2 sm:px-4 dark:bg-[#242526] transition-colors',
         isModal && 'p-0 sm:p-0 bg-transparent dark:bg-transparent',
         className
       )}

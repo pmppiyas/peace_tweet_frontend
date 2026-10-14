@@ -30,7 +30,7 @@ export function ProfileTabHeader({
   return (
     <div
       className={cn(
-        'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#242526] border border-[#e4e6eb] dark:border-[#393a3b] shadow-2xs',
+        'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-3.5 py-3 sm:p-5 rounded-none sm:rounded-2xl bg-white dark:bg-[#242526] border-0 border-b sm:border border-[#e4e6eb] dark:border-[#393a3b] shadow-none sm:shadow-2xs',
         className
       )}
     >

@@ -157,7 +157,7 @@ export function FriendList({
           ))}
         </div>
       ) : (
-        <div className="rounded-2xl border border-[#e4e6eb] bg-white dark:border-[#393a3b] dark:bg-[#242526] overflow-hidden shadow-2xs">
+        <div className="rounded-none sm:rounded-2xl border-0 sm:border border-[#e4e6eb] bg-white dark:border-[#393a3b] dark:bg-[#242526] overflow-hidden shadow-none sm:shadow-2xs">
           {header}
           <div className="divide-y divide-[#e4e6eb] dark:divide-[#393a3b]">
             {items.map((friend) => (

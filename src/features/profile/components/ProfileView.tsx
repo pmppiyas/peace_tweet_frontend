@@ -305,10 +305,10 @@ export function ProfileView({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-0 sm:space-y-4 bg-white dark:bg-[#242526] sm:bg-transparent sm:dark:bg-transparent min-h-screen">
       {/* View As Indicator Banner (Only shown when owner is previewing own profile as public) */}
       {isOwner && isViewAs && (
-        <div className="flex items-center justify-between gap-3 px-4 py-3 rounded-2xl bg-gradient-to-r from-primary-500/10 via-primary-500/15 to-teal-500/10 border border-primary-500/30 text-primary-950 dark:text-primary-100 shadow-xs">
+        <div className="flex items-center justify-between gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-none sm:rounded-2xl bg-gradient-to-r from-primary-500/10 via-primary-500/15 to-teal-500/10 border-0 border-b sm:border border-primary-500/30 text-primary-950 dark:text-primary-100 shadow-none sm:shadow-xs">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary-600 text-white shrink-0 shadow-xs">
               <Eye className="h-4 w-4" />
@@ -338,18 +338,18 @@ export function ProfileView({
       )}
 
       {/* 1. Profile Hero Card */}
-      <div className="relative z-20 rounded-2xl border border-[#e4e6eb] bg-white shadow-2xs dark:border-[#393a3b] dark:bg-[#242526]">
+      <div className="relative z-20 rounded-none sm:rounded-2xl border-0 border-b sm:border border-[#e4e6eb] bg-white shadow-none sm:shadow-2xs dark:border-[#393a3b] dark:bg-[#242526]">
         {/* Cover Photo Banner */}
-        <div className="relative h-44 sm:h-56 md:h-64 lg:h-72 xl:h-80 2xl:h-96 rounded-t-2xl bg-gradient-to-r from-emerald-800 via-teal-700 to-primary-800 overflow-hidden">
+        <div className="relative h-44 sm:h-56 md:h-64 lg:h-72 xl:h-80 2xl:h-96 rounded-none sm:rounded-t-2xl bg-gradient-to-r from-emerald-800 via-teal-700 to-primary-800 overflow-hidden">
 
           {/* Floating Mobile Back Button */}
           <Link
             href={ROUTES.HOME}
-            className="md:hidden absolute top-3 left-3 z-30 flex h-9 w-9 items-center justify-center rounded-full bg-black/40 hover:bg-black/60 text-white backdrop-blur-xs transition-all shadow-md active:scale-95"
+            className="md:hidden absolute top-3 left-3 z-30 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 hover:bg-black/70 text-white backdrop-blur-xs transition-all shadow-md active:scale-95"
             title={locale === 'bn' ? 'ফিরে যান' : 'Go back'}
             aria-label={locale === 'bn' ? 'ফিরে যান' : 'Go back'}
           >
-            <ArrowLeft className="h-5 w-5" />
+            <ArrowLeft className="h-4.5 w-4.5" />
           </Link>
 
           {displayUser.coverUrl ? (
@@ -442,7 +442,7 @@ export function ProfileView({
         </div>
 
         {/* Profile Info Header Bar (Center-wise Layout) */}
-        <div className="px-4 sm:px-8 pb-4 text-center">
+        <div className="px-3 sm:px-8 pb-3 sm:pb-4 text-center">
           {/* Avatar: Centered horizontally, exactly 50% overlaps the cover banner */}
           <div className="-mt-14 sm:-mt-[72px] md:-mt-20 relative z-10 inline-block mx-auto">
             <div className="relative h-28 w-28 sm:h-36 sm:w-36 md:h-40 md:w-40 rounded-full border-4 border-white dark:border-[#242526] bg-primary-600 text-white shadow-xl overflow-hidden">
@@ -761,7 +761,7 @@ export function ProfileView({
           )}
 
           {/* Sub-Navigation Tabs & 3-Dot More Menu */}
-          <div className="relative flex items-center justify-between gap-2 pt-3 mt-4 border-t border-[#e4e6eb] dark:border-[#393a3b]">
+          <div className="relative flex items-center justify-between gap-1.5 sm:gap-2 pt-2 sm:pt-3 mt-2.5 sm:mt-4 border-t border-[#e4e6eb] dark:border-[#393a3b]">
             {/* Left balance spacer on larger screens so centered tabs stay perfectly centered */}
             <div className="hidden sm:block w-9 shrink-0" />
 
@@ -770,7 +770,7 @@ export function ProfileView({
               <Link
                 href={buildTabUrl('overview')}
                 className={cn(
-                  'py-2 px-3 sm:px-4 rounded-xl transition-colors whitespace-nowrap',
+                  'py-1.5 px-2.5 sm:py-2 sm:px-4 rounded-lg sm:rounded-xl transition-colors whitespace-nowrap',
                   currentTab === 'overview'
                     ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/50'
                     : 'text-[#65676b] dark:text-[#b0b3b8] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c]'
@@ -782,7 +782,7 @@ export function ProfileView({
               <Link
                 href={buildTabUrl('post')}
                 className={cn(
-                  'py-2 px-3 sm:px-4 rounded-xl transition-colors whitespace-nowrap',
+                  'py-1.5 px-2.5 sm:py-2 sm:px-4 rounded-lg sm:rounded-xl transition-colors whitespace-nowrap',
                   currentTab === 'post'
                     ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/50'
                     : 'text-[#65676b] dark:text-[#b0b3b8] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c]'
@@ -794,7 +794,7 @@ export function ProfileView({
               <Link
                 href={buildTabUrl('friend')}
                 className={cn(
-                  'py-2 px-3 sm:px-4 rounded-xl transition-colors whitespace-nowrap',
+                  'py-1.5 px-2.5 sm:py-2 sm:px-4 rounded-lg sm:rounded-xl transition-colors whitespace-nowrap',
                   currentTab === 'friend'
                     ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/50'
                     : 'text-[#65676b] dark:text-[#b0b3b8] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c]'
@@ -811,7 +811,7 @@ export function ProfileView({
               <Link
                 href={buildTabUrl('group')}
                 className={cn(
-                  'py-2 px-3 sm:px-4 rounded-xl transition-colors whitespace-nowrap',
+                  'py-1.5 px-2.5 sm:py-2 sm:px-4 rounded-lg sm:rounded-xl transition-colors whitespace-nowrap',
                   currentTab === 'group'
                     ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/50'
                     : 'text-[#65676b] dark:text-[#b0b3b8] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c]'
@@ -966,12 +966,12 @@ export function ProfileView({
       )}
 
       {currentTab === 'overview' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 sm:gap-4 items-start">
           {/* Left Column: Intro & Summary Cards */}
-          <div className="lg:col-span-5 xl:col-span-4 2xl:col-span-4 space-y-4">
+          <div className="lg:col-span-5 xl:col-span-4 2xl:col-span-4 space-y-0 sm:space-y-4 divide-y divide-[#e4e6eb] dark:divide-[#393a3b] sm:divide-y-0">
 
             {/* Intro Card */}
-            <div className="rounded-2xl border border-[#e4e6eb] bg-white p-4 sm:p-5 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526] space-y-3.5">
+            <div className="rounded-none sm:rounded-2xl border-0 border-b sm:border border-[#e4e6eb] bg-white px-3.5 py-3 sm:p-5 shadow-none sm:shadow-2xs dark:border-[#393a3b] dark:bg-[#242526] space-y-3 sm:space-y-3.5">
               <h2 className="text-base font-bold text-[#050505] dark:text-white">
                 {locale === 'bn' ? 'পরিচিতি' : 'Intro'}
               </h2>
@@ -1069,7 +1069,7 @@ export function ProfileView({
 
             {/* Friends Preview Card (6-Grid) (Only for owner) */}
             {isOwner && (
-              <div className="rounded-2xl border border-[#e4e6eb] bg-white p-4 sm:p-5 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526]">
+              <div className="rounded-none sm:rounded-2xl border-0 border-b sm:border border-[#e4e6eb] bg-white px-3.5 py-3 sm:p-5 shadow-none sm:shadow-2xs dark:border-[#393a3b] dark:bg-[#242526]">
                 <div className="flex items-center justify-between pb-3">
                   <div>
                     <h2 className="text-base font-bold text-[#050505] dark:text-white">
@@ -1137,7 +1137,7 @@ export function ProfileView({
 
             {/* Groups Preview Card (Only for owner) */}
             {isOwner && (
-              <div className="rounded-2xl border border-[#e4e6eb] bg-white p-4 sm:p-5 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526]">
+              <div className="rounded-none sm:rounded-2xl border-0 border-b sm:border border-[#e4e6eb] bg-white px-3.5 py-3 sm:p-5 shadow-none sm:shadow-2xs dark:border-[#393a3b] dark:bg-[#242526]">
                 <div className="flex items-center justify-between pb-2.5">
                   <div>
                     <h2 className="text-base font-bold text-[#050505] dark:text-white">
@@ -1209,18 +1209,18 @@ export function ProfileView({
           </div>
 
           {/* Right Column: Post Composer & Timeline */}
-          <div className="lg:col-span-7 xl:col-span-8 2xl:col-span-8 space-y-4">
+          <div className="lg:col-span-7 xl:col-span-8 2xl:col-span-8 space-y-0 sm:space-y-4 divide-y divide-[#e4e6eb] dark:divide-[#393a3b] sm:divide-y-0">
 
             {/* Post Composer (Hidden in View As mode or when not owner) */}
             {isOwner && !isViewAs && (
-              <div className="bg-white dark:bg-[#242526] rounded-2xl border border-[#e4e6eb] dark:border-[#393a3b] shadow-2xs overflow-hidden">
+              <div className="bg-white dark:bg-[#242526] rounded-none sm:rounded-2xl border-0 border-b sm:border border-[#e4e6eb] dark:border-[#393a3b] shadow-none sm:shadow-2xs overflow-hidden">
                 <PostComposer />
               </div>
             )}
 
             {/* Quick Shortcuts Card (Only for owner in normal mode) */}
             {isOwner && !isViewAs && (
-              <div className="rounded-2xl border border-[#e4e6eb] bg-white p-4 sm:p-5 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526]">
+              <div className="rounded-none sm:rounded-2xl border-0 border-b sm:border border-[#e4e6eb] bg-white px-3.5 py-3 sm:p-5 shadow-none sm:shadow-2xs dark:border-[#393a3b] dark:bg-[#242526]">
                 <h3 className="text-sm font-bold text-[#050505] dark:text-white mb-3">
                   {locale === 'bn' ? 'দ্রুত শর্টকাট' : 'Quick Actions'}
                 </h3>

@@ -55,20 +55,20 @@ export function formatDate(dateString: string | Date, locale?: string): string {
       return `${toArabicDigits(day)} ${arMonthNames[date.getMonth()]}، ${toArabicDigits(year)}`;
     }
 
-    // Default to English
+    // Default to English (short format: Oct, Nov, etc.)
     const enMonthNames = [
-      'January',
-      'February',
-      'March',
-      'April',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
       'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     const month = enMonthNames[date.getMonth()];
     return `${day} ${month}, ${year}`;

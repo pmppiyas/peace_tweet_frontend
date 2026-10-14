@@ -10,9 +10,7 @@ export const metadata = {
 export default function SavedDuasPage() {
   return (
     <SavedLayout>
-      <div className="space-y-4">
-        <BookmarkList />
-      </div>
+      <BookmarkList />
     </SavedLayout>
   );
 }

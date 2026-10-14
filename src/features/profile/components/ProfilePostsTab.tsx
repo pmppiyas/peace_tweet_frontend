@@ -42,10 +42,10 @@ export function ProfilePostsTab({
   }, [data]);
 
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full space-y-0 sm:space-y-4 divide-y divide-[#e4e6eb] dark:divide-[#393a3b] sm:divide-y-0">
       {/* Post Composer (Only for owner in normal mode) */}
       {isOwner && !isViewAs && (
-        <div className="bg-white dark:bg-[#242526] rounded-2xl border border-[#e4e6eb] dark:border-[#393a3b] shadow-2xs overflow-hidden">
+        <div className="bg-white dark:bg-[#242526] rounded-none sm:rounded-2xl border-0 border-b sm:border border-[#e4e6eb] dark:border-[#393a3b] shadow-none sm:shadow-2xs overflow-hidden">
           <PostComposer />
         </div>
       )}
@@ -54,7 +54,7 @@ export function ProfilePostsTab({
       {isLoading ? (
         <FeedSkeleton />
       ) : isError ? (
-        <div className="flex flex-col items-center justify-center p-8 text-center bg-rose-50/70 dark:bg-rose-950/30 rounded-2xl border border-rose-200 dark:border-rose-900">
+        <div className="flex flex-col items-center justify-center p-6 sm:p-8 text-center bg-rose-50/70 dark:bg-rose-950/30 rounded-none sm:rounded-2xl border-0 border-b sm:border border-rose-200 dark:border-rose-900">
           <AlertCircle className="h-8 w-8 text-rose-600 dark:text-rose-400" />
           <h3 className="mt-2 text-sm font-bold text-rose-800 dark:text-rose-300">
             {locale === 'bn' ? 'পোস্ট লোড করা যাচ্ছে না' : 'Unable to load posts'}
@@ -68,7 +68,7 @@ export function ProfilePostsTab({
           </button>
         </div>
       ) : (
-        <div className="bg-white dark:bg-[#242526] rounded-2xl border border-[#e4e6eb] dark:border-[#393a3b] shadow-2xs overflow-hidden">
+        <div className="bg-white dark:bg-[#242526] rounded-none sm:rounded-2xl border-0 border-b sm:border border-[#e4e6eb] dark:border-[#393a3b] shadow-none sm:shadow-2xs overflow-hidden">
           <FeedList
             items={allPosts}
             hasNextPage={hasNextPage}

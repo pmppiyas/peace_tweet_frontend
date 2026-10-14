@@ -80,10 +80,10 @@ export function PublicProfileView({ username }: PublicProfileViewProps) {
         activeMobileTabId={mobileTabIdMap[currentTab]}
         maxWidth="w-full max-w-7xl 2xl:max-w-[1600px]"
       >
-        <div className="space-y-4 animate-pulse">
-          <div className="rounded-2xl border border-[#e4e6eb] bg-white dark:border-[#393a3b] dark:bg-[#242526] overflow-hidden">
+        <div className="space-y-0 sm:space-y-4 animate-pulse">
+          <div className="rounded-none sm:rounded-2xl border-0 border-b sm:border border-[#e4e6eb] bg-white dark:border-[#393a3b] dark:bg-[#242526] overflow-hidden">
             <Skeleton className="h-44 sm:h-56 md:h-64 w-full rounded-none" />
-            <div className="px-4 sm:px-8 pb-4 text-center">
+            <div className="px-3 sm:px-8 pb-3 sm:pb-4 text-center">
               <div className="-mt-14 sm:-mt-[72px] md:-mt-20 inline-block mx-auto">
                 <Skeleton className="h-28 w-28 sm:h-36 sm:w-36 md:h-40 md:w-40 rounded-full border-4 border-white dark:border-[#242526]" />
               </div>

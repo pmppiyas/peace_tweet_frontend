@@ -17,6 +17,7 @@ import {
   Loader2,
   ExternalLink,
 } from 'lucide-react';
+import { NotificationSkeleton } from './NotificationSkeleton';
 import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/constants/routes';
 import { soundEffects } from '@/lib/sound/soundEffects';
@@ -301,10 +302,7 @@ export function NotificationDropdown({
       {/* Notification List Container */}
       <div className="flex-1 overflow-y-auto p-2 space-y-1 overscroll-contain">
         {isLoading && allNotifications.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-[#65676b] dark:text-[#b0b3b8] gap-3">
-            <Loader2 className="h-7 w-7 animate-spin text-primary-500" />
-            <p className="text-sm">Loading notifications...</p>
-          </div>
+          <NotificationSkeleton count={5} variant="dropdown" />
         ) : displayedNotifications.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 px-6 text-center text-[#65676b] dark:text-[#b0b3b8]">
             <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#f0f2f5] dark:bg-[#3a3b3c] mb-3">

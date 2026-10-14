@@ -215,7 +215,7 @@ export function RegisterView() {
   const isSubmitting = isRegistering || isUploadingPhoto;
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-[#f0f2f5] dark:bg-[#18191a] px-4 sm:px-8 xl:px-14 py-1 sm:py-2 lg:py-3">
+    <div className="min-h-screen w-full flex items-center justify-center bg-[#f0f2f5] dark:bg-[#18191a] px-3 sm:px-8 xl:px-14 py-1 sm:py-2 lg:py-3">
       <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 xl:gap-16 items-center">
         {/* ================= LEFT SIDE: Minimalist & Iconic Brand ================= */}
         <div className="hidden lg:flex lg:col-span-7 flex-col justify-center pr-4 xl:pr-12 select-none">

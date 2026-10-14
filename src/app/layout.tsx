@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Raleway } from 'next/font/google';
 import './globals.css';
 import { siteConfig } from '@/config/site';
@@ -13,6 +13,7 @@ import { MobileNav } from '@/components/navigation/MobileNav';
 import { FloatingAudioBar } from '@/features/audio/components/FloatingAudioBar';
 import { AppSplashLoader } from '@/components/ui/AppSplashLoader';
 import { ChatDock } from '@/features/chat/components/ChatDock';
+import { PwaRegistrar } from '@/components/pwa/PwaRegistrar';
 
 export const metadata: Metadata = {
   title: {
@@ -21,14 +22,30 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   metadataBase: new URL(siteConfig.url),
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'PeaceTweet',
+  },
   icons: {
     icon: [
       { url: '/p-favicon.svg', type: 'image/svg+xml' },
       { url: '/favicon.ico', sizes: '32x32' },
+      { url: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
     ],
     shortcut: '/p-favicon.svg',
-    apple: [{ url: '/p-logo.svg', sizes: '512x512', type: 'image/svg+xml' }],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+    ],
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#1877f2',
+  width: 'device-width',
+  initialScale: 1,
 };
 
 const raleway = Raleway({
@@ -60,6 +77,7 @@ export default function RootLayout({
                     <FloatingAudioBar />
                     <MobileNav />
                     <ChatDock />
+                    <PwaRegistrar />
                   </AudioProvider>
                 </SocketProvider>
               </AuthProvider>

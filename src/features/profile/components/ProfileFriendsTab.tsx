@@ -31,7 +31,7 @@ export function ProfileFriendsTab({ targetUser }: ProfileFriendsTabProps = {}) {
       : 'All your connected friends on PeaceTweet';
 
   const header = (
-    <div className="px-4 py-3.5 sm:px-5 sm:py-4 border-b border-[#e4e6eb] dark:border-[#393a3b]">
+    <div className="px-3.5 py-3 sm:px-5 sm:py-4 border-b border-[#e4e6eb] dark:border-[#393a3b]">
       <h2 className="text-base sm:text-lg font-bold text-[#050505] dark:text-white flex items-center gap-2">
         <Users className="h-5 w-5 text-indigo-600 dark:text-indigo-400 shrink-0" />
         <span>{title}</span>
