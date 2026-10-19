@@ -1,8 +1,18 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import { Container } from '@/components/layout/Container';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { RightSidebar } from '@/components/layout/RightSidebar';
 import { Feed } from '@/features/feed/components/Feed';
+
+export const metadata: Metadata = {
+  title: 'PeaceTweet — Peaceful Social Media & Islamic Community Platform',
+  description:
+    'Join PeaceTweet, the peaceful Islamic social media platform and Facebook alternative. Discover authentic Duas, daily Hadiths, recitation audio, and connect with a wholesome community.',
+  alternates: {
+    canonical: '/',
+  },
+};
 
 export default function HomePage() {
   return (

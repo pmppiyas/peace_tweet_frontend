@@ -14,15 +14,60 @@ import { FloatingAudioBar } from '@/features/audio/components/FloatingAudioBar';
 import { AppSplashLoader } from '@/components/ui/AppSplashLoader';
 import { ChatDock } from '@/features/chat/components/ChatDock';
 import { PwaRegistrar } from '@/components/pwa/PwaRegistrar';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
   title: {
     default: siteConfig.title,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
-  metadataBase: new URL(siteConfig.url),
+  keywords: siteConfig.keywords,
+  authors: [{ name: 'PeaceTweet Team', url: siteConfig.url }],
+  creator: 'PeaceTweet',
+  publisher: 'PeaceTweet',
+  applicationName: 'PeaceTweet',
+  alternates: {
+    canonical: '/',
+  },
   manifest: '/manifest.json',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'bn_BD',
+    alternateLocale: ['en_US'],
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    title: siteConfig.title,
+    description: siteConfig.description,
+    images: [
+      {
+        url: '/icon-512x512.png',
+        width: 512,
+        height: 512,
+        alt: 'PeaceTweet — Peaceful Social Media & Islamic Community Platform',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: siteConfig.title,
+    description: siteConfig.description,
+    images: ['/icon-512x512.png'],
+    creator: '@peacetweet',
+    site: '@peacetweet',
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
@@ -64,6 +109,7 @@ export default function RootLayout({
       <body
         className={`${raleway.variable} font-sans min-h-screen flex flex-col antialiased bg-[#f0f2f5] text-[#050505] dark:bg-[#18191a] dark:text-[#e4e6eb] overflow-x-hidden`}
       >
+        <JsonLd />
         <ThemeProvider>
           <AppSplashLoader />
           <LanguageProvider>
