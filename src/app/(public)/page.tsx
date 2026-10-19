@@ -21,7 +21,7 @@ export default function HomePage() {
         <div className="flex h-full justify-between gap-0 lg:gap-6 2xl:gap-8">
           <Sidebar />
 
-          <main className="flex-1 w-full min-w-0 h-full overflow-y-auto overscroll-contain no-scrollbar scrollbar-none pt-2 sm:pt-4 pb-[68px] sm:pb-8 px-2 sm:px-0">
+          <main className="flex-1 w-full min-w-0 h-full overflow-y-auto overscroll-contain no-scrollbar scrollbar-none pt-0 sm:pt-4 pb-[68px] sm:pb-8 px-0">
             <Feed />
           </main>
           <RightSidebar />

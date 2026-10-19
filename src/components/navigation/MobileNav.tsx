@@ -2,21 +2,20 @@
 
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { usePathname } from 'next/navigation';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
   Home,
   Plus,
   Bookmark,
   Bell,
-  User as UserIcon,
+  MessageCircle,
   Check,
   Loader2,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { useUnreadNotificationsCount } from '@/features/notifications/hooks/useNotifications';
+import { useTotalUnreadCount } from '@/features/chat';
 import { useUiStore } from '@/stores/uiStore';
 import { MobileComposerModal } from '@/features/feed/components/MobileComposerModal';
 import { cn } from '@/lib/utils/cn';
@@ -25,6 +24,7 @@ import { ROUTES } from '@/constants/routes';
 export function MobileNav() {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { isAuthenticated, user } = useAuth();
   const { t, locale } = useLanguage();
   const {
@@ -37,6 +37,7 @@ export function MobileNav() {
   } = useUiStore();
   const { data: unreadNotificationsCount = 0 } =
     useUnreadNotificationsCount(isAuthenticated);
+  const unreadMessagesCount = useTotalUnreadCount();
 
   const handleComposerClick = () => {
     if (!isAuthenticated) {
@@ -49,13 +50,13 @@ export function MobileNav() {
   const navItems = [
     {
       id: 'nav-home',
-      label: locale === 'bn' ? 'হোম' : t('nav.home'),
+      label: locale === 'bn' ? 'হোম' : t('nav.home') || 'Home',
       href: ROUTES.HOME,
       icon: Home,
     },
     {
       id: 'nav-bookmarks',
-      label: locale === 'bn' ? 'সংরক্ষিত' : t('nav.bookmarks'),
+      label: locale === 'bn' ? 'সংরক্ষিত' : t('nav.bookmarks') || 'Saved',
       href: isAuthenticated ? ROUTES.SAVED : ROUTES.LOGIN,
       icon: Bookmark,
     },
@@ -66,36 +67,36 @@ export function MobileNav() {
       isComposer: true,
     },
     {
+      id: 'nav-messages',
+      label: locale === 'bn' ? 'মেসেজ' : t('nav.messages') || 'Messages',
+      href: isAuthenticated ? ROUTES.MESSAGES : ROUTES.LOGIN,
+      icon: MessageCircle,
+      badge: unreadMessagesCount,
+    },
+    {
       id: 'nav-notifications',
       label: locale === 'bn' ? 'বিজ্ঞপ্তি' : t('nav.notifications') || 'Alerts',
       href: isAuthenticated ? ROUTES.NOTIFICATIONS : ROUTES.LOGIN,
       icon: Bell,
       badge: unreadNotificationsCount,
     },
-    {
-      id: 'nav-profile',
-      label: isAuthenticated
-        ? locale === 'bn'
-          ? 'প্রোফাইল'
-          : t('nav.profile')
-        : locale === 'bn'
-          ? 'লগইন'
-          : t('nav.login'),
-      href: isAuthenticated ? ROUTES.PROFILE : ROUTES.LOGIN,
-      icon: UserIcon,
-      isAvatar: true,
-    },
   ];
 
-  const isMessagesPage =
-    pathname === '/messages' || pathname.startsWith('/messages/');
+  const isInsideActiveChat =
+    (pathname === '/messages' || pathname.startsWith('/messages/')) &&
+    Boolean(
+      searchParams.get('conversationId') ||
+        searchParams.get('userId') ||
+        searchParams.get('user') ||
+        searchParams.get('username')
+    );
   const isAuthPage = pathname === '/login' || pathname === '/register';
 
   return (
     <div
       className={cn(
         'md:hidden fixed bottom-0 left-0 z-50 w-full border-t border-[#e4e6eb] bg-white/95 backdrop-blur-md dark:border-[#393a3b] dark:bg-[#242526]/95 pb-safe',
-        (isMessagesPage ||
+        (isInsideActiveChat ||
           isAuthPage ||
           isMenuDrawerOpen ||
           isSearchModalOpen) &&
@@ -184,10 +185,10 @@ export function MobileNav() {
           const isActive =
             item.id === 'nav-bookmarks'
               ? pathname.startsWith(ROUTES.SAVED)
-              : item.id === 'nav-notifications'
-                ? pathname.startsWith(ROUTES.NOTIFICATIONS)
-                : item.id === 'nav-profile'
-                  ? pathname.startsWith(ROUTES.PROFILE)
+              : item.id === 'nav-messages'
+                ? pathname.startsWith(ROUTES.MESSAGES)
+                : item.id === 'nav-notifications'
+                  ? pathname.startsWith(ROUTES.NOTIFICATIONS)
                   : href === '/'
                     ? pathname === '/'
                     : pathname.startsWith(href) &&
@@ -207,29 +208,12 @@ export function MobileNav() {
               aria-label={item.label}
             >
               <div className="relative flex items-center justify-center">
-                {item.isAvatar && isAuthenticated && user?.avatarUrl ? (
-                  <div
-                    className={cn(
-                      'relative h-5 w-5 rounded-full overflow-hidden shrink-0 border',
-                      isActive ? 'border-primary-500' : 'border-transparent'
-                    )}
-                  >
-                    <Image
-                      src={user.avatarUrl}
-                      alt={user.name || 'User'}
-                      fill
-                      className="object-cover"
-                      unoptimized
-                    />
-                  </div>
-                ) : (
-                  <Icon
-                    className={cn(
-                      'h-5 w-5 shrink-0',
-                      isActive ? 'stroke-[2.3]' : 'stroke-[1.9]'
-                    )}
-                  />
-                )}
+                <Icon
+                  className={cn(
+                    'h-5 w-5 shrink-0',
+                    isActive ? 'stroke-[2.3]' : 'stroke-[1.9]'
+                  )}
+                />
 
                 {typeof item.badge === 'number' && item.badge > 0 ? (
                   <span className="absolute -top-1 -right-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-600 px-1 text-[9px] font-bold text-white shadow-xs leading-none">

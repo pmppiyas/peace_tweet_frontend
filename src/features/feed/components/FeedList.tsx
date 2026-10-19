@@ -60,7 +60,10 @@ export function FeedList({
       {items.map((post, index) => (
         <React.Fragment key={post.id}>
           {index > 0 && (
-            <hr className="border-0 border-t border-[#e4e6eb] dark:border-[#393a3b]" />
+            <div
+              className="h-2 sm:h-2.5 w-full bg-[#f0f2f5] dark:bg-[#18191a] border-y border-[#e4e6eb] dark:border-[#393a3b] select-none"
+              aria-hidden="true"
+            />
           )}
           <FeedItem post={post} />
         </React.Fragment>

@@ -203,70 +203,44 @@ export function Navbar() {
         <Search className="h-[19px] w-[19px] stroke-[2.2]" strokeWidth={2.2} />
       </button>
 
-      {/* 2. Messenger / Messages */}
+      {/* 2. Messenger / Messages (Desktop only) */}
       {isAuthenticated ? (
-        <>
-          {/* Mobile Direct Link to /messages */}
-          <Link
-            href={ROUTES.MESSAGES}
-            className={cn(
-              'relative flex md:hidden h-10 w-10 items-center justify-center rounded-full transition-colors cursor-pointer',
-              isMessagesActive
-                ? 'bg-primary-50 text-primary-600 dark:bg-primary-950/60 dark:text-primary-400 font-semibold ring-2 ring-primary-500/20'
-                : 'bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb]'
-            )}
-            title={t('nav.messages')}
-            aria-label="Messages"
-          >
-            <MessageCircle
-              className="h-[19px] w-[19px] stroke-[2.2]"
-              strokeWidth={2.2}
-            />
-            {unreadMessagesCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-[11px] font-bold text-white shadow-xs">
-                {unreadMessagesCount > 9 ? '9+' : unreadMessagesCount}
-              </span>
-            )}
-          </Link>
-
-          {/* Desktop Toggle Button */}
-          <button
-            ref={messengerTriggerRef}
-            data-messenger-trigger="true"
-            type="button"
-            onClick={() => {
-              if (isMessagesActive) {
-                setIsMessengerOpen(false);
-              } else {
-                setIsMessengerOpen((prev) => !prev);
-                setIsNotificationsOpen(false);
-              }
-            }}
-            className={cn(
-              'relative hidden md:flex h-10 w-10 items-center justify-center rounded-full transition-colors cursor-pointer',
-              isMessagesActive || isMessengerOpen
-                ? 'bg-primary-50 text-primary-600 dark:bg-primary-950/60 dark:text-primary-400 font-semibold ring-2 ring-primary-500/20'
-                : 'bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb]'
-            )}
-            title={t('nav.messages')}
-            aria-label="Chats"
-            aria-expanded={isMessengerOpen}
-          >
-            <MessageCircle
-              className="h-[19px] w-[19px] stroke-[2.2]"
-              strokeWidth={2.2}
-            />
-            {unreadMessagesCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-[11px] font-bold text-white shadow-xs">
-                {unreadMessagesCount > 9 ? '9+' : unreadMessagesCount}
-              </span>
-            )}
-          </button>
-        </>
+        <button
+          ref={messengerTriggerRef}
+          data-messenger-trigger="true"
+          type="button"
+          onClick={() => {
+            if (isMessagesActive) {
+              setIsMessengerOpen(false);
+            } else {
+              setIsMessengerOpen((prev) => !prev);
+              setIsNotificationsOpen(false);
+            }
+          }}
+          className={cn(
+            'relative hidden md:flex h-10 w-10 items-center justify-center rounded-full transition-colors cursor-pointer',
+            isMessagesActive || isMessengerOpen
+              ? 'bg-primary-50 text-primary-600 dark:bg-primary-950/60 dark:text-primary-400 font-semibold ring-2 ring-primary-500/20'
+              : 'bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb]'
+          )}
+          title={t('nav.messages')}
+          aria-label="Chats"
+          aria-expanded={isMessengerOpen}
+        >
+          <MessageCircle
+            className="h-[19px] w-[19px] stroke-[2.2]"
+            strokeWidth={2.2}
+          />
+          {unreadMessagesCount > 0 && (
+            <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-[11px] font-bold text-white shadow-xs">
+              {unreadMessagesCount > 9 ? '9+' : unreadMessagesCount}
+            </span>
+          )}
+        </button>
       ) : (
         <Link
           href={ROUTES.LOGIN}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors"
+          className="hidden md:flex h-10 w-10 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors"
           title={t('nav.messages') || 'Messages'}
         >
           <MessageCircle

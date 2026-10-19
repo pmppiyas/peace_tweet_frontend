@@ -32,14 +32,14 @@ export function Feed() {
   }, [data]);
 
   return (
-    <div className="w-full space-y-3 sm:space-y-4">
+    <div className="w-full space-y-2.5 sm:space-y-4">
       {/* 1. Post Composer Card */}
-      <div className="w-full bg-white dark:bg-[#242526] rounded-xl sm:rounded-2xl border border-[#e4e6eb] dark:border-[#393a3b] shadow-xs sm:shadow-2xs overflow-hidden transition-all">
+      <div className="w-full bg-white dark:bg-[#242526] rounded-none sm:rounded-2xl border-y sm:border border-[#e4e6eb] dark:border-[#393a3b] shadow-none sm:shadow-2xs overflow-hidden transition-all">
         <PostComposer />
       </div>
 
       {/* 2. Feed Content States Card */}
-      <div className="w-full bg-white dark:bg-[#242526] rounded-xl sm:rounded-2xl border border-[#e4e6eb] dark:border-[#393a3b] shadow-xs sm:shadow-2xs overflow-hidden transition-all">
+      <div className="w-full bg-white dark:bg-[#242526] rounded-none sm:rounded-2xl border-y sm:border border-[#e4e6eb] dark:border-[#393a3b] shadow-none sm:shadow-2xs overflow-hidden transition-all">
         {isLoading ? (
           <FeedSkeleton />
         ) : isError ? (
