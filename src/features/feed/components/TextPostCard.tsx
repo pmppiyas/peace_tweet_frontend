@@ -4,6 +4,8 @@ import React from 'react';
 import { FeedItem } from '../types/feed.types';
 import { PostMediaGallery } from './PostMediaGallery';
 
+import { PostContent } from './PostContent';
+
 interface TextPostCardProps {
   post: FeedItem;
 }
@@ -13,11 +15,7 @@ export function TextPostCard({ post }: TextPostCardProps) {
 
   return (
     <div className="space-y-3 sm:space-y-3.5">
-      {post.content && (
-        <p className="text-[15px] sm:text-[16px] font-normal text-[#050505] dark:text-[#e4e6eb] leading-relaxed sm:leading-[1.7] whitespace-pre-line">
-          {post.content}
-        </p>
-      )}
+      {post.content && <PostContent content={post.content} />}
 
       {/* Multi-Photo Interactive Gallery (Collage / Slide) */}
       {images.length > 0 && (

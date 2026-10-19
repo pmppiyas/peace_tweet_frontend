@@ -335,88 +335,140 @@ export function PostComposer({
   return (
     <div
       className={cn(
-        'w-full bg-white px-3 py-2 sm:px-4 dark:bg-[#242526] transition-colors',
+        'w-full bg-white pt-2.5 pb-1 px-3 sm:pt-3 sm:pb-1.5 sm:px-4 dark:bg-[#242526] transition-colors',
         isModal && 'p-0 sm:p-0 bg-transparent dark:bg-transparent',
         className
       )}
     >
       {!isOpen ? (
-        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 w-full">
-          <div className="relative flex items-center justify-center shrink-0">
-            {isUploadingPost && (
-              <>
-                <div className="absolute -inset-1.5 rounded-full border-[2.5px] border-transparent border-t-primary-500 border-r-primary-500 animate-spin" />
-                <div className="absolute -inset-2.5 rounded-full border border-primary-400/40 animate-pulse" />
-              </>
-            )}
-            <div
-              className={cn(
-                'relative flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-xs sm:text-sm select-none overflow-hidden shadow-xs transition-all',
-                isUploadingPost &&
-                  'ring-2 ring-primary-500 ring-offset-2 ring-offset-white dark:ring-offset-[#242526]',
-                isSuccessActive &&
-                  'ring-2 ring-emerald-500 ring-offset-2 ring-offset-white dark:ring-offset-[#242526]',
+        <div className="w-full">
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 w-full">
+            <div className="relative flex items-center justify-center shrink-0">
+              {isUploadingPost && (
+                <>
+                  <div className="absolute -inset-1.5 rounded-full border-[2.5px] border-transparent border-t-primary-500 border-r-primary-500 animate-spin" />
+                  <div className="absolute -inset-2.5 rounded-full border border-primary-400/40 animate-pulse" />
+                </>
               )}
-            >
-              {user?.avatarUrl ? (
-                <Image
-                  src={user.avatarUrl}
-                  alt={user.name || 'User'}
-                  fill
-                  className="object-cover"
-                  unoptimized
-                />
-              ) : (
-                <span>{user?.name ? user.name.charAt(0).toUpperCase() : '🕊️'}</span>
-              )}
-            </div>
-          </div>
-          {isSuccessActive ? (
-            <div className="h-9 sm:h-10 flex-1 min-w-0 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-700/60 px-3.5 sm:px-4 text-xs sm:text-sm font-semibold text-emerald-700 dark:text-emerald-300 flex items-center justify-between animate-in fade-in zoom-in-95 duration-200 select-none overflow-hidden">
-              <div className="flex items-center gap-2 min-w-0 truncate">
-                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-white shrink-0 shadow-xs">
-                  <Check className="h-3.5 w-3.5 stroke-[3]" />
-                </div>
-                <span className="truncate">{successText}</span>
+              <div
+                className={cn(
+                  'relative flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-xs sm:text-sm select-none overflow-hidden shadow-xs ring-2 ring-primary-500/20 dark:ring-primary-400/20 transition-all hover:ring-primary-500/40',
+                  isUploadingPost &&
+                    'ring-2 ring-primary-500 ring-offset-2 ring-offset-white dark:ring-offset-[#242526]',
+                  isSuccessActive &&
+                    'ring-2 ring-emerald-500 ring-offset-2 ring-offset-white dark:ring-offset-[#242526]',
+                )}
+              >
+                {user?.avatarUrl ? (
+                  <Image
+                    src={user.avatarUrl}
+                    alt={user.name || 'User'}
+                    fill
+                    className="object-cover"
+                    unoptimized
+                  />
+                ) : (
+                  <span>{user?.name ? user.name.charAt(0).toUpperCase() : '🕊️'}</span>
+                )}
               </div>
-              <span className="text-[11px] font-normal text-emerald-600 dark:text-emerald-400 hidden sm:inline shrink-0">
-                Visible in feed
-              </span>
             </div>
-          ) : (
+            {isSuccessActive ? (
+              <div className="h-9 sm:h-10 flex-1 min-w-0 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-700/60 px-4 text-xs sm:text-sm font-semibold text-emerald-700 dark:text-emerald-300 flex items-center justify-between animate-in fade-in zoom-in-95 duration-200 select-none overflow-hidden">
+                <div className="flex items-center gap-2 min-w-0 truncate">
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-white shrink-0 shadow-xs">
+                    <Check className="h-3.5 w-3.5 stroke-[3]" />
+                  </div>
+                  <span className="truncate">{successText}</span>
+                </div>
+                <span className="text-[11px] font-normal text-emerald-600 dark:text-emerald-400 hidden sm:inline shrink-0">
+                  Visible in feed
+                </span>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  soundEffects.playTab();
+                  setIsOpen(true);
+                }}
+                className="h-9 sm:h-10 flex-1 min-w-0 rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] px-3.5 sm:px-4 text-left text-xs sm:text-[14px] text-[#65676b] hover:text-[#050505] dark:text-[#b0b3b8] dark:hover:text-[#e4e6eb] transition-all flex items-center justify-between gap-2 overflow-hidden cursor-pointer shadow-2xs"
+              >
+                <span className="truncate min-w-0 font-normal">
+                  {isUploadingPost ? (
+                    activeLoadingText
+                  ) : user?.name ? (
+                    <>
+                      <span className="sm:hidden">{user.name.split(' ')[0]}, what&apos;s on your mind?</span>
+                      <span className="hidden sm:inline">
+                        {user.name.split(' ')[0]}, what&apos;s on your mind?
+                      </span>
+                    </>
+                  ) : (
+                    <span>What&apos;s on your mind?</span>
+                  )}
+                </span>
+                {isUploadingPost && (
+                  <span className="flex items-center gap-1.5 text-xs text-primary-600 dark:text-primary-400 font-semibold shrink-0">
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    <span className="hidden xs:inline">Processing...</span>
+                  </span>
+                )}
+              </button>
+            )}
+          </div>
+
+          {/* Facebook-style Compact Bottom Action Buttons */}
+          <div className="grid grid-cols-3 gap-1 pt-1 mt-2 border-t border-[#e4e6eb] dark:border-[#393a3b]">
+            {/* Photo / Media */}
             <button
               type="button"
               onClick={() => {
                 soundEffects.playTab();
+                setPostType('TEXT');
+                setIsOpen(true);
+                setTimeout(() => fileInputRef.current?.click(), 100);
+              }}
+              className="flex items-center justify-center gap-1.5 sm:gap-2 py-1.5 px-1 sm:px-2 rounded-lg hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] active:scale-[0.98] transition-colors cursor-pointer group"
+            >
+              <ImageIcon className="h-5 w-5 text-emerald-500 shrink-0 group-hover:scale-105 transition-transform" />
+              <span className="text-xs sm:text-[13px] font-semibold text-[#65676b] dark:text-[#b0b3b8] group-hover:text-[#050505] dark:group-hover:text-[#e4e6eb] truncate transition-colors">
+                {locale === 'bn' ? 'ছবি / মিডিয়া' : 'Photo/video'}
+              </span>
+            </button>
+
+            {/* Dua */}
+            <button
+              type="button"
+              onClick={() => {
+                soundEffects.playTab();
+                setPostType('DUA');
                 setIsOpen(true);
               }}
-              className="h-9 sm:h-10 flex-1 min-w-0 rounded-full bg-[#f0f2f5] px-3.5 sm:px-4 text-left text-xs sm:text-sm text-[#65676b] hover:bg-[#e4e6eb] transition-colors dark:bg-[#3a3b3c] dark:text-[#b0b3b8] dark:hover:bg-[#4e4f50] flex items-center justify-between gap-2 overflow-hidden"
+              className="flex items-center justify-center gap-1.5 sm:gap-2 py-1.5 px-1 sm:px-2 rounded-lg hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] active:scale-[0.98] transition-colors cursor-pointer group"
             >
-              <span className="truncate min-w-0 block">
-                {isUploadingPost ? (
-                  activeLoadingText
-                ) : user?.name ? (
-                  <>
-                    <span className="sm:hidden">{user.name.split(' ')[0]}, what&apos;s on your mind?</span>
-                    <span className="hidden sm:inline">
-                      {user.name.split(' ')[0]}, Share a reflection, Dua, or Blood Request...
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <span className="sm:hidden">What&apos;s on your mind?</span>
-                    <span className="hidden sm:inline">Share a reflection, Dua, or Blood Request...</span>
-                  </>
-                )}
+              <BookOpen className="h-5 w-5 text-indigo-500 shrink-0 group-hover:scale-105 transition-transform" />
+              <span className="text-xs sm:text-[13px] font-semibold text-[#65676b] dark:text-[#b0b3b8] group-hover:text-[#050505] dark:group-hover:text-[#e4e6eb] truncate transition-colors">
+                {locale === 'bn' ? 'দোয়া' : 'Dua'}
               </span>
-              {isUploadingPost && (
-                <span className="flex items-center gap-1.5 text-xs text-primary-600 dark:text-primary-400 font-semibold shrink-0">
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  <span className="hidden xs:inline">Processing...</span>
-                </span>
-              )}
             </button>
-          )}
+
+            {/* Feeling */}
+            <button
+              type="button"
+              onClick={() => {
+                soundEffects.playTab();
+                setPostType('TEXT');
+                setShowFeelingPicker(true);
+                setIsOpen(true);
+              }}
+              className="flex items-center justify-center gap-1.5 sm:gap-2 py-1.5 px-1 sm:px-2 rounded-lg hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] active:scale-[0.98] transition-colors cursor-pointer group"
+            >
+              <Smile className="h-5 w-5 text-amber-500 shrink-0 group-hover:scale-105 transition-transform" />
+              <span className="text-xs sm:text-[13px] font-semibold text-[#65676b] dark:text-[#b0b3b8] group-hover:text-[#050505] dark:group-hover:text-[#e4e6eb] truncate transition-colors">
+                {locale === 'bn' ? 'অনুভূতি' : 'Feeling'}
+              </span>
+            </button>
+          </div>
         </div>
       ) : (
         <form

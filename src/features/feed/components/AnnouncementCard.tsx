@@ -5,6 +5,8 @@ import { Megaphone } from 'lucide-react';
 import { FeedItem } from '../types/feed.types';
 import { useLanguage } from '@/providers/LanguageProvider';
 
+import { PostContent } from './PostContent';
+
 interface AnnouncementCardProps {
   post: FeedItem;
 }
@@ -19,9 +21,7 @@ export function AnnouncementCard({ post }: AnnouncementCardProps) {
         <span>{locale === 'bn' ? 'ঘোষণা' : 'Announcement'}</span>
       </div>
 
-      <p className="text-[15px] sm:text-[16px] font-normal text-[#050505] dark:text-[#e4e6eb] leading-relaxed whitespace-pre-line">
-        {post.content}
-      </p>
+      {post.content && <PostContent content={post.content} />}
     </div>
   );
 }

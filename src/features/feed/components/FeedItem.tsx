@@ -10,6 +10,7 @@ import { BloodPostCard } from './BloodPostCard';
 import { QuestionPostCard } from './QuestionPostCard';
 import { AnnouncementCard } from './AnnouncementCard';
 import { PostUnavailableCard } from './PostUnavailableCard';
+import { PostContent } from './PostContent';
 import { ShareModal, SharePreviewData } from './ShareModal';
 import { usePostActions } from '../hooks/usePostActions';
 import { useComments } from '../hooks/useComments';
@@ -247,11 +248,7 @@ export function FeedItem({ post }: FeedItemProps) {
         {post.originalPostId || post.originalPost ? (
           <div className="mt-3 sm:mt-3.5 space-y-3">
             {/* Sharer's custom commentary/caption */}
-            {post.content && (
-              <p className="text-[15px] sm:text-[16px] font-normal text-[#050505] dark:text-[#e4e6eb] leading-relaxed whitespace-pre-line">
-                {post.content}
-              </p>
-            )}
+            {post.content && <PostContent content={post.content} />}
 
             {isOriginalUnavailable ? (
               <PostUnavailableCard />
