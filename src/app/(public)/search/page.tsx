@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -36,7 +36,7 @@ const TABS: { id: SearchScope; label: string; icon: React.ElementType }[] = [
   { id: 'POSTS', label: 'Posts', icon: FileText },
 ];
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -516,5 +516,19 @@ export default function SearchPage() {
         </div>
       </Container>
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#f0f2f5] dark:bg-[#18191a] flex items-center justify-center p-6">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary-500/30 border-t-primary-500" />
+        </div>
+      }
+    >
+      <SearchContent />
+    </Suspense>
   );
 }

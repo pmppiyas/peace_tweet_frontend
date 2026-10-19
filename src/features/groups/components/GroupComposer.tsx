@@ -71,14 +71,22 @@ export function GroupComposer({ group }: GroupComposerProps) {
     <Card className="border border-[#e4e6eb] bg-white p-3 sm:p-4 shadow-2xs dark:border-[#393a3b] dark:bg-[#242526] rounded-2xl overflow-hidden w-full">
       {!isOpen ? (
         <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 w-full">
-          <div className="relative flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-xs sm:text-sm select-none overflow-hidden shadow-xs">
+          <div
+            className={cn(
+              'relative flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full font-bold text-xs sm:text-sm select-none overflow-hidden shadow-xs',
+              !user?.avatarUrl
+                ? 'bg-primary-500 text-white'
+                : 'bg-[#f0f2f5] dark:bg-[#3a3b3c]'
+            )}
+          >
             {user?.avatarUrl ? (
-              <Image
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
                 src={user.avatarUrl}
                 alt={user.name || 'User'}
-                fill
-                className="object-cover"
-                unoptimized
+                className="h-full w-full object-cover rounded-full"
+                loading="eager"
+                decoding="sync"
               />
             ) : (
               <span>{user?.name ? user.name.charAt(0).toUpperCase() : '🕊️'}</span>
@@ -120,14 +128,22 @@ export function GroupComposer({ group }: GroupComposerProps) {
           {/* Header */}
           <div className="flex items-center justify-between border-b border-[#e4e6eb] pb-2.5 dark:border-[#393a3b]">
             <div className="flex items-center gap-2">
-              <div className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-xs select-none overflow-hidden shadow-xs">
+              <div
+                className={cn(
+                  'relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full font-bold text-xs select-none overflow-hidden shadow-xs',
+                  !user?.avatarUrl
+                    ? 'bg-primary-500 text-white'
+                    : 'bg-[#f0f2f5] dark:bg-[#3a3b3c]'
+                )}
+              >
                 {user?.avatarUrl ? (
-                  <Image
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img
                     src={user.avatarUrl}
                     alt={user.name || 'User'}
-                    fill
-                    className="object-cover"
-                    unoptimized
+                    className="h-full w-full object-cover rounded-full"
+                    loading="eager"
+                    decoding="sync"
                   />
                 ) : (
                   <span>{user?.name ? user.name.charAt(0).toUpperCase() : '🕊️'}</span>

@@ -1,3 +1,4 @@
+import React, { Suspense } from 'react';
 import type { Metadata, Viewport } from 'next';
 import { Raleway } from 'next/font/google';
 import './globals.css';
@@ -120,7 +121,9 @@ export default function RootLayout({
                     <Navbar />
                     <main className="flex-1 min-h-0">{children}</main>
                     <FloatingAudioBar />
-                    <MobileNav />
+                    <Suspense fallback={null}>
+                      <MobileNav />
+                    </Suspense>
                     <ChatDock />
                     <PwaRegistrar />
                   </AudioProvider>

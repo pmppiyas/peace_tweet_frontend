@@ -443,14 +443,22 @@ export function MobileComposerModal({
         {/* User Identity & Audience Meta */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm shadow-xs overflow-hidden ring-2 ring-primary-500/20">
+            <div
+              className={cn(
+                'relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-bold text-sm shadow-xs overflow-hidden ring-2 ring-primary-500/20',
+                !user?.avatarUrl
+                  ? 'bg-primary-500 text-white'
+                  : 'bg-[#f0f2f5] dark:bg-[#3a3b3c]'
+              )}
+            >
               {user?.avatarUrl ? (
-                <Image
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
                   src={user.avatarUrl}
                   alt={user.name || 'User'}
-                  fill
-                  className="object-cover"
-                  unoptimized
+                  className="h-full w-full object-cover rounded-full"
+                  loading="eager"
+                  decoding="sync"
                 />
               ) : (
                 <span>{user?.name ? user.name.charAt(0).toUpperCase() : '🕊️'}</span>

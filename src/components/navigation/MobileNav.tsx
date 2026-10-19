@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   Home,
   Plus,
@@ -24,9 +24,44 @@ import { ROUTES } from '@/constants/routes';
 export function MobileNav() {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const { isAuthenticated, user } = useAuth();
   const { t, locale } = useLanguage();
+  const [isInsideActiveChat, setIsInsideActiveChat] = React.useState(false);
+
+  // Sync active chat state client-side without useSearchParams to prevent SSR bailout
+  React.useEffect(() => {
+    const isMessages =
+      pathname === '/messages' || pathname.startsWith('/messages/');
+    if (!isMessages) {
+      setIsInsideActiveChat(false);
+      return;
+    }
+
+    const checkActiveChat = () => {
+      if (typeof window === 'undefined') return;
+      const params = new URLSearchParams(window.location.search);
+      const hasChatParam = Boolean(
+        params.get('conversationId') ||
+          params.get('userId') ||
+          params.get('user') ||
+          params.get('username')
+      );
+      setIsInsideActiveChat(hasChatParam);
+    };
+
+    checkActiveChat();
+    window.addEventListener('popstate', checkActiveChat);
+
+    const interval = pathname.startsWith('/messages')
+      ? setInterval(checkActiveChat, 300)
+      : null;
+
+    return () => {
+      window.removeEventListener('popstate', checkActiveChat);
+      if (interval) clearInterval(interval);
+    };
+  }, [pathname]);
+
   const {
     isMobileComposerOpen,
     setMobileComposerOpen,
@@ -82,14 +117,6 @@ export function MobileNav() {
     },
   ];
 
-  const isInsideActiveChat =
-    (pathname === '/messages' || pathname.startsWith('/messages/')) &&
-    Boolean(
-      searchParams.get('conversationId') ||
-        searchParams.get('userId') ||
-        searchParams.get('user') ||
-        searchParams.get('username')
-    );
   const isAuthPage = pathname === '/login' || pathname === '/register';
 
   return (

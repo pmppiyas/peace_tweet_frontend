@@ -425,14 +425,22 @@ export function FeedItem({ post }: FeedItemProps) {
         <div className="border-t border-[#e4e6eb] bg-[#f0f2f5]/40 px-3 py-2.5 sm:px-4 space-y-2.5 dark:border-[#393a3b] dark:bg-[#3a3b3c]/20 animate-in fade-in duration-150">
           {/* Comment Form */}
           <form onSubmit={handleCommentSubmit} className="flex gap-2">
-            <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-xs select-none overflow-hidden shadow-xs">
+            <div
+              className={cn(
+                'relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-bold text-xs select-none overflow-hidden shadow-xs',
+                !user?.avatarUrl
+                  ? 'bg-primary-500 text-white'
+                  : 'bg-[#f0f2f5] dark:bg-[#3a3b3c]'
+              )}
+            >
               {user?.avatarUrl ? (
-                <Image
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
                   src={user.avatarUrl}
                   alt={user.name || 'User'}
-                  fill
-                  className="object-cover"
-                  unoptimized
+                  className="h-full w-full object-cover rounded-full"
+                  loading="eager"
+                  decoding="sync"
                 />
               ) : (
                 <span>
