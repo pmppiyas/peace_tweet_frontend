@@ -2,8 +2,8 @@ import React from 'react';
 import { LoginView } from '@/features/auth/components/LoginView';
 
 export const metadata = {
-  title: 'লগইন — PeaceTweet',
-  description: 'PeaceTweet-এ লগইন করুন',
+  title: 'Log In',
+  description: 'Log in to your PeaceTweet account to connect, share duas, and join the community.',
 };
 
 export default function LoginPage() {

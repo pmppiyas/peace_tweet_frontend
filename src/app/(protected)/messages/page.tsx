@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import { MessagesLayout, MessagesSkeleton } from '@/features/chat';
 
 export const metadata: Metadata = {
-  title: 'Messages | PeaceTweet',
+  title: 'Messages',
   description: 'Real-time peaceful messaging and conversations on PeaceTweet',
 };
 

@@ -1,6 +1,6 @@
 # 🕊️ PeaceTweet Frontend
 
-> **Next-generation Islamic Social Media & Spiritual Wellness Platform**  
+> **Next-generation Islamic Social Media & Spiritual Wellness Platform**
 > Built with **Next.js 14 (App Router)**, **TypeScript**, **Tailwind CSS**, **TanStack React Query v5**, **Zustand**, **Socket.IO**, **Apache Kafka**, and **Web Audio API**.
 
 ---
@@ -46,30 +46,36 @@ The frontend is architected as a feature-driven Next.js App Router application o
 ## ✨ Key Features
 
 ### 1. 📱 Dynamic Social Feed & Rich Post Composer
+
 - **Multi-type Posting**: Share Text reflections, authentic Quranic/Masnoon Duas, and urgent Blood Requests.
 - **Media Uploads**: Multi-image attachments with client-side preview, validation, and optimistic posting.
 - **Reactions & Interactions**: Tactile like reactions with bubble pop sounds, nested comment threads, and share count tracking.
 - **Story Bar**: Interactive daily Dua stories carousel (Sabah-Masa, Sleep, Prayer, Sustenance) with auto-advancing cards.
 
 ### 2. 💬 Real-Time Messenger
+
 - **Instant Messaging**: Powered by Socket.IO for real-time one-to-one messaging with zero page refreshes.
 - **Dual Interface**:
   - Quick-access Messenger popover dropdown on the navbar with live unread count badges.
   - Full-screen dedicated chat suite at `/messages` with conversations list, active typing, and message history.
 
 ### 3. 🔔 Notification System
+
 - **Real-Time Push Alerts**: Live notifications for friend requests, post interactions, comments, and blood donation calls.
 - **Instant Filtering**: Switch between All and Unread notifications with instant client-side memoization.
 
 ### 4. 👥 Social Network & Friends System
+
 - **Friend Requests**: Send, accept, and cancel requests with affirmative synthesized chime audio feedback.
 - **Relationships Tab**: Dedicated tabs for Friend Requests, Suggestions, Following, and Followers.
 
 ### 5. 🩸 Emergency Blood Donation Network
+
 - **Live Donation Requests**: Dedicated feed items and sidebar filter for urgent patient blood requirements.
 - **Detailed Vitals**: Blood group (A+, B+, O+, AB+, etc.), urgency levels, hospital location, and direct call contact.
 
 ### 6. 📿 Saved Routines Hub & Digital Tasbih (`/saved`)
+
 - **Daily Time-Slot Organization**: Categorize saved Duas and posts by routine prayer times:
   - 🌅 **Morning / Fajr** (সকাল)
   - ☀️ **Noon / Dhuhr** (দুপুর)
@@ -84,6 +90,7 @@ The frontend is architected as a feature-driven Next.js App Router application o
   - LocalStorage persistence for Lap and Total daily dhikr counts.
 
 ### 7. 🔊 Synthesized Web Audio API Engine
+
 - Zero external MP3/WAV download overhead; audio is synthesized natively on the user's browser using oscillators and gain envelopes.
 - Synthesized audio profiles:
   - `playFriendRequest`: Ascending dual tone.
@@ -95,6 +102,7 @@ The frontend is architected as a feature-driven Next.js App Router application o
   - `playCancel`: Soft descending tick.
 
 ### 8. 🌐 Bilingual & Dark Mode Support
+
 - **Full i18n Translation**: Seamless toggle between Bengali (`bn`) and English (`en`) without layout shift.
 - **Modern Theme System**: Crisp Light mode and high-contrast Dark mode (`#18191a` / `#242526`).
 
@@ -173,19 +181,19 @@ peacetweet_frontend/
 
 ## 🛠️ Tech Stack
 
-| Category | Technology | Description |
-| :--- | :--- | :--- |
-| **Framework** | [Next.js 14 (App Router)](https://nextjs.org/) | React framework with hybrid SSR/CSR & server components |
-| **Language** | [TypeScript 5](https://www.typescriptlang.org/) | Strongly typed JavaScript with strict typing |
-| **Styling** | [Tailwind CSS 3](https://tailwindcss.com/) | Utility-first CSS framework with dark mode support |
-| **Data Fetching** | [TanStack React Query v5](https://tanstack.com/query/v5) | Async state manager, optimistic updates & cache invalidation |
-| **Client State** | [Zustand](https://github.com/pmndrs/zustand) | Lightweight, hook-based state management |
-| **HTTP Client** | [Axios](https://axios-http.com/) | Promise-based HTTP client with request/response interceptors |
-| **Real-time WebSockets** | [Socket.IO Client](https://socket.io/) | Low-latency bi-directional messaging & live push notifications |
-| **Event Streaming** | [Apache Kafka](https://kafka.apache.org/) | Distributed event backbone for async post processing & media jobs |
-| **In-Memory Caching** | [Redis](https://redis.io/) | Sub-millisecond feed & session caching layer |
-| **Icons** | [Lucide React](https://lucide.dev/) | Clean, consistent SVG icon set |
-| **Sound Synthesis** | [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) | Native browser audio synthesis without asset downloads |
+| Category                 | Technology                                                                      | Description                                                       |
+| :----------------------- | :------------------------------------------------------------------------------ | :---------------------------------------------------------------- |
+| **Framework**            | [Next.js 14 (App Router)](https://nextjs.org/)                                  | React framework with hybrid SSR/CSR & server components           |
+| **Language**             | [TypeScript 5](https://www.typescriptlang.org/)                                 | Strongly typed JavaScript with strict typing                      |
+| **Styling**              | [Tailwind CSS 3](https://tailwindcss.com/)                                      | Utility-first CSS framework with dark mode support                |
+| **Data Fetching**        | [TanStack React Query v5](https://tanstack.com/query/v5)                        | Async state manager, optimistic updates & cache invalidation      |
+| **Client State**         | [Zustand](https://github.com/pmndrs/zustand)                                    | Lightweight, hook-based state management                          |
+| **HTTP Client**          | [Axios](https://axios-http.com/)                                                | Promise-based HTTP client with request/response interceptors      |
+| **Real-time WebSockets** | [Socket.IO Client](https://socket.io/)                                          | Low-latency bi-directional messaging & live push notifications    |
+| **Event Streaming**      | [Apache Kafka](https://kafka.apache.org/)                                       | Distributed event backbone for async post processing & media jobs |
+| **In-Memory Caching**    | [Redis](https://redis.io/)                                                      | Sub-millisecond feed & session caching layer                      |
+| **Icons**                | [Lucide React](https://lucide.dev/)                                             | Clean, consistent SVG icon set                                    |
+| **Sound Synthesis**      | [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) | Native browser audio synthesis without asset downloads            |
 
 ---
 
@@ -251,28 +259,34 @@ PeaceTweet uses an **event-driven distributed architecture** where the Next.js f
 ### Prerequisites
 
 Ensure you have installed:
+
 - **Node.js**: v18.17.0 or higher
 - **pnpm**: v8.0.0 or higher (or `npm` / `yarn`)
 
 ### Installation
 
 1. **Clone repository & enter frontend directory:**
+
    ```bash
    cd peacetweet_frontend
    ```
 
 2. **Install project dependencies:**
+
    ```bash
    pnpm install
    ```
 
 3. **Configure environment variables:**
+
    ```bash
    cp .env.example .env.local
    ```
-   *(See [Environment Configuration](#-environment-configuration) below for details)*
+
+   _(See [Environment Configuration](#-environment-configuration) below for details)_
 
 4. **Run the local development server:**
+
    ```bash
    pnpm dev
    ```
@@ -288,7 +302,7 @@ Create a `.env.local` file in the root of `peacetweet_frontend/`:
 
 ```env
 # Backend REST API endpoint (Express / NestJS backend)
-NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
+NEXT_PUBLIC_BACKEND_URL=http://localhost:5000/api/v1
 
 # Real-time WebSocket Gateway URL (Socket.IO)
 NEXT_PUBLIC_SOCKET_URL=http://localhost:5000
@@ -309,13 +323,13 @@ META_REDIRECT_URI=http://localhost:3000/api/auth/facebook/callback
 
 ## 📜 Available Scripts
 
-| Script | Command | Purpose |
-| :--- | :--- | :--- |
-| `dev` | `pnpm dev` | Starts local Next.js development server on port `3000` |
-| `build` | `pnpm build` | Compiles production-optimized client and server bundles |
-| `start` | `pnpm start` | Runs the compiled production build on port `3000` |
-| `lint` | `pnpm lint` | Runs ESLint analysis across TypeScript & JSX files |
-| `type-check` | `pnpm tsc --noEmit` | Runs strict TypeScript compiler verification |
+| Script       | Command             | Purpose                                                 |
+| :----------- | :------------------ | :------------------------------------------------------ |
+| `dev`        | `pnpm dev`          | Starts local Next.js development server on port `3000`  |
+| `build`      | `pnpm build`        | Compiles production-optimized client and server bundles |
+| `start`      | `pnpm start`        | Runs the compiled production build on port `3000`       |
+| `lint`       | `pnpm lint`         | Runs ESLint analysis across TypeScript & JSX files      |
+| `type-check` | `pnpm tsc --noEmit` | Runs strict TypeScript compiler verification            |
 
 ---
 

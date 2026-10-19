@@ -5,7 +5,7 @@ import { RightSidebar } from '@/components/layout/RightSidebar';
 import { CategoryList } from '@/features/category/components/CategoryList';
 
 export const metadata = {
-  title: 'Dua Categories | PeaceTweet',
+  title: 'Dua Categories',
   description: 'Explore authentic Islamic supplications by category and theme.',
 };
 

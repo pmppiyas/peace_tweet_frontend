@@ -3,7 +3,7 @@ import { SavedLayout } from '@/features/bookmark/components/SavedLayout';
 import { BookmarkList } from '@/features/bookmark/components/BookmarkList';
 
 export const metadata = {
-  title: 'Saved Bookmarks | PeaceTweet',
+  title: 'Saved Bookmarks',
   description: 'Your collection of saved Duas and supplications.',
 };
 

@@ -13,7 +13,10 @@ export const getSocketUrl = (): string => {
     // On live production deployment (like peacetweet.vercel.app)
     if (!isLocalhost) {
       let candidate = (process.env.NEXT_PUBLIC_SOCKET_URL || '').trim();
-      candidate = candidate.replace('peace-tweet-backend', 'peace-tweet-backned');
+      candidate = candidate.replace(
+        'peace-tweet-backend',
+        'peace-tweet-backned'
+      );
 
       if (
         candidate &&
@@ -23,8 +26,11 @@ export const getSocketUrl = (): string => {
         return candidate.replace(/\/+$/, '');
       }
 
-      let apiCandidate = (process.env.NEXT_PUBLIC_API_URL || '').trim();
-      apiCandidate = apiCandidate.replace('peace-tweet-backend', 'peace-tweet-backned');
+      let apiCandidate = (process.env.NEXT_PUBLIC_BACKEND_URL || '').trim();
+      apiCandidate = apiCandidate.replace(
+        'peace-tweet-backend',
+        'peace-tweet-backned'
+      );
 
       if (
         apiCandidate &&
@@ -42,7 +48,8 @@ export const getSocketUrl = (): string => {
   const envSocketUrl = process.env.NEXT_PUBLIC_SOCKET_URL;
   if (envSocketUrl) return envSocketUrl;
 
-  const envApiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+  const envApiUrl =
+    process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000/api/v1';
   return envApiUrl.replace(/\/api\/v1\/?$/, '');
 };
 

@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import { ProfilePageContent } from '@/features/profile/components/ProfilePageContent';
 
 export const metadata = {
-  title: 'My Profile | PeaceTweet',
+  title: 'My Profile',
   description: 'User profile, friends, groups, and saved items',
 };
 

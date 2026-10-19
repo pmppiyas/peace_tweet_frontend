@@ -43,7 +43,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: `@${username} | PeaceTweet Profile`,
+    title: `@${username}`,
     description: `View @${username}'s profile on PeaceTweet.`,
   };
 }

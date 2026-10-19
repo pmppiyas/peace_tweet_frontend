@@ -3,9 +3,9 @@ import type { Metadata } from 'next';
 import { TermsAndPrivacyView } from '@/features/legal/components/TermsAndPrivacyView';
 
 export const metadata: Metadata = {
-  title: 'Terms of Service & Privacy Policy | PeaceTweet',
+  title: 'Terms of Service & Privacy Policy',
   description:
-    'ব্যবহারের শর্তাবলী ও গোপনীয়তা নীতি - PeaceTweet. আমাদের অশ্লীলতামুক্ত, শালীন ও নিরাপদ ইসলামিক সামাজিক যোগাযোগ প্ল্যাটফর্মের নীতিমালা।',
+    'Terms of Service and Privacy Policy for PeaceTweet — our commitment to a peaceful, modest, and safe Islamic social media platform.',
 };
 
 export default function TermsPage() {

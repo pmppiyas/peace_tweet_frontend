@@ -3,13 +3,13 @@ import type { Metadata } from 'next';
 import { FeedbackPageView } from '@/features/feedback';
 
 export const metadata: Metadata = {
-  title: 'পরামর্শ ও অভিযোগ | Feedback & Report - PeaceTweet',
+  title: 'Feedback & Report',
   description:
-    'PeaceTweet প্ল্যাটফর্মের পরামর্শ, ফিচার রিকোয়েস্ট, কারিগরি সমস্যা বা অভিযোগ সরাসরি আমাদের টিমকে জানান। অফিসিয়াল যোগাযোগ: connect.peacetweet@gmail.com',
+    'Share your suggestions, feature requests, bug reports, or content concerns directly with the PeaceTweet team. Official contact: connect.peacetweet@gmail.com',
   openGraph: {
-    title: 'পরামর্শ ও অভিযোগ | Feedback & Report - PeaceTweet',
+    title: 'Feedback & Report — PeaceTweet',
     description:
-      'আপনার পরামর্শেই সমৃদ্ধ হবে PeaceTweet। ফিচার অনুরোধ, কারিগরি ত্রুটি বা অভিযোগ জানাতে ভিজিট করুন।',
+      'Help us shape and improve PeaceTweet. Submit feedback, bug reports, and suggestions directly to our core team.',
   },
 };
 

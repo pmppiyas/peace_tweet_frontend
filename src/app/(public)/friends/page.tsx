@@ -4,7 +4,7 @@ import { FriendsLayout } from '@/features/friends/components/FriendsLayout';
 import { FriendsHomeView } from '@/features/friends/components/FriendsHomeView';
 
 export const metadata: Metadata = {
-  title: 'Friends | PeaceTweet',
+  title: 'Friends',
   description:
     'Manage incoming friend requests, discover friends, and connect on PeaceTweet.',
 };

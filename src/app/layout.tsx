@@ -17,7 +17,7 @@ import { PwaRegistrar } from '@/components/pwa/PwaRegistrar';
 
 export const metadata: Metadata = {
   title: {
-    default: `${siteConfig.name} — ${siteConfig.title}`,
+    default: siteConfig.title,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
@@ -52,7 +52,6 @@ const raleway = Raleway({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-raleway',
-  weight: ['300', '400', '500', '600', '700', '800', '900'],
 });
 
 export default function RootLayout({
