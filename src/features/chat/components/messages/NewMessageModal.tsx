@@ -127,8 +127,8 @@ export function NewMessageModal({
       title={locale === 'bn' ? 'নতুন মেসেজ' : 'New Message'}
       description={
         locale === 'bn'
-          ? 'কথোপকথন শুরু করতে একজন ব্যবহারকারী বা বন্ধু নির্বাচন করুন'
-          : 'Select a user or friend to start a conversation'
+          ? 'মেসেজ পাঠাতে একজন ব্যবহারকারী বা বন্ধু নির্বাচন করুন'
+          : 'Select a user or friend to start messaging'
       }
       className="w-full max-w-md md:max-w-lg lg:max-w-xl p-5 md:p-6 rounded-3xl shadow-2xl flex flex-col"
     >

@@ -4,7 +4,7 @@ export const en = {
     duas: 'Duas',
     categories: 'Categories',
     bookmarks: 'Saved',
-    messages: 'Conversations',
+    messages: 'Messages',
     search: 'Search',
     login: 'Log In',
     join: 'Join Now',

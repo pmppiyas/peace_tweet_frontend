@@ -19,7 +19,6 @@ import { ROUTES } from '@/constants/routes';
 import { ConversationSidebar } from './ConversationSidebar';
 import { ChatView } from './ChatView';
 import { EmptyChatPlaceholder } from './EmptyChatPlaceholder';
-import { NewMessageModal } from './NewMessageModal';
 import { MessagesSkeleton, ChatViewSkeleton } from './MessagesSkeleton';
 import { Container } from '@/components/layout/Container';
 import { cn } from '@/lib/utils/cn';
@@ -38,7 +37,6 @@ export function MessagesLayout() {
 
   const [directSelectedConv, setDirectSelectedConv] =
     useState<ConversationItem | null>(null);
-  const [isNewMessageModalOpen, setIsNewMessageModalOpen] = useState(false);
 
   // Derive currently selected conversation from URL param or immediate selection
   const selectedConversation = useMemo(() => {
@@ -219,7 +217,14 @@ export function MessagesLayout() {
   }
 
   return (
-    <div className="h-[100dvh] md:h-[calc(100vh-3.5rem)] overflow-hidden bg-white dark:bg-[#18191a] sm:bg-[#f0f2f5]">
+    <div
+      className={cn(
+        'overflow-hidden bg-white dark:bg-[#18191a] sm:bg-[#f0f2f5]',
+        selectedConversation || isConvLoading
+          ? 'h-[100dvh] md:h-[calc(100vh-3.5rem)]'
+          : 'h-[calc(100vh-3.5rem)]'
+      )}
+    >
       <Container size="2xl" className="h-full px-0 sm:px-4 lg:px-6 2xl:px-8">
         <div className="flex h-full gap-4 lg:gap-6 2xl:gap-8">
           {/* 1. Left Sidebar: Chats / Conversations Sidebar (In place of main menu sidebar) */}
@@ -233,7 +238,6 @@ export function MessagesLayout() {
               conversations={conversations}
               selectedConversationId={selectedConversation?.id}
               onSelectConversation={handleSelectConversation}
-              onOpenNewMessage={() => setIsNewMessageModalOpen(true)}
               isLoading={isLoading}
               isError={isError}
               totalUnreadCount={totalUnreadCount}
@@ -257,19 +261,10 @@ export function MessagesLayout() {
               ) : isConvLoading ? (
                 <ChatViewSkeleton onBack={handleBackToSidebar} />
               ) : (
-                <EmptyChatPlaceholder
-                  onOpenNewMessage={() => setIsNewMessageModalOpen(true)}
-                />
+                <EmptyChatPlaceholder />
               )}
             </div>
           </main>
-
-          {/* 3. New Message User Search Modal */}
-          <NewMessageModal
-            isOpen={isNewMessageModalOpen}
-            onClose={() => setIsNewMessageModalOpen(false)}
-            onSelectConversation={handleSelectConversation}
-          />
         </div>
       </Container>
     </div>

@@ -22,7 +22,9 @@ export default function HomePage() {
           <Sidebar />
 
           <main className="flex-1 w-full min-w-0 h-full overflow-y-auto overscroll-contain no-scrollbar scrollbar-none pt-0 sm:pt-4 pb-[68px] sm:pb-8 px-0">
-            <Feed />
+            <div className="w-full max-w-[720px] mx-auto">
+              <Feed />
+            </div>
           </main>
           <RightSidebar />
         </div>

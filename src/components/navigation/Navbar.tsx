@@ -12,6 +12,7 @@ import {
   MessageCircle,
   Bell,
   User as UserIcon,
+  X,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/providers/LanguageProvider';
@@ -64,6 +65,26 @@ export function Navbar() {
   );
   const isMessagesActive =
     pathname === '/messages' || pathname.startsWith('/messages/');
+  const currentActiveConversationId = useChatStore(
+    (state) => state.currentActiveConversationId
+  );
+  const isInsideActiveChat =
+    isMessagesActive && Boolean(currentActiveConversationId);
+
+  const chatSearchQuery = useChatStore((state) => state.chatSearchQuery);
+  const setChatSearchQuery = useChatStore((state) => state.setChatSearchQuery);
+  const [isMobileMessagesSearchOpen, setIsMobileMessagesSearchOpen] =
+    useState(false);
+  const mobileSearchInputRef = useRef<HTMLInputElement>(null);
+
+  React.useEffect(() => {
+    if (isMobileMessagesSearchOpen) {
+      const timer = setTimeout(() => {
+        mobileSearchInputRef.current?.focus({ preventScroll: true });
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [isMobileMessagesSearchOpen]);
   const notificationsTriggerRef = useRef<HTMLButtonElement>(null);
   const messengerTriggerRef = useRef<HTMLButtonElement>(null);
 
@@ -102,7 +123,14 @@ export function Navbar() {
     'blood',
     'purpose',
     'feedback',
+    'notifications',
+    'privacy',
   ]);
+
+  const isNotificationsPage =
+    pathname === ROUTES.NOTIFICATIONS ||
+    pathname === '/notifications' ||
+    pathname.startsWith('/notifications/');
 
   const firstPathSegment = pathname.slice(1).split('/')[0]?.toLowerCase() || '';
   const isProfilePage =
@@ -198,7 +226,10 @@ export function Navbar() {
       <button
         type="button"
         onClick={() => setIsSearchOpen(true)}
-        className="flex md:hidden h-10 w-10 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors cursor-pointer"
+        className={cn(
+          'h-10 w-10 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors cursor-pointer',
+          isNotificationsPage || isMessagesActive ? 'hidden' : 'flex md:hidden'
+        )}
         title={locale === 'bn' ? 'অনুসন্ধান' : 'Search'}
         aria-label="Search"
       >
@@ -331,12 +362,100 @@ export function Navbar() {
       <button
         type="button"
         onClick={() => setIsDrawerOpen(true)}
-        className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors"
+        className={cn(
+          'h-10 w-10 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-colors',
+          isNotificationsPage || isMessagesActive ? 'hidden md:flex' : 'flex'
+        )}
         title="Menu"
         aria-label="Open menu drawer"
       >
         <FacebookMenuIcon className="h-5 w-5" />
       </button>
+
+      {/* Mobile-only Notification title on Notifications Page (Right side) */}
+      {isNotificationsPage && (
+        <span
+          suppressHydrationWarning
+          className="md:hidden h-10 flex items-center text-2xl sm:text-[27px] font-black tracking-tight text-[#050505] dark:text-[#e4e6eb] opacity-75 select-none leading-none"
+        >
+          {locale === 'bn' ? 'নোটিফিকেশন' : 'Notification'}
+        </span>
+      )}
+
+      {/* Mobile-only Animated Messages Search & Title Container */}
+      {isMessagesActive && (
+        <div className="md:hidden relative flex items-center justify-end h-10 select-none">
+          {/* Default view: Compact Search Button + "Messages" text */}
+          <div
+            className={cn(
+              'flex items-center gap-2 h-full transition-all duration-300 ease-out',
+              isMobileMessagesSearchOpen
+                ? 'opacity-0 scale-95 pointer-events-none absolute right-0 invisible'
+                : 'opacity-100 scale-100 pointer-events-auto relative visible'
+            )}
+          >
+            {/* Compact search trigger button */}
+            <button
+              type="button"
+              onClick={() => setIsMobileMessagesSearchOpen(true)}
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] transition-transform active:scale-90 cursor-pointer shadow-2xs"
+              title={locale === 'bn' ? 'ফ্রেন্ড খুঁজুন' : 'Search friends'}
+              aria-label="Search friends"
+            >
+              <Search className="h-[19px] w-[19px] stroke-[2.2]" strokeWidth={2.2} />
+            </button>
+
+            {/* Messages text */}
+            <span
+              suppressHydrationWarning
+              className="h-10 flex items-center text-2xl sm:text-[27px] font-black tracking-tight text-[#050505] dark:text-[#e4e6eb] opacity-75 leading-none shrink-0"
+            >
+              {locale === 'bn' ? 'মেসেজ' : 'Messages'}
+            </span>
+          </div>
+
+          {/* Active view: Animated expanding search input field */}
+          <div
+            className={cn(
+              'flex items-center transition-all duration-300 ease-out',
+              isMobileMessagesSearchOpen
+                ? 'opacity-100 scale-100 w-[180px] sm:w-[210px] pointer-events-auto relative visible'
+                : 'opacity-0 scale-95 w-0 pointer-events-none absolute right-0 invisible overflow-hidden'
+            )}
+          >
+            <div className="relative w-full flex items-center">
+              <Search className="absolute left-2.5 h-4 w-4 text-[#65676b] dark:text-[#b0b3b8] pointer-events-none shrink-0" />
+              <input
+                ref={mobileSearchInputRef}
+                type="text"
+                value={chatSearchQuery}
+                onChange={(e) => setChatSearchQuery(e.target.value)}
+                placeholder={
+                  locale === 'bn' ? 'ফ্রেন্ড খুঁজুন...' : 'Search friends...'
+                }
+                className="w-full h-9 rounded-full bg-[#f0f2f5] dark:bg-[#3a3b3c] pl-8 pr-7 text-xs sm:text-sm font-semibold text-[#050505] dark:text-[#e4e6eb] placeholder-[#65676b] dark:placeholder-[#b0b3b8] outline-hidden ring-1 ring-primary-500/20 focus:ring-2 focus:ring-primary-500/50 transition-all shadow-2xs"
+                onKeyDown={(e) => {
+                  if (e.key === 'Escape') {
+                    setIsMobileMessagesSearchOpen(false);
+                    setChatSearchQuery('');
+                  }
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMobileMessagesSearchOpen(false);
+                  setChatSearchQuery('');
+                }}
+                className="absolute right-1 flex h-6 w-6 items-center justify-center rounded-full text-[#65676b] hover:text-[#050505] hover:bg-[#e4e6eb] dark:text-[#b0b3b8] dark:hover:text-[#e4e6eb] dark:hover:bg-[#4e4f50] transition-colors cursor-pointer"
+                title={locale === 'bn' ? 'বন্ধ করুন' : 'Close search'}
+              >
+                <X className="h-3.5 w-3.5 stroke-[2.5]" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Messenger Popover Dropdown placed at right: 0 */}
       {isAuthenticated && (
@@ -362,7 +481,8 @@ export function Navbar() {
     <header
       className={cn(
         'sticky top-0 z-40 w-full h-14 box-border border-b border-[#e4e6eb] bg-white dark:border-[#393a3b] dark:bg-[#242526] shadow-2xs select-none px-3 sm:px-0',
-        (isMessagesActive || isProfilePage) && 'hidden md:block'
+        ((isInsideActiveChat && isMessagesActive) || isProfilePage) &&
+          'hidden md:block'
       )}
     >
       <Container size="2xl" className="h-full px-0 sm:px-0 md:px-0 lg:px-6 2xl:px-8">
@@ -370,7 +490,7 @@ export function Navbar() {
         <div className="flex items-center justify-between h-full gap-4 lg:gap-6 2xl:gap-8 w-full">
           {/* Left Column: Brand Logo + Search Button (Matches Sidebar: lg:w-60 xl:w-64 2xl:w-72) */}
           <div className="flex items-center gap-3 sm:gap-4 shrink-0 lg:w-60 xl:w-64 2xl:w-72 z-10">
-            <Link href="/" className="flex items-center gap-2.5">
+            <Link href="/" className="flex items-center gap-2.5 shrink-0">
               <div className="relative h-10 w-10 shrink-0 rounded-full overflow-hidden shadow-xs">
                 <Image
                   src="/p-logo.svg"
@@ -381,7 +501,7 @@ export function Navbar() {
                   className="h-full w-full object-cover"
                 />
               </div>
-              <span className="h-10 flex items-center text-2xl sm:text-[27px] font-black tracking-tight text-primary-700 dark:text-white select-none leading-none">
+              <span className="h-10 flex items-center text-2xl sm:text-[27px] font-black tracking-tight text-primary-700 dark:text-white select-none leading-none shrink-0">
                 PeaceTweet
               </span>
             </Link>
@@ -405,8 +525,8 @@ export function Navbar() {
 
           {/* Center Column: Navigation Tabs (Matches Feed width with justify-between) */}
           {!isLoginPage && (
-            <div className="hidden lg:flex flex-1 min-w-0 h-full">
-              <nav className="flex items-center justify-between w-full h-full gap-1 sm:gap-2">
+            <div className="hidden lg:flex flex-1 min-w-0 h-full justify-center">
+              <nav className="flex items-center justify-between w-full max-w-[720px] h-full gap-1 sm:gap-2">
                 {navCenterLinks.map((item) => {
                   const Icon = item.icon;
                   const isActive =

@@ -21,8 +21,8 @@ export function ConversationSidebarSkeleton({
         className
       )}
     >
-      {/* Top Header */}
-      <div className="px-2 pb-2.5 flex items-center justify-between gap-2 shrink-0">
+      {/* Top Header (Desktop only - Mobile has title & search in the top navbar) */}
+      <div className="hidden md:flex px-2 pb-2.5 items-center justify-between gap-2 shrink-0">
         <div className="flex items-center gap-2 min-w-0">
           <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700/60 animate-pulse shrink-0" />
           <div className="h-7 w-24 rounded-lg bg-gray-200 dark:bg-gray-700/60 animate-pulse" />
@@ -30,19 +30,19 @@ export function ConversationSidebarSkeleton({
         <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700/60 animate-pulse shrink-0" />
       </div>
 
-      {/* Search Input Bar */}
-      <div className="px-2 pb-2 shrink-0">
+      {/* Search Input Bar (Desktop only) */}
+      <div className="hidden md:block px-2 pb-2 shrink-0">
         <div className="h-9 w-full rounded-xl bg-gray-200/80 dark:bg-gray-700/50 animate-pulse" />
       </div>
 
       {/* Conversation List */}
-      <div className="flex-1 overflow-y-auto px-1 space-y-1.5 overscroll-contain">
+      <div className="flex-1 overflow-y-auto px-1 space-y-0.5 overscroll-contain">
         {Array.from({ length: 8 }).map((_, i) => (
           <div
             key={i}
-            className="flex items-center gap-3 px-2.5 py-2 rounded-xl animate-pulse"
+            className="flex items-center gap-2.5 px-2 py-2 rounded-xl animate-pulse"
           >
-            <div className="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700/60 shrink-0" />
+            <div className="h-11 w-11 rounded-full bg-gray-200 dark:bg-gray-700/60 shrink-0" />
             <div className="flex-1 space-y-1.5 min-w-0">
               <div className="flex items-center justify-between gap-2">
                 <div

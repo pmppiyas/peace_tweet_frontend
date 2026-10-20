@@ -53,40 +53,47 @@ export function SavedLayout({ children }: SavedLayoutProps) {
 
   return (
     <div className="h-[calc(100vh-3.5rem)] overflow-hidden bg-[#f0f2f5] dark:bg-[#18191a]">
-      <Container size="2xl" className="h-full px-0 sm:px-0 md:px-0 lg:px-6 2xl:px-8">
+      <Container
+        size="2xl"
+        className="h-full px-0 sm:px-0 md:px-0 lg:px-6 2xl:px-8"
+      >
         <div className="flex h-full justify-between gap-0 lg:gap-6 2xl:gap-8">
           {/* 1. Left Column: Saved Routine Sidebar */}
           <SavedSidebar />
 
           {/* 2. Middle Column: Saved Content Feed (Matching HomePage Width, Padding & Margins) */}
           <main className="flex-1 w-full min-w-0 h-full overflow-y-auto overscroll-contain no-scrollbar scrollbar-none pt-0 sm:pt-4 pb-[68px] sm:pb-8 space-y-2.5 sm:space-y-4 px-0">
-            {/* Mobile / Tablet Routine Filter Bar (Scroll-less & Ultra Clean, Matching Feed Composer Style) */}
-            <div className="lg:hidden shrink-0 w-full bg-white dark:bg-[#242526] rounded-none sm:rounded-2xl border-y sm:border border-[#e4e6eb] dark:border-[#393a3b] shadow-none sm:shadow-2xs p-1.5 sm:p-2 select-none transition-all">
-              <div className="grid grid-cols-6 gap-0.5 sm:gap-1">
-                {mobileTabs.map((tab) => {
-                  const isActive = tab.id === activeMobileTabId;
-                  return (
-                    <Link
-                      key={tab.id}
-                      href={tab.href}
-                      className={cn(
-                        'flex flex-col items-center justify-center py-1 sm:py-2 px-0.5 rounded-lg sm:rounded-xl text-center transition-all select-none',
-                        isActive
-                          ? 'bg-primary-500 text-white font-bold shadow-xs'
-                          : 'text-[#65676b] dark:text-[#b0b3b8] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] hover:text-[#050505] dark:hover:text-[#e4e6eb]'
-                      )}
-                    >
-                      <span className="text-xs sm:text-sm leading-none">{tab.icon}</span>
-                      <span className="text-[10px] sm:text-[11px] leading-tight font-semibold truncate max-w-full mt-0.5 sm:mt-1">
-                        {tab.label}
-                      </span>
-                    </Link>
-                  );
-                })}
+            <div className="w-full max-w-[720px] mx-auto space-y-2.5 sm:space-y-4">
+              {/* Mobile / Tablet Routine Filter Bar (Scroll-less & Ultra Clean, Matching Feed Composer Style) */}
+              <div className="lg:hidden shrink-0 w-full bg-white dark:bg-[#242526] rounded-none sm:rounded-2xl border-y sm:border border-[#e4e6eb] dark:border-[#393a3b] shadow-none sm:shadow-2xs p-1.5 sm:p-2 select-none transition-all">
+                <div className="grid grid-cols-6 gap-0.5 sm:gap-1">
+                  {mobileTabs.map((tab) => {
+                    const isActive = tab.id === activeMobileTabId;
+                    return (
+                      <Link
+                        key={tab.id}
+                        href={tab.href}
+                        className={cn(
+                          'flex flex-col items-center justify-center py-1 sm:py-2 px-0.5 rounded-lg sm:rounded-xl text-center transition-all select-none',
+                          isActive
+                            ? 'bg-primary-500 text-white font-bold shadow-xs'
+                            : 'text-[#65676b] dark:text-[#b0b3b8] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] hover:text-[#050505] dark:hover:text-[#e4e6eb]'
+                        )}
+                      >
+                        <span className="text-xs sm:text-sm leading-none">
+                          {tab.icon}
+                        </span>
+                        <span className="text-[10px] sm:text-[11px] leading-tight font-semibold truncate max-w-full mt-0.5 sm:mt-1">
+                          {tab.label}
+                        </span>
+                      </Link>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
 
-            {children}
+              {children}
+            </div>
           </main>
 
           {/* 3. Right Column: Digital Tasbih Widget */}

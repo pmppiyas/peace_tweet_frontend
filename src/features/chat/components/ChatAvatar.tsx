@@ -15,7 +15,7 @@ export interface ChatAvatarProps {
 const SIZE_MAP: Record<string, string> = {
   xs: 'h-7 w-7 text-xs',
   sm: 'h-9 w-9 text-xs',
-  md: 'h-10 w-10 sm:h-11 sm:w-11 text-sm',
+  md: 'h-11 w-11 text-sm',
   lg: 'h-12 w-12 text-sm sm:text-base',
   xl: 'h-20 w-20 text-2xl',
   custom: '',

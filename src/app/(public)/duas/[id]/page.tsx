@@ -22,18 +22,20 @@ export default function SingleDuaPage() {
           <Sidebar />
 
           <main className="flex-1 w-full min-w-0 h-full overflow-y-auto overscroll-contain no-scrollbar scrollbar-none py-4 pb-20 sm:pb-8 space-y-4 px-3 sm:px-0">
-            {isLoading ? (
-              <div className="space-y-6">
-                <Skeleton className="h-6 w-36 rounded-md" />
-                <Skeleton className="h-80 w-full rounded-3xl" />
-              </div>
-            ) : isError || !dua ? (
-              <div className="rounded-3xl border border-red-200 bg-red-50 p-12 text-center text-red-700">
-                দোয়াটি পাওয়া যায়নি।
-              </div>
-            ) : (
-              <DuaDetail dua={dua} />
-            )}
+            <div className="w-full max-w-[720px] mx-auto space-y-4">
+              {isLoading ? (
+                <div className="space-y-6">
+                  <Skeleton className="h-6 w-36 rounded-md" />
+                  <Skeleton className="h-80 w-full rounded-3xl" />
+                </div>
+              ) : isError || !dua ? (
+                <div className="rounded-3xl border border-red-200 bg-red-50 p-12 text-center text-red-700">
+                  দোয়াটি পাওয়া যায়নি।
+                </div>
+              ) : (
+                <DuaDetail dua={dua} />
+              )}
+            </div>
           </main>
 
           <RightSidebar />

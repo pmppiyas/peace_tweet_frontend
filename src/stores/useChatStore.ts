@@ -7,6 +7,7 @@ interface ChatStoreState {
   typingMap: Record<string, TypingState>;
   isMessengerDropdownOpen: boolean;
   currentActiveConversationId: string | null;
+  chatSearchQuery: string;
 
   openChat: (user: ChatUser, conversationId?: string) => void;
   closeChat: (identifier: string) => void;
@@ -17,6 +18,7 @@ interface ChatStoreState {
   setTyping: (conversationId: string, typing: TypingState) => void;
   setIsMessengerDropdownOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
   setCurrentActiveConversationId: (id: string | null) => void;
+  setChatSearchQuery: (query: string) => void;
 }
 
 export const useChatStore = create<ChatStoreState>((set, get) => ({
@@ -25,6 +27,8 @@ export const useChatStore = create<ChatStoreState>((set, get) => ({
   typingMap: {},
   isMessengerDropdownOpen: false,
   currentActiveConversationId: null,
+  chatSearchQuery: '',
+  setChatSearchQuery: (query: string) => set({ chatSearchQuery: query }),
 
   openChat: (user: ChatUser, conversationId?: string) => {
     set((state) => {

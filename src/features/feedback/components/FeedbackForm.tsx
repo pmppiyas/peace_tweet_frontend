@@ -32,8 +32,6 @@ interface CategoryOption {
   descBn: string;
   descEn: string;
   icon: React.ComponentType<{ className?: string }>;
-  accentColor: string;
-  bgLight: string;
 }
 
 const CATEGORIES: CategoryOption[] = [
@@ -44,8 +42,6 @@ const CATEGORIES: CategoryOption[] = [
     descBn: 'নতুন কোনো ফিচার বা উন্নতির প্রস্তাব',
     descEn: 'Feature requests or improvements',
     icon: Lightbulb,
-    accentColor: 'text-amber-500 border-amber-500/40 bg-amber-50/50 dark:bg-amber-950/20',
-    bgLight: 'bg-amber-100 text-amber-700 dark:bg-amber-950/80 dark:text-amber-400',
   },
   {
     type: 'BUG',
@@ -54,8 +50,6 @@ const CATEGORIES: CategoryOption[] = [
     descBn: 'কোনো ফিচার কাজ না করলে বা ত্রুটি হলে',
     descEn: 'Something is broken or not working',
     icon: Bug,
-    accentColor: 'text-rose-500 border-rose-500/40 bg-rose-50/50 dark:bg-rose-950/20',
-    bgLight: 'bg-rose-100 text-rose-700 dark:bg-rose-950/80 dark:text-rose-400',
   },
   {
     type: 'REPORT_CONTENT',
@@ -64,8 +58,6 @@ const CATEGORIES: CategoryOption[] = [
     descBn: 'ভুল দোয়া, আপত্তিকর বা স্প্যাম পোস্ট',
     descEn: 'Incorrect dua, offensive or spam post',
     icon: Flag,
-    accentColor: 'text-orange-500 border-orange-500/40 bg-orange-50/50 dark:bg-orange-950/20',
-    bgLight: 'bg-orange-100 text-orange-700 dark:bg-orange-950/80 dark:text-orange-400',
   },
   {
     type: 'BUSINESS',
@@ -74,8 +66,6 @@ const CATEGORIES: CategoryOption[] = [
     descBn: 'পার্টনারশিপ, স্পনসরশিপ বা প্রাতিষ্ঠানিক',
     descEn: 'Partnership or corporate inquiries',
     icon: Briefcase,
-    accentColor: 'text-indigo-500 border-indigo-500/40 bg-indigo-50/50 dark:bg-indigo-950/20',
-    bgLight: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-950/80 dark:text-indigo-400',
   },
   {
     type: 'OTHER',
@@ -84,8 +74,6 @@ const CATEGORIES: CategoryOption[] = [
     descBn: 'সাধারণ কোনো মতামত বা প্রশ্ন',
     descEn: 'General thoughts or questions',
     icon: MessageSquare,
-    accentColor: 'text-teal-500 border-teal-500/40 bg-teal-50/50 dark:bg-teal-950/20',
-    bgLight: 'bg-teal-100 text-teal-700 dark:bg-teal-950/80 dark:text-teal-400',
   },
 ];
 
@@ -276,10 +264,10 @@ export function FeedbackForm() {
       <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
         {/* Category Picker Chips */}
         <div>
-          <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2">
+          <label className="block text-xs font-bold text-[#050505] dark:text-[#e4e6eb] mb-2">
             {locale === 'bn' ? 'ক্যাটাগরি নির্বাচন করুন' : 'Select Category'} *
           </label>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
             {CATEGORIES.map((cat) => {
               const Icon = cat.icon;
               const isSelected = selectedType === cat.type;
@@ -289,31 +277,35 @@ export function FeedbackForm() {
                   key={cat.type}
                   onClick={() => setSelectedType(cat.type)}
                   className={cn(
-                    'flex items-start gap-2.5 p-2.5 sm:p-3 rounded-xl border text-left transition-all cursor-pointer select-none',
+                    'flex flex-col items-center text-center p-3 sm:p-3.5 rounded-xl border transition-all cursor-pointer select-none',
                     isSelected
-                      ? cn(
-                          'border-primary-500 dark:border-primary-500 shadow-2xs',
-                          cat.accentColor
-                        )
-                      : 'border-gray-200 dark:border-gray-700/80 bg-gray-50/50 dark:bg-[#18191a] hover:bg-gray-100/70 dark:hover:bg-[#202122]'
+                      ? 'border-primary-500 bg-primary-50/70 dark:bg-primary-950/40 shadow-2xs ring-1 ring-primary-500/30'
+                      : 'border-[#e4e6eb] dark:border-[#393a3b] bg-white dark:bg-[#18191a] hover:bg-[#f0f2f5] dark:hover:bg-[#242526]'
                   )}
                 >
                   <div
                     className={cn(
-                      'w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5',
-                      isSelected ? cat.bgLight : 'bg-gray-200/70 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
+                      'w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0 mb-2 transition-colors',
+                      isSelected
+                        ? 'bg-primary-500 text-white shadow-xs'
+                        : 'bg-[#f0f2f5] dark:bg-[#3a3b3c] text-[#65676b] dark:text-[#b0b3b8]'
                     )}
                   >
-                    <Icon className="w-4 h-4" />
+                    <Icon className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
                   </div>
-                  <div>
-                    <span className="block text-xs font-bold text-gray-900 dark:text-gray-100">
-                      {locale === 'bn' ? cat.labelBn : cat.labelEn}
-                    </span>
-                    <span className="block text-[11px] text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-1">
-                      {locale === 'bn' ? cat.descBn : cat.descEn}
-                    </span>
-                  </div>
+                  <span
+                    className={cn(
+                      'block text-xs sm:text-[13px] font-bold transition-colors leading-tight',
+                      isSelected
+                        ? 'text-primary-700 dark:text-primary-300'
+                        : 'text-[#050505] dark:text-[#e4e6eb]'
+                    )}
+                  >
+                    {locale === 'bn' ? cat.labelBn : cat.labelEn}
+                  </span>
+                  <span className="block text-[11px] text-[#65676b] dark:text-[#b0b3b8] mt-1 line-clamp-2 leading-relaxed">
+                    {locale === 'bn' ? cat.descBn : cat.descEn}
+                  </span>
                 </button>
               );
             })}
@@ -322,15 +314,15 @@ export function FeedbackForm() {
 
         {/* Dynamic Context Tip based on selection */}
         {selectedType === 'REPORT_CONTENT' && (
-          <div className="p-3 rounded-xl bg-orange-50 dark:bg-orange-950/30 border border-orange-200/80 dark:border-orange-800/50 flex items-start gap-2.5 text-xs text-orange-800 dark:text-orange-300">
-            <Info className="w-4 h-4 shrink-0 mt-0.5 text-orange-600" />
+          <div className="p-3 rounded-xl bg-primary-50/70 dark:bg-primary-950/30 border border-primary-200/80 dark:border-primary-800/50 flex items-start gap-2.5 text-xs text-primary-900 dark:text-primary-200">
+            <Info className="w-4 h-4 shrink-0 mt-0.5 text-primary-600 dark:text-primary-400" />
             <div>
               <p className="font-semibold">
                 {locale === 'bn'
                   ? 'দোয়া বা পোস্ট সংক্রান্ত রিপোর্টের নির্দেশিকা:'
                   : 'Content reporting guideline:'}
               </p>
-              <p className="text-[11px] mt-0.5 text-orange-700 dark:text-orange-300/90">
+              <p className="text-[11px] mt-0.5 text-primary-800/90 dark:text-primary-300/90">
                 {locale === 'bn'
                   ? 'কোনো দোয়াতে হাদিস বা অর্থের অসঙ্গতি থাকলে অথবা কোনো অনুপযুক্ত পোস্ট চোখে পড়লে নিচের ফিল্ডে সেই পোস্টের লিঙ্ক বা আইডি উল্লেখ করুন।'
                   : 'If you noticed errors in a Dua translation/source or found inappropriate content, please paste the post link or ID below.'}
@@ -340,15 +332,15 @@ export function FeedbackForm() {
         )}
 
         {selectedType === 'BUG' && (
-          <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200/80 dark:border-rose-800/50 flex items-start gap-2.5 text-xs text-rose-800 dark:text-rose-300">
-            <Info className="w-4 h-4 shrink-0 mt-0.5 text-rose-600" />
+          <div className="p-3 rounded-xl bg-primary-50/70 dark:bg-primary-950/30 border border-primary-200/80 dark:border-primary-800/50 flex items-start gap-2.5 text-xs text-primary-900 dark:text-primary-200">
+            <Info className="w-4 h-4 shrink-0 mt-0.5 text-primary-600 dark:text-primary-400" />
             <div>
               <p className="font-semibold">
                 {locale === 'bn'
                   ? 'কারিগরি সমস্যা দ্রুত সমাধানের টিপস:'
                   : 'Tips for faster bug resolution:'}
               </p>
-              <p className="text-[11px] mt-0.5 text-rose-700 dark:text-rose-300/90">
+              <p className="text-[11px] mt-0.5 text-primary-800/90 dark:text-primary-300/90">
                 {locale === 'bn'
                   ? 'সমস্যাটি কীভাবে ঘটেছে তা ধাপে ধাপে লিখলে এবং সাথে স্ক্রিনশট যুক্ত করলে আমাদের ডেভেলপার টিম দ্রুত তা ফিক্স করতে পারবে।'
                   : 'Describing the steps to reproduce along with screenshots helps our engineering team fix it much faster.'}

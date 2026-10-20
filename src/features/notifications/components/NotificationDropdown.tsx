@@ -22,7 +22,6 @@ import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/constants/routes';
 import { soundEffects } from '@/lib/sound/soundEffects';
 import {
-  NotificationFilter,
   NotificationItem,
   NotificationType,
 } from '../types/notification.types';
@@ -112,8 +111,6 @@ export function NotificationDropdown({
 }: NotificationDropdownProps) {
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [activeFilter, setActiveFilter] = useState<NotificationFilter>('ALL');
-
   // Fetch all notifications and keep in client cache
   const { data: notificationsData, isLoading } = useNotifications(
     undefined,
@@ -133,13 +130,17 @@ export function NotificationDropdown({
     notificationsData?.meta?.unreadCount ??
     allNotifications.filter((n) => !n.isRead).length;
 
-  // Instant client-side filtering without any refetching or loading spinner
-  const displayedNotifications = useMemo(() => {
-    if (activeFilter === 'UNREAD') {
-      return allNotifications.filter((item) => !item.isRead);
+  // Auto-mark all as read when dropdown modal opens
+  const hasAutoMarked = useRef(false);
+  useEffect(() => {
+    if (isOpen && unreadCount > 0 && !hasAutoMarked.current) {
+      hasAutoMarked.current = true;
+      markAllAsReadMutation.mutate();
     }
-    return allNotifications;
-  }, [activeFilter, allNotifications]);
+    if (!isOpen) {
+      hasAutoMarked.current = false;
+    }
+  }, [isOpen, unreadCount, markAllAsReadMutation]);
 
   // Handle click outside & escape key
   useEffect(() => {
@@ -246,81 +247,30 @@ export function NotificationDropdown({
       style={{ maxHeight: 'calc(100vh - 80px)' }}
     >
       {/* Top Header */}
-      <div className="flex items-center justify-between px-4 pt-3.5 pb-2">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[#e4e6eb]/60 dark:border-[#393a3b]/60">
         <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#050505] dark:text-[#e4e6eb]">
           Notifications
         </h2>
-
-        {unreadCount > 0 && (
-          <button
-            type="button"
-            onClick={handleMarkAllRead}
-            disabled={markAllAsReadMutation.isPending}
-            className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 dark:text-primary-400 hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] px-2.5 py-1.5 rounded-full transition-colors disabled:opacity-50"
-            title="Mark all as read"
-          >
-            <CheckCheck className="h-4 w-4" />
-            <span>Mark all as read</span>
-          </button>
-        )}
-      </div>
-
-      {/* Filter Tabs: All / Unread */}
-      <div className="flex items-center gap-2 px-4 pb-2.5 border-b border-[#e4e6eb]/60 dark:border-[#393a3b]/60">
-        <button
-          type="button"
-          onClick={() => setActiveFilter('ALL')}
-          className={cn(
-            'px-3.5 py-1 rounded-full text-sm font-semibold transition-all',
-            activeFilter === 'ALL'
-              ? 'bg-primary-50 text-primary-700 dark:bg-primary-950/60 dark:text-primary-300'
-              : 'text-[#65676b] dark:text-[#b0b3b8] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c]'
-          )}
-        >
-          All
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setActiveFilter('UNREAD')}
-          className={cn(
-            'flex items-center gap-1.5 px-3.5 py-1 rounded-full text-sm font-semibold transition-all',
-            activeFilter === 'UNREAD'
-              ? 'bg-primary-50 text-primary-700 dark:bg-primary-950/60 dark:text-primary-300'
-              : 'text-[#65676b] dark:text-[#b0b3b8] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c]'
-          )}
-        >
-          <span>Unread</span>
-          {unreadCount > 0 && (
-            <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold text-white leading-none">
-              {unreadCount > 99 ? '99+' : unreadCount}
-            </span>
-          )}
-        </button>
       </div>
 
       {/* Notification List Container */}
       <div className="flex-1 overflow-y-auto p-2 space-y-1 overscroll-contain">
         {isLoading && allNotifications.length === 0 ? (
           <NotificationSkeleton count={5} variant="dropdown" />
-        ) : displayedNotifications.length === 0 ? (
+        ) : allNotifications.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 px-6 text-center text-[#65676b] dark:text-[#b0b3b8]">
             <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#f0f2f5] dark:bg-[#3a3b3c] mb-3">
               <Inbox className="h-7 w-7 stroke-[1.5]" />
             </div>
             <p className="font-semibold text-[#050505] dark:text-[#e4e6eb] text-sm">
-              {activeFilter === 'UNREAD'
-                ? 'No unread notifications'
-                : 'No notifications yet'}
+              No notifications yet
             </p>
             <p className="text-xs mt-1 text-[#65676b] dark:text-[#b0b3b8] max-w-xs">
-              {activeFilter === 'UNREAD'
-                ? 'You are all caught up! There are no unread notifications.'
-                : 'When someone likes or comments on your posts, or sends you a friend request, you will see it here.'}
+              When someone likes or comments on your posts, or sends you a friend request, you will see it here.
             </p>
           </div>
         ) : (
-          displayedNotifications.map((item) => {
+          allNotifications.map((item) => {
             const badge = getNotificationBadge(item.type);
             const BadgeIcon = badge.icon;
             const actorName = item.actor?.name || 'Someone';
@@ -363,31 +313,28 @@ export function NotificationDropdown({
                   {/* Badged action icon */}
                   <span
                     className={cn(
-                      'absolute -bottom-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full ring-2 ring-white dark:ring-[#242526]',
+                      'absolute -bottom-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full ring-2 ring-white dark:ring-[#242526] shadow-xs',
                       badge.bgColor,
                       badge.textColor
                     )}
                   >
-                    <BadgeIcon className="h-3 w-3 stroke-[2.5]" />
+                    <BadgeIcon className="h-3 w-3 stroke-[2.2]" />
                   </span>
                 </div>
 
                 {/* Center: Notification Message and Relative Time */}
                 <div className="flex-1 min-w-0 pr-1">
-                  <p className="text-sm text-[#050505] dark:text-[#e4e6eb] leading-snug line-clamp-3">
-                    <span className="font-semibold">{actorName}</span>{' '}
-                    <span>{item.message}</span>
+                  <p className="text-[15px] leading-tight truncate text-[#050505] dark:text-[#e4e6eb]">
+                    <span className="font-bold text-[#050505] dark:text-white">
+                      {actorName}
+                    </span>{' '}
+                    <span className="font-normal text-[#050505] dark:text-[#e4e6eb]">
+                      {item.message}
+                    </span>
                   </p>
 
-                  <div className="flex items-center gap-1.5 mt-0.5">
-                    <span
-                      className={cn(
-                        'text-xs',
-                        !item.isRead
-                          ? 'font-semibold text-primary-600 dark:text-primary-400'
-                          : 'text-[#65676b] dark:text-[#b0b3b8]'
-                      )}
-                    >
+                  <div className="flex items-center gap-1 mt-1">
+                    <span className="text-[13px] leading-normal truncate text-[#65676b] dark:text-[#b0b3b8]">
                       {formatTimeAgo(item.createdAt)}
                     </span>
                   </div>

@@ -4,7 +4,7 @@ export const bn = {
     duas: 'সকল দোয়া',
     categories: 'ক্যাটাগরি',
     bookmarks: 'সংরক্ষিত',
-    messages: 'কথোপকথন',
+    messages: 'মেসেজ',
     search: 'অনুসন্ধান',
     login: 'লগইন',
     join: 'জয়েন করুন',

@@ -89,7 +89,7 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
     },
     {
       id: 'menu-messages',
-      label: locale === 'bn' ? 'কথোপকথন' : 'Conversations',
+      label: locale === 'bn' ? 'মেসেজ' : 'Messages',
       href: isAuthenticated ? ROUTES.MESSAGES : ROUTES.LOGIN,
       icon: MessageCircle,
       iconBg: 'bg-sky-500 text-white',

@@ -98,7 +98,7 @@ export function ChatViewHeader({
               ? 'bg-primary-50 text-primary-600 dark:bg-primary-950/60 dark:text-primary-400'
               : 'text-[#65676b] hover:bg-[#f0f2f5] dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] hover:text-[#050505] dark:hover:text-white',
           )}
-          title={locale === 'bn' ? 'চ্যাটের বিবরণ' : 'Conversation info'}
+          title={locale === 'bn' ? 'মেসেজের বিবরণ' : 'Message info'}
         >
           <Info className="h-5 w-5 stroke-[2.2]" />
         </button>

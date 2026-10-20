@@ -24,7 +24,7 @@ export interface SectionLayoutProps {
   maxWidth?: string;
   className?: string;
   contentClassName?: string;
-  containerSize?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
+  containerSize?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | 'full';
 }
 
 export function SectionLayout({
@@ -47,7 +47,7 @@ export function SectionLayout({
         className
       )}
     >
-      <Container size={containerSize} className="h-full px-0 sm:px-4 lg:px-6 2xl:px-8">
+      <Container size={containerSize} className={cn('h-full px-0 sm:px-4 lg:px-6 2xl:px-8', maxWidth)}>
 
         <div className="flex flex-col lg:flex-row h-full">
           {/* Dedicated Section Sidebar */}

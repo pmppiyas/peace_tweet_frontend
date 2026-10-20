@@ -47,7 +47,7 @@ export function ConversationDetailsPanel({
       {/* Header */}
       <div className="p-4 border-b border-[#e4e6eb] dark:border-[#393a3b] flex items-center justify-between shrink-0">
         <h3 className="font-bold text-base text-[#050505] dark:text-white">
-          {locale === 'bn' ? 'কথোপকথনের বিবরণ' : 'Chat Details'}
+          {locale === 'bn' ? 'মেসেজের বিবরণ' : 'Message Details'}
         </h3>
         <button
           type="button"
@@ -164,7 +164,7 @@ export function ConversationDetailsPanel({
           </div>
           <p className="text-[11px] text-primary-800/80 dark:text-primary-300/80 leading-relaxed">
             {locale === 'bn'
-              ? 'কথোপকথনে সুন্দর ও মার্জিত শব্দ ব্যবহার করুন। পারস্পরিক সম্প্রীতি বজায় রাখা মুমিনের ভূষণ।'
+              ? 'মেসেজে সুন্দর ও মার্জিত শব্দ ব্যবহার করুন। পারস্পরিক সম্প্রীতি বজায় রাখা মুমিনের ভূষণ।'
               : 'Communicate with warmth and kindness. Maintaining peace and respect is the true essence of brotherhood.'}
           </p>
         </div>

@@ -80,7 +80,7 @@ export function ConversationItemView({
       <ChatAvatar
         src={participant?.avatarUrl}
         name={displayName}
-        size="sm"
+        size="md"
         isOnline={isOnline}
         className="shrink-0 transition-transform group-hover:scale-105"
       />
@@ -112,10 +112,10 @@ export function ConversationItemView({
           </span>
         </div>
 
-        <div className="flex items-center justify-between gap-2 mt-0.5">
+        <div className="flex items-center justify-between gap-2 mt-1">
           <p
             className={cn(
-              'text-xs truncate leading-tight',
+              'text-[13px] truncate leading-normal',
               isTyping
                 ? 'text-primary-600 dark:text-primary-400 font-semibold italic animate-pulse'
                 : hasUnread
@@ -128,7 +128,7 @@ export function ConversationItemView({
                 ? 'টাইপ করছেন...'
                 : 'typing...'
               : conversation.lastMessageText ||
-                (locale === 'bn' ? 'কথোপকথন শুরু করুন' : 'Start a conversation')}
+                (locale === 'bn' ? 'মেসেজ পাঠান' : 'Send a message')}
           </p>
 
           {/* Unread Count Badge */}

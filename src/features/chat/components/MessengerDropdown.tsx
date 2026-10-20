@@ -88,7 +88,7 @@ export function MessengerDropdown({
       {/* Header */}
       <div className="p-3.5 pb-2 border-b border-[#e4e6eb] dark:border-[#393a3b] flex items-center justify-between">
         <h3 className="font-bold text-lg text-[#050505] dark:text-[#e4e6eb] flex items-center gap-2">
-          <span>{locale === 'bn' ? 'চ্যাট' : 'Chats'}</span>
+          <span>{locale === 'bn' ? 'মেসেজ' : 'Messages'}</span>
         </h3>
         <button
           onClick={onClose}
@@ -116,14 +116,14 @@ export function MessengerDropdown({
       </div>
 
       {/* Conversations List */}
-      <div className="flex-1 overflow-y-auto overscroll-contain divide-y divide-transparent p-1.5">
+      <div className="flex-1 overflow-y-auto overscroll-contain space-y-0.5 p-2">
         {isLoading ? (
-          <div className="space-y-3 p-3 animate-pulse">
+          <div className="space-y-0.5 animate-pulse">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="flex items-center gap-3">
-                <div className="h-12 w-12 rounded-full bg-gray-200 dark:bg-gray-700 shrink-0" />
-                <div className="flex-1 space-y-1.5">
-                  <div className="h-4 w-32 rounded-sm bg-gray-200 dark:bg-gray-700" />
+              <div key={i} className="flex items-center gap-2.5 px-2 py-2 rounded-xl">
+                <div className="h-11 w-11 rounded-full bg-gray-200 dark:bg-gray-700 shrink-0" />
+                <div className="flex-1 space-y-1.5 min-w-0">
+                  <div className="h-3.5 w-32 rounded-sm bg-gray-200 dark:bg-gray-700" />
                   <div className="h-3 w-48 rounded-sm bg-gray-200 dark:bg-gray-700" />
                 </div>
               </div>
@@ -138,7 +138,7 @@ export function MessengerDropdown({
               {searchQuery
                 ? locale === 'bn'
                   ? 'কোনো ফলাফল পাওয়া যায়নি'
-                  : 'No conversations found'
+                  : 'No messages found'
                 : locale === 'bn'
                   ? 'কোনো মেসেজ নেই'
                   : 'No messages yet'}
@@ -176,16 +176,17 @@ export function MessengerDropdown({
                   onClose();
                 }}
                 className={cn(
-                  'w-full flex items-center gap-3 p-2.5 rounded-xl transition-colors text-left hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c]',
-                  hasUnread && 'bg-primary-50/40 dark:bg-primary-950/20',
+                  'w-full flex items-center gap-2.5 px-2 py-2 rounded-xl transition-colors text-left select-none cursor-pointer group hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c]',
+                  hasUnread && 'bg-[#f0f2f5] dark:bg-[#3a3b3c]/80',
                 )}
               >
                 {/* Avatar with Online Status Dot */}
                 <ChatAvatar
                   src={participant.avatarUrl}
                   name={participant.name}
-                  size="lg"
+                  size="md"
                   isOnline={isOnline}
+                  className="shrink-0 transition-transform group-hover:scale-105"
                 />
 
                 {/* Details */}
@@ -193,7 +194,7 @@ export function MessengerDropdown({
                   <div className="flex items-center justify-between gap-1">
                     <p
                       className={cn(
-                        'text-sm truncate',
+                        'text-[15px] truncate leading-tight',
                         hasUnread
                           ? 'font-bold text-[#050505] dark:text-white'
                           : 'font-semibold text-[#050505] dark:text-[#e4e6eb]',
@@ -215,10 +216,10 @@ export function MessengerDropdown({
                     )}
                   </div>
 
-                  <div className="flex items-center justify-between gap-2 mt-0.5">
+                  <div className="flex items-center justify-between gap-2 mt-1">
                     <p
                       className={cn(
-                        'text-xs truncate',
+                        'text-[13px] truncate leading-normal',
                         hasUnread
                           ? 'font-semibold text-[#050505] dark:text-[#e4e6eb]'
                           : 'text-[#65676b] dark:text-[#b0b3b8]',
@@ -226,11 +227,11 @@ export function MessengerDropdown({
                     >
                       {conv.lastMessageText ||
                         (locale === 'bn'
-                          ? 'কথোপকথন শুরু করুন'
-                          : 'Start a conversation')}
+                          ? 'মেসেজ পাঠান'
+                          : 'Send a message')}
                     </p>
                     {hasUnread && (
-                      <span className="h-2.5 w-2.5 rounded-full bg-primary-600 shrink-0" />
+                      <span className="h-2 w-2 rounded-full bg-primary-600 shrink-0" />
                     )}
                   </div>
                 </div>

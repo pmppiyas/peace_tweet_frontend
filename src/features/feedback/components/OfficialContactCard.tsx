@@ -28,17 +28,17 @@ export function OfficialContactCard() {
   return (
     <div className="bg-white dark:bg-[#242526] rounded-2xl border border-gray-100 dark:border-gray-800 shadow-xs overflow-hidden transition-all">
       {/* Top Banner / Header */}
-      <div className="bg-gradient-to-br from-primary-600 to-teal-700 p-5 text-white relative overflow-hidden">
+      <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-5 text-white relative overflow-hidden">
         <div className="absolute top-0 right-0 translate-x-4 -translate-y-4 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none" />
         <div className="relative z-10 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-white/15 backdrop-blur-md border border-white/20 flex items-center justify-center shrink-0">
-            <Sparkles className="w-5 h-5 text-yellow-300" />
+          <div className="w-10 h-10 rounded-xl bg-white/15 backdrop-blur-xs border border-white/20 flex items-center justify-center shrink-0">
+            <Sparkles className="w-5 h-5 text-white" />
           </div>
           <div>
             <h2 className="text-base font-bold leading-snug">
               {locale === 'bn' ? 'অফিসিয়াল সহায়তা ও যোগাযোগ' : 'Official Support & Contact'}
             </h2>
-            <p className="text-xs text-white/80 mt-0.5">
+            <p className="text-xs text-white/85 mt-0.5">
               {locale === 'bn'
                 ? 'PeaceTweet টিমের সাথে সরাসরি যোগাযোগের মাধ্যম'
                 : 'Direct channels to reach the PeaceTweet team'}
@@ -89,7 +89,7 @@ export function OfficialContactCard() {
         <div className="p-3.5 rounded-xl bg-gray-50/80 dark:bg-[#18191a] border border-gray-100 dark:border-gray-800/80">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-lg bg-teal-100 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center shrink-0">
+              <div className="w-9 h-9 rounded-lg bg-primary-100 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center shrink-0">
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <div>

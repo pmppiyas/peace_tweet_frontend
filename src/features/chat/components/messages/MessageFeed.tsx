@@ -155,12 +155,12 @@ export function MessageFeed({
               <MessageSquare className="h-8 w-8" />
             </div>
             <h3 className="text-base font-bold text-[#050505] dark:text-white">
-              {locale === 'bn' ? 'কথোপকথন শুরু করুন' : 'Say Salam & start chatting'}
+              {locale === 'bn' ? 'মেসেজ পাঠানো শুরু করুন' : 'Say Salam & start messaging'}
             </h3>
             <p className="text-xs max-w-xs mt-1 text-[#65676b] dark:text-[#b0b3b8] leading-relaxed">
               {locale === 'bn'
                 ? 'প্রথম মেসেজটি পাঠিয়ে আন্তরিক যোগাযোগ গড়ে তুলুন'
-                : 'Send your first message or a warm Salam to start your conversation'}
+                : 'Send your first message or a warm Salam to start messaging'}
             </p>
           </div>
         ) : (

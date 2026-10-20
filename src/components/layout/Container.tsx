@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from '@/lib/utils/cn';
 
 export interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
-  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | 'full';
 }
 
 export function Container({
@@ -16,7 +16,8 @@ export function Container({
     md: 'max-w-5xl',
     lg: 'max-w-7xl',
     xl: 'max-w-[1536px]',
-    '2xl': 'max-w-[1920px]',
+    '2xl': 'max-w-[1600px]',
+    '3xl': 'max-w-[1920px]',
     full: 'max-w-full',
   };
 
