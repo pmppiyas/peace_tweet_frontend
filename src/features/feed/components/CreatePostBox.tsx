@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { Button } from '@/components/ui/Button';
@@ -9,6 +8,7 @@ import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
 import { BookOpen, Sparkles, Feather } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
+import { cn } from '@/lib/utils/cn';
 import Link from 'next/link';
 
 export function CreatePostBox() {
@@ -56,6 +56,7 @@ export function CreatePostBox() {
             )}
           >
             {user?.avatarUrl ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
               <img
                 src={user.avatarUrl}
                 alt={user.name || 'User'}

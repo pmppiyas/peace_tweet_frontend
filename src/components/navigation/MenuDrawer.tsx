@@ -25,6 +25,7 @@ import {
   MessageCircle,
   MessageSquarePlus,
   Download,
+  Sparkles,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/providers/LanguageProvider';
@@ -141,6 +142,13 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
       href: ROUTES.SETTINGS,
       icon: Settings,
       iconBg: 'bg-gray-600 text-white',
+    },
+    {
+      id: 'menu-purpose',
+      label: locale === 'bn' ? 'আমাদের উদ্দেশ্য' : 'Our Purpose',
+      href: ROUTES.PURPOSE,
+      icon: Sparkles,
+      iconBg: 'bg-emerald-600 text-white',
     },
     {
       id: 'menu-feedback',
@@ -391,6 +399,14 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
 
             {/* Legal / Policy Links */}
             <div className="pt-2 px-2 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[11px] text-[#65676b] dark:text-[#b0b3b8]">
+              <Link
+                href="/purpose"
+                onClick={onClose}
+                className="hover:underline hover:text-primary-600 dark:hover:text-primary-400 font-medium"
+              >
+                {locale === 'bn' ? 'উদ্দেশ্য' : 'Purpose'}
+              </Link>
+              <span>•</span>
               <Link
                 href="/terms?tab=terms"
                 onClick={onClose}

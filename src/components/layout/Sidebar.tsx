@@ -12,6 +12,7 @@ import {
   Shield,
   Droplet,
   MessageCircle,
+  Sparkles,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/providers/LanguageProvider';
@@ -22,7 +23,11 @@ import {
   SidebarNavItem,
 } from '@/components/navigation/SectionSidebar';
 
-export function Sidebar() {
+export interface SidebarProps {
+  className?: string;
+}
+
+export function Sidebar({ className }: SidebarProps = {}) {
   const { isAuthenticated, isAdmin } = useAuth();
   const { t, locale } = useLanguage();
   const unreadMessagesCount = useTotalUnreadCount();
@@ -90,6 +95,13 @@ export function Sidebar() {
       iconBg: 'bg-amber-600 text-white',
     },
     {
+      id: 'sidebar-purpose',
+      label: locale === 'bn' ? 'আমাদের উদ্দেশ্য' : 'Our Purpose',
+      href: ROUTES.PURPOSE,
+      icon: Sparkles,
+      iconBg: 'bg-emerald-600 text-white',
+    },
+    {
       id: 'sidebar-settings',
       label: t('nav.settings'),
       href: ROUTES.SETTINGS,
@@ -113,7 +125,7 @@ export function Sidebar() {
     <SectionSidebar
       items={menuItems}
       showUserProfile={true}
-      className="sticky top-14 h-[calc(100vh-3.5rem)]"
+      className={className || "sticky top-14 h-[calc(100vh-3.5rem)]"}
     />
   );
 }

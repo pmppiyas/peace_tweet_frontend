@@ -100,6 +100,8 @@ export function Navbar() {
     'api',
     'terms',
     'blood',
+    'purpose',
+    'feedback',
   ]);
 
   const firstPathSegment = pathname.slice(1).split('/')[0]?.toLowerCase() || '';
@@ -469,3 +471,4 @@ export function Navbar() {
     </header>
   );
 }
+

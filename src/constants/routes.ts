@@ -12,6 +12,7 @@ export const ROUTES = {
   NOTIFICATIONS: '/notifications',
   SETTINGS: '/settings',
   FEEDBACK: '/feedback',
+  PURPOSE: '/purpose',
   TERMS: '/terms',
   PRIVACY: '/privacy',
   MESSAGES: '/messages',

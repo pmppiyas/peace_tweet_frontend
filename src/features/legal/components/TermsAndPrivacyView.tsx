@@ -61,7 +61,10 @@ export function TermsAndPrivacyView() {
 
   return (
     <div className="min-h-screen bg-[#f0f2f5] dark:bg-[#18191a] py-6 sm:py-10 text-[#050505] dark:text-[#e4e6eb]">
-      <Container size="2xl" className="px-4 sm:px-6 lg:px-8 2xl:px-10 max-w-7xl 2xl:max-w-[1600px]">
+      <Container
+        size="2xl"
+        className="px-4 sm:px-6 lg:px-8 2xl:px-10 max-w-7xl 2xl:max-w-[1600px]"
+      >
         {/* Top Back Nav & Brand */}
         <div className="flex items-center justify-between mb-6">
           <Link
@@ -207,7 +210,9 @@ export function TermsAndPrivacyView() {
                   <ul className="list-disc pl-5 space-y-1.5">
                     <li>
                       <strong className="text-[#050505] dark:text-[#e4e6eb]">
-                        {locale === 'bn' ? 'নগ্নতা ও অর্ধনগ্নতা:' : 'Nudity & Partial Nudity:'}
+                        {locale === 'bn'
+                          ? 'নগ্নতা ও অর্ধনগ্নতা:'
+                          : 'Nudity & Partial Nudity:'}
                       </strong>{' '}
                       {locale === 'bn'
                         ? 'পুরুষ বা মহিলার সতর উন্মুক্তকারী কোনো ছবি, রিল বা ভিডিও আপলোড করা যাবে না।'
@@ -215,7 +220,9 @@ export function TermsAndPrivacyView() {
                     </li>
                     <li>
                       <strong className="text-[#050505] dark:text-[#e4e6eb]">
-                        {locale === 'bn' ? 'অশ্লীল ভাষা ও গালিগালাজ:' : 'Vulgar Language & Profanity:'}
+                        {locale === 'bn'
+                          ? 'অশ্লীল ভাষা ও গালিগালাজ:'
+                          : 'Vulgar Language & Profanity:'}
                       </strong>{' '}
                       {locale === 'bn'
                         ? 'পোস্টের ক্যাপশনে বা কমেন্টে কুরুচিপূর্ণ শব্দ, দ্ব্যর্থবোধক ইঙ্গিত বা অশোভন অঙ্গভঙ্গি প্রদর্শন করা যাবে না।'
@@ -223,7 +230,9 @@ export function TermsAndPrivacyView() {
                     </li>
                     <li>
                       <strong className="text-[#050505] dark:text-[#e4e6eb]">
-                        {locale === 'bn' ? 'মদ্যপান, জুয়া ও অনৈতিক প্রমোশন:' : 'Intoxicants, Gambling & Vice:'}
+                        {locale === 'bn'
+                          ? 'মদ্যপান, জুয়া ও অনৈতিক প্রমোশন:'
+                          : 'Intoxicants, Gambling & Vice:'}
                       </strong>{' '}
                       {locale === 'bn'
                         ? 'মাদক, জুয়া বা কোনো অনৈসলামিক কাজের প্রচারণা বা উৎসাহ প্রদানকারী কন্টেন্ট।'
@@ -436,7 +445,9 @@ export function TermsAndPrivacyView() {
                   <ul className="list-disc pl-5 space-y-1.5">
                     <li>
                       <strong className="text-[#050505] dark:text-[#e4e6eb]">
-                        {locale === 'bn' ? 'অ্যাকাউন্ট প্রোফাইল:' : 'Account Profile:'}
+                        {locale === 'bn'
+                          ? 'অ্যাকাউন্ট প্রোফাইল:'
+                          : 'Account Profile:'}
                       </strong>{' '}
                       {locale === 'bn'
                         ? 'আপনার নাম, ইমেইল ঠিকানা, ইউজারনেম, প্রোফাইল ছবি এবং পাসওয়ার্ড (Bcrypt এনক্রিপ্টেড হ্যাশ)।'
@@ -444,7 +455,9 @@ export function TermsAndPrivacyView() {
                     </li>
                     <li>
                       <strong className="text-[#050505] dark:text-[#e4e6eb]">
-                        {locale === 'bn' ? 'ইউজার কন্টেন্ট:' : 'User-Generated Content:'}
+                        {locale === 'bn'
+                          ? 'ইউজার কন্টেন্ট:'
+                          : 'User-Generated Content:'}
                       </strong>{' '}
                       {locale === 'bn'
                         ? 'আপনার পোস্ট, কমেন্ট, শেয়ারকৃত দোয়া, রক্তদানের অনুরোধ এবং সংরক্ষিত রুটিন সময়সূচি।'
@@ -452,7 +465,9 @@ export function TermsAndPrivacyView() {
                     </li>
                     <li>
                       <strong className="text-[#050505] dark:text-[#e4e6eb]">
-                        {locale === 'bn' ? 'লোকাল স্টোরেজ প্রেফারেন্স:' : 'Client Preferences:'}
+                        {locale === 'bn'
+                          ? 'লোকাল স্টোরেজ প্রেফারেন্স:'
+                          : 'Client Preferences:'}
                       </strong>{' '}
                       {locale === 'bn'
                         ? 'আপনার ডিভাইসে অফলাইন ডিজিটাল তাসবীহ কাউন্ট, সাউন্ড অন/অফ এবং ডার্ক/লাইট মোড সেটিংস।'
@@ -583,10 +598,10 @@ export function TermsAndPrivacyView() {
               : 'Our team is dedicated to keeping our community safe. Contact us for any policy clarification or violation reports.'}
           </p>
           <a
-            href="mailto:support@peacetweet.com"
+            href="mailto:connect@peacetweet.com"
             className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-primary-600 hover:bg-primary-700 px-5 py-2 text-xs font-bold text-white shadow-xs transition-all"
           >
-            <span>support@peacetweet.com</span>
+            <span>connect@peacetweet.com</span>
             <ExternalLink className="h-3.5 w-3.5" />
           </a>
         </div>

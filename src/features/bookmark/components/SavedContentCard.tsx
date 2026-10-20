@@ -84,9 +84,9 @@ export function SavedContentCard({
   const itemType: 'DUA' | 'POST' = item.savedType === 'DUA' ? 'DUA' : 'POST';
 
   return (
-    <article className="w-full bg-white dark:bg-[#242526] p-3 sm:p-4 transition-colors">
+    <article className="w-full bg-white dark:bg-[#242526] transition-colors">
       {/* 1. Header with Routine Slot & Action Buttons */}
-      <div className="flex items-center justify-between pb-3 border-b border-[#e4e6eb]/80 dark:border-[#393a3b]/80 gap-2">
+      <div className="flex items-center justify-between px-3 pt-2.5 pb-2 sm:px-4 sm:pt-3 sm:pb-2.5 border-b border-[#e4e6eb]/80 dark:border-[#393a3b]/80 gap-2">
         <div className="flex items-center gap-2 flex-wrap">
           <TimeSlotBadge
             timeSlot={
@@ -175,7 +175,7 @@ export function SavedContentCard({
       </div>
 
       {/* 2. Dua Content Body */}
-      <div className="pt-3 space-y-3">
+      <div className="px-3 pt-2.5 pb-3.5 sm:px-4 sm:pt-3 sm:pb-4 space-y-3">
         {dua?.title && (
           <h3 className="text-base sm:text-lg font-bold text-[#050505] dark:text-[#e4e6eb] leading-snug">
             🌙 {dua.title}

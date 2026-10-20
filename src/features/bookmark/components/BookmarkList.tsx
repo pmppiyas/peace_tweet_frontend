@@ -2,21 +2,17 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { ROUTES } from '@/constants/routes';
-import { useSavedItems, useUpdateTimeSlotMutation } from '../hooks/useBookmarks';
+import {
+  useSavedItems,
+  useUpdateTimeSlotMutation,
+} from '../hooks/useBookmarks';
 import { bookmarkApi } from '../api/bookmark.api';
 import { SavedContentCard } from './SavedContentCard';
 import { FeedSkeleton } from '@/features/feed/components/FeedSkeleton';
 import { Bookmark } from 'lucide-react';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { useQueryClient } from '@tanstack/react-query';
-import {
-  TimeSlot,
-  TIME_SLOTS,
-  getCurrentTimeSlot,
-  SavedFeedItem,
-} from '@/types/saved.types';
-import { cn } from '@/lib/utils/cn';
+import { TimeSlot, TIME_SLOTS, getCurrentTimeSlot } from '@/types/saved.types';
 import { soundEffects } from '@/lib/sound/soundEffects';
 
 export interface BookmarkListProps {
@@ -45,7 +41,9 @@ export function BookmarkList({
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | 'all'>(
     urlSlot
       ? urlSlot
-      : (initialTimeSlot !== 'all' ? initialTimeSlot : currentRoutineSlot)
+      : initialTimeSlot !== 'all'
+        ? initialTimeSlot
+        : currentRoutineSlot
   );
 
   useEffect(() => {
@@ -88,7 +86,11 @@ export function BookmarkList({
 
   const updateTimeSlotMutation = useUpdateTimeSlotMutation();
 
-  const handleUpdateSlot = (id: string, type: 'DUA' | 'POST', slot: TimeSlot | null) => {
+  const handleUpdateSlot = (
+    id: string,
+    type: 'DUA' | 'POST',
+    slot: TimeSlot | null
+  ) => {
     updateTimeSlotMutation.mutate({ id, type, timeSlot: slot });
   };
 
@@ -108,21 +110,16 @@ export function BookmarkList({
     }
   };
 
-  const isLoading =
-    slotQuery.isLoading || (isSlotEmpty && allQuery.isLoading);
+  const isLoading = slotQuery.isLoading || (isSlotEmpty && allQuery.isLoading);
   const isError = shouldFallbackToAll ? allQuery.isError : slotQuery.isError;
   const savedItems =
     (shouldFallbackToAll ? allQuery.data?.items : slotQuery.data?.items) || [];
 
   return (
-    <div className="space-y-2 sm:space-y-4">
-
-
-
-
+    <div className="w-full space-y-2.5 sm:space-y-4">
       {/* Fallback Banner when routine time has no items */}
       {shouldFallbackToAll && (
-        <div className="flex items-center gap-2.5 p-3 sm:p-3.5 rounded-2xl bg-amber-50/90 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-900/60 text-amber-900 dark:text-amber-200 text-xs sm:text-sm animate-in fade-in duration-200">
+        <div className="w-full bg-amber-50/90 dark:bg-amber-950/40 border-y sm:border border-amber-200/80 dark:border-amber-900/60 rounded-none sm:rounded-2xl p-3 sm:p-3.5 text-amber-900 dark:text-amber-200 text-xs sm:text-sm flex items-center gap-2.5 animate-in fade-in duration-200 shadow-none sm:shadow-2xs">
           <span className="text-base sm:text-lg shrink-0">✨</span>
           <p className="leading-snug font-medium">
             {locale === 'bn'
@@ -134,15 +131,17 @@ export function BookmarkList({
 
       {/* 3. Main Reading Feed of Saved Items */}
       {isLoading ? (
-        <FeedSkeleton />
+        <div className="w-full bg-white dark:bg-[#242526] rounded-none sm:rounded-2xl border-y sm:border border-[#e4e6eb] dark:border-[#393a3b] shadow-none sm:shadow-2xs overflow-hidden">
+          <FeedSkeleton />
+        </div>
       ) : isError ? (
-        <div className="rounded-2xl border border-red-200 bg-red-50/80 p-6 text-center text-xs text-red-700 dark:bg-red-950/40 dark:border-red-900/60 dark:text-red-300">
+        <div className="w-full rounded-none sm:rounded-2xl border-y sm:border border-red-200 bg-red-50/80 p-6 text-center text-xs text-red-700 dark:bg-red-950/40 dark:border-red-900/60 dark:text-red-300 shadow-none sm:shadow-2xs">
           {locale === 'bn'
             ? 'সংরক্ষিত আইটেম লোড করা সম্ভব হয়নি।'
             : 'Failed to load your saved items.'}
         </div>
       ) : savedItems.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-[#e4e6eb] bg-white p-12 text-center dark:border-[#393a3b] dark:bg-[#242526] select-none">
+        <div className="w-full flex flex-col items-center justify-center rounded-none sm:rounded-2xl border-y sm:border border-[#e4e6eb] bg-white p-12 text-center dark:border-[#393a3b] dark:bg-[#242526] select-none shadow-none sm:shadow-2xs">
           <div className="flex h-14 w-14 items-center justify-center rounded-full bg-amber-50 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400 mb-3 shadow-xs">
             <Bookmark className="h-7 w-7" />
           </div>
@@ -166,11 +165,14 @@ export function BookmarkList({
           </p>
         </div>
       ) : (
-        <div className="w-full bg-white dark:bg-[#242526] sm:rounded-2xl sm:border sm:border-[#e4e6eb] sm:dark:border-[#393a3b] sm:shadow-2xs overflow-hidden">
+        <div className="w-full bg-white dark:bg-[#242526] rounded-none sm:rounded-2xl border-y sm:border border-[#e4e6eb] dark:border-[#393a3b] shadow-none sm:shadow-2xs overflow-hidden transition-all">
           {savedItems.map((item, index) => (
             <React.Fragment key={item.savedId || item.id}>
               {index > 0 && (
-                <hr className="border-0 border-t border-[#e4e6eb] dark:border-[#393a3b]" />
+                <div
+                  className="h-2 sm:h-2.5 w-full bg-[#f0f2f5] dark:bg-[#18191a] border-y border-[#e4e6eb] dark:border-[#393a3b] select-none"
+                  aria-hidden="true"
+                />
               )}
               <SavedContentCard
                 item={item}

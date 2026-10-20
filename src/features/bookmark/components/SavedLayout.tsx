@@ -53,15 +53,15 @@ export function SavedLayout({ children }: SavedLayoutProps) {
 
   return (
     <div className="h-[calc(100vh-3.5rem)] overflow-hidden bg-[#f0f2f5] dark:bg-[#18191a]">
-      <Container size="2xl" className="h-full px-0 sm:px-4 lg:px-6 2xl:px-8">
-        <div className="flex h-full justify-between gap-4 lg:gap-6 2xl:gap-8">
+      <Container size="2xl" className="h-full px-0 sm:px-0 md:px-0 lg:px-6 2xl:px-8">
+        <div className="flex h-full justify-between gap-0 lg:gap-6 2xl:gap-8">
           {/* 1. Left Column: Saved Routine Sidebar */}
           <SavedSidebar />
 
-          {/* 2. Middle Column: Saved Content Feed (Matching HomePage Width) */}
-          <main className="flex-1 w-full min-w-0 h-full overflow-y-auto overscroll-contain no-scrollbar scrollbar-none pt-1.5 sm:pt-4 pb-[68px] sm:pb-8 space-y-2 sm:space-y-4 px-3 sm:px-0">
-            {/* Mobile / Tablet Routine Filter Bar (Scroll-less & Ultra Clean) */}
-            <div className="lg:hidden shrink-0 bg-white dark:bg-[#242526] border border-[#e4e6eb] dark:border-[#393a3b] rounded-xl sm:rounded-2xl p-1 sm:p-1.5 shadow-2xs select-none">
+          {/* 2. Middle Column: Saved Content Feed (Matching HomePage Width, Padding & Margins) */}
+          <main className="flex-1 w-full min-w-0 h-full overflow-y-auto overscroll-contain no-scrollbar scrollbar-none pt-0 sm:pt-4 pb-[68px] sm:pb-8 space-y-2.5 sm:space-y-4 px-0">
+            {/* Mobile / Tablet Routine Filter Bar (Scroll-less & Ultra Clean, Matching Feed Composer Style) */}
+            <div className="lg:hidden shrink-0 w-full bg-white dark:bg-[#242526] rounded-none sm:rounded-2xl border-y sm:border border-[#e4e6eb] dark:border-[#393a3b] shadow-none sm:shadow-2xs p-1.5 sm:p-2 select-none transition-all">
               <div className="grid grid-cols-6 gap-0.5 sm:gap-1">
                 {mobileTabs.map((tab) => {
                   const isActive = tab.id === activeMobileTabId;
