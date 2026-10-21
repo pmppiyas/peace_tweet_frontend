@@ -74,6 +74,9 @@ export const metadata: Metadata = {
     statusBarStyle: 'default',
     title: 'PeaceTweet',
   },
+  other: {
+    'mobile-web-app-capable': 'yes',
+  },
   icons: {
     icon: [
       { url: '/p-favicon.svg', type: 'image/svg+xml' },
@@ -92,6 +95,8 @@ export const viewport: Viewport = {
   themeColor: '#1877f2',
   width: 'device-width',
   initialScale: 1,
+  maximumScale: 1,
+  interactiveWidget: 'resizes-content',
 };
 
 const raleway = Raleway({

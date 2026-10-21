@@ -130,7 +130,7 @@ export function MessageComposerView({
   };
 
   return (
-    <footer className="border-t border-[#e4e6eb] dark:border-[#393a3b] bg-white dark:bg-[#242526] p-2.5 sm:p-3 pb-safe shrink-0">
+    <footer className="border-t border-[#e4e6eb] dark:border-[#393a3b] bg-white dark:bg-[#242526] px-3 pt-2 sm:px-4 sm:pt-2.5 pb-3 sm:pb-3 pb-safe shrink-0">
       {/* Quick Emoji Bar (Collapsible) */}
       {showEmojiPicker && (
         <div className="flex items-center gap-1.5 px-2 py-2 mb-2 bg-[#f0f2f5] dark:bg-[#18191a] rounded-xl overflow-x-auto select-none animate-in fade-in zoom-in-95 duration-100">
@@ -163,7 +163,9 @@ export function MessageComposerView({
       {editingMessageId ? (
         <div className="space-y-2">
           <div className="flex items-center justify-between px-2 text-xs font-semibold text-primary-600 dark:text-primary-400">
-            <span>{locale === 'bn' ? 'মেসেজ এডিট করা হচ্ছে' : 'Editing message'}</span>
+            <span>
+              {locale === 'bn' ? 'মেসেজ এডিট করা হচ্ছে' : 'Editing message'}
+            </span>
             <button
               type="button"
               onClick={onCancelEdit}
@@ -183,7 +185,7 @@ export function MessageComposerView({
                 adjustHeight(e.target);
               }}
               onKeyDown={handleEditKeyDown}
-              className="flex-1 max-h-32 min-h-[38px] rounded-2xl bg-[#f0f2f5] dark:bg-[#3a3b3c] px-3.5 py-2 text-sm text-[#050505] dark:text-[#e4e6eb] outline-hidden focus:ring-2 focus:ring-primary-500 resize-none transition-all"
+              className="flex-1 max-h-32 min-h-[38px] rounded-2xl bg-[#f0f2f5] dark:bg-[#3a3b3c] px-3.5 py-2 text-sm text-[#050505] dark:text-[#e4e6eb] border-0 outline-none focus:outline-none focus:ring-0 focus:border-0 resize-none transition-all"
             />
             <button
               type="button"
@@ -199,20 +201,6 @@ export function MessageComposerView({
       ) : (
         /* Regular Message Composer */
         <div className="space-y-2">
-          {/* Quick Salam Pill when empty */}
-          {!text.trim() && (
-            <div className="flex items-center gap-2 select-none overflow-x-auto [scrollbar-width:none]">
-              <button
-                type="button"
-                onClick={sendQuickSalam}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-50 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 border border-primary-200/60 dark:border-primary-800/40 hover:bg-primary-100 hover:scale-[1.02] text-xs font-semibold transition-all shrink-0 cursor-pointer shadow-2xs"
-              >
-                <Sparkles className="h-3.5 w-3.5 text-primary-500" />
-                <span>আসসালামু আলাইকুম</span>
-              </button>
-            </div>
-          )}
-
           <div className="flex items-end gap-1.5 sm:gap-2">
             {/* Attachment Button (Prepared architecture) */}
             <button
@@ -232,7 +220,7 @@ export function MessageComposerView({
                 'p-2 sm:p-2.5 rounded-full transition-colors shrink-0 cursor-pointer',
                 showEmojiPicker
                   ? 'bg-primary-50 text-primary-600 dark:bg-primary-950/60 dark:text-primary-400'
-                  : 'text-[#65676b] hover:bg-[#f0f2f5] dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] hover:text-[#050505] dark:hover:text-[#e4e6eb]',
+                  : 'text-[#65676b] hover:bg-[#f0f2f5] dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] hover:text-[#050505] dark:hover:text-[#e4e6eb]'
               )}
               title={locale === 'bn' ? 'ইমোজি' : 'Emoji'}
             >
@@ -247,12 +235,25 @@ export function MessageComposerView({
                 value={text}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
+                onFocus={() => {
+                  if (
+                    typeof window !== 'undefined' &&
+                    window.innerWidth < 768
+                  ) {
+                    setTimeout(() => {
+                      textareaRef.current?.scrollIntoView({
+                        block: 'nearest',
+                        behavior: 'smooth',
+                      });
+                    }, 100);
+                  }
+                }}
                 placeholder={
                   locale === 'bn'
                     ? 'শান্তিপূর্ণ মেসেজ লিখুন... (Enter পাঠাতে)'
                     : 'Write a peaceful message... (Enter to send)'
                 }
-                className="w-full max-h-32 min-h-[40px] rounded-2xl bg-[#f0f2f5] dark:bg-[#3a3b3c] px-4 py-2.5 text-sm text-[#050505] dark:text-[#e4e6eb] placeholder-[#65676b] dark:placeholder-[#b0b3b8] outline-hidden focus:ring-2 focus:ring-primary-500 resize-none transition-all leading-normal"
+                className="w-full max-h-32 min-h-[40px] rounded-2xl bg-[#f0f2f5] dark:bg-[#3a3b3c] px-4 py-2.5 text-sm text-[#050505] dark:text-[#e4e6eb] placeholder-[#65676b] dark:placeholder-[#b0b3b8] border-0 outline-none focus:outline-none focus:ring-0 focus:border-0 resize-none transition-all leading-normal"
               />
             </div>
 
@@ -265,7 +266,7 @@ export function MessageComposerView({
                 'p-2.5 sm:p-3 rounded-full font-bold flex items-center justify-center transition-all shrink-0 cursor-pointer shadow-xs',
                 text.trim() && !isSending
                   ? 'bg-primary-500 hover:bg-primary-600 text-white scale-100 hover:scale-105 active:scale-95'
-                  : 'bg-primary-200 dark:bg-primary-950/50 text-primary-400 cursor-not-allowed opacity-50',
+                  : 'bg-primary-200 dark:bg-primary-950/50 text-primary-400 cursor-not-allowed opacity-50'
               )}
               title={locale === 'bn' ? 'মেসেজ পাঠান' : 'Send'}
             >

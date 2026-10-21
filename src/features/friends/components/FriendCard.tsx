@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import { UserMinus, User, MessageCircle } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -10,6 +12,7 @@ import { Modal } from '@/components/ui/Modal';
 import { ROUTES } from '@/constants/routes';
 import { useLanguage } from '@/providers/LanguageProvider';
 import { useChatStore } from '@/stores/useChatStore';
+import { CONVERSATIONS_QUERY_KEY, ConversationItem } from '@/features/chat';
 import { useFriendActions } from '../hooks/useFriendActions';
 import { FriendItem } from '../types/friends.types';
 
@@ -18,6 +21,8 @@ export interface FriendCardProps {
 }
 
 export function FriendCard({ friend }: FriendCardProps) {
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const { locale } = useLanguage();
   const { unfriend } = useFriendActions();
   const openChat = useChatStore((state) => state.openChat);
@@ -27,6 +32,31 @@ export function FriendCard({ friend }: FriendCardProps) {
   const targetUser = friend.user;
   const profileUrl = ROUTES.USER_PROFILE(targetUser.username);
   const avatarSrc = targetUser.avatarUrl || targetUser.avatar;
+
+  const handleMessage = () => {
+    if (!targetUser?.id) return;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    if (isMobile) {
+      const cachedConvs =
+        queryClient.getQueryData<ConversationItem[]>(CONVERSATIONS_QUERY_KEY) || [];
+      const existing = cachedConvs.find((c) => {
+        const p = c.otherUser || c.participant;
+        return (
+          p?.id === targetUser.id ||
+          c.participantOneId === targetUser.id ||
+          c.participantTwoId === targetUser.id
+        );
+      });
+
+      if (existing?.id) {
+        router.push(`/messages?conversationId=${existing.id}`, { scroll: false });
+      } else {
+        router.push(`/messages?userId=${targetUser.id}`, { scroll: false });
+      }
+    } else {
+      openChat(targetUser);
+    }
+  };
 
   const handleConfirmUnfriend = () => {
     setIsModalOpen(false);
@@ -85,7 +115,7 @@ export function FriendCard({ friend }: FriendCardProps) {
                 <Button
                   variant="primary"
                   size="sm"
-                  onClick={() => openChat(targetUser)}
+                  onClick={handleMessage}
                   className="w-full font-bold text-sm h-9 rounded-xl shadow-xs gap-1.5"
                 >
                   <MessageCircle className="h-4 w-4" />

@@ -38,6 +38,9 @@ export function MessagesLayout() {
   const [directSelectedConv, setDirectSelectedConv] =
     useState<ConversationItem | null>(null);
 
+  // Track visualViewport height on mobile when active chat is open to stick directly above keyboard
+  const [viewportHeight, setViewportHeight] = useState<number | null>(null);
+
   // Derive currently selected conversation from URL param or immediate selection
   const selectedConversation = useMemo(() => {
     if (urlConvId) {
@@ -69,6 +72,11 @@ export function MessagesLayout() {
     return directSelectedConv || null;
   }, [urlConvId, urlUsername, urlUserId, conversations, directSelectedConv]);
 
+  const isConvLoading = Boolean(
+    ((urlUserId || urlUsername) && !selectedConversation) ||
+    (urlConvId && !selectedConversation && isLoading)
+  );
+
   // Sync active conversation with global store so navbar badge & socket listeners stay in sync
   useEffect(() => {
     const activeId = selectedConversation?.id || urlConvId || null;
@@ -96,9 +104,41 @@ export function MessagesLayout() {
     }
   }, [selectedConversation, queryClient]);
 
+  // Handle mobile visualViewport resize when virtual keyboard appears
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.visualViewport) return;
+
+    const vv = window.visualViewport;
+    const updateViewportHeight = () => {
+      if (window.innerWidth < 768) {
+        setViewportHeight(vv.height);
+      } else {
+        setViewportHeight(null);
+      }
+    };
+
+    updateViewportHeight();
+    vv.addEventListener('resize', updateViewportHeight);
+    window.addEventListener('resize', updateViewportHeight);
+
+    return () => {
+      vv.removeEventListener('resize', updateViewportHeight);
+      window.removeEventListener('resize', updateViewportHeight);
+    };
+  }, [selectedConversation, isConvLoading]);
+
   // Handle ?user= / ?username= / ?userId= deep linking
   useEffect(() => {
     if (urlConvId) return;
+
+    // Do not attempt to open chat with oneself
+    if (
+      (urlUserId && user?.id && urlUserId === user.id) ||
+      (urlUsername && user?.username && urlUsername.toLowerCase() === user.username.toLowerCase())
+    ) {
+      router.replace('/messages', { scroll: false });
+      return;
+    }
 
     if (urlUsername) {
       const target = urlUsername.trim().toLowerCase();
@@ -204,10 +244,6 @@ export function MessagesLayout() {
     router.replace('/messages', { scroll: false });
   };
 
-  const isConvLoading = Boolean(
-    (urlConvId || urlUserId || urlUsername) && !selectedConversation && isLoading
-  );
-
   if (isAuthLoading || (isLoading && conversations.length === 0)) {
     return (
       <MessagesSkeleton
@@ -218,10 +254,15 @@ export function MessagesLayout() {
 
   return (
     <div
+      style={
+        (selectedConversation || isConvLoading) && viewportHeight
+          ? { height: `${viewportHeight}px` }
+          : undefined
+      }
       className={cn(
         'overflow-hidden bg-white dark:bg-[#18191a] sm:bg-[#f0f2f5]',
         selectedConversation || isConvLoading
-          ? 'h-[100dvh] md:h-[calc(100vh-3.5rem)]'
+          ? 'fixed top-0 left-0 right-0 z-40 md:relative md:top-auto md:left-auto md:right-auto md:z-auto h-[100dvh] md:h-[calc(100vh-3.5rem)]'
           : 'h-[calc(100vh-3.5rem)]'
       )}
     >

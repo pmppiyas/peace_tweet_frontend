@@ -48,7 +48,7 @@ export function ChatViewHeader({
         {/* User Info Link */}
         <Link
           href={ROUTES.USER_PROFILE(user.username)}
-          className="flex items-center gap-2.5 sm:gap-3 min-w-0 group"
+          className="flex items-center gap-2.5 sm:gap-3 min-w-0"
           title={`View @${user.username}`}
         >
           {/* Avatar */}
@@ -57,13 +57,13 @@ export function ChatViewHeader({
             name={displayName}
             size="md"
             isOnline={isOnline}
-            className="transition-transform group-hover:scale-105"
+            className="shrink-0"
           />
 
           {/* Name & Status */}
           <div className="min-w-0">
             <div className="flex items-center gap-1.5 min-w-0">
-              <h2 className="text-sm sm:text-base font-bold text-[#050505] dark:text-white truncate group-hover:underline">
+              <h2 className="text-sm sm:text-base font-bold text-[#050505] dark:text-white truncate">
                 {displayName}
               </h2>
             </div>

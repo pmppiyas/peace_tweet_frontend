@@ -96,10 +96,10 @@
 
 /* Safe area for mobile navigation and notch */
 .pb-safe {
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0.75rem));
 }
 .pt-safe {
-  padding-top: env(safe-area-inset-top, 0px);
+  padding-top: max(0.75rem, env(safe-area-inset-top, 0.75rem));
 }
 
 @layer utilities {

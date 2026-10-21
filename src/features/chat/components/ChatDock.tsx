@@ -34,7 +34,7 @@ export function ChatDock() {
   const minimizedChats = activeChats.filter((c) => c.isMinimized);
 
   return (
-    <div className={cn(isMessagesPage && 'hidden')}>
+    <div className={cn('hidden md:block', isMessagesPage && 'md:hidden')}>
       {/* 1. Open Chat Windows (Mobile: Full-screen Messenger view; Desktop: Bottom-right docked) */}
       {openChats.length > 0 && (
         <div className="fixed inset-0 z-50 sm:inset-auto sm:bottom-4 md:bottom-6 sm:right-20 sm:z-50 pointer-events-auto flex items-end sm:gap-3">

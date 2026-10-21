@@ -136,7 +136,10 @@ export function Navbar() {
   const isProfilePage =
     pathname === '/profile' ||
     pathname.startsWith('/profile/') ||
-    (!isAuthPage && !isMessagesActive && Boolean(firstPathSegment) && !RESERVED_FIRST_SEGMENTS.has(firstPathSegment));
+    (!isAuthPage &&
+      !isMessagesActive &&
+      Boolean(firstPathSegment) &&
+      !RESERVED_FIRST_SEGMENTS.has(firstPathSegment));
 
   const isLoginPage = false;
 
@@ -402,7 +405,10 @@ export function Navbar() {
               title={locale === 'bn' ? 'ফ্রেন্ড খুঁজুন' : 'Search friends'}
               aria-label="Search friends"
             >
-              <Search className="h-[19px] w-[19px] stroke-[2.2]" strokeWidth={2.2} />
+              <Search
+                className="h-[19px] w-[19px] stroke-[2.2]"
+                strokeWidth={2.2}
+              />
             </button>
 
             {/* Messages text */}
@@ -485,22 +491,15 @@ export function Navbar() {
           'hidden md:block'
       )}
     >
-      <Container size="2xl" className="h-full px-0 sm:px-0 md:px-0 lg:px-6 2xl:px-8">
+      <Container
+        size="2xl"
+        className="h-full px-0 sm:px-0 md:px-0 lg:px-6 2xl:px-8"
+      >
         {/* Header container matching layout of the page */}
         <div className="flex items-center justify-between h-full gap-4 lg:gap-6 2xl:gap-8 w-full">
           {/* Left Column: Brand Logo + Search Button (Matches Sidebar: lg:w-60 xl:w-64 2xl:w-72) */}
           <div className="flex items-center gap-3 sm:gap-4 shrink-0 lg:w-60 xl:w-64 2xl:w-72 z-10">
             <Link href="/" className="flex items-center gap-2.5 shrink-0">
-              <div className="relative h-10 w-10 shrink-0 rounded-full overflow-hidden shadow-xs">
-                <Image
-                  src="/p-logo.svg"
-                  alt="PeaceTweet Logo"
-                  width={40}
-                  height={40}
-                  priority
-                  className="h-full w-full object-cover"
-                />
-              </div>
               <span className="h-10 flex items-center text-2xl sm:text-[27px] font-black tracking-tight text-primary-700 dark:text-white select-none leading-none shrink-0">
                 PeaceTweet
               </span>
@@ -591,4 +590,3 @@ export function Navbar() {
     </header>
   );
 }
-

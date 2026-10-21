@@ -3,7 +3,8 @@
 import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
 import { useAuthStore } from '@/stores/authStore';
 import { useLanguage } from '@/providers/LanguageProvider';
@@ -12,6 +13,7 @@ import { useMyGroups } from '@/features/groups/hooks/useMyGroups';
 import { useBookmarks } from '@/features/bookmark/hooks/useBookmarks';
 import { usersApi } from '../api/users.api';
 import { uploadsApi } from '@/features/uploads/api/uploads.api';
+import { CONVERSATIONS_QUERY_KEY, ConversationItem } from '@/features/chat';
 import { PostComposer } from '@/features/feed/components/PostComposer';
 import { Button } from '@/components/ui/Button';
 import {
@@ -83,6 +85,8 @@ export function ProfileView({
   baseUrl,
 }: ProfileViewProps) {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const { user: authUser, isAuthenticated } = useAuth();
   const { setUser } = useAuthStore();
   const { locale } = useLanguage();
@@ -289,6 +293,41 @@ export function ProfileView({
   const handleCancelBio = () => {
     setBioInput(authUser?.bio || '');
     setIsEditingBio(false);
+  };
+
+  // Handle start chat (on mobile, navigate immediately to /messages)
+  const handleMessageClick = () => {
+    if (!displayUser?.id) return;
+
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
+    if (isMobile) {
+      const cachedConvs =
+        queryClient.getQueryData<ConversationItem[]>(CONVERSATIONS_QUERY_KEY) || [];
+      const existing = cachedConvs.find((c) => {
+        const p = c.otherUser || c.participant;
+        return (
+          p?.id === displayUser.id ||
+          c.participantOneId === displayUser.id ||
+          c.participantTwoId === displayUser.id
+        );
+      });
+
+      if (existing?.id) {
+        router.push(`/messages?conversationId=${existing.id}`, { scroll: false });
+      } else {
+        router.push(`/messages?userId=${displayUser.id}`, { scroll: false });
+      }
+    } else {
+      openChat({
+        id: displayUser.id,
+        name: displayUser.name,
+        username: displayUser.username,
+        avatarUrl: displayUser.avatarUrl,
+        badge: displayUser.badge,
+        userStatus: displayUser.userStatus,
+      });
+    }
   };
 
   const handleCopyProfileLink = async () => {
@@ -739,16 +778,7 @@ export function ProfileView({
                   {isAuthenticated && (
                     <Button
                       size="md"
-                      onClick={() =>
-                        openChat({
-                          id: displayUser.id,
-                          name: displayUser.name,
-                          username: displayUser.username,
-                          avatarUrl: displayUser.avatarUrl,
-                          badge: displayUser.badge,
-                          userStatus: displayUser.userStatus,
-                        })
-                      }
+                      onClick={handleMessageClick}
                       className="rounded-xl px-4 py-2 gap-1.5 text-xs font-bold bg-[#e4e6eb] hover:bg-[#d8dadf] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-[#e4e6eb] shadow-xs cursor-pointer"
                     >
                       <MessageCircle className="h-4 w-4" />
