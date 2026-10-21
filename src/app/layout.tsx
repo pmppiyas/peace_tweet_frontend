@@ -123,7 +123,9 @@ export default function RootLayout({
               <AuthProvider>
                 <SocketProvider>
                   <AudioProvider>
-                    <Navbar />
+                    <Suspense fallback={<header className="sticky top-0 z-40 w-full h-14 bg-white dark:bg-[#242526] border-b border-[#e4e6eb] dark:border-[#393a3b]" />}>
+                      <Navbar />
+                    </Suspense>
                     <main className="flex-1 min-h-0">{children}</main>
                     <FloatingAudioBar />
                     <Suspense fallback={null}>

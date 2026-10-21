@@ -247,7 +247,7 @@ export function SearchDrawer({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search PeaceTweet"
-              className="h-10 w-full rounded-full bg-[#f0f2f5] pl-4 pr-9 text-sm text-[#050505] placeholder-[#65676b] focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-primary-500/40 dark:bg-[#3a3b3c] dark:text-[#e4e6eb] dark:placeholder-[#b0b3b8] dark:focus:bg-[#18191a]"
+              className="h-10 w-full rounded-full bg-[#f0f2f5] pl-4 pr-9 text-sm text-[#050505] placeholder-[#65676b] border-0 outline-none focus:outline-none ring-1 ring-primary-500/20 focus:ring-2 focus:ring-primary-500/50 focus:bg-white dark:bg-[#3a3b3c] dark:text-[#e4e6eb] dark:placeholder-[#b0b3b8] dark:focus:bg-[#18191a] transition-all"
             />
             {query.length > 0 && (
               <button

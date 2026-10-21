@@ -167,7 +167,7 @@ export function FriendActionButton({
             aria-label="Send friend request"
           >
             <UserPlus className="mr-1.5 h-4 w-4" />
-            <span>Add Friend</span>
+            <span>{locale === 'bn' ? 'ফ্রেন্ড রিকোয়েস্ট' : 'Add Friend'}</span>
           </Button>
         )}
 
@@ -182,7 +182,7 @@ export function FriendActionButton({
             title="Click to cancel request"
           >
             <Clock className="mr-1.5 h-4 w-4 text-amber-500" />
-            <span>Request Sent</span>
+            <span>{locale === 'bn' ? 'রিকোয়েস্ট পাঠানো' : 'Request Sent'}</span>
           </Button>
         )}
 
@@ -223,7 +223,7 @@ export function FriendActionButton({
             title="Click to unfriend"
           >
             <Check className="mr-1.5 h-4 w-4 text-primary-500" />
-            <span>Friends</span>
+            <span>{locale === 'bn' ? 'বন্ধু' : 'Friends'}</span>
           </Button>
         )}
       </div>

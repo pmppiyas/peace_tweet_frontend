@@ -130,7 +130,10 @@ export function MessageComposerView({
   };
 
   return (
-    <footer className="border-t border-[#e4e6eb] dark:border-[#393a3b] bg-white dark:bg-[#242526] px-3 pt-2 sm:px-4 sm:pt-2.5 pb-3 sm:pb-3 pb-safe shrink-0">
+    <footer
+      style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom, 0.75rem))' }}
+      className="border-t border-[#e4e6eb] dark:border-[#393a3b] bg-white dark:bg-[#242526] px-3 pt-2.5 sm:px-4 sm:pt-3 shrink-0"
+    >
       {/* Quick Emoji Bar (Collapsible) */}
       {showEmojiPicker && (
         <div className="flex items-center gap-1.5 px-2 py-2 mb-2 bg-[#f0f2f5] dark:bg-[#18191a] rounded-xl overflow-x-auto select-none animate-in fade-in zoom-in-95 duration-100">

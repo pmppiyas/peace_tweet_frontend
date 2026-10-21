@@ -30,6 +30,11 @@ export interface FriendUser {
   friendsCount?: number;
   friendCount?: number;
   postCount?: number;
+  mutualFriendsCount?: number;
+  relationship?: {
+    status: FriendshipStatus;
+    requestId: string | null;
+  };
 }
 
 // Friend list item

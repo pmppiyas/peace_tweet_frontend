@@ -252,16 +252,19 @@ export function MessagesLayout() {
     );
   }
 
+  const hasTargetChat = Boolean(urlConvId || urlUserId || urlUsername);
+  const isChatActive = Boolean(selectedConversation || isConvLoading || hasTargetChat);
+
   return (
     <div
       style={
-        (selectedConversation || isConvLoading) && viewportHeight
+        isChatActive && viewportHeight
           ? { height: `${viewportHeight}px` }
           : undefined
       }
       className={cn(
         'overflow-hidden bg-white dark:bg-[#18191a] sm:bg-[#f0f2f5]',
-        selectedConversation || isConvLoading
+        isChatActive
           ? 'fixed top-0 left-0 right-0 z-40 md:relative md:top-auto md:left-auto md:right-auto md:z-auto h-[100dvh] md:h-[calc(100vh-3.5rem)]'
           : 'h-[calc(100vh-3.5rem)]'
       )}
@@ -272,7 +275,7 @@ export function MessagesLayout() {
           <div
             className={cn(
               'w-full md:w-60 lg:w-60 xl:w-64 2xl:w-72 h-full shrink-0 flex flex-col',
-              selectedConversation || isConvLoading ? 'hidden md:flex' : 'flex'
+              isChatActive ? 'hidden md:flex' : 'flex'
             )}
           >
             <ConversationSidebar
@@ -289,7 +292,7 @@ export function MessagesLayout() {
           <main
             className={cn(
               'flex-1 w-full min-w-0 h-full py-0 sm:py-3 lg:py-4 px-0',
-              selectedConversation || isConvLoading ? 'flex' : 'hidden md:flex'
+              isChatActive ? 'flex' : 'hidden md:flex'
             )}
           >
             <div className="w-full h-full flex bg-white dark:bg-[#242526] sm:rounded-2xl sm:border sm:border-[#e4e6eb] sm:dark:border-[#393a3b] sm:shadow-2xs overflow-hidden">
@@ -299,7 +302,7 @@ export function MessagesLayout() {
                   conversation={selectedConversation}
                   onBack={handleBackToSidebar}
                 />
-              ) : isConvLoading ? (
+              ) : isChatActive ? (
                 <ChatViewSkeleton onBack={handleBackToSidebar} />
               ) : (
                 <EmptyChatPlaceholder />

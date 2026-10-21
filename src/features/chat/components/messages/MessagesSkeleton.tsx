@@ -156,7 +156,14 @@ export function MessagesSkeleton({
   hasSelectedConversation = false,
 }: MessagesSkeletonProps) {
   return (
-    <div className="h-[100dvh] md:h-[calc(100vh-3.5rem)] overflow-hidden bg-white dark:bg-[#18191a] sm:bg-[#f0f2f5]">
+    <div
+      className={cn(
+        'overflow-hidden bg-white dark:bg-[#18191a] sm:bg-[#f0f2f5]',
+        hasSelectedConversation
+          ? 'fixed top-0 left-0 right-0 z-40 md:relative md:top-auto md:left-auto md:right-auto md:z-auto h-[100dvh] md:h-[calc(100vh-3.5rem)]'
+          : 'h-[calc(100vh-3.5rem)]'
+      )}
+    >
       <Container size="2xl" className="h-full px-0 sm:px-4 lg:px-6 2xl:px-8">
         <div className="flex h-full gap-4 lg:gap-6 2xl:gap-8">
           {/* 1. Left Column: Conversations Sidebar Skeleton */}
