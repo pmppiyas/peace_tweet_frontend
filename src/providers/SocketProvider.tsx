@@ -1,12 +1,22 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Socket } from 'socket.io-client';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
-import { initSocket, getSocket, disconnectSocket } from '@/lib/socket/socketClient';
+import { initSocket, disconnectSocket } from '@/lib/socket/socketClient';
 import { useChatStore } from '@/stores/useChatStore';
-import { ChatMessage, ConversationItem, MessagesResponse } from '@/features/chat/types/chat.types';
+import {
+  ChatMessage,
+  ConversationItem,
+  MessagesResponse,
+} from '@/features/chat/types/chat.types';
 import { CONVERSATIONS_QUERY_KEY } from '@/features/chat/hooks/useConversations';
 import { MESSAGES_QUERY_KEY } from '@/features/chat/hooks/useChatMessages';
 import { playMessageSound } from '@/features/chat/utils/sound';
@@ -60,8 +70,13 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       useChatStore.getState().setOnlineUserIds(userIds);
     };
 
-    const handleUserStatus = (payload: { userId: string; status: 'online' | 'offline' }) => {
-      useChatStore.getState().setUserOnlineStatus(payload.userId, payload.status === 'online');
+    const handleUserStatus = (payload: {
+      userId: string;
+      status: 'online' | 'offline';
+    }) => {
+      useChatStore
+        .getState()
+        .setUserOnlineStatus(payload.userId, payload.status === 'online');
     };
 
     const handleMessageReceived = (message: ChatMessage) => {
@@ -97,7 +112,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
             items: nextList,
             nextCursor: old?.nextCursor ?? null,
           };
-        },
+        }
       );
 
       // 3. Update conversations list cache (bump to top & update snippet)
@@ -121,7 +136,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
           // If conversation wasn't found in current cache, invalidate to fetch fresh
           queryClient.invalidateQueries({ queryKey: CONVERSATIONS_QUERY_KEY });
           return old;
-        },
+        }
       );
     };
 
@@ -137,7 +152,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
             (m) =>
               m.id.startsWith('temp_') &&
               m.senderId === message.senderId &&
-              m.text === message.text,
+              m.text === message.text
           );
           let nextList: ChatMessage[];
           if (tempIndex !== -1) {
@@ -152,25 +167,31 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
             items: nextList,
             nextCursor: old?.nextCursor ?? null,
           };
-        },
+        }
       );
     };
 
-    const handleMessageSeen = (payload: { conversationId: string; seenBy: string; seenAt: string }) => {
+    const handleMessageSeen = (payload: {
+      conversationId: string;
+      seenBy: string;
+      seenAt: string;
+    }) => {
       queryClient.setQueryData<MessagesResponse>(
         MESSAGES_QUERY_KEY(payload.conversationId),
         (old) => {
           if (!old) return old!;
           const list = old.messages || old.items || [];
           const updated = list.map((m) =>
-            m.senderId === user.id ? { ...m, isRead: true, readAt: payload.seenAt } : m,
+            m.senderId === user.id
+              ? { ...m, isRead: true, readAt: payload.seenAt }
+              : m
           );
           return {
             ...old,
             messages: updated,
             items: updated,
           };
-        },
+        }
       );
     };
 
@@ -196,13 +217,15 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
         (old) => {
           if (!old) return old!;
           const list = old.messages || old.items || [];
-          const updated = list.map((m) => (m.id === message.id ? { ...m, ...message } : m));
+          const updated = list.map((m) =>
+            m.id === message.id ? { ...m, ...message } : m
+          );
           return {
             ...old,
             messages: updated,
             items: updated,
           };
-        },
+        }
       );
     };
 
@@ -214,14 +237,14 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
           if (!old) return old!;
           const list = old.messages || old.items || [];
           const updated = list.map((m) =>
-            m.id === message.id ? { ...m, ...message, isDeleted: true } : m,
+            m.id === message.id ? { ...m, ...message, isDeleted: true } : m
           );
           return {
             ...old,
             messages: updated,
             items: updated,
           };
-        },
+        }
       );
     };
 
@@ -249,7 +272,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
           }
           queryClient.invalidateQueries({ queryKey: CONVERSATIONS_QUERY_KEY });
           return old;
-        },
+        }
       );
     };
 

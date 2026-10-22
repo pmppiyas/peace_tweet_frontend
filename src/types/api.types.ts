@@ -1,4 +1,5 @@
 export interface ApiResponse<T> {
+  items: import("../features/friends").FriendItem[];
   success: boolean;
   message: string;
   data: T;

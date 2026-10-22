@@ -131,7 +131,9 @@ export function MessageComposerView({
 
   return (
     <footer
-      style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom, 0.75rem))' }}
+      style={{
+        paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom, 0.75rem))',
+      }}
       className="border-t border-[#e4e6eb] dark:border-[#393a3b] bg-white dark:bg-[#242526] px-3 pt-2.5 sm:px-4 sm:pt-3 shrink-0"
     >
       {/* Quick Emoji Bar (Collapsible) */}
@@ -254,7 +256,7 @@ export function MessageComposerView({
                 placeholder={
                   locale === 'bn'
                     ? 'শান্তিপূর্ণ মেসেজ লিখুন... (Enter পাঠাতে)'
-                    : 'Write a peaceful message... (Enter to send)'
+                    : 'Write a peaceful message...'
                 }
                 className="w-full max-h-32 min-h-[40px] rounded-2xl bg-[#f0f2f5] dark:bg-[#3a3b3c] px-4 py-2.5 text-sm text-[#050505] dark:text-[#e4e6eb] placeholder-[#65676b] dark:placeholder-[#b0b3b8] border-0 outline-none focus:outline-none focus:ring-0 focus:border-0 resize-none transition-all leading-normal"
               />

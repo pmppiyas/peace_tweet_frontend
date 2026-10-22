@@ -58,17 +58,20 @@ const URGENCIES: {
   {
     value: 'REGULAR',
     label: 'Regular',
-    badgeColor: 'border-blue-300 bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800',
+    badgeColor:
+      'border-blue-300 bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800',
   },
   {
     value: 'URGENT',
     label: 'Urgent',
-    badgeColor: 'border-amber-300 bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800',
+    badgeColor:
+      'border-amber-300 bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800',
   },
   {
     value: 'EMERGENCY',
     label: 'Emergency 🚨',
-    badgeColor: 'border-rose-400 bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-800',
+    badgeColor:
+      'border-rose-400 bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-800',
   },
 ];
 
@@ -83,7 +86,8 @@ export function MobileComposerModal({
 }: MobileComposerModalProps) {
   const { user } = useAuth();
   const { createPost, isCreatingPost } = usePostActions();
-  const { setIsUploadingPost, triggerPostSuccess, isUploadingPost } = useUiStore();
+  const { setIsUploadingPost, triggerPostSuccess, isUploadingPost } =
+    useUiStore();
   const { locale } = useLanguage();
 
   const [mounted, setMounted] = useState(false);
@@ -97,7 +101,9 @@ export function MobileComposerModal({
 
   // Photos & Media
   const [mediaUrls, setMediaUrls] = useState<string[]>([]);
-  const [mediaLayout, setMediaLayout] = useState<'COLLAGE' | 'SWIPE'>('COLLAGE');
+  const [mediaLayout, setMediaLayout] = useState<'COLLAGE' | 'SWIPE'>(
+    'COLLAGE'
+  );
   const [isUploadingMedia, setIsUploadingMedia] = useState(false);
   const [uploadingCount, setUploadingCount] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -121,7 +127,9 @@ export function MobileComposerModal({
   const [hospitalName, setHospitalName] = useState('');
   const [location, setLocation] = useState('');
   const [contactNumber, setContactNumber] = useState('');
-  const [neededDate, setNeededDate] = useState(() => new Date().toISOString().split('T')[0]);
+  const [neededDate, setNeededDate] = useState(
+    () => new Date().toISOString().split('T')[0]
+  );
   const [problem, setProblem] = useState('');
   const [bloodNote, setBloodNote] = useState('');
 
@@ -202,7 +210,11 @@ export function MobileComposerModal({
     if (!files || files.length === 0) return;
 
     if (mediaUrls.length + files.length > 10) {
-      setErrorMessage(locale === 'bn' ? 'সর্বোচ্চ ১০টি ছবি যুক্ত করা যাবে।' : 'You can attach a maximum of 10 photos.');
+      setErrorMessage(
+        locale === 'bn'
+          ? 'সর্বোচ্চ ১০টি ছবি যুক্ত করা যাবে।'
+          : 'You can attach a maximum of 10 photos.'
+      );
       return;
     }
 
@@ -217,7 +229,11 @@ export function MobileComposerModal({
         setMediaUrls((prev) => [...prev, ...newUrls]);
         soundEffects.playTab();
       } else {
-        setErrorMessage(locale === 'bn' ? 'ছবি আপলোড করা সম্ভব হয়নি।' : 'Failed to upload images.');
+        setErrorMessage(
+          locale === 'bn'
+            ? 'ছবি আপলোড করা সম্ভব হয়নি।'
+            : 'Failed to upload images.'
+        );
       }
     } catch (err: any) {
       setErrorMessage(err?.message || 'Failed to upload photos');
@@ -233,14 +249,18 @@ export function MobileComposerModal({
     soundEffects.playTab();
   };
 
-
   // Validation
   const isPostValid =
     postType === 'TEXT'
       ? content.trim().length > 0 || mediaUrls.length > 0
       : postType === 'DUA'
         ? duaMeaning.trim().length > 0
-        : Boolean(patientName.trim() && bloodGroup && hospitalName.trim() && contactNumber.trim());
+        : Boolean(
+            patientName.trim() &&
+            bloodGroup &&
+            hospitalName.trim() &&
+            contactNumber.trim()
+          );
 
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -287,15 +307,23 @@ export function MobileComposerModal({
       };
     }
 
-    setIsUploadingPost(true, locale === 'bn' ? 'পোস্ট তৈরি হচ্ছে...' : 'Publishing post...');
+    setIsUploadingPost(
+      true,
+      locale === 'bn' ? 'পোস্ট তৈরি হচ্ছে...' : 'Publishing post...'
+    );
     handleClose();
 
     try {
       await createPost(payload);
       soundEffects.playPost();
-      triggerPostSuccess(locale === 'bn' ? 'সফলভাবে প্রকাশিত হয়েছে!' : 'Published successfully!');
+      triggerPostSuccess(
+        locale === 'bn' ? 'সফলভাবে প্রকাশিত হয়েছে!' : 'Published successfully!'
+      );
     } catch (err: any) {
-      const msg = err?.response?.data?.message || err?.message || 'Failed to create post. Please try again.';
+      const msg =
+        err?.response?.data?.message ||
+        err?.message ||
+        'Failed to create post. Please try again.';
       console.error('Post creation error:', msg);
       if (typeof window !== 'undefined') {
         window.alert(msg);
@@ -347,10 +375,18 @@ export function MobileComposerModal({
         <button
           type="button"
           onClick={() => handleSubmit()}
-          disabled={!isPostValid || isCreatingPost || isUploadingMedia || isUploadingPost}
+          disabled={
+            !isPostValid ||
+            isCreatingPost ||
+            isUploadingMedia ||
+            isUploadingPost
+          }
           className={cn(
             'shrink-0 flex items-center justify-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all select-none active:scale-95 shadow-xs',
-            isPostValid && !isCreatingPost && !isUploadingMedia && !isUploadingPost
+            isPostValid &&
+              !isCreatingPost &&
+              !isUploadingMedia &&
+              !isUploadingPost
               ? postType === 'BLOOD_REQUEST'
                 ? 'bg-rose-600 text-white hover:bg-rose-700 shadow-rose-500/25 ring-2 ring-rose-500/20'
                 : postType === 'DUA'
@@ -461,7 +497,9 @@ export function MobileComposerModal({
                   decoding="sync"
                 />
               ) : (
-                <span>{user?.name ? user.name.charAt(0).toUpperCase() : '🕊️'}</span>
+                <span>
+                  {user?.name ? user.name.charAt(0).toUpperCase() : '🕊️'}
+                </span>
               )}
             </div>
 
@@ -477,7 +515,9 @@ export function MobileComposerModal({
 
                 {selectedFeeling && (
                   <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200/60 dark:border-amber-900/60">
-                    <span>{selectedFeeling.emoji} {selectedFeeling.label}</span>
+                    <span>
+                      {selectedFeeling.emoji} {selectedFeeling.label}
+                    </span>
                     <button
                       type="button"
                       onClick={() => setFeeling(null)}
@@ -517,13 +557,14 @@ export function MobileComposerModal({
               className="w-full resize-none border-none outline-none focus:outline-hidden focus:ring-0 bg-transparent text-[17px] sm:text-[18px] leading-relaxed text-[#050505] placeholder:text-[#8e8e93] dark:text-[#e4e6eb] dark:placeholder:text-[#6e6e73] p-0"
             />
 
-
             {/* Attached Photos Grid Preview */}
             {mediaUrls.length > 0 && (
               <div className="space-y-2.5 rounded-2xl border border-[#e4e6eb] dark:border-[#2d2e2f] p-3 bg-[#f8f9fa] dark:bg-[#1f2022]">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-[#050505] dark:text-[#e4e6eb]">
-                    {locale === 'bn' ? `সংযুক্ত ছবি (${mediaUrls.length}/10)` : `Attached Photos (${mediaUrls.length}/10)`}
+                    {locale === 'bn'
+                      ? `সংযুক্ত ছবি (${mediaUrls.length}/10)`
+                      : `Attached Photos (${mediaUrls.length}/10)`}
                   </span>
                   {mediaUrls.length > 1 && (
                     <div className="flex items-center gap-1 rounded-xl bg-[#e4e6eb] dark:bg-[#2d2e2f] p-0.5">
@@ -585,7 +626,10 @@ export function MobileComposerModal({
 
                 {/* Live Collage / Swipe Gallery Preview */}
                 {mediaUrls.length > 1 && (
-                  <PostMediaGallery mediaUrls={mediaUrls} layout={mediaLayout} />
+                  <PostMediaGallery
+                    mediaUrls={mediaUrls}
+                    layout={mediaLayout}
+                  />
                 )}
               </div>
             )}
@@ -604,7 +648,11 @@ export function MobileComposerModal({
                 type="text"
                 value={duaTitle}
                 onChange={(e) => setDuaTitle(e.target.value)}
-                placeholder={locale === 'bn' ? 'যেমন: অন্তরের প্রশান্তির দু’আ' : 'e.g. Supplication for Inner Peace'}
+                placeholder={
+                  locale === 'bn'
+                    ? 'যেমন: অন্তরের প্রশান্তির দু’আ'
+                    : 'e.g. Supplication for Inner Peace'
+                }
                 className="w-full rounded-2xl border border-[#e4e6eb] bg-[#f8f9fa] dark:bg-[#242526] px-3.5 py-2.5 text-sm text-[#050505] dark:text-[#e4e6eb] focus:border-emerald-500 focus:bg-white focus:outline-hidden dark:border-[#393a3b] dark:focus:bg-[#18191a] transition-all shadow-2xs"
               />
             </div>
@@ -613,14 +661,22 @@ export function MobileComposerModal({
             <div className="space-y-1">
               <div className="flex items-center justify-between">
                 <label className="block text-xs font-bold text-gray-700 dark:text-gray-300">
-                  {locale === 'bn' ? 'বাংলা অর্থ / অনুবাদ *' : 'Bangla Meaning (Required) *'}
+                  {locale === 'bn'
+                    ? 'বাংলা অর্থ / অনুবাদ *'
+                    : 'Bangla Meaning (Required) *'}
                 </label>
-                <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase">Required</span>
+                <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase">
+                  Required
+                </span>
               </div>
               <textarea
                 value={duaMeaning}
                 onChange={(e) => setDuaMeaning(e.target.value)}
-                placeholder={locale === 'bn' ? 'দু’আটির অর্থ সুন্দরভাবে বাংলায় লিখুন...' : 'Write the translation / meaning...'}
+                placeholder={
+                  locale === 'bn'
+                    ? 'দু’আটির অর্থ সুন্দরভাবে বাংলায় লিখুন...'
+                    : 'Write the translation / meaning...'
+                }
                 rows={3}
                 required
                 className="w-full rounded-2xl border border-[#e4e6eb] bg-[#f8f9fa] dark:bg-[#242526] p-3 text-sm text-[#050505] dark:text-[#e4e6eb] focus:border-emerald-500 focus:bg-white focus:outline-hidden dark:border-[#393a3b] dark:focus:bg-[#18191a] transition-all shadow-2xs leading-relaxed"
@@ -630,13 +686,19 @@ export function MobileComposerModal({
             {/* Pronunciation */}
             <div className="space-y-1">
               <label className="block text-xs font-bold text-gray-700 dark:text-gray-300">
-                {locale === 'bn' ? 'বাংলা উচ্চারণ (Transliteration)' : 'Pronunciation in Bengali'}
+                {locale === 'bn'
+                  ? 'বাংলা উচ্চারণ (Transliteration)'
+                  : 'Pronunciation in Bengali'}
               </label>
               <input
                 type="text"
                 value={duaTransliteration}
                 onChange={(e) => setDuaTransliteration(e.target.value)}
-                placeholder={locale === 'bn' ? 'যেমন: আল্লাহুম্মা ইন্নি আসআলুকাল আফওয়া...' : 'Transliteration in Bengali'}
+                placeholder={
+                  locale === 'bn'
+                    ? 'যেমন: আল্লাহুম্মা ইন্নি আসআলুকাল আফওয়া...'
+                    : 'Transliteration in Bengali'
+                }
                 className="w-full rounded-2xl border border-[#e4e6eb] bg-[#f8f9fa] dark:bg-[#242526] px-3.5 py-2.5 text-sm text-[#050505] dark:text-[#e4e6eb] focus:border-emerald-500 focus:bg-white focus:outline-hidden dark:border-[#393a3b] dark:focus:bg-[#18191a] transition-all shadow-2xs"
               />
             </div>
@@ -644,13 +706,19 @@ export function MobileComposerModal({
             {/* Virtue & Source */}
             <div className="space-y-1">
               <label className="block text-xs font-bold text-gray-700 dark:text-gray-300">
-                {locale === 'bn' ? 'ফজিলত ও হাদিস রেফারেন্স' : 'Virtue & Hadith Reference'}
+                {locale === 'bn'
+                  ? 'ফজিলত ও হাদিস রেফারেন্স'
+                  : 'Virtue & Hadith Reference'}
               </label>
               <input
                 type="text"
                 value={duaFadilah}
                 onChange={(e) => setDuaFadilah(e.target.value)}
-                placeholder={locale === 'bn' ? 'যেমন: তিরমিযী, হাদিস নং ৩৪৫৬' : 'e.g. Tirmidhi Hadith #3456'}
+                placeholder={
+                  locale === 'bn'
+                    ? 'যেমন: তিরমিযী, হাদিস নং ৩৪৫৬'
+                    : 'e.g. Tirmidhi Hadith #3456'
+                }
                 className="w-full rounded-2xl border border-[#e4e6eb] bg-[#f8f9fa] dark:bg-[#242526] px-3.5 py-2.5 text-sm text-[#050505] dark:text-[#e4e6eb] focus:border-emerald-500 focus:bg-white focus:outline-hidden dark:border-[#393a3b] dark:focus:bg-[#18191a] transition-all shadow-2xs"
               />
             </div>
@@ -664,9 +732,13 @@ export function MobileComposerModal({
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <label className="block text-xs font-bold text-gray-700 dark:text-gray-300">
-                  {locale === 'bn' ? 'রক্তের গ্রুপ নির্বাচন করুন *' : 'Blood Group *'}
+                  {locale === 'bn'
+                    ? 'রক্তের গ্রুপ নির্বাচন করুন *'
+                    : 'Blood Group *'}
                 </label>
-                <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400 uppercase">Emergency</span>
+                <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400 uppercase">
+                  Emergency
+                </span>
               </div>
               <div className="grid grid-cols-4 gap-2">
                 {BLOOD_GROUPS.map(({ value, label }) => (
@@ -744,7 +816,9 @@ export function MobileComposerModal({
                   min={1}
                   max={20}
                   value={units}
-                  onChange={(e) => setUnits(Math.max(1, parseInt(e.target.value) || 1))}
+                  onChange={(e) =>
+                    setUnits(Math.max(1, parseInt(e.target.value) || 1))
+                  }
                   className="w-full rounded-xl border border-[#e4e6eb] bg-[#f8f9fa] dark:bg-[#242526] px-3 py-2 text-xs text-[#050505] dark:text-[#e4e6eb] focus:border-rose-500 focus:outline-hidden dark:border-[#393a3b]"
                 />
               </div>
@@ -819,7 +893,9 @@ export function MobileComposerModal({
                     <Smile className="h-4 w-4" />
                   </div>
                   <h3 className="text-sm font-bold text-[#050505] dark:text-[#e4e6eb]">
-                    {locale === 'bn' ? 'কেমন অনুভব করছেন?' : 'How are you feeling?'}
+                    {locale === 'bn'
+                      ? 'কেমন অনুভব করছেন?'
+                      : 'How are you feeling?'}
                   </h3>
                 </div>
                 <button
@@ -849,7 +925,9 @@ export function MobileComposerModal({
                         : 'border-transparent hover:border-[#e4e6eb] dark:hover:border-[#393a3b] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] text-[#050505] dark:text-[#e4e6eb]'
                     )}
                   >
-                    <span className="text-xl select-none shrink-0">{item.emoji}</span>
+                    <span className="text-xl select-none shrink-0">
+                      {item.emoji}
+                    </span>
                     <span className="truncate capitalize">{item.label}</span>
                   </button>
                 ))}
@@ -901,7 +979,13 @@ export function MobileComposerModal({
               ) : (
                 <ImageIcon className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
               )}
-              <span>{isUploadingMedia ? 'Uploading...' : locale === 'bn' ? 'ছবি যুক্ত' : 'Photo'}</span>
+              <span>
+                {isUploadingMedia
+                  ? 'Uploading...'
+                  : locale === 'bn'
+                    ? 'ছবি যুক্ত'
+                    : 'Photo'}
+              </span>
               {mediaUrls.length > 0 && (
                 <span className="flex h-4 w-4 items-center justify-center rounded-full bg-emerald-600 text-white text-[10px] font-bold">
                   {mediaUrls.length}
@@ -917,7 +1001,13 @@ export function MobileComposerModal({
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200/60 dark:border-amber-900/60 transition-all active:scale-95 cursor-pointer"
           >
             <Smile className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-            <span>{selectedFeeling ? selectedFeeling.label : locale === 'bn' ? 'অনুভূতি' : 'Feeling'}</span>
+            <span>
+              {selectedFeeling
+                ? selectedFeeling.label
+                : locale === 'bn'
+                  ? 'অনুভূতি'
+                  : 'Feeling'}
+            </span>
           </button>
         </div>
 
@@ -954,7 +1044,9 @@ export function MobileComposerModal({
                 />
               </svg>
               <span className="text-[11px] font-bold text-[#8e8e93] tabular-nums">
-                {charLength > 4500 ? charLimit - charLength : `${charLength}/${charLimit}`}
+                {charLength > 4500
+                  ? charLimit - charLength
+                  : `${charLength}/${charLimit}`}
               </span>
             </div>
           )}

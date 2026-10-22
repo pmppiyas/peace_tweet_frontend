@@ -48,9 +48,14 @@ export function ConversationSidebar({
   const [localSearchQuery, setLocalSearchQuery] = useState('');
 
   // Fetch cached friends to accurately determine friendship status
-  const { data: cachedFriendsData } = useFriends('', undefined, Boolean(authUser?.id));
+  const { data: cachedFriendsData } = useFriends(
+    '',
+    undefined,
+    Boolean(authUser?.id)
+  );
   const allCachedFriendIds = useMemo(() => {
-    const items = cachedFriendsData?.pages?.flatMap((p) => p?.items || []) || [];
+    const items =
+      cachedFriendsData?.pages?.flatMap((p) => p?.items || []) || [];
     const set = new Set<string>();
     items.forEach((item) => {
       if (item.friendId) set.add(item.friendId);
@@ -62,9 +67,13 @@ export function ConversationSidebar({
   const [friendResults, setFriendResults] = useState<ChatUser[]>([]);
   const [otherResults, setOtherResults] = useState<ChatUser[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [creatingForUserId, setCreatingForUserId] = useState<string | null>(null);
+  const [creatingForUserId, setCreatingForUserId] = useState<string | null>(
+    null
+  );
 
-  const activeQuery = (chatSearchQuery || localSearchQuery).trim().toLowerCase();
+  const activeQuery = (chatSearchQuery || localSearchQuery)
+    .trim()
+    .toLowerCase();
 
   // Search users/friends debounced when searching - split into Friends (top) and Others (bottom)
   useEffect(() => {
@@ -92,7 +101,9 @@ export function ConversationSidebar({
           friendsRes.status === 'fulfilled'
             ? friendsRes.value?.data?.items ||
               friendsRes.value?.items ||
-              (Array.isArray(friendsRes.value?.data) ? friendsRes.value.data : [])
+              (Array.isArray(friendsRes.value?.data)
+                ? friendsRes.value.data
+                : [])
             : [];
 
         const directFriends: ChatUser[] = rawFriendItems
@@ -161,7 +172,8 @@ export function ConversationSidebar({
 
   const handleSelectUser = async (targetUser: ChatUser) => {
     // Prevent starting conversation with oneself or multiple simultaneous requests
-    if (creatingForUserId || !targetUser?.id || targetUser.id === authUser?.id) return;
+    if (creatingForUserId || !targetUser?.id || targetUser.id === authUser?.id)
+      return;
     setCreatingForUserId(targetUser.id);
     try {
       const res = await chatApi.getOrCreateConversation(targetUser.id);
@@ -305,7 +317,9 @@ export function ConversationSidebar({
             <div className="py-12 px-4 text-center text-[#65676b] dark:text-[#b0b3b8]">
               <UserX className="h-10 w-10 mx-auto mb-2 opacity-30 text-primary-500" />
               <p className="text-sm font-bold text-[#050505] dark:text-[#e4e6eb]">
-                {locale === 'bn' ? 'কোনো ফলাফল পাওয়া যায়নি' : 'No results found'}
+                {locale === 'bn'
+                  ? 'কোনো ফলাফল পাওয়া যায়নি'
+                  : 'No results found'}
               </p>
               <p className="text-xs mt-1 max-w-[220px] mx-auto leading-relaxed">
                 {locale === 'bn'

@@ -659,9 +659,6 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
     }
   };
 
-  // ─────────────────────────────────────────────────────────────
-  // Event Handlers
-  // ─────────────────────────────────────────────────────────────
   const handleCountryChange = (newCode: string) => {
     setSelectedCountryCode(newCode);
     setSelectedDivisionId('');

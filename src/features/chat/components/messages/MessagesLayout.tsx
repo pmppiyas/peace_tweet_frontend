@@ -27,7 +27,7 @@ export function MessagesLayout() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
-  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
+  const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
   const urlConvId = searchParams.get('conversationId');
   const urlUserId = searchParams.get('userId');
   const urlUsername = searchParams.get('user') || searchParams.get('username');
@@ -99,7 +99,9 @@ export function MessagesLayout() {
       queryClient.setQueryData<ConversationItem[]>(
         CONVERSATIONS_QUERY_KEY,
         (old = []) =>
-          old.map((c) => (c.id === selectedConversation.id ? { ...c, unreadCount: 0 } : c)),
+          old.map((c) =>
+            c.id === selectedConversation.id ? { ...c, unreadCount: 0 } : c
+          )
       );
     }
   }, [selectedConversation, queryClient]);
@@ -134,7 +136,9 @@ export function MessagesLayout() {
     // Do not attempt to open chat with oneself
     if (
       (urlUserId && user?.id && urlUserId === user.id) ||
-      (urlUsername && user?.username && urlUsername.toLowerCase() === user.username.toLowerCase())
+      (urlUsername &&
+        user?.username &&
+        urlUsername.toLowerCase() === user.username.toLowerCase())
     ) {
       router.replace('/messages', { scroll: false });
       return;
@@ -222,7 +226,16 @@ export function MessagesLayout() {
         isCancelled = true;
       };
     }
-  }, [urlUsername, urlUserId, urlConvId, conversations, isLoading, queryClient, router]);
+  }, [
+    urlUsername,
+    urlUserId,
+    urlConvId,
+    user,
+    conversations,
+    isLoading,
+    queryClient,
+    router,
+  ]);
 
   const handleSelectConversation = (conversation: ConversationItem) => {
     setDirectSelectedConv(conversation);
@@ -230,7 +243,9 @@ export function MessagesLayout() {
       queryClient.setQueryData<ConversationItem[]>(
         CONVERSATIONS_QUERY_KEY,
         (old = []) =>
-          old.map((c) => (c.id === conversation.id ? { ...c, unreadCount: 0 } : c)),
+          old.map((c) =>
+            c.id === conversation.id ? { ...c, unreadCount: 0 } : c
+          )
       );
     }
     router.replace(`/messages?conversationId=${conversation.id}`, {
@@ -253,7 +268,9 @@ export function MessagesLayout() {
   }
 
   const hasTargetChat = Boolean(urlConvId || urlUserId || urlUsername);
-  const isChatActive = Boolean(selectedConversation || isConvLoading || hasTargetChat);
+  const isChatActive = Boolean(
+    selectedConversation || isConvLoading || hasTargetChat
+  );
 
   return (
     <div
