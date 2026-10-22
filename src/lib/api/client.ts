@@ -2,6 +2,7 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { siteConfig } from '@/config/site';
 import { API_ENDPOINTS } from '@/constants/api';
 import { tokenStorage } from '../auth/token';
+import { useAuthStore } from '@/stores/authStore';
 
 export const apiClient = axios.create({
   baseURL: siteConfig.apiUrl,
@@ -23,7 +24,7 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-// Response Interceptor: Handle Token Refresh on 401
+// Response Interceptor: Handle Token Refresh on 401 and invalid user state
 let isRefreshing = false;
 let failedQueue: Array<{
   resolve: (value?: unknown) => void;
@@ -41,14 +42,45 @@ const processQueue = (error: Error | null, token: string | null = null) => {
   failedQueue = [];
 };
 
+const handleForceLogout = () => {
+  tokenStorage.clearTokens();
+  try {
+    useAuthStore.getState().logout();
+  } catch (e) {
+    console.error('Failed to logout store:', e);
+  }
+  if (typeof window !== 'undefined') {
+    const path = window.location.pathname;
+    if (!path.startsWith('/login') && !path.startsWith('/register')) {
+      window.location.href = '/login';
+    }
+  }
+};
+
 apiClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+    const responseData = error.response?.data as { message?: string } | undefined;
+    const errorMessage = responseData?.message || '';
+    const status = error.response?.status;
+
+    // Detect if user does not exist in database or account is inactive/deleted
+    const isUserNotExist =
+      (status === 400 || status === 401 || status === 404) &&
+      (errorMessage === 'User does not exist!' ||
+        errorMessage.toLowerCase().includes('user does not exist') ||
+        errorMessage.toLowerCase().includes('user account is inactive') ||
+        errorMessage.toLowerCase().includes('user not found'));
+
+    if (isUserNotExist) {
+      handleForceLogout();
+      return Promise.reject(error);
+    }
 
     // If 401 and not already retrying and not an auth endpoint
     if (
-      error.response?.status === 401 &&
+      status === 401 &&
       originalRequest &&
       !originalRequest._retry &&
       !originalRequest.url?.includes('/auth/login') &&
@@ -73,7 +105,7 @@ apiClient.interceptors.response.use(
 
       const refreshToken = tokenStorage.getRefreshToken();
       if (!refreshToken) {
-        tokenStorage.clearTokens();
+        handleForceLogout();
         isRefreshing = false;
         return Promise.reject(error);
       }
@@ -102,9 +134,9 @@ apiClient.interceptors.response.use(
         } else {
           throw new Error('Refresh failed');
         }
-      } catch (refreshError) {
+      } catch (refreshError: any) {
         processQueue(refreshError as Error, null);
-        tokenStorage.clearTokens();
+        handleForceLogout();
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;

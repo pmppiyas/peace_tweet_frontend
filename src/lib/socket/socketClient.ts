@@ -1,56 +1,49 @@
 import { io, Socket } from 'socket.io-client';
 import { tokenStorage } from '@/lib/auth/token';
+import { envConfig } from '@/config/env';
 
 let socket: Socket | null = null;
 
+export const cleanSocketOrigin = (urlStr: string): string => {
+  if (!urlStr) return '';
+  const trimmed = urlStr.trim();
+  try {
+    const parsed = new URL(trimmed);
+    return parsed.origin;
+  } catch {
+    return trimmed
+      .replace(/\/api(\/v1)?\/?$/, '')
+      .replace(/\/socket\.io\/?$/, '')
+      .replace(/\/+$/, '');
+  }
+};
+
 export const getSocketUrl = (): string => {
-  // If running in browser
-  if (typeof window !== 'undefined') {
-    const isLocalhost =
-      window.location.hostname === 'localhost' ||
-      window.location.hostname === '127.0.0.1';
+  const envSocketUrl = (
+    process.env.NEXT_PUBLIC_SOCKET_URL ||
+    envConfig.socketUrl ||
+    ''
+  ).trim();
 
-    // On live production deployment (like peacetweet.vercel.app)
-    if (!isLocalhost) {
-      let candidate = (process.env.NEXT_PUBLIC_SOCKET_URL || '').trim();
-      candidate = candidate.replace(
-        'peace-tweet-backend',
-        'peace-tweet-backned'
-      );
-
-      if (
-        candidate &&
-        !candidate.includes('localhost') &&
-        !candidate.includes('127.0.0.1')
-      ) {
-        return candidate.replace(/\/+$/, '');
-      }
-
-      let apiCandidate = (process.env.NEXT_PUBLIC_BACKEND_URL || '').trim();
-      apiCandidate = apiCandidate.replace(
-        'peace-tweet-backend',
-        'peace-tweet-backned'
-      );
-
-      if (
-        apiCandidate &&
-        !apiCandidate.includes('localhost') &&
-        !apiCandidate.includes('127.0.0.1')
-      ) {
-        return apiCandidate.replace(/\/api\/v1\/?$/, '').replace(/\/+$/, '');
-      }
-
-      return 'https://peace-tweet-backned.onrender.com';
-    }
+  if (envSocketUrl) {
+    return cleanSocketOrigin(envSocketUrl);
   }
 
-  // Local development fallback
-  const envSocketUrl = process.env.NEXT_PUBLIC_SOCKET_URL;
-  if (envSocketUrl) return envSocketUrl;
+  const envApiUrl = (
+    process.env.NEXT_PUBLIC_BACKEND_URL ||
+    envConfig.apiUrl ||
+    ''
+  ).trim();
 
-  const envApiUrl =
-    process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000/api/v1';
-  return envApiUrl.replace(/\/api\/v1\/?$/, '');
+  if (envApiUrl) {
+    return cleanSocketOrigin(envApiUrl);
+  }
+
+  if (typeof window !== 'undefined') {
+    return window.location.origin;
+  }
+
+  return '';
 };
 
 export const initSocket = (): Socket | null => {
@@ -81,8 +74,10 @@ export const initSocket = (): Socket | null => {
   }
 
   const socketUrl = getSocketUrl();
+  if (!socketUrl) return null;
 
   socket = io(socketUrl, {
+    path: '/socket.io',
     auth: {
       token,
     },
@@ -90,7 +85,6 @@ export const initSocket = (): Socket | null => {
       authorization: `Bearer ${token}`,
     },
     withCredentials: true,
-    // Start with polling for instant handshake then upgrade to websocket
     transports: ['polling', 'websocket'],
     autoConnect: true,
     reconnection: true,

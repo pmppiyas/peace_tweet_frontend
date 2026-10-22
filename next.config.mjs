@@ -15,9 +15,7 @@ const nextConfig = {
     ],
   },
   async rewrites() {
-    const rawApi =
-      process.env.NEXT_PUBLIC_BACKEND_URL ||
-      'https://api.peacetweet.com/api/v1';
+    const rawApi = process.env.NEXT_PUBLIC_BACKEND_URL;
     const apiBase = rawApi.replace(/\/api\/v1\/?$/, '');
     return [
       {

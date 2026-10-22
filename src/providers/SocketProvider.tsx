@@ -20,6 +20,7 @@ import {
 import { CONVERSATIONS_QUERY_KEY } from '@/features/chat/hooks/useConversations';
 import { MESSAGES_QUERY_KEY } from '@/features/chat/hooks/useChatMessages';
 import { playMessageSound } from '@/features/chat/utils/sound';
+import { notificationKeys } from '@/features/notifications/hooks/useNotifications';
 
 interface SocketContextValue {
   socket: Socket | null;
@@ -276,6 +277,52 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       );
     };
 
+    // Real-time Notification handlers
+    const handleNotificationReceived = (notification: any) => {
+      // 1. Play incoming notification sound
+      playMessageSound();
+
+      // 2. Increment unread count in cache immediately
+      queryClient.setQueryData<number>(
+        notificationKeys.unreadCount(),
+        (old = 0) => old + 1
+      );
+
+      // 3. Update notification listing cache optimistically
+      queryClient.setQueriesData<any>(
+        { queryKey: notificationKeys.all },
+        (old: any) => {
+          if (!old) return old;
+          if (Array.isArray(old?.data)) {
+            if (old.data.some((n: any) => n.id === notification.id)) return old;
+            return {
+              ...old,
+              data: [notification, ...old.data],
+              meta: {
+                ...old.meta,
+                total: (old.meta?.total || 0) + 1,
+                unreadCount: (old.meta?.unreadCount || 0) + 1,
+              },
+            };
+          }
+          return old;
+        }
+      );
+
+      // 4. Invalidate to guarantee fresh pagination
+      queryClient.invalidateQueries({ queryKey: notificationKeys.unreadCount() });
+      queryClient.invalidateQueries({ queryKey: notificationKeys.all });
+    };
+
+    const handleNotificationUnreadCount = (payload: { unreadCount: number }) => {
+      if (typeof payload?.unreadCount === 'number') {
+        queryClient.setQueryData<number>(
+          notificationKeys.unreadCount(),
+          payload.unreadCount
+        );
+      }
+    };
+
     socket.on('connect', handleConnect);
     socket.on('disconnect', handleDisconnect);
     socket.on('users:online_list', handleOnlineList);
@@ -287,6 +334,9 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     socket.on('message:updated', handleMessageUpdated);
     socket.on('message:deleted', handleMessageDeleted);
     socket.on('conversation:updated', handleConversationUpdated);
+    socket.on('notification:received', handleNotificationReceived);
+    socket.on('notification:new', handleNotificationReceived);
+    socket.on('notification:unread_count', handleNotificationUnreadCount);
 
     return () => {
       socket.off('connect', handleConnect);
@@ -300,8 +350,11 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       socket.off('message:updated', handleMessageUpdated);
       socket.off('message:deleted', handleMessageDeleted);
       socket.off('conversation:updated', handleConversationUpdated);
+      socket.off('notification:received', handleNotificationReceived);
+      socket.off('notification:new', handleNotificationReceived);
+      socket.off('notification:unread_count', handleNotificationUnreadCount);
     };
-  }, [isAuthenticated, user?.id, queryClient]);
+  }, [isAuthenticated, user, queryClient]);
 
   return (
     <SocketContext.Provider

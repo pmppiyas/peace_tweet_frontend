@@ -6,7 +6,13 @@ export const queryClient = new QueryClient({
       staleTime: 1000 * 60 * 3, // 3 minutes fresh cache
       gcTime: 1000 * 60 * 15, // 15 minutes garbage collection
       retry: (failureCount, error: any) => {
-        if (error?.response?.status === 404 || error?.response?.status === 401) {
+        const status = error?.response?.status;
+        const msg = error?.response?.data?.message;
+        if (
+          status === 404 ||
+          status === 401 ||
+          (status === 400 && typeof msg === 'string' && msg.toLowerCase().includes('user does not exist'))
+        ) {
           return false;
         }
         return failureCount < 2;
