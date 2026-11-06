@@ -314,14 +314,14 @@ export function FeedItem({ post }: FeedItemProps) {
         )}
       </div>
 
-      {/* Action Buttons Bar with Counts in a Single Line beside the Icons */}
-      <div className="grid grid-cols-4 px-2 sm:px-3 py-1 sm:py-1.5 text-xs font-semibold border-t border-[#e4e6eb]/70 dark:border-[#393a3b]/70">
+      {/* Action Buttons Bar with icons & counts, aligned to start */}
+      <div className="flex items-center justify-start gap-4 sm:gap-6 px-3 py-1.5 text-xs font-semibold border-t border-[#e4e6eb]/70 dark:border-[#393a3b]/70 select-none">
         {/* Reaction (LIKE / Ameen) */}
         <button
           type="button"
           onClick={() => toggleReaction(post.id, !!post.viewer?.hasReacted)}
           className={cn(
-            'flex items-center justify-center gap-0.5 sm:gap-1 py-1.5 sm:py-2 px-0 sm:px-0.5 rounded-lg transition-colors select-none whitespace-nowrap',
+            'flex items-center gap-1.5 py-1 px-2 rounded-lg transition-colors select-none cursor-pointer',
             post.viewer?.hasReacted
               ? 'text-rose-600 dark:text-rose-400 bg-rose-50/50 dark:bg-rose-950/20'
               : 'text-[#65676b] hover:bg-[#f0f2f5] hover:text-[#050505] dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] dark:hover:text-[#e4e6eb]'
@@ -330,22 +330,13 @@ export function FeedItem({ post }: FeedItemProps) {
         >
           <Heart
             className={cn(
-              'h-4 w-4 shrink-0',
+              'h-4.5 w-4.5 shrink-0',
               post.viewer?.hasReacted &&
                 'fill-current text-rose-600 dark:text-rose-400'
             )}
           />
-          <span className="truncate">
-            {post.type === 'DUA'
-              ? locale === 'bn'
-                ? 'আমীন'
-                : 'Ameen'
-              : locale === 'bn'
-                ? 'পছন্দ'
-                : 'Like'}
-          </span>
-          <span className="text-[11px] font-bold opacity-80 shrink-0">
-            ({post.stats?.reactionCount || 0})
+          <span className="font-semibold">
+            {post.stats?.reactionCount || 0}
           </span>
         </button>
 
@@ -354,19 +345,16 @@ export function FeedItem({ post }: FeedItemProps) {
           type="button"
           onClick={() => setShowComments(!showComments)}
           className={cn(
-            'flex items-center justify-center gap-0.5 sm:gap-1 py-1.5 sm:py-2 px-0 sm:px-0.5 rounded-lg transition-colors select-none whitespace-nowrap',
+            'flex items-center gap-1.5 py-1 px-2 rounded-lg transition-colors select-none cursor-pointer',
             showComments
               ? 'text-primary-600 dark:text-primary-400 bg-primary-50/50 dark:bg-primary-900/20'
               : 'text-[#65676b] hover:bg-[#f0f2f5] hover:text-[#050505] dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] dark:hover:text-[#e4e6eb]'
           )}
           title={`${post.stats?.commentCount || 0} comments`}
         >
-          <MessageCircle className="h-4 w-4 shrink-0" />
-          <span className="truncate">
-            {locale === 'bn' ? 'মন্তব্য' : 'Comment'}
-          </span>
-          <span className="text-[11px] font-bold opacity-80 shrink-0">
-            ({post.stats?.commentCount || 0})
+          <MessageCircle className="h-4.5 w-4.5 shrink-0" />
+          <span className="font-semibold">
+            {post.stats?.commentCount || 0}
           </span>
         </button>
 
@@ -375,7 +363,7 @@ export function FeedItem({ post }: FeedItemProps) {
           type="button"
           onClick={handleToggleSave}
           className={cn(
-            'flex items-center justify-center gap-0.5 sm:gap-1 py-1.5 sm:py-2 px-0 sm:px-0.5 rounded-lg transition-colors select-none whitespace-nowrap cursor-pointer',
+            'flex items-center gap-1.5 py-1 px-2 rounded-lg transition-colors select-none cursor-pointer',
             post.viewer?.hasSaved
               ? 'text-amber-600 dark:text-amber-400 bg-amber-50/50 dark:bg-amber-950/20'
               : 'text-[#65676b] hover:bg-[#f0f2f5] hover:text-[#050505] dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] dark:hover:text-[#e4e6eb]'
@@ -384,22 +372,13 @@ export function FeedItem({ post }: FeedItemProps) {
         >
           <Bookmark
             className={cn(
-              'h-4 w-4 shrink-0',
+              'h-4.5 w-4.5 shrink-0',
               post.viewer?.hasSaved &&
                 'fill-current text-amber-600 dark:text-amber-400'
             )}
           />
-          <span className="truncate">
-            {post.viewer?.hasSaved
-              ? locale === 'bn'
-                ? 'সংরক্ষিত'
-                : 'Saved'
-              : locale === 'bn'
-                ? 'সেভ'
-                : 'Save'}
-          </span>
-          <span className="text-[11px] font-bold opacity-80 shrink-0">
-            ({post.stats?.saveCount || 0})
+          <span className="font-semibold">
+            {post.stats?.saveCount || 0}
           </span>
         </button>
 
@@ -407,15 +386,12 @@ export function FeedItem({ post }: FeedItemProps) {
         <button
           type="button"
           onClick={handleShare}
-          className="flex items-center justify-center gap-0.5 sm:gap-1 py-1.5 sm:py-2 px-0 sm:px-0.5 text-[#65676b] hover:bg-[#f0f2f5] hover:text-[#050505] rounded-lg transition-colors select-none whitespace-nowrap dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] dark:hover:text-[#e4e6eb]"
+          className="flex items-center gap-1.5 py-1 px-2 text-[#65676b] hover:bg-[#f0f2f5] hover:text-[#050505] rounded-lg transition-colors select-none cursor-pointer dark:text-[#b0b3b8] dark:hover:bg-[#3a3b3c] dark:hover:text-[#e4e6eb]"
           title={`${post.stats?.shareCount || 0} shares`}
         >
-          <Share2 className="h-4 w-4 shrink-0" />
-          <span className="truncate">
-            {locale === 'bn' ? 'শেয়ার' : 'Share'}
-          </span>
-          <span className="text-[11px] font-bold opacity-80 shrink-0">
-            ({post.stats?.shareCount || 0})
+          <Share2 className="h-4.5 w-4.5 shrink-0" />
+          <span className="font-semibold">
+            {post.stats?.shareCount || 0}
           </span>
         </button>
       </div>

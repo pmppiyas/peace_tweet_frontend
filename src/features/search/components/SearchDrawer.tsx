@@ -14,11 +14,13 @@ import {
   Users,
   ChevronRight,
   TrendingUp,
+  Calculator,
 } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
 import { useSearchHistory } from '../hooks/useSearchHistory';
 import { useSearchGlobal } from '../hooks/useSearchGlobal';
 import { soundEffects } from '@/lib/sound/soundEffects';
+import { isZakatRelatedQuery, ZAKAT_META } from '@/features/zakat/constants/zakatMeta';
 import {
   SearchEntityType,
   SearchHistoryItem,
@@ -380,12 +382,72 @@ export function SearchDrawer({
                   ))}
                 </div>
               )}
+
+              {/* Quick Recommended Tools Section in Empty Search State */}
+              <div className="pt-3 border-t border-slate-200 dark:border-slate-800 mt-2">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2 px-1">
+                  প্রস্তাবিত টুল
+                </p>
+                <div
+                  onClick={() => {
+                    onClose();
+                    router.push('/zakat');
+                  }}
+                  className="flex items-center justify-between p-2.5 rounded-xl bg-emerald-50/80 hover:bg-emerald-100/80 dark:bg-emerald-950/30 dark:hover:bg-emerald-900/40 border border-emerald-100 dark:border-emerald-800/40 cursor-pointer transition-colors"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center">
+                      <Calculator className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                        যাকাত ক্যালকুলেটর (Zakat Calculator)
+                      </p>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                        নিসাব ও সম্পদের যাকাত হিসাব
+                      </p>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-emerald-600" />
+                </div>
+              </div>
             </div>
           )}
 
           {/* STATE 2: User is typing -> Live Search Suggestions */}
           {!isQueryEmpty && (
             <div className="space-y-2">
+              {/* Top Zakat Suggestion Card */}
+              {isZakatRelatedQuery(query) && (
+                <div
+                  onClick={() => {
+                    onClose();
+                    router.push('/zakat');
+                  }}
+                  className="flex items-center gap-3 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/40 dark:to-teal-950/30 border border-emerald-200 dark:border-emerald-800/60 p-2.5 hover:border-emerald-400 dark:hover:border-emerald-600 cursor-pointer transition-all shadow-2xs"
+                >
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-2xs">
+                    <Calculator className="h-5 w-5" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <p className="text-sm font-bold text-emerald-900 dark:text-emerald-100">
+                        যাকাত ক্যালকুলেটর (Zakat Calculator)
+                      </p>
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-200/80 text-emerald-800 dark:bg-emerald-800 dark:text-emerald-100">
+                        {ZAKAT_META.badgeBn}
+                      </span>
+                    </div>
+                    <p className="text-xs text-emerald-700 dark:text-emerald-300 truncate">
+                      বাংলাদেশের নিসাব ও ইসলামী নিয়ম অনুযায়ী যাকাত হিসাব করুন
+                    </p>
+                  </div>
+                  <span className="text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-white dark:bg-emerald-900/60 px-3 py-1.5 rounded-lg border border-emerald-200 dark:border-emerald-800 shrink-0">
+                    হিসাব করুন →
+                  </span>
+                </div>
+              )}
+
               {/* Row 1: Search for "{query}" */}
               <div
                 onClick={() => executeSearch(query)}

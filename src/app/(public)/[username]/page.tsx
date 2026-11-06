@@ -19,6 +19,7 @@ const RESERVED_ROUTES = new Set([
   'terms',
   'privacy',
   'blood',
+  'zakat',
   'messages',
   'message',
   'login',

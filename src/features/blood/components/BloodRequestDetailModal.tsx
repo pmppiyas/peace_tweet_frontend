@@ -346,33 +346,39 @@ export function BloodRequestDetailModal({
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       <div className="relative h-10 w-10 shrink-0 rounded-full overflow-hidden bg-primary-100 flex items-center justify-center font-bold text-sm text-primary-700">
-                        {d.donor.avatarUrl ? (
+                        {d?.donor?.avatarUrl ? (
                           <Image
                             src={d.donor.avatarUrl}
-                            alt={d.donor.name}
+                            alt={d?.donor?.name || 'Donor'}
                             fill
                             className="object-cover"
                             unoptimized
                           />
                         ) : (
-                          d.donor.name.charAt(0)
+                          d?.donor?.name?.charAt(0) || 'D'
                         )}
                       </div>
 
                       <div className="min-w-0">
-                        <Link
-                          href={ROUTES.USER_PROFILE(d.donor.username)}
-                          className="font-bold text-xs text-[#050505] dark:text-white hover:underline truncate block"
-                        >
-                          {d.donor.name}
-                        </Link>
+                        {d?.donor?.username ? (
+                          <Link
+                            href={ROUTES.USER_PROFILE(d.donor.username)}
+                            className="font-bold text-xs text-[#050505] dark:text-white hover:underline truncate block"
+                          >
+                            {d?.donor?.name || 'Donor'}
+                          </Link>
+                        ) : (
+                          <span className="font-bold text-xs text-[#050505] dark:text-white truncate block">
+                            {d?.donor?.name || 'Donor'}
+                          </span>
+                        )}
                         <div className="flex items-center gap-2 text-[11px] text-[#65676b] dark:text-[#b0b3b8]">
                           <span className="font-semibold text-rose-600">
-                            {formatBloodGroup(d.donor.bloodGroup)}
+                            {formatBloodGroup(d?.donor?.bloodGroup)}
                           </span>
                           <span>•</span>
                           <span>
-                            {formatNumber(d.donor.donationCount)}{' '}
+                            {formatNumber(d?.donor?.donationCount || 0)}{' '}
                             {locale === 'bn' ? 'বার রক্ত দিয়েছেন' : 'donations'}
                           </span>
                         </div>

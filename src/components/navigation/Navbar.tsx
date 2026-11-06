@@ -119,6 +119,7 @@ export function Navbar() {
     'api',
     'terms',
     'blood',
+    'zakat',
     'purpose',
     'feedback',
     'notifications',

@@ -37,6 +37,7 @@ export const ROUTES = {
     DONORS: '/blood/donors',
     DETAIL: (id: string) => `/blood/${id}`,
   },
+  ZAKAT: '/zakat',
   ADMIN: {
     HOME: '/admin',
     DUAS: '/admin/duas',

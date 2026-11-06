@@ -13,6 +13,7 @@ import {
   Droplet,
   MessageCircle,
   Sparkles,
+  Calculator,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/providers/LanguageProvider';
@@ -79,6 +80,13 @@ export function Sidebar({ className }: SidebarProps = {}) {
       href: ROUTES.BLOOD.HOME,
       icon: Droplet,
       iconBg: 'bg-rose-600 text-white',
+    },
+    {
+      id: 'sidebar-zakat',
+      label: locale === 'bn' ? 'যাকাত ক্যালকুলেটর' : 'Zakat Calculator',
+      href: ROUTES.ZAKAT,
+      icon: Calculator,
+      iconBg: 'bg-emerald-600 text-white',
     },
     {
       id: 'sidebar-bookmarks',

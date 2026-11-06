@@ -265,19 +265,19 @@ export function BloodRequestCard({
                 .map((d) => (
                   <div
                     key={d.id}
-                    title={`${d.donor.name} (${formatBloodGroup(d.donor.bloodGroup)})`}
+                    title={`${d?.donor?.name || 'Donor'} (${formatBloodGroup(d?.donor?.bloodGroup)})`}
                     className="relative h-6 w-6 rounded-full border-2 border-white dark:border-[#242526] bg-primary-100 flex items-center justify-center text-[10px] font-bold text-primary-700 uppercase overflow-hidden"
                   >
-                    {d.donor.avatarUrl ? (
+                    {d?.donor?.avatarUrl ? (
                       <Image
                         src={d.donor.avatarUrl}
-                        alt={d.donor.name}
+                        alt={d?.donor?.name || 'Donor'}
                         fill
                         className="object-cover"
                         unoptimized
                       />
                     ) : (
-                      d.donor.name.charAt(0)
+                      d?.donor?.name?.charAt(0) || 'D'
                     )}
                   </div>
                 ))}
@@ -299,20 +299,20 @@ export function BloodRequestCard({
         {/* Requester Profile */}
         <div className="flex items-center gap-2 min-w-0">
           <div className="relative h-7 w-7 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xs font-bold shrink-0">
-            {request.requester.avatarUrl ? (
+            {request?.requester?.avatarUrl ? (
               <Image
                 src={request.requester.avatarUrl}
-                alt={request.requester.name}
+                alt={request?.requester?.name || 'Requester'}
                 fill
                 className="object-cover"
                 unoptimized
               />
             ) : (
-              request.requester.name.charAt(0).toUpperCase()
+              request?.requester?.name?.charAt(0)?.toUpperCase() || 'U'
             )}
           </div>
           <span className="truncate text-xs text-[#65676b] dark:text-[#b0b3b8]">
-            {request.requester.name}
+            {request?.requester?.name || 'Anonymous'}
           </span>
         </div>
 

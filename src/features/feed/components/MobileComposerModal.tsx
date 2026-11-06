@@ -17,14 +17,10 @@ import {
   SlidersHorizontal,
   Globe,
   Sparkles,
-  Hash,
   User as UserIcon,
   Building2,
   Phone,
   Calendar,
-  Heart,
-  ChevronRight,
-  Info,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { usePostActions } from '../hooks/usePostActions';
@@ -105,7 +101,6 @@ export function MobileComposerModal({
     'COLLAGE'
   );
   const [isUploadingMedia, setIsUploadingMedia] = useState(false);
-  const [uploadingCount, setUploadingCount] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Feelings
@@ -122,7 +117,7 @@ export function MobileComposerModal({
   // Blood Request Fields
   const [patientName, setPatientName] = useState('');
   const [bloodGroup, setBloodGroup] = useState<BloodGroup | ''>('');
-  const [units, setUnits] = useState(1);
+  const [units, setUnits] = useState('1');
   const [urgency, setUrgency] = useState<BloodRequestUrgency>('REGULAR');
   const [hospitalName, setHospitalName] = useState('');
   const [location, setLocation] = useState('');
@@ -188,7 +183,7 @@ export function MobileComposerModal({
     setDuaFadilah('');
     setPatientName('');
     setBloodGroup('');
-    setUnits(1);
+    setUnits('1');
     setUrgency('REGULAR');
     setHospitalName('');
     setLocation('');
@@ -219,7 +214,6 @@ export function MobileComposerModal({
     }
 
     setIsUploadingMedia(true);
-    setUploadingCount(files.length);
     setErrorMessage(null);
 
     try {
@@ -239,7 +233,6 @@ export function MobileComposerModal({
       setErrorMessage(err?.message || 'Failed to upload photos');
     } finally {
       setIsUploadingMedia(false);
-      setUploadingCount(0);
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
@@ -295,7 +288,7 @@ export function MobileComposerModal({
         bloodRequestData: {
           patientName: patientName.trim(),
           bloodGroup,
-          units: Number(units) || 1,
+          units: Math.max(1, parseInt(units, 10) || 1),
           urgency,
           hospitalName: hospitalName.trim(),
           location: location.trim(),
@@ -323,11 +316,11 @@ export function MobileComposerModal({
       const msg =
         err?.response?.data?.message ||
         err?.message ||
-        'Failed to create post. Please try again.';
+        (locale === 'bn'
+          ? 'পোস্ট তৈরি করতে সমস্যা হয়েছে।'
+          : 'Failed to create post. Please try again.');
       console.error('Post creation error:', msg);
-      if (typeof window !== 'undefined') {
-        window.alert(msg);
-      }
+      setErrorMessage(msg);
     } finally {
       setIsUploadingPost(false);
     }
@@ -816,9 +809,15 @@ export function MobileComposerModal({
                   min={1}
                   max={20}
                   value={units}
-                  onChange={(e) =>
-                    setUnits(Math.max(1, parseInt(e.target.value) || 1))
-                  }
+                  onChange={(e) => {
+                    const cleaned = e.target.value.replace(/[^0-9]/g, '');
+                    setUnits(cleaned);
+                  }}
+                  onBlur={() => {
+                    if (!units || parseInt(units, 10) < 1) {
+                      setUnits('1');
+                    }
+                  }}
                   className="w-full rounded-xl border border-[#e4e6eb] bg-[#f8f9fa] dark:bg-[#242526] px-3 py-2 text-xs text-[#050505] dark:text-[#e4e6eb] focus:border-rose-500 focus:outline-hidden dark:border-[#393a3b]"
                 />
               </div>

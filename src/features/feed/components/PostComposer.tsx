@@ -322,11 +322,11 @@ export function PostComposer({
       const msg =
         err?.response?.data?.message ||
         err?.message ||
-        'Failed to create post. Please try again.';
+        (locale === 'bn'
+          ? 'পোস্ট তৈরি করতে সমস্যা হয়েছে।'
+          : 'Failed to create post. Please try again.');
       console.error('Post creation error:', msg);
-      if (typeof window !== 'undefined') {
-        window.alert(msg);
-      }
+      setErrorMessage(msg);
     } finally {
       setIsUploadingPost(false);
     }

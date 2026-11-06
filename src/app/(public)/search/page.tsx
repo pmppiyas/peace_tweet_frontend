@@ -14,6 +14,7 @@ import {
   FileText,
   ChevronRight,
   ExternalLink,
+  Calculator,
 } from 'lucide-react';
 import { Container } from '@/components/layout/Container';
 import { Sidebar } from '@/components/layout/Sidebar';
@@ -27,6 +28,7 @@ import {
   SearchHistoryItem,
 } from '@/features/search/types/search.types';
 import { cn } from '@/lib/utils/cn';
+import { isZakatRelatedQuery, ZAKAT_META } from '@/features/zakat/constants/zakatMeta';
 
 const TABS: { id: SearchScope; label: string; icon: React.ElementType }[] = [
   { id: 'ALL', label: 'All', icon: Search },
@@ -45,6 +47,7 @@ function SearchContent() {
 
   const [inputVal, setInputVal] = useState(queryParam);
   const [activeTab, setActiveTab] = useState<SearchScope>(scopeParam);
+  const isZakatMatch = isZakatRelatedQuery(queryParam) || isZakatRelatedQuery(inputVal);
 
   const {
     history,
@@ -131,6 +134,37 @@ function SearchContent() {
             {/* RESULTS CONTENT */}
             {queryParam.trim() ? (
               <div className="space-y-4">
+                {/* TOP FEATURED TOOL: ZAKAT CALCULATOR */}
+                {isZakatMatch && (
+                  <div className="rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-700 p-4 text-white shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="flex items-center gap-3.5">
+                      <div className="h-12 w-12 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
+                        <Calculator className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <h2 className="text-base font-bold text-white">
+                            যাকাত ক্যালকুলেটর (Zakat Calculator)
+                          </h2>
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/20 text-emerald-100 uppercase tracking-wide">
+                            {ZAKAT_META.badgeBn}
+                          </span>
+                        </div>
+                        <p className="text-xs text-emerald-100">
+                          বাংলাদেশের স্বর্ণ ও রৌপ্যের নিসাব এবং শরীয়াহ্ নিয়ম অনুযায়ী সহজেই আপনার যাকাত হিসাব করুন।
+                        </p>
+                      </div>
+                    </div>
+                    <Link
+                      href="/zakat"
+                      className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-white px-4 py-2 text-xs font-bold text-emerald-800 hover:bg-emerald-50 transition-all shadow-xs shrink-0 self-start sm:self-auto"
+                    >
+                      <span>হিসাব করুন</span>
+                      <ChevronRight className="h-4 w-4" />
+                    </Link>
+                  </div>
+                )}
+
                 {isLoading ? (
                   /* Loading skeleton */
                   <div className="space-y-3">
@@ -346,34 +380,34 @@ function SearchContent() {
                               >
                                 <div className="flex items-center gap-2">
                                   <Link
-                                    href={ROUTES.USER_PROFILE(post.author.username)}
+                                    href={ROUTES.USER_PROFILE(post.author?.username || '')}
                                     className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-700 font-bold text-xs hover:opacity-90 active:scale-95 transition-all"
-                                    title={post.author.name}
+                                    title={post.author?.name || 'User'}
                                   >
-                                    {post.author.avatarUrl ? (
+                                    {post.author?.avatarUrl ? (
                                       <Image
                                         src={post.author.avatarUrl}
-                                        alt={post.author.name}
+                                        alt={post.author?.name || 'User'}
                                         fill
                                         className="object-cover"
                                         unoptimized
                                       />
                                     ) : (
                                       <span>
-                                        {post.author.name
-                                          .charAt(0)
-                                          .toUpperCase()}
+                                        {post.author?.name
+                                          ? post.author.name.charAt(0).toUpperCase()
+                                          : 'U'}
                                       </span>
                                     )}
                                   </Link>
                                   <div>
                                     <Link
                                       href={ROUTES.USER_PROFILE(
-                                        post.author.username
+                                        post.author?.username || ''
                                       )}
                                       className="font-bold text-xs text-[#050505] hover:underline dark:text-[#e4e6eb]"
                                     >
-                                      {post.author.name}
+                                      {post.author?.name || 'User'}
                                     </Link>
                                     <p className="text-[11px] text-[#65676b] dark:text-[#b0b3b8]">
                                       {new Date(
@@ -508,6 +542,32 @@ function SearchContent() {
                     ))}
                   </div>
                 )}
+
+                {/* Suggested Tools in Empty State */}
+                <div className="pt-3 border-t border-[#e4e6eb] dark:border-[#393a3b] mt-3">
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#65676b] dark:text-[#b0b3b8] mb-2 px-1">
+                    প্রস্তাবিত টুলস
+                  </p>
+                  <Link
+                    href="/zakat"
+                    className="flex items-center justify-between p-3 rounded-xl bg-emerald-50/70 hover:bg-emerald-100/70 dark:bg-emerald-950/30 dark:hover:bg-emerald-900/40 border border-emerald-100 dark:border-emerald-800/40 transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-lg bg-emerald-600 text-white flex items-center justify-center">
+                        <Calculator className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-slate-900 dark:text-slate-100">
+                          যাকাত ক্যালকুলেটর (Zakat Calculator)
+                        </p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                          নিসাব, সোনা-রুপা ও নগদ সম্পদের যাকাত হিসাব করুন
+                        </p>
+                      </div>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-emerald-600" />
+                  </Link>
+                </div>
               </div>
             )}
           </main>

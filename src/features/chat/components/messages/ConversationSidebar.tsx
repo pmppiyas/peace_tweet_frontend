@@ -246,7 +246,7 @@ export function ConversationSidebar({
   };
 
   return (
-    <aside className="w-full h-full flex flex-col bg-white dark:bg-[#18191a] md:bg-transparent overflow-hidden select-none py-2 sm:py-3 lg:py-4 pr-0 md:pr-1">
+    <aside className="w-full h-full flex flex-col bg-white dark:bg-[#18191a] md:bg-transparent overflow-hidden select-none pt-1.5 pb-0 sm:py-3 lg:py-4 pr-0 md:pr-1">
       {/* Top Header (Desktop only - Mobile has title & search in the top navbar) */}
       <div className="hidden md:flex px-2 pb-2.5 items-center justify-between gap-2 shrink-0">
         <div className="flex items-center gap-2 min-w-0">

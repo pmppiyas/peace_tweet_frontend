@@ -26,6 +26,7 @@ import {
   MessageSquarePlus,
   Download,
   Sparkles,
+  Calculator,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/providers/LanguageProvider';
@@ -128,6 +129,13 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
       href: ROUTES.BLOOD.HOME,
       icon: Droplet,
       iconBg: 'bg-rose-600 text-white',
+    },
+    {
+      id: 'menu-zakat',
+      label: locale === 'bn' ? 'যাকাত ক্যালকুলেটর' : 'Zakat Calculator',
+      href: ROUTES.ZAKAT,
+      icon: Calculator,
+      iconBg: 'bg-emerald-600 text-white',
     },
     {
       id: 'menu-bookmarks',
