@@ -8,7 +8,7 @@ export function JsonLd() {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: siteConfig.name,
-    alternateName: ['peacetweet', 'Peace Tweet', 'ইসলামিক সোশ্যাল মিডিয়া', 'Peaceful Social Media'],
+    alternateName: siteConfig.alternateNames,
     url: baseUrl,
     description: siteConfig.description,
     potentialAction: {
@@ -26,6 +26,7 @@ export function JsonLd() {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: siteConfig.name,
+    alternateName: siteConfig.alternateNames,
     url: baseUrl,
     logo: `${baseUrl}/icon-512x512.png`,
     description: siteConfig.description,

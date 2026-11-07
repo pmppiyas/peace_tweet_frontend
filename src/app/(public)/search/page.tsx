@@ -15,6 +15,9 @@ import {
   ChevronRight,
   ExternalLink,
   Calculator,
+  Droplet,
+  Sparkles,
+  Layers,
 } from 'lucide-react';
 import { Container } from '@/components/layout/Container';
 import { Sidebar } from '@/components/layout/Sidebar';
@@ -29,6 +32,7 @@ import {
 } from '@/features/search/types/search.types';
 import { cn } from '@/lib/utils/cn';
 import { isZakatRelatedQuery, ZAKAT_META } from '@/features/zakat/constants/zakatMeta';
+import { getFeatureShortcut } from '@/features/search/utils/searchShortcuts';
 
 const TABS: { id: SearchScope; label: string; icon: React.ElementType }[] = [
   { id: 'ALL', label: 'All', icon: Search },
@@ -164,6 +168,52 @@ function SearchContent() {
                     </Link>
                   </div>
                 )}
+
+                {/* FEATURE SHORTCUT BANNER (Brand / Blood / Categories) */}
+                {!isZakatMatch && getFeatureShortcut(queryParam) && (() => {
+                  const shortcut = getFeatureShortcut(queryParam)!;
+                  const isRose = shortcut.theme === 'rose';
+                  const isBlue = shortcut.theme === 'blue';
+                  return (
+                    <div
+                      className={`rounded-2xl p-4 text-white shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+                        isRose
+                          ? 'bg-gradient-to-r from-rose-600 to-red-700'
+                          : isBlue
+                          ? 'bg-gradient-to-r from-blue-600 to-indigo-700'
+                          : 'bg-gradient-to-r from-primary-600 to-sky-700'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3.5">
+                        <div className="h-12 w-12 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
+                          {shortcut.icon === 'droplet' && <Droplet className="h-6 w-6 text-white" />}
+                          {shortcut.icon === 'layers' && <Layers className="h-6 w-6 text-white" />}
+                          {shortcut.icon === 'sparkles' && <Sparkles className="h-6 w-6 text-white" />}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <h2 className="text-base font-bold text-white">
+                              {shortcut.titleBn}
+                            </h2>
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/20 text-white uppercase tracking-wide">
+                              {shortcut.badgeBn}
+                            </span>
+                          </div>
+                          <p className="text-xs text-white/90">
+                            {shortcut.descBn}
+                          </p>
+                        </div>
+                      </div>
+                      <Link
+                        href={shortcut.href}
+                        className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-white px-4 py-2 text-xs font-bold text-gray-900 hover:bg-gray-100 transition-all shadow-xs shrink-0 self-start sm:self-auto"
+                      >
+                        <span>দেখুন</span>
+                        <ChevronRight className="h-4 w-4" />
+                      </Link>
+                    </div>
+                  );
+                })()}
 
                 {isLoading ? (
                   /* Loading skeleton */

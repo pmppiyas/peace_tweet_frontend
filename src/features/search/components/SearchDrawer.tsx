@@ -15,12 +15,16 @@ import {
   ChevronRight,
   TrendingUp,
   Calculator,
+  Droplet,
+  Sparkles,
+  Layers,
 } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
 import { useSearchHistory } from '../hooks/useSearchHistory';
 import { useSearchGlobal } from '../hooks/useSearchGlobal';
 import { soundEffects } from '@/lib/sound/soundEffects';
 import { isZakatRelatedQuery, ZAKAT_META } from '@/features/zakat/constants/zakatMeta';
+import { getFeatureShortcut } from '../utils/searchShortcuts';
 import {
   SearchEntityType,
   SearchHistoryItem,
@@ -417,7 +421,7 @@ export function SearchDrawer({
           {/* STATE 2: User is typing -> Live Search Suggestions */}
           {!isQueryEmpty && (
             <div className="space-y-2">
-              {/* Top Zakat Suggestion Card */}
+              {/* Feature Match 1: Zakat Suggestion Card */}
               {isZakatRelatedQuery(query) && (
                 <div
                   onClick={() => {
@@ -447,6 +451,54 @@ export function SearchDrawer({
                   </span>
                 </div>
               )}
+
+              {/* Feature Match 2: Brand / Blood / Categories Shortcut */}
+              {!isZakatRelatedQuery(query) && getFeatureShortcut(query) && (() => {
+                const shortcut = getFeatureShortcut(query)!;
+                const isRose = shortcut.theme === 'rose';
+                const isBlue = shortcut.theme === 'blue';
+                return (
+                  <div
+                    onClick={() => {
+                      onClose();
+                      router.push(shortcut.href);
+                    }}
+                    className={`flex items-center gap-3 rounded-xl p-2.5 cursor-pointer transition-all shadow-2xs border ${
+                      isRose
+                        ? 'bg-gradient-to-r from-rose-50 to-red-50 dark:from-rose-950/40 dark:to-red-950/30 border-rose-200 dark:border-rose-800/60 hover:border-rose-400'
+                        : isBlue
+                        ? 'bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/30 border-blue-200 dark:border-blue-800/60 hover:border-blue-400'
+                        : 'bg-gradient-to-r from-primary-50 to-sky-50 dark:from-primary-950/40 dark:to-sky-950/30 border-primary-200 dark:border-primary-800/60 hover:border-primary-400'
+                    }`}
+                  >
+                    <div
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white shadow-2xs ${
+                        isRose ? 'bg-rose-600' : isBlue ? 'bg-blue-600' : 'bg-primary-600'
+                      }`}
+                    >
+                      {shortcut.icon === 'droplet' && <Droplet className="h-5 w-5" />}
+                      {shortcut.icon === 'layers' && <Layers className="h-5 w-5" />}
+                      {shortcut.icon === 'sparkles' && <Sparkles className="h-5 w-5" />}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <p className="text-sm font-bold text-[#050505] dark:text-white truncate">
+                          {shortcut.titleBn}
+                        </p>
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white dark:bg-white/10 text-gray-700 dark:text-gray-200 border border-black/5 shrink-0">
+                          {shortcut.badgeBn}
+                        </span>
+                      </div>
+                      <p className="text-xs text-[#65676b] dark:text-[#b0b3b8] truncate">
+                        {shortcut.descBn}
+                      </p>
+                    </div>
+                    <span className="text-xs font-bold text-primary-700 dark:text-primary-300 bg-white dark:bg-white/10 px-3 py-1.5 rounded-lg border border-black/5 shrink-0">
+                      দেখুন →
+                    </span>
+                  </div>
+                );
+              })()}
 
               {/* Row 1: Search for "{query}" */}
               <div

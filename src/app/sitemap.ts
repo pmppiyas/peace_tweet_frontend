@@ -26,9 +26,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
+      url: `${baseUrl}/zakat`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/blood`,
       lastModified: currentDate,
-      changeFrequency: 'weekly',
+      changeFrequency: 'daily',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blood/donors`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blood/create`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/purpose`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
