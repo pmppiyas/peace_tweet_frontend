@@ -61,7 +61,12 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     // Listeners
     const handleConnect = () => {
       setIsConnected(true);
+      socket.emit('users:get_online');
     };
+
+    if (socket.connected) {
+      socket.emit('users:get_online');
+    }
 
     const handleDisconnect = () => {
       setIsConnected(false);
@@ -91,6 +96,13 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       const isOpenAndActive =
         currentActiveConvId === convId ||
         activeChats.some((c) => c.conversationId === convId && !c.isMinimized);
+
+      // Acknowledge message delivery back to sender
+      socket.emit('message:delivered', {
+        conversationId: convId,
+        messageId: message.id,
+        senderId: message.senderId,
+      });
 
       // If chat is open and active, mark it as read immediately
       if (isOpenAndActive) {
@@ -185,6 +197,29 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
           const updated = list.map((m) =>
             m.senderId === user.id
               ? { ...m, isRead: true, readAt: payload.seenAt }
+              : m
+          );
+          return {
+            ...old,
+            messages: updated,
+            items: updated,
+          };
+        }
+      );
+    };
+
+    const handleMessageDelivered = (payload: {
+      conversationId: string;
+      messageId?: string;
+    }) => {
+      queryClient.setQueryData<MessagesResponse>(
+        MESSAGES_QUERY_KEY(payload.conversationId),
+        (old) => {
+          if (!old) return old!;
+          const list = old.messages || old.items || [];
+          const updated = list.map((m) =>
+            m.senderId === user.id && !m.isRead
+              ? { ...m, isDelivered: true }
               : m
           );
           return {
@@ -329,6 +364,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     socket.on('user:status', handleUserStatus);
     socket.on('message:received', handleMessageReceived);
     socket.on('message:sent', handleMessageSent);
+    socket.on('message:delivered', handleMessageDelivered);
     socket.on('message:seen', handleMessageSeen);
     socket.on('message:typing', handleMessageTyping);
     socket.on('message:updated', handleMessageUpdated);
@@ -345,6 +381,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       socket.off('user:status', handleUserStatus);
       socket.off('message:received', handleMessageReceived);
       socket.off('message:sent', handleMessageSent);
+      socket.off('message:delivered', handleMessageDelivered);
       socket.off('message:seen', handleMessageSeen);
       socket.off('message:typing', handleMessageTyping);
       socket.off('message:updated', handleMessageUpdated);

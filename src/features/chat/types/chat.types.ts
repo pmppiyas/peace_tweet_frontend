@@ -26,6 +26,7 @@ export interface ChatMessage {
   senderId: string;
   text: string;
   isRead: boolean;
+  isDelivered?: boolean;
   readAt: string | null;
   isEdited?: boolean;
   isDeleted?: boolean;

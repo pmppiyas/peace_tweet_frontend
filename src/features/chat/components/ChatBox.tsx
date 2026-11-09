@@ -525,7 +525,7 @@ export function ChatBox({ activeChat, isMobileActive = true }: ChatBoxProps) {
                             <span>{locale === 'bn' ? 'দেখা হয়েছে' : 'Seen'}</span>
                           )}
                         </span>
-                      ) : (
+                      ) : (msg.isDelivered || isOnline) ? (
                         <span
                           className="inline-flex items-center gap-0.5 text-gray-400 dark:text-gray-500"
                           title={locale === 'bn' ? 'পৌঁছেছে (Delivered)' : 'Delivered'}
@@ -533,6 +533,16 @@ export function ChatBox({ activeChat, isMobileActive = true }: ChatBoxProps) {
                           <CheckCheck className="h-3 w-3 stroke-[1.8]" />
                           {isLastMessage && (
                             <span>{locale === 'bn' ? 'পৌঁছেছে' : 'Delivered'}</span>
+                          )}
+                        </span>
+                      ) : (
+                        <span
+                          className="inline-flex items-center gap-0.5 text-gray-400 dark:text-gray-500"
+                          title={locale === 'bn' ? 'পাঠানো হয়েছে (Sent)' : 'Sent'}
+                        >
+                          <Check className="h-3 w-3 stroke-[1.8]" />
+                          {isLastMessage && (
+                            <span>{locale === 'bn' ? 'পাঠানো হয়েছে' : 'Sent'}</span>
                           )}
                         </span>
                       )}

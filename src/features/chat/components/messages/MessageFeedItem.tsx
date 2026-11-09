@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { ChatMessage, ChatUser } from '@/features/chat/types/chat.types';
 import { useLanguage } from '@/providers/LanguageProvider';
+import { useChatStore } from '@/stores/useChatStore';
 import { cn } from '@/lib/utils/cn';
 
 interface MessageFeedItemProps {
@@ -35,6 +36,9 @@ export function MessageFeedItem({
   onDeleteMessage,
 }: MessageFeedItemProps) {
   const { locale } = useLanguage();
+  const isUserOnline = useChatStore((state) => state.isUserOnline);
+  const isOtherOnline = otherUser?.id ? isUserOnline(otherUser.id) : false;
+  const isDelivered = Boolean(message.isDelivered || isOtherOnline);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -236,8 +240,12 @@ export function MessageFeedItem({
                   <span title="Seen">
                     <CheckCheck className="h-3.5 w-3.5 text-white stroke-[2.5]" />
                   </span>
-                ) : (
+                ) : isDelivered ? (
                   <span title="Delivered">
+                    <CheckCheck className="h-3.5 w-3.5 text-white/80 stroke-[2.2]" />
+                  </span>
+                ) : (
+                  <span title="Sent">
                     <Check className="h-3.5 w-3.5 text-white/80 stroke-[2.2]" />
                   </span>
                 )}
