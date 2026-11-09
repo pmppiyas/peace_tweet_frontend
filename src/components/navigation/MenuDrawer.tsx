@@ -237,7 +237,7 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
               <ChevronRight className="h-4 w-4 text-[#65676b] dark:text-[#b0b3b8] group-hover:translate-x-0.5 transition-transform" />
             </Link>
           ) : (
-            <div className="p-3.5 rounded-2xl border border-[#e4e6eb] bg-[#f0f2f5]/60 dark:border-[#393a3b] dark:bg-[#3a3b3c]/40 space-y-2.5">
+            <div className="p-3.5 rounded-2xl   bg-[#f0f2f5]/60  dark:bg-[#3a3b3c]/40 space-y-2.5">
               <div>
                 <p className="font-bold text-sm text-[#050505] dark:text-white">
                   {locale === 'bn'
@@ -397,7 +397,11 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
                   <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary-600 text-white shadow-2xs">
                     <Download className="h-4 w-4" />
                   </div>
-                  <span>{locale === 'bn' ? 'PeaceTweet অ্যাপ ইনস্টল করুন' : 'Install PeaceTweet App'}</span>
+                  <span>
+                    {locale === 'bn'
+                      ? 'PeaceTweet অ্যাপ ইনস্টল করুন'
+                      : 'Install PeaceTweet App'}
+                  </span>
                 </div>
                 <span className="text-[10px] font-bold bg-primary-600 text-white px-2 py-0.5 rounded-full shadow-2xs">
                   {locale === 'bn' ? 'ফ্রি ইনস্টল' : 'PWA'}
