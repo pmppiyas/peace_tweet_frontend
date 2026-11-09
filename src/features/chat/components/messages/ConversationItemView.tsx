@@ -28,6 +28,25 @@ export function ConversationItemView({
   const isTyping = Boolean(typingStatus?.isTyping);
   const hasUnread = (conversation.unreadCount || 0) > 0;
 
+  const formatLastMessage = (text?: string | null) => {
+    if (!text) {
+      return locale === 'bn' ? 'মেসেজ পাঠান' : 'Send a message';
+    }
+    const isDeleted =
+      text === 'মেসেজটি মুছে ফেলা হয়েছে' ||
+      text === 'মেসেজ মুছে ফেলা হয়েছে' ||
+      text === 'This message was deleted' ||
+      text === 'Message was deleted';
+
+    if (isDeleted) {
+      return locale === 'bn'
+        ? 'মেসেজটি মুছে ফেলা হয়েছে'
+        : 'This message was deleted';
+    }
+
+    return text;
+  };
+
   const formatTimestamp = (dateStr?: string | null) => {
     if (!dateStr) return '';
     const date = new Date(dateStr);
@@ -127,8 +146,7 @@ export function ConversationItemView({
               ? locale === 'bn'
                 ? 'টাইপ করছেন...'
                 : 'typing...'
-              : conversation.lastMessageText ||
-                (locale === 'bn' ? 'মেসেজ পাঠান' : 'Send a message')}
+              : formatLastMessage(conversation.lastMessageText)}
           </p>
 
           {/* Unread Count Badge */}
