@@ -45,7 +45,7 @@ import {
 import { useChatStore } from '@/stores/useChatStore';
 import { formatDate } from '@/lib/utils/date';
 import { ROUTES } from '@/constants/routes';
-import { BloodGroup, User } from '@/types/user.types';
+import { BloodGroup, User, UserBadge } from '@/types/user.types';
 import { UserProfileResponse } from '@/features/friends/types/friends.types';
 import { FriendActionButton } from '@/features/friends/components/FriendActionButton';
 import { FriendshipStatusBadge } from '@/features/friends/components/FriendshipStatus';
@@ -575,14 +575,24 @@ export function ProfileView({
               </span>
             )}
 
-            {/* Member Tier Pill */}
-            <span
-              className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-bold text-emerald-700 border border-emerald-200 dark:bg-emerald-950/60 dark:border-emerald-800 dark:text-emerald-300 shadow-2xs cursor-pointer hover:bg-emerald-100 hover:border-emerald-300 dark:hover:bg-emerald-900/60 dark:hover:border-emerald-700 transition-all select-none"
-              title={locale === 'bn' ? 'মেম্বারশিপ ব্যাজ' : 'Membership Tier'}
-            >
-              <Award className="h-3.5 w-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
-              <span>{displayUser.badge || 'Standard Member'}</span>
-            </span>
+            {/* Dynamic Community Badges */}
+            {displayUser.badges
+              ?.filter(
+                (b: UserBadge) =>
+                  b.name !== 'STANDARD MEMBER' &&
+                  b.name !== 'NON VERIFIED' &&
+                  b.name !== 'VERIFIED'
+              )
+              .map((b: UserBadge) => (
+                <span
+                  key={b.id || b.name}
+                  className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-bold text-emerald-700 border border-emerald-200 dark:bg-emerald-950/60 dark:border-emerald-800 dark:text-emerald-300 shadow-2xs cursor-pointer hover:bg-emerald-100 hover:border-emerald-300 dark:hover:bg-emerald-900/60 dark:hover:border-emerald-700 transition-all select-none"
+                  title={b.name}
+                >
+                  <Award className="h-3.5 w-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                  <span>{b.name}</span>
+                </span>
+              ))}
 
             {/* Blood Group Pill */}
             {bloodGroupLabel ? (
@@ -1007,15 +1017,31 @@ export function ProfileView({
               </h2>
 
               <div className="space-y-2.5 text-xs sm:text-sm">
-                <div className="flex items-center gap-2.5 text-[#050505] dark:text-[#e4e6eb]">
-                  <Award className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                  <span>
-                    {locale === 'bn' ? 'মেম্বার ব্যাজ:' : 'Tier:'}{' '}
-                    <strong className="font-bold">
-                      {displayUser.badge || 'Standard Member'}
-                    </strong>
-                  </span>
-                </div>
+                {displayUser.badges &&
+                  displayUser.badges.filter(
+                    (b: UserBadge) =>
+                      b.name !== 'STANDARD MEMBER' &&
+                      b.name !== 'NON VERIFIED' &&
+                      b.name !== 'VERIFIED'
+                  ).length > 0 && (
+                    <div className="flex items-center gap-2.5 text-[#050505] dark:text-[#e4e6eb]">
+                      <Award className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                      <span>
+                        {locale === 'bn' ? 'বিশেষ ব্যাজ:' : 'Badges:'}{' '}
+                        <strong className="font-bold">
+                          {displayUser.badges
+                            .filter(
+                              (b: UserBadge) =>
+                                b.name !== 'STANDARD MEMBER' &&
+                                b.name !== 'NON VERIFIED' &&
+                                b.name !== 'VERIFIED'
+                            )
+                            .map((b: UserBadge) => b.name)
+                            .join(', ')}
+                        </strong>
+                      </span>
+                    </div>
+                  )}
 
                 <div className="flex items-center gap-2.5 text-[#050505] dark:text-[#e4e6eb]">
                   <Shield className="h-4 w-4 text-primary-500 shrink-0" />
