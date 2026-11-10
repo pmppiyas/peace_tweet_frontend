@@ -562,7 +562,7 @@ export function ProfileView({
             </p>
           </div>
 
-          {/* Badges & Meta (Special Badges, Blood Group, Friendship Status) */}
+          {/* Badges & Meta (Special Badges & Friendship Status) */}
           <div className="mt-2.5 flex items-center justify-center gap-2 sm:gap-2.5 flex-wrap">
             {/* Dynamic Community Badges */}
             {displayUser.badges
@@ -582,32 +582,6 @@ export function ProfileView({
                   <span>{b.name}</span>
                 </span>
               ))}
-
-            {/* Blood Group Pill */}
-            {bloodGroupLabel ? (
-              <span
-                className="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2.5 py-0.5 text-xs font-bold text-rose-600 border border-rose-200 dark:bg-rose-950/60 dark:border-rose-900 dark:text-rose-300 shadow-2xs cursor-pointer hover:bg-rose-100 hover:border-rose-300 dark:hover:bg-rose-900/60 dark:hover:border-rose-800 transition-all select-none"
-                title={locale === 'bn' ? 'রক্তের গ্রুপ' : 'Blood Group'}
-              >
-                <Droplet className="h-3.5 w-3.5 fill-rose-500 text-rose-500 shrink-0" />
-                <span>Blood: {bloodGroupLabel}</span>
-              </span>
-            ) : isOwner && !isViewAs ? (
-              <Link
-                href={ROUTES.SETTINGS}
-                className="inline-flex items-center gap-1 rounded-full bg-rose-50/70 hover:bg-rose-100 px-2.5 py-0.5 text-xs font-bold text-rose-600 border border-dashed border-rose-300 dark:bg-rose-950/40 dark:border-rose-800 dark:text-rose-300 transition-colors shadow-2xs cursor-pointer select-none"
-                title={
-                  locale === 'bn'
-                    ? 'সেটিংসে রক্তের গ্রুপ যুক্ত করুন'
-                    : 'Add blood group in settings'
-                }
-              >
-                <Droplet className="h-3.5 w-3.5 fill-rose-500 text-rose-500 shrink-0" />
-                <span>
-                  {locale === 'bn' ? '+ রক্তের গ্রুপ দিন' : '+ Add Blood Group'}
-                </span>
-              </Link>
-            ) : null}
 
             {/* Friendship Status Badge on Another User's Profile */}
             {!isOwner && relationshipStatus !== 'NONE' && relationshipStatus !== 'SELF' && (
