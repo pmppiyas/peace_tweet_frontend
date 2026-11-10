@@ -557,7 +557,7 @@ export function ProfileView({
               </span>
             </div>
 
-            <p className="text-xs sm:text-sm font-semibold text-primary-600 dark:text-primary-400">
+            <p className="text-[14.5px] sm:text-[15px] font-semibold text-primary-600 dark:text-primary-400 mt-1">
               @{displayUser.username}
             </p>
           </div>
@@ -600,11 +600,7 @@ export function ProfileView({
                   value={bioInput}
                   onChange={(e) => setBioInput(e.target.value)}
                   maxLength={160}
-                  placeholder={
-                    locale === 'bn'
-                      ? 'নিজের সম্পর্কে কিছু লিখুন...'
-                      : 'Describe yourself in a few words...'
-                  }
+                  placeholder="Spreading peace, one good deed at a time."
                   rows={2}
                   className="w-full rounded-xl border border-primary-300 dark:border-primary-700 bg-white dark:bg-[#242526] p-3 text-xs sm:text-sm text-[#050505] dark:text-[#e4e6eb] placeholder:text-[#65676b] dark:placeholder:text-[#b0b3b8] focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:outline-hidden text-center resize-none shadow-xs transition-all"
                   autoFocus
@@ -640,10 +636,11 @@ export function ProfileView({
                   </div>
                 </div>
               </div>
-            ) : displayUser.bio ? (
-              <div className="group relative flex flex-col items-center justify-center px-4 py-1.5 rounded-2xl hover:bg-[#f0f2f5]/70 dark:hover:bg-[#3a3b3c]/50 transition-colors">
-                <p className="text-xs sm:text-sm text-[#050505] dark:text-[#e4e6eb] font-normal leading-relaxed text-center break-words whitespace-pre-line max-w-md">
-                  {displayUser.bio}
+            ) : (
+              <div className="flex items-center justify-center flex-wrap gap-1.5 px-4">
+                <p className="text-[15px] sm:text-[16px] text-[#1e2329] dark:text-[#e4e6eb] font-normal leading-[23px] text-center break-words whitespace-pre-line max-w-md">
+                  {displayUser.bio?.trim() ||
+                    'Spreading peace, one good deed at a time.'}
                 </p>
                 {isOwner && !isViewAs && (
                   <button
@@ -652,29 +649,14 @@ export function ProfileView({
                       setBioInput(displayUser.bio || '');
                       setIsEditingBio(true);
                     }}
-                    className="mt-1.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/60 border border-primary-200/60 dark:border-primary-800/60 hover:bg-primary-100 dark:hover:bg-primary-900/60 opacity-80 group-hover:opacity-100 transition-all cursor-pointer shadow-2xs"
-                    title={locale === 'bn' ? 'বায়ো এডিট করুন' : 'Edit bio'}
+                    className="p-1 rounded-full text-primary-600 dark:text-primary-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
+                    title={locale === 'bn' ? 'বায়ো সম্পাদনা' : 'Edit bio'}
                   >
-                    <Edit3 className="h-3 w-3" />
-                    <span>{locale === 'bn' ? 'বায়ো সম্পাদনা' : 'Edit Bio'}</span>
+                    <Edit3 className="h-3.5 w-3.5" />
                   </button>
                 )}
               </div>
-            ) : isOwner && !isViewAs ? (
-              <button
-                type="button"
-                onClick={() => {
-                  setBioInput('');
-                  setIsEditingBio(true);
-                }}
-                className="inline-flex items-center gap-2 rounded-full border border-dashed border-primary-300 dark:border-primary-700 bg-primary-50/60 hover:bg-primary-100/70 dark:bg-primary-950/30 dark:hover:bg-primary-900/40 px-4 py-1.5 text-xs font-bold text-primary-700 dark:text-primary-300 transition-all duration-200 shadow-2xs hover:shadow-xs cursor-pointer group"
-              >
-                <div className="flex h-4 w-4 items-center justify-center rounded-full bg-primary-600 text-white text-[10px] group-hover:scale-110 transition-transform">
-                  <Plus className="h-3 w-3" />
-                </div>
-                <span>{locale === 'bn' ? 'বায়ো যুক্ত করুন' : 'Add Bio'}</span>
-              </button>
-            ) : null}
+            )}
           </div>
 
           {/* Action Buttons (Centered) */}
