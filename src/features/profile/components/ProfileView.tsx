@@ -25,6 +25,7 @@ import {
   CheckCircle2,
   Sparkles,
   Shield,
+  ShieldCheck,
   Award,
   Edit3,
   Camera,
@@ -534,11 +535,26 @@ export function ProfileView({
               <h1 className="text-2xl sm:text-3xl font-black text-[#050505] dark:text-white tracking-tight">
                 {displayUser.name}
               </h1>
-              {displayUser.userStatus === 'VERIFIED' && (
-                <span title="Verified Account">
-                  <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 fill-blue-500 text-white" />
-                </span>
-              )}
+              <span
+                title={
+                  displayUser.userStatus === 'VERIFIED'
+                    ? locale === 'bn'
+                      ? 'ভেরিফাইড অ্যাকাউন্ট'
+                      : 'Verified Account'
+                    : locale === 'bn'
+                      ? 'নন-ভেরিফাইড অ্যাকাউন্ট'
+                      : 'Non-verified Account'
+                }
+              >
+                <ShieldCheck
+                  className={cn(
+                    'h-5 w-5 sm:h-6 sm:w-6 shrink-0 transition-colors',
+                    displayUser.userStatus === 'VERIFIED'
+                      ? 'text-[#0866FF] fill-[#0866FF]/15'
+                      : 'text-[#65676b] dark:text-[#b0b3b8]'
+                  )}
+                />
+              </span>
             </div>
 
             <p className="text-xs sm:text-sm font-semibold text-primary-600 dark:text-primary-400">
@@ -546,35 +562,8 @@ export function ProfileView({
             </p>
           </div>
 
-          {/* Badges & Meta (Verification, Tier, Blood Group, Friendship Status, Friends) */}
+          {/* Badges & Meta (Special Badges, Blood Group, Friendship Status) */}
           <div className="mt-2.5 flex items-center justify-center gap-2 sm:gap-2.5 flex-wrap">
-            {/* Verification Status Badge */}
-            {displayUser.userStatus === 'VERIFIED' ? (
-              <span
-                className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-bold text-blue-600 border border-blue-200 dark:bg-blue-950/60 dark:border-blue-800 dark:text-blue-300 shadow-2xs cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-900/60 hover:border-blue-300 transition-all select-none"
-                title="Verified Account"
-              >
-                <CheckCircle2 className="h-3.5 w-3.5 fill-blue-500 text-white shrink-0" />
-                <span>{locale === 'bn' ? 'ভেরিফাইড' : 'Verified'}</span>
-              </span>
-            ) : displayUser.userStatus === 'PREMIUM' ? (
-              <span
-                className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 text-white px-2.5 py-0.5 text-xs font-bold shadow-xs cursor-pointer hover:brightness-110 hover:shadow-sm transition-all select-none"
-                title="Premium Member"
-              >
-                <Sparkles className="h-3.5 w-3.5 shrink-0" />
-                <span>{locale === 'bn' ? 'প্রিমিয়াম' : 'Premium'}</span>
-              </span>
-            ) : (
-              <span
-                className="inline-flex items-center gap-1 rounded-full bg-[#f0f2f5] px-2.5 py-0.5 text-xs font-semibold text-[#65676b] border border-[#e4e6eb] dark:bg-[#3a3b3c] dark:border-[#4e4f50] dark:text-[#b0b3b8] cursor-pointer hover:bg-[#e4e6eb] dark:hover:bg-[#4e4f50] transition-all select-none"
-                title="Non-verified Account"
-              >
-                <Shield className="h-3.5 w-3.5 shrink-0" />
-                <span>{locale === 'bn' ? 'নন-ভেরিফাইড' : 'Non-verified'}</span>
-              </span>
-            )}
-
             {/* Dynamic Community Badges */}
             {displayUser.badges
               ?.filter(
@@ -626,23 +615,6 @@ export function ProfileView({
                 status={relationshipStatus}
                 className="cursor-pointer select-none hover:brightness-95 dark:hover:brightness-110 transition-all"
               />
-            )}
-
-            {isOwner && totalFriends > 0 && (
-              <Link
-                href={buildTabUrl('friend')}
-                className="inline-flex items-center gap-1 rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-bold text-indigo-700 border border-indigo-200 dark:bg-indigo-950/60 dark:border-indigo-800 dark:text-indigo-300 shadow-2xs hover:bg-indigo-100 hover:border-indigo-300 dark:hover:bg-indigo-900/60 dark:hover:border-indigo-700 transition-all cursor-pointer select-none"
-              >
-                <Users className="h-3.5 w-3.5 shrink-0 text-indigo-600 dark:text-indigo-400" />
-                <span>
-                  {totalFriends}{' '}
-                  {locale === 'bn'
-                    ? 'বন্ধু'
-                    : totalFriends === 1
-                      ? 'friend'
-                      : 'friends'}
-                </span>
-              </Link>
             )}
           </div>
 
