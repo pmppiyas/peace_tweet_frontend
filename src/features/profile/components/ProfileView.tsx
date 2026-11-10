@@ -548,7 +548,7 @@ export function ProfileView({
               >
                 <ShieldCheck
                   className={cn(
-                    'h-5 w-5 sm:h-6 sm:w-6 shrink-0 transition-colors',
+                    'h-4 w-4 sm:h-5 sm:w-5 shrink-0 transition-colors',
                     displayUser.userStatus === 'VERIFIED'
                       ? 'text-[#0866FF] fill-[#0866FF]/15'
                       : 'text-[#65676b] dark:text-[#b0b3b8]'
