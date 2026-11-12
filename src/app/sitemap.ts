@@ -1,12 +1,11 @@
 import { MetadataRoute } from 'next';
 import { siteConfig } from '@/config/site';
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = siteConfig.url.replace(/\/+$/, '');
   const currentDate = new Date();
 
-  // Static core routes with priorities
-  const staticRoutes: MetadataRoute.Sitemap = [
+  return [
     {
       url: baseUrl,
       lastModified: currentDate,
@@ -14,98 +13,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/categories`,
+      url: `${baseUrl}/login`,
       lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/groups`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/zakat`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
+      changeFrequency: 'monthly',
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/blood`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blood/donors`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blood/create`,
+      url: `${baseUrl}/register`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
-      priority: 0.6,
+      priority: 0.9,
     },
     {
       url: `${baseUrl}/purpose`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/friends`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/feedback`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/privacy`,
-      lastModified: currentDate,
-      changeFrequency: 'yearly',
-      priority: 0.4,
-    },
-    {
-      url: `${baseUrl}/terms`,
-      lastModified: currentDate,
-      changeFrequency: 'yearly',
-      priority: 0.4,
+      priority: 0.8,
     },
   ];
-
-  // Attempt to fetch dynamic categories if API is reachable
-  const dynamicRoutes: MetadataRoute.Sitemap = [];
-  try {
-    const res = await fetch(`${siteConfig.apiUrl}/category?limit=100`, {
-      next: { revalidate: 3600 },
-    });
-    if (res.ok) {
-      const data = await res.json();
-      const categories = data?.data || data?.categories || [];
-      if (Array.isArray(categories)) {
-        for (const cat of categories) {
-          if (cat.slug) {
-            dynamicRoutes.push({
-              url: `${baseUrl}/categories/${cat.slug}`,
-              lastModified: cat.updatedAt ? new Date(cat.updatedAt) : currentDate,
-              changeFrequency: 'weekly',
-              priority: 0.7,
-            });
-          }
-        }
-      }
-    }
-  } catch {
-    // Graceful fallback if backend is offline during build
-  }
-
-  return [...staticRoutes, ...dynamicRoutes];
 }

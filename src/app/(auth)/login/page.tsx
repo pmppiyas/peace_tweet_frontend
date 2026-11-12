@@ -1,9 +1,14 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import { LoginView } from '@/features/auth/components/LoginView';
 
-export const metadata = {
-  title: 'Log In',
-  description: 'Log in to your PeaceTweet account to connect, share duas, and join the community.',
+export const metadata: Metadata = {
+  title: 'Sign In (লগইন)',
+  description:
+    'Log in to your PeaceTweet account to connect, share duas and reflections, and join the peaceful Islamic community.',
+  alternates: {
+    canonical: '/login',
+  },
 };
 
 export default function LoginPage() {

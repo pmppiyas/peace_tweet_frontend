@@ -1,8 +1,17 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/layout/Container';
 import { BookX, Home } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
+
+export const metadata: Metadata = {
+  title: 'পৃষ্ঠাটি পাওয়া যায়নি (৪০৪) | PeaceTweet',
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default function NotFound() {
   return (
@@ -14,7 +23,7 @@ export default function NotFound() {
         পৃষ্ঠাটি পাওয়া যায়নি (৪০৪)
       </h2>
       <p className="mt-2 text-sm text-gray-500 max-w-md mx-auto">
-        আপনি যে দোয়া বা পৃষ্ঠাটি খুঁজছেন তা মুছে ফেলা হয়েছে অথবা ঠিকানাটি ভুল।
+        আপনি যে পৃষ্ঠাটি খুঁজছেন তা মুছে ফেলা হয়েছে অথবা ঠিকানাটি ভুল।
       </p>
       <div className="mt-8">
         <Link href={ROUTES.HOME}>

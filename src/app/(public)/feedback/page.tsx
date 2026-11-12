@@ -6,6 +6,10 @@ export const metadata: Metadata = {
   title: 'Feedback & Report',
   description:
     'Share your suggestions, feature requests, bug reports, or content concerns directly with the PeaceTweet team. Official contact: connect.peacetweet@gmail.com',
+  robots: {
+    index: false,
+    follow: true,
+  },
   openGraph: {
     title: 'Feedback & Report — PeaceTweet',
     description:
