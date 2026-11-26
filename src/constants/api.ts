@@ -11,6 +11,9 @@ export const API_ENDPOINTS = {
   USERS: {
     ME: '/users/me',
     CHANGE_PASSWORD: '/users/change-password',
+    VERIFY_EMAIL_REQUEST: '/users/me/verify-email/request',
+    VERIFY_EMAIL_CONFIRM: '/users/me/verify-email/confirm',
+    VERIFY_EMAIL_GOOGLE: '/users/me/verify-email/google',
     SAVED_DUAS: '/users/me/saved-duas',
     SAVED: '/users/me/saved',
     UPDATE_TIME_SLOT: '/saved/time-slot',
@@ -133,5 +136,13 @@ export const API_ENDPOINTS = {
     CREATE: '/feedback',
     LIST: '/feedback',
     STATS: '/feedback/stats',
+  },
+  POINTS: {
+    ME: '/points/me',
+    HISTORY: '/points/history',
+    CHECK_IN: '/points/check-in',
+    REDEEM: '/points/redeem',
+    REDEEM_EQUIP: '/points/redeem/equip',
+    LEADERBOARD: '/points/leaderboard',
   },
 } as const;

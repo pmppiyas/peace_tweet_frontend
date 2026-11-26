@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuthActions } from '../hooks/useAuthActions';
@@ -48,9 +48,20 @@ export function RegisterView() {
   // 5 = Blood Group
   const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1);
 
-  // Step 1: Personal Info
+  // Step 1: Personal Info & Optional Inviter Username
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [invitedBy, setInvitedBy] = useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const search = new URLSearchParams(window.location.search);
+      const raw = search.get('invitedBy') || search.get('ref');
+      if (raw?.trim()) {
+        setInvitedBy(raw.trim());
+      }
+    }
+  }, []);
 
   // Step 2: Password
   const [password, setPassword] = useState('');
@@ -200,6 +211,7 @@ export function RegisterView() {
         city: locationData.location ? locationData.city : undefined,
         location: locationData.location?.trim() ? locationData.location.trim() : undefined,
         bloodGroup: includeBloodGroup ? bloodGroup : undefined,
+        invitedBy: invitedBy.trim().replace(/^@+/, '') || undefined,
       });
     } catch (err: any) {
       setIsUploadingPhoto(false);
@@ -333,6 +345,22 @@ export function RegisterView() {
                   onChange={(e) => setEmail(e.target.value)}
                   leftIcon={<Mail className="h-4 w-4" />}
                   required
+                />
+
+                <Input
+                  label={
+                    locale === 'bn'
+                      ? 'কে ইনভাইট করেছে? (ইউজারনেম - ঐচ্ছিক)'
+                      : 'Invited By (Username - Optional)'
+                  }
+                  placeholder={
+                    locale === 'bn'
+                      ? 'যেমন: @username'
+                      : 'e.g. @username'
+                  }
+                  value={invitedBy}
+                  onChange={(e) => setInvitedBy(e.target.value)}
+                  leftIcon={<User className="h-4 w-4" />}
                 />
 
                 <div className="pt-1.5">

@@ -27,6 +27,7 @@ import {
   Download,
   Sparkles,
   Calculator,
+  Trophy,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/providers/LanguageProvider';
@@ -208,66 +209,123 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
         <div className="flex-1 overflow-y-auto p-3.5 space-y-3 pb-8 md:pb-6">
           {/* User Account / Auth Section */}
           {isAuthenticated ? (
-            <Link
-              href={ROUTES.PROFILE}
-              onClick={onClose}
-              className="flex items-center gap-3 p-3 rounded-2xl bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] transition-colors shadow-2xs group"
-            >
-              <div className="relative h-11 w-11 shrink-0 rounded-full bg-primary-500 text-white font-bold text-base flex items-center justify-center overflow-hidden shadow-xs">
-                {user?.avatarUrl ? (
-                  <Image
-                    src={user.avatarUrl}
-                    alt={user.name || 'User'}
-                    fill
-                    className="object-cover"
-                    unoptimized
-                  />
-                ) : (
-                  <span>{user?.name?.charAt(0) || 'P'}</span>
+            <div className="space-y-2">
+              <Link
+                href={ROUTES.PROFILE}
+                onClick={onClose}
+                className="flex items-center gap-3 p-3 rounded-2xl bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] transition-colors shadow-2xs group"
+              >
+                <div className="relative h-11 w-11 shrink-0 rounded-full bg-primary-500 text-white font-bold text-base flex items-center justify-center overflow-hidden shadow-xs">
+                  {user?.avatarUrl ? (
+                    <Image
+                      src={user.avatarUrl}
+                      alt={user.name || 'User'}
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
+                  ) : (
+                    <span>{user?.name?.charAt(0) || 'P'}</span>
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="font-bold text-sm text-[#050505] dark:text-white truncate">
+                    {user?.name}
+                  </p>
+                  <p className="text-xs text-[#65676b] dark:text-[#b0b3b8] truncate">
+                    {user?.username ? `@${user.username}` : user?.email}
+                    {typeof user?.points === 'number'
+                      ? ` • ${user.points} pts`
+                      : ''}
+                  </p>
+                </div>
+                <ChevronRight className="h-4 w-4 text-[#65676b] dark:text-[#b0b3b8] group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+
+              {/* Points & Tasks right below user card (subtle menu row) */}
+              <Link
+                href={ROUTES.POINTS}
+                onClick={onClose}
+                className={cn(
+                  'flex items-center justify-between rounded-xl px-2.5 py-2 transition-colors',
+                  pathname.startsWith(ROUTES.POINTS)
+                    ? 'bg-[#e4e6eb] dark:bg-[#3a3b3c] text-primary-700 dark:text-primary-400 font-bold'
+                    : 'text-[#050505] dark:text-[#e4e6eb] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c]/60 font-semibold text-[14px]'
                 )}
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="font-bold text-sm text-[#050505] dark:text-white truncate">
-                  {user?.name}
-                </p>
-                <p className="text-xs text-[#65676b] dark:text-[#b0b3b8] truncate">
-                  {user?.username ? `@${user.username}` : user?.email}
-                </p>
-              </div>
-              <ChevronRight className="h-4 w-4 text-[#65676b] dark:text-[#b0b3b8] group-hover:translate-x-0.5 transition-transform" />
-            </Link>
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-500 text-white shadow-xs">
+                    <Trophy className="h-4 w-4" />
+                  </div>
+                  <span className="truncate">
+                    {locale === 'bn' ? 'অর্জন ও সম্মাননা' : 'Achievements'}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  {typeof user?.points === 'number' && (
+                    <span className="text-xs font-semibold text-[#65676b] dark:text-[#b0b3b8]">
+                      {user.points} pts
+                    </span>
+                  )}
+                  <ChevronRight className="h-4 w-4 text-[#65676b] dark:text-[#b0b3b8]" />
+                </div>
+              </Link>
+            </div>
           ) : (
-            <div className="p-3.5 rounded-2xl   bg-[#f0f2f5]/60  dark:bg-[#3a3b3c]/40 space-y-2.5">
-              <div>
-                <p className="font-bold text-sm text-[#050505] dark:text-white">
-                  {locale === 'bn'
-                    ? 'PeaceTweet এ স্বাগতম'
-                    : 'Welcome to PeaceTweet'}
-                </p>
-                <p className="text-xs text-[#65676b] dark:text-[#b0b3b8]">
-                  {locale === 'bn'
-                    ? 'দোয়া ও ইসলামিক চিন্তার প্ল্যাটফর্মে যুক্ত হন'
-                    : 'Join the peaceful Dua & Islamic platform'}
-                </p>
+            <div className="space-y-2">
+              <div className="p-3.5 rounded-2xl bg-[#f0f2f5]/60 dark:bg-[#3a3b3c]/40 space-y-2.5">
+                <div>
+                  <p className="font-bold text-sm text-[#050505] dark:text-white">
+                    {locale === 'bn'
+                      ? 'PeaceTweet এ স্বাগতম'
+                      : 'Welcome to PeaceTweet'}
+                  </p>
+                  <p className="text-xs text-[#65676b] dark:text-[#b0b3b8]">
+                    {locale === 'bn'
+                      ? 'দোয়া ও ইসলামিক চিন্তার প্ল্যাটফর্মে যুক্ত হন'
+                      : 'Join the peaceful Dua & Islamic platform'}
+                  </p>
+                </div>
+                <div className="grid grid-cols-2 gap-2 pt-1">
+                  <Link
+                    href={ROUTES.LOGIN}
+                    onClick={onClose}
+                    className="flex items-center justify-center gap-1.5 rounded-xl bg-primary-500 py-2 text-xs font-bold text-white shadow-xs hover:bg-primary-600 transition-colors"
+                  >
+                    <LogIn className="h-3.5 w-3.5" />
+                    <span>{t('nav.login')}</span>
+                  </Link>
+                  <Link
+                    href={ROUTES.REGISTER}
+                    onClick={onClose}
+                    className="flex items-center justify-center gap-1.5 rounded-xl border border-[#e4e6eb] bg-white py-2 text-xs font-bold text-[#050505] hover:bg-[#f0f2f5] dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#e4e6eb] dark:hover:bg-[#3a3b3c] transition-colors"
+                  >
+                    <UserPlus className="h-3.5 w-3.5" />
+                    <span>{t('nav.join')}</span>
+                  </Link>
+                </div>
               </div>
-              <div className="grid grid-cols-2 gap-2 pt-1">
-                <Link
-                  href={ROUTES.LOGIN}
-                  onClick={onClose}
-                  className="flex items-center justify-center gap-1.5 rounded-xl bg-primary-500 py-2 text-xs font-bold text-white shadow-xs hover:bg-primary-600 transition-colors"
-                >
-                  <LogIn className="h-3.5 w-3.5" />
-                  <span>{t('nav.login')}</span>
-                </Link>
-                <Link
-                  href={ROUTES.REGISTER}
-                  onClick={onClose}
-                  className="flex items-center justify-center gap-1.5 rounded-xl border border-[#e4e6eb] bg-white py-2 text-xs font-bold text-[#050505] hover:bg-[#f0f2f5] dark:border-[#393a3b] dark:bg-[#242526] dark:text-[#e4e6eb] dark:hover:bg-[#3a3b3c] transition-colors"
-                >
-                  <UserPlus className="h-3.5 w-3.5" />
-                  <span>{t('nav.join')}</span>
-                </Link>
-              </div>
+
+              <Link
+                href={ROUTES.POINTS}
+                onClick={onClose}
+                className={cn(
+                  'flex items-center justify-between rounded-xl px-2.5 py-2 transition-colors',
+                  pathname.startsWith(ROUTES.POINTS)
+                    ? 'bg-[#e4e6eb] dark:bg-[#3a3b3c] text-primary-700 dark:text-primary-400 font-bold'
+                    : 'text-[#050505] dark:text-[#e4e6eb] hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c]/60 font-semibold text-[14px]'
+                )}
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-500 text-white shadow-xs">
+                    <Trophy className="h-4 w-4" />
+                  </div>
+                  <span className="truncate">
+                    {locale === 'bn' ? 'অর্জন ও সম্মাননা' : 'Achievements'}
+                  </span>
+                </div>
+                <ChevronRight className="h-4 w-4 text-[#65676b] dark:text-[#b0b3b8]" />
+              </Link>
             </div>
           )}
 

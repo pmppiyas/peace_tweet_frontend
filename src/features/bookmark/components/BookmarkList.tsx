@@ -141,9 +141,9 @@ export function BookmarkList({
             : 'Failed to load your saved items.'}
         </div>
       ) : savedItems.length === 0 ? (
-        <div className="w-full flex flex-col items-center justify-center rounded-none sm:rounded-2xl border-y sm:border border-[#e4e6eb] bg-white p-12 text-center dark:border-[#393a3b] dark:bg-[#242526] select-none shadow-none sm:shadow-2xs">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-amber-50 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400 mb-3 shadow-xs">
-            <Bookmark className="h-7 w-7" />
+        <div className="w-full flex flex-col items-center justify-center py-6 px-6 text-center select-none">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#f0f2f5] dark:bg-[#3a3b3c] mb-3 text-[#65676b] dark:text-[#b0b3b8]">
+            <Bookmark className="h-8 w-8 stroke-[1.5]" />
           </div>
           <h3 className="text-base font-bold text-[#050505] dark:text-[#e4e6eb]">
             {selectedSlot !== 'all'
@@ -154,7 +154,7 @@ export function BookmarkList({
                 ? 'এখনো কোনো আইটেম সংরক্ষণ করা হয়নি'
                 : 'No saved items yet'}
           </h3>
-          <p className="mt-1.5 text-xs text-[#65676b] dark:text-[#b0b3b8] max-w-sm leading-relaxed">
+          <p className="mt-1 text-xs text-[#65676b] dark:text-[#b0b3b8] max-w-sm leading-relaxed">
             {selectedSlot !== 'all'
               ? locale === 'bn'
                 ? 'দোয়া বা পোস্ট সেভ করার সময় এই রুটিনটি নির্বাচন করলে তা এখানে সহজে পড়তে পারবেন।'

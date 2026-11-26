@@ -16,6 +16,7 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import { useAuthStore } from '@/stores/authStore';
 import { useLanguage } from '@/providers/LanguageProvider';
+import { useToast } from '@/providers/ToastProvider';
 import { usersApi } from '../api/users.api';
 import { MapPin, Globe, CheckCircle2, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
@@ -24,6 +25,7 @@ export function LocationSettingsCard() {
   const { user } = useAuth();
   const { setUser } = useAuthStore();
   const { locale } = useLanguage();
+  const { showToast } = useToast();
 
   const [location, setLocation] = useState('');
   const [locationData, setLocationData] = useState<LocationValue>({
@@ -61,18 +63,32 @@ export function LocationSettingsCard() {
     const finalLocation = (location || locationData.location).trim() || null;
 
     try {
-      const res = await usersApi.updateProfile({
-        country: locationData.country || null,
-        countryCode: locationData.countryCode || null,
-        state: locationData.state || null,
-        city: locationData.city || null,
-        location: finalLocation,
-      });
+      const payload: Record<string, string | null> = {};
+      const nextCountry = locationData.country || null;
+      const nextCountryCode = locationData.countryCode || null;
+      const nextState = locationData.state || null;
+      const nextCity = locationData.city || null;
+
+      if (nextCountry !== (user?.country || null)) payload.country = nextCountry;
+      if (nextCountryCode !== (user?.countryCode || null)) payload.countryCode = nextCountryCode;
+      if (nextState !== (user?.state || null)) payload.state = nextState;
+      if (nextCity !== (user?.city || null)) payload.city = nextCity;
+      if (finalLocation !== (user?.location?.trim() || null)) payload.location = finalLocation;
+
+      if (Object.keys(payload).length === 0) {
+        showToast({
+          type: 'info',
+          message: locale === 'bn' ? 'কোনো পরিবর্তন করা হয়নি।' : 'No changes to save.',
+        });
+        return;
+      }
+
+      const res = await usersApi.updateProfile(payload);
 
       setUser(res.data);
-      setStatus({
+      showToast({
         type: 'success',
-        text:
+        message:
           locale === 'bn'
             ? 'বাসস্থানের তথ্য সফলভাবে সংরক্ষিত হয়েছে!'
             : 'Lives in details saved successfully!',

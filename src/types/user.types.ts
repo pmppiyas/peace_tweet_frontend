@@ -22,8 +22,12 @@ export interface User {
   name: string;
   username: string;
   email: string;
+  emailVerified?: boolean;
+  emailVerifiedAt?: string | null;
   role: UserRole;
   userStatus?: UserStatus;
+  activeAvatarFrame?: string | null;
+  activeProfileTheme?: string | null;
   badge?: string;
   badges?: UserBadge[];
   bio?: string | null;
@@ -37,6 +41,10 @@ export interface User {
   bloodGroup?: BloodGroup | null;
   isDonor?: boolean;
   donationCount?: number;
+  points?: number;
+  lifetimePoints?: number;
+  referralCode?: string | null;
+  currentStreak?: number;
   hasPassword?: boolean;
   needPasswordUpdate?: boolean;
   createdAt: string;

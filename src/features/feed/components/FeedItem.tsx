@@ -152,7 +152,11 @@ export function FeedItem({ post }: FeedItemProps) {
           <div className="flex items-center gap-2.5">
             <Link
               href={authorProfileHref}
-              className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm shadow-xs select-none overflow-hidden hover:opacity-90 active:scale-95 transition-all"
+              className={cn(
+                'relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-sm shadow-xs select-none overflow-hidden hover:opacity-90 active:scale-95 transition-all',
+                (post.author as any)?.activeAvatarFrame === 'EMERALD_AVATAR_FRAME' &&
+                  'ring-2 ring-emerald-500 ring-offset-2 dark:ring-offset-[#242526]'
+              )}
               title={post.author.name || 'User Profile'}
             >
               {post.author.avatar || (isAuthor ? user?.avatarUrl : null) ? (
@@ -179,7 +183,17 @@ export function FeedItem({ post }: FeedItemProps) {
                 >
                   {post.author.name || 'PeaceTweet Scholar'}
                 </Link>
-                <CheckCircle2 className="h-3.5 w-3.5 text-primary-500 fill-primary-100 dark:fill-primary-900 shrink-0" />
+                {(post.author?.userStatus === 'VERIFIED' ||
+                  post.author?.userStatus === 'PREMIUM') && (
+                  <CheckCircle2
+                    className={cn(
+                      'h-3.5 w-3.5 shrink-0',
+                      post.author?.userStatus === 'PREMIUM'
+                        ? 'text-amber-500 fill-amber-100 dark:fill-amber-900'
+                        : 'text-emerald-600 fill-emerald-100 dark:text-emerald-400 dark:fill-emerald-900'
+                    )}
+                  />
+                )}
                 {feelingItem && (
                   <span className="text-xs text-[#65676b] dark:text-[#b0b3b8] font-normal flex items-center gap-1">
                     <span>is feeling</span>

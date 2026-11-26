@@ -397,7 +397,7 @@ export function PostComposer({
                 }}
                 className="h-9 sm:h-10 flex-1 min-w-0 rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] px-3.5 sm:px-4 text-left text-xs sm:text-[14px] text-[#65676b] hover:text-[#050505] dark:text-[#b0b3b8] dark:hover:text-[#e4e6eb] transition-all flex items-center justify-between gap-2 overflow-hidden cursor-pointer shadow-2xs"
               >
-                <span className="truncate min-w-0 font-normal">
+                <span className="truncate min-w-0 font-bold text-[#4b4f56] dark:text-[#d0d2d6]">
                   {isUploadingPost ? (
                     activeLoadingText
                   ) : user?.name ? (
@@ -435,7 +435,7 @@ export function PostComposer({
               className="flex items-center justify-center gap-1.5 sm:gap-2 py-1.5 px-1 sm:px-2 rounded-lg hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] active:scale-[0.98] transition-colors cursor-pointer group"
             >
               <ImageIcon className="h-5 w-5 text-emerald-500 shrink-0 group-hover:scale-105 transition-transform" />
-              <span className="text-xs sm:text-[13px] font-semibold text-[#65676b] dark:text-[#b0b3b8] group-hover:text-[#050505] dark:group-hover:text-[#e4e6eb] truncate transition-colors">
+              <span className="text-xs sm:text-[13px] font-bold text-[#050505] dark:text-[#e4e6eb] truncate transition-colors">
                 {locale === 'bn' ? 'ছবি / মিডিয়া' : 'Photo/video'}
               </span>
             </button>
@@ -451,7 +451,7 @@ export function PostComposer({
               className="flex items-center justify-center gap-1.5 sm:gap-2 py-1.5 px-1 sm:px-2 rounded-lg hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] active:scale-[0.98] transition-colors cursor-pointer group"
             >
               <BookOpen className="h-5 w-5 text-indigo-500 shrink-0 group-hover:scale-105 transition-transform" />
-              <span className="text-xs sm:text-[13px] font-semibold text-[#65676b] dark:text-[#b0b3b8] group-hover:text-[#050505] dark:group-hover:text-[#e4e6eb] truncate transition-colors">
+              <span className="text-xs sm:text-[13px] font-bold text-[#050505] dark:text-[#e4e6eb] truncate transition-colors">
                 {locale === 'bn' ? 'দোয়া' : 'Dua'}
               </span>
             </button>
@@ -468,7 +468,7 @@ export function PostComposer({
               className="flex items-center justify-center gap-1.5 sm:gap-2 py-1.5 px-1 sm:px-2 rounded-lg hover:bg-[#f0f2f5] dark:hover:bg-[#3a3b3c] active:scale-[0.98] transition-colors cursor-pointer group"
             >
               <Smile className="h-5 w-5 text-amber-500 shrink-0 group-hover:scale-105 transition-transform" />
-              <span className="text-xs sm:text-[13px] font-semibold text-[#65676b] dark:text-[#b0b3b8] group-hover:text-[#050505] dark:group-hover:text-[#e4e6eb] truncate transition-colors">
+              <span className="text-xs sm:text-[13px] font-bold text-[#050505] dark:text-[#e4e6eb] truncate transition-colors">
                 {locale === 'bn' ? 'অনুভূতি' : 'Feeling'}
               </span>
             </button>

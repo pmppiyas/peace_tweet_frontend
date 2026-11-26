@@ -53,7 +53,7 @@ export function BloodDonorCard({ donor, className }: BloodDonorCardProps) {
                   {donor?.name || 'Donor'}
                 </h3>
                 {donor?.userStatus === 'VERIFIED' && (
-                  <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-primary-500 fill-current" />
+                  <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-600 dark:text-emerald-400 fill-current" />
                 )}
               </div>
               <p className="truncate text-xs text-[#65676b] dark:text-[#b0b3b8]">

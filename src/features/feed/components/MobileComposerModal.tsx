@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import Image from 'next/image';
 import {
   X,
   Send,
@@ -13,20 +12,13 @@ import {
   PenTool,
   Loader2,
   AlertCircle,
-  LayoutGrid,
-  SlidersHorizontal,
   Globe,
   Sparkles,
-  User as UserIcon,
-  Building2,
-  Phone,
-  Calendar,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { usePostActions } from '../hooks/usePostActions';
 import { uploadsApi } from '@/features/uploads/api/uploads.api';
 import { PostType } from '../types/feed.types';
-import { PostMediaGallery } from './PostMediaGallery';
 import { BloodGroup } from '@/types/user.types';
 import { BloodRequestUrgency } from '@/features/blood/types/blood.types';
 import { useLanguage } from '@/providers/LanguageProvider';
@@ -34,42 +26,13 @@ import { useUiStore } from '@/stores/uiStore';
 import { FEELINGS, getFeelingById } from '../constants/feelings';
 import { soundEffects } from '@/lib/sound/soundEffects';
 import { cn } from '@/lib/utils/cn';
-
-const BLOOD_GROUPS: { value: BloodGroup; label: string }[] = [
-  { value: 'A_POSITIVE', label: 'A+' },
-  { value: 'A_NEGATIVE', label: 'A-' },
-  { value: 'B_POSITIVE', label: 'B+' },
-  { value: 'B_NEGATIVE', label: 'B-' },
-  { value: 'AB_POSITIVE', label: 'AB+' },
-  { value: 'AB_NEGATIVE', label: 'AB-' },
-  { value: 'O_POSITIVE', label: 'O+' },
-  { value: 'O_NEGATIVE', label: 'O-' },
-];
-
-const URGENCIES: {
-  value: BloodRequestUrgency;
-  label: string;
-  badgeColor: string;
-}[] = [
-  {
-    value: 'REGULAR',
-    label: 'Regular',
-    badgeColor:
-      'border-blue-300 bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800',
-  },
-  {
-    value: 'URGENT',
-    label: 'Urgent',
-    badgeColor:
-      'border-amber-300 bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800',
-  },
-  {
-    value: 'EMERGENCY',
-    label: 'Emergency 🚨',
-    badgeColor:
-      'border-rose-400 bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-800',
-  },
-];
+import {
+  MobileTextComposer,
+  MobileDuaComposer,
+  MobileBloodComposer,
+  BLOOD_GROUPS,
+  URGENCIES,
+} from './composer';
 
 interface MobileComposerModalProps {
   isOpen: boolean;
@@ -406,8 +369,8 @@ export function MobileComposerModal({
       </header>
 
       {/* ────────────────── 2. POST TYPE SEGMENTED ROW ────────────────── */}
-      <div className="px-4 py-2.5 border-b border-[#e4e6eb]/60 dark:border-[#2d2e2f] bg-[#fbfbfb] dark:bg-[#1f2022] shrink-0">
-        <div className="grid grid-cols-3 gap-1.5 p-1 rounded-2xl bg-[#f0f2f5] dark:bg-[#2a2b2d]">
+      <div className="px-3.5 py-1.5 border-b border-[#e4e6eb]/60 dark:border-[#2d2e2f] bg-[#fbfbfb] dark:bg-[#1f2022] shrink-0">
+        <div className="grid grid-cols-3 gap-1 p-0.5 rounded-xl bg-[#f0f2f5] dark:bg-[#2a2b2d]">
           {/* Option 1: General Post */}
           <button
             type="button"
@@ -417,13 +380,13 @@ export function MobileComposerModal({
               setErrorMessage(null);
             }}
             className={cn(
-              'flex items-center justify-center gap-1.5 py-1.5 rounded-xl text-xs font-bold transition-all select-none',
+              'flex items-center justify-center gap-1.5 py-1 rounded-lg text-xs font-bold transition-all select-none',
               postType === 'TEXT'
                 ? 'bg-white text-primary-600 shadow-xs dark:bg-[#18191a] dark:text-primary-300'
                 : 'text-[#65676b] hover:text-[#050505] dark:text-[#b0b3b8]'
             )}
           >
-            <PenTool className="h-3.5 w-3.5" />
+            <PenTool className="h-3 w-3" />
             <span>{locale === 'bn' ? 'ভাবনা / সাধারণ' : 'Reflection'}</span>
           </button>
 
@@ -436,13 +399,13 @@ export function MobileComposerModal({
               setErrorMessage(null);
             }}
             className={cn(
-              'flex items-center justify-center gap-1.5 py-1.5 rounded-xl text-xs font-bold transition-all select-none',
+              'flex items-center justify-center gap-1.5 py-1 rounded-lg text-xs font-bold transition-all select-none',
               postType === 'DUA'
                 ? 'bg-white text-emerald-600 shadow-xs dark:bg-[#18191a] dark:text-emerald-300'
                 : 'text-[#65676b] hover:text-[#050505] dark:text-[#b0b3b8]'
             )}
           >
-            <BookOpen className="h-3.5 w-3.5" />
+            <BookOpen className="h-3 w-3" />
             <span>{locale === 'bn' ? 'পবিত্র দু’আ' : 'Dua'}</span>
           </button>
 
@@ -455,13 +418,13 @@ export function MobileComposerModal({
               setErrorMessage(null);
             }}
             className={cn(
-              'flex items-center justify-center gap-1.5 py-1.5 rounded-xl text-xs font-bold transition-all select-none',
+              'flex items-center justify-center gap-1.5 py-1 rounded-lg text-xs font-bold transition-all select-none',
               postType === 'BLOOD_REQUEST'
                 ? 'bg-white text-rose-600 shadow-xs dark:bg-[#18191a] dark:text-rose-300'
                 : 'text-[#65676b] hover:text-[#050505] dark:text-[#b0b3b8]'
             )}
           >
-            <Droplet className="h-3.5 w-3.5 fill-current" />
+            <Droplet className="h-3 w-3 fill-current" />
             <span>{locale === 'bn' ? 'রক্তদান' : 'Blood'}</span>
           </button>
         </div>
@@ -535,345 +498,52 @@ export function MobileComposerModal({
 
         {/* ────────────── MODE 1: REFLECTION / TEXT ────────────── */}
         {postType === 'TEXT' && (
-          <div className="space-y-4">
-            {/* Borderless Open Canvas Textarea */}
-            <textarea
-              ref={textareaRef}
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder={
-                locale === 'bn'
-                  ? 'আপনার ভাবনা, কুরআন-হাদিসের সুন্দর নসিহত বা দোয়া শেয়ার করুন...'
-                  : "What's on your mind? Share a reflection, reminder, or story..."
-              }
-              rows={6}
-              className="w-full resize-none border-none outline-none focus:outline-hidden focus:ring-0 bg-transparent text-[17px] sm:text-[18px] leading-relaxed text-[#050505] placeholder:text-[#8e8e93] dark:text-[#e4e6eb] dark:placeholder:text-[#6e6e73] p-0"
-            />
-
-            {/* Attached Photos Grid Preview */}
-            {mediaUrls.length > 0 && (
-              <div className="space-y-2.5 rounded-2xl border border-[#e4e6eb] dark:border-[#2d2e2f] p-3 bg-[#f8f9fa] dark:bg-[#1f2022]">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-[#050505] dark:text-[#e4e6eb]">
-                    {locale === 'bn'
-                      ? `সংযুক্ত ছবি (${mediaUrls.length}/10)`
-                      : `Attached Photos (${mediaUrls.length}/10)`}
-                  </span>
-                  {mediaUrls.length > 1 && (
-                    <div className="flex items-center gap-1 rounded-xl bg-[#e4e6eb] dark:bg-[#2d2e2f] p-0.5">
-                      <button
-                        type="button"
-                        onClick={() => setMediaLayout('COLLAGE')}
-                        className={cn(
-                          'flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold transition-all',
-                          mediaLayout === 'COLLAGE'
-                            ? 'bg-white text-primary-600 shadow-xs dark:bg-[#18191a] dark:text-primary-300'
-                            : 'text-[#65676b] dark:text-[#b0b3b8]'
-                        )}
-                      >
-                        <LayoutGrid className="h-3 w-3" />
-                        <span>Collage</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setMediaLayout('SWIPE')}
-                        className={cn(
-                          'flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold transition-all',
-                          mediaLayout === 'SWIPE'
-                            ? 'bg-white text-primary-600 shadow-xs dark:bg-[#18191a] dark:text-primary-300'
-                            : 'text-[#65676b] dark:text-[#b0b3b8]'
-                        )}
-                      >
-                        <SlidersHorizontal className="h-3 w-3" />
-                        <span>Swipe</span>
-                      </button>
-                    </div>
-                  )}
-                </div>
-
-                {/* Thumbnails row */}
-                <div className="flex gap-2.5 overflow-x-auto pb-1 scrollbar-none">
-                  {mediaUrls.map((url, idx) => (
-                    <div
-                      key={`${url}-${idx}`}
-                      className="group relative h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 shadow-xs"
-                    >
-                      <Image
-                        src={url}
-                        alt={`Attachment ${idx + 1}`}
-                        fill
-                        className="object-cover"
-                        unoptimized
-                      />
-                      <button
-                        type="button"
-                        onClick={() => removeMediaUrl(idx)}
-                        className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/75 text-white hover:bg-black transition-colors"
-                        title="Remove photo"
-                      >
-                        <X className="h-3 w-3 stroke-[2.5]" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Live Collage / Swipe Gallery Preview */}
-                {mediaUrls.length > 1 && (
-                  <PostMediaGallery
-                    mediaUrls={mediaUrls}
-                    layout={mediaLayout}
-                  />
-                )}
-              </div>
-            )}
-          </div>
+          <MobileTextComposer
+            content={content}
+            onChangeContent={setContent}
+            textareaRef={textareaRef}
+            mediaUrls={mediaUrls}
+            mediaLayout={mediaLayout}
+            onChangeMediaLayout={setMediaLayout}
+            onRemoveMediaUrl={removeMediaUrl}
+            locale={locale}
+          />
         )}
 
         {/* ────────────── MODE 2: DUA ────────────── */}
         {postType === 'DUA' && (
-          <div className="space-y-3.5 animate-in fade-in duration-150">
-            {/* Title */}
-            <div className="space-y-1">
-              <label className="block text-xs font-bold text-gray-700 dark:text-gray-300">
-                {locale === 'bn' ? 'দু’আর নাম বা বিষয়' : 'Dua Title / Theme'}
-              </label>
-              <input
-                type="text"
-                value={duaTitle}
-                onChange={(e) => setDuaTitle(e.target.value)}
-                placeholder={
-                  locale === 'bn'
-                    ? 'যেমন: অন্তরের প্রশান্তির দু’আ'
-                    : 'e.g. Supplication for Inner Peace'
-                }
-                className="w-full rounded-2xl border border-[#e4e6eb] bg-[#f8f9fa] dark:bg-[#242526] px-3.5 py-2.5 text-sm text-[#050505] dark:text-[#e4e6eb] focus:border-emerald-500 focus:bg-white focus:outline-hidden dark:border-[#393a3b] dark:focus:bg-[#18191a] transition-all shadow-2xs"
-              />
-            </div>
-
-            {/* Meaning (Required) */}
-            <div className="space-y-1">
-              <div className="flex items-center justify-between">
-                <label className="block text-xs font-bold text-gray-700 dark:text-gray-300">
-                  {locale === 'bn'
-                    ? 'বাংলা অর্থ / অনুবাদ *'
-                    : 'Bangla Meaning (Required) *'}
-                </label>
-                <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase">
-                  Required
-                </span>
-              </div>
-              <textarea
-                value={duaMeaning}
-                onChange={(e) => setDuaMeaning(e.target.value)}
-                placeholder={
-                  locale === 'bn'
-                    ? 'দু’আটির অর্থ সুন্দরভাবে বাংলায় লিখুন...'
-                    : 'Write the translation / meaning...'
-                }
-                rows={3}
-                required
-                className="w-full rounded-2xl border border-[#e4e6eb] bg-[#f8f9fa] dark:bg-[#242526] p-3 text-sm text-[#050505] dark:text-[#e4e6eb] focus:border-emerald-500 focus:bg-white focus:outline-hidden dark:border-[#393a3b] dark:focus:bg-[#18191a] transition-all shadow-2xs leading-relaxed"
-              />
-            </div>
-
-            {/* Pronunciation */}
-            <div className="space-y-1">
-              <label className="block text-xs font-bold text-gray-700 dark:text-gray-300">
-                {locale === 'bn'
-                  ? 'বাংলা উচ্চারণ (Transliteration)'
-                  : 'Pronunciation in Bengali'}
-              </label>
-              <input
-                type="text"
-                value={duaTransliteration}
-                onChange={(e) => setDuaTransliteration(e.target.value)}
-                placeholder={
-                  locale === 'bn'
-                    ? 'যেমন: আল্লাহুম্মা ইন্নি আসআলুকাল আফওয়া...'
-                    : 'Transliteration in Bengali'
-                }
-                className="w-full rounded-2xl border border-[#e4e6eb] bg-[#f8f9fa] dark:bg-[#242526] px-3.5 py-2.5 text-sm text-[#050505] dark:text-[#e4e6eb] focus:border-emerald-500 focus:bg-white focus:outline-hidden dark:border-[#393a3b] dark:focus:bg-[#18191a] transition-all shadow-2xs"
-              />
-            </div>
-
-            {/* Virtue & Source */}
-            <div className="space-y-1">
-              <label className="block text-xs font-bold text-gray-700 dark:text-gray-300">
-                {locale === 'bn'
-                  ? 'ফজিলত ও হাদিস রেফারেন্স'
-                  : 'Virtue & Hadith Reference'}
-              </label>
-              <input
-                type="text"
-                value={duaFadilah}
-                onChange={(e) => setDuaFadilah(e.target.value)}
-                placeholder={
-                  locale === 'bn'
-                    ? 'যেমন: তিরমিযী, হাদিস নং ৩৪৫৬'
-                    : 'e.g. Tirmidhi Hadith #3456'
-                }
-                className="w-full rounded-2xl border border-[#e4e6eb] bg-[#f8f9fa] dark:bg-[#242526] px-3.5 py-2.5 text-sm text-[#050505] dark:text-[#e4e6eb] focus:border-emerald-500 focus:bg-white focus:outline-hidden dark:border-[#393a3b] dark:focus:bg-[#18191a] transition-all shadow-2xs"
-              />
-            </div>
-          </div>
+          <MobileDuaComposer
+            duaTitle={duaTitle}
+            onChangeDuaTitle={setDuaTitle}
+            duaMeaning={duaMeaning}
+            onChangeDuaMeaning={setDuaMeaning}
+            duaTransliteration={duaTransliteration}
+            onChangeDuaTransliteration={setDuaTransliteration}
+            duaFadilah={duaFadilah}
+            onChangeDuaFadilah={setDuaFadilah}
+            locale={locale}
+          />
         )}
 
         {/* ────────────── MODE 3: BLOOD REQUEST ────────────── */}
         {postType === 'BLOOD_REQUEST' && (
-          <div className="space-y-4 animate-in fade-in duration-150">
-            {/* Blood Group Selector Chips */}
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <label className="block text-xs font-bold text-gray-700 dark:text-gray-300">
-                  {locale === 'bn'
-                    ? 'রক্তের গ্রুপ নির্বাচন করুন *'
-                    : 'Blood Group *'}
-                </label>
-                <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400 uppercase">
-                  Emergency
-                </span>
-              </div>
-              <div className="grid grid-cols-4 gap-2">
-                {BLOOD_GROUPS.map(({ value, label }) => (
-                  <button
-                    key={value}
-                    type="button"
-                    onClick={() => {
-                      setBloodGroup(value);
-                      soundEffects.playTab();
-                    }}
-                    className={cn(
-                      'py-2.5 rounded-2xl text-xs font-black border transition-all text-center select-none active:scale-95 shadow-2xs',
-                      bloodGroup === value
-                        ? 'bg-rose-600 text-white border-rose-600 shadow-rose-500/25 ring-2 ring-rose-500/20'
-                        : 'bg-[#f8f9fa] dark:bg-[#242526] border-[#e4e6eb] dark:border-[#393a3b] text-[#050505] dark:text-[#e4e6eb] hover:border-rose-300'
-                    )}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Urgency */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-gray-700 dark:text-gray-300">
-                {locale === 'bn' ? 'জরুরিতার মাত্রা' : 'Urgency Level'}
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                {URGENCIES.map((u) => (
-                  <button
-                    key={u.value}
-                    type="button"
-                    onClick={() => {
-                      setUrgency(u.value);
-                      soundEffects.playTab();
-                    }}
-                    className={cn(
-                      'py-2 rounded-xl text-xs font-bold border transition-all text-center select-none',
-                      urgency === u.value
-                        ? 'border-rose-600 bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300 shadow-xs'
-                        : 'border-[#e4e6eb] dark:border-[#393a3b] text-[#65676b] dark:text-[#b0b3b8]'
-                    )}
-                  >
-                    {u.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Patient & Units */}
-            <div className="grid grid-cols-2 gap-2.5">
-              <div className="space-y-1">
-                <label className="block text-xs font-bold text-gray-700 dark:text-gray-300">
-                  {locale === 'bn' ? 'রোগীর নাম *' : 'Patient Name *'}
-                </label>
-                <div className="relative">
-                  <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
-                  <input
-                    type="text"
-                    value={patientName}
-                    onChange={(e) => setPatientName(e.target.value)}
-                    placeholder="Patient Name"
-                    className="w-full rounded-xl border border-[#e4e6eb] bg-[#f8f9fa] dark:bg-[#242526] pl-9 pr-3 py-2 text-xs text-[#050505] dark:text-[#e4e6eb] focus:border-rose-500 focus:outline-hidden dark:border-[#393a3b]"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <label className="block text-xs font-bold text-gray-700 dark:text-gray-300">
-                  {locale === 'bn' ? 'কত ব্যাগ রক্ত লাগবে' : 'Units (Bags)'}
-                </label>
-                <input
-                  type="number"
-                  min={1}
-                  max={20}
-                  value={units}
-                  onChange={(e) => {
-                    const cleaned = e.target.value.replace(/[^0-9]/g, '');
-                    setUnits(cleaned);
-                  }}
-                  onBlur={() => {
-                    if (!units || parseInt(units, 10) < 1) {
-                      setUnits('1');
-                    }
-                  }}
-                  className="w-full rounded-xl border border-[#e4e6eb] bg-[#f8f9fa] dark:bg-[#242526] px-3 py-2 text-xs text-[#050505] dark:text-[#e4e6eb] focus:border-rose-500 focus:outline-hidden dark:border-[#393a3b]"
-                />
-              </div>
-            </div>
-
-            {/* Hospital & Phone */}
-            <div className="grid grid-cols-2 gap-2.5">
-              <div className="space-y-1">
-                <label className="block text-xs font-bold text-gray-700 dark:text-gray-300">
-                  {locale === 'bn' ? 'হাসপাতালের নাম *' : 'Hospital Name *'}
-                </label>
-                <div className="relative">
-                  <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
-                  <input
-                    type="text"
-                    value={hospitalName}
-                    onChange={(e) => setHospitalName(e.target.value)}
-                    placeholder="Hospital / Clinic"
-                    className="w-full rounded-xl border border-[#e4e6eb] bg-[#f8f9fa] dark:bg-[#242526] pl-9 pr-3 py-2 text-xs text-[#050505] dark:text-[#e4e6eb] focus:border-rose-500 focus:outline-hidden dark:border-[#393a3b]"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <label className="block text-xs font-bold text-gray-700 dark:text-gray-300">
-                  {locale === 'bn' ? 'যোগাযোগের নম্বর *' : 'Contact Phone *'}
-                </label>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
-                  <input
-                    type="tel"
-                    value={contactNumber}
-                    onChange={(e) => setContactNumber(e.target.value)}
-                    placeholder="01XXXXXXXXX"
-                    className="w-full rounded-xl border border-[#e4e6eb] bg-[#f8f9fa] dark:bg-[#242526] pl-9 pr-3 py-2 text-xs text-[#050505] dark:text-[#e4e6eb] focus:border-rose-500 focus:outline-hidden dark:border-[#393a3b]"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Date Needed */}
-            <div className="space-y-1">
-              <label className="block text-xs font-bold text-gray-700 dark:text-gray-300">
-                {locale === 'bn' ? 'কবে রক্ত প্রয়োজন (তারিখ)' : 'Date Needed'}
-              </label>
-              <div className="relative">
-                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
-                <input
-                  type="date"
-                  value={neededDate}
-                  onChange={(e) => setNeededDate(e.target.value)}
-                  className="w-full rounded-xl border border-[#e4e6eb] bg-[#f8f9fa] dark:bg-[#242526] pl-9 pr-3 py-2 text-xs text-[#050505] dark:text-[#e4e6eb] focus:border-rose-500 focus:outline-hidden dark:border-[#393a3b]"
-                />
-              </div>
-            </div>
-          </div>
+          <MobileBloodComposer
+            bloodGroup={bloodGroup}
+            onChangeBloodGroup={setBloodGroup}
+            urgency={urgency}
+            onChangeUrgency={setUrgency}
+            patientName={patientName}
+            onChangePatientName={setPatientName}
+            units={units}
+            onChangeUnits={setUnits}
+            hospitalName={hospitalName}
+            onChangeHospitalName={setHospitalName}
+            contactNumber={contactNumber}
+            onChangeContactNumber={setContactNumber}
+            neededDate={neededDate}
+            onChangeNeededDate={setNeededDate}
+            locale={locale}
+          />
         )}
 
         {/* ────────────── FEELINGS CENTERED MODAL DIALOGUE ────────────── */}

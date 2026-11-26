@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/hooks/useAuth';
 import { useAuthStore } from '@/stores/authStore';
 import { useLanguage } from '@/providers/LanguageProvider';
+import { useToast } from '@/providers/ToastProvider';
 import { uploadsApi } from '@/features/uploads/api/uploads.api';
 import { usersApi } from '../api/users.api';
 import { CoverPhotoEditorModal } from './CoverPhotoEditorModal';
@@ -32,6 +33,7 @@ export function PhotosSettingsCard() {
   const { user } = useAuth();
   const { setUser } = useAuthStore();
   const { locale } = useLanguage();
+  const { showToast } = useToast();
 
   const [avatarUrl, setAvatarUrl] = useState<string | null>(
     user?.avatarUrl || null
@@ -89,9 +91,9 @@ export function PhotosSettingsCard() {
 
       const updateRes = await usersApi.updateProfile({ avatarUrl: newUrl });
       setUser(updateRes.data);
-      setStatus({
+      showToast({
         type: 'success',
-        text:
+        message:
           locale === 'bn'
             ? 'প্রোফাইল ছবি সফলভাবে আপডেট করা হয়েছে!'
             : 'Profile picture updated successfully!',
@@ -153,9 +155,9 @@ export function PhotosSettingsCard() {
       setUser(updateRes.data);
       setIsCoverEditorOpen(false);
       setCoverEditorImageSrc(null);
-      setStatus({
+      showToast({
         type: 'success',
-        text:
+        message:
           locale === 'bn'
             ? 'কভার ফটো সফলভাবে রিসাইজ ও সংরক্ষণ করা হয়েছে!'
             : 'Cover photo resized & updated successfully!',

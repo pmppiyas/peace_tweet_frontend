@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/hooks/useAuth';
 import { useAuthStore } from '@/stores/authStore';
 import { useLanguage } from '@/providers/LanguageProvider';
+import { useToast } from '@/providers/ToastProvider';
 import { usersApi } from '../api/users.api';
 import {
   KeyRound,
@@ -29,6 +30,7 @@ export function SecuritySettingsCard() {
   const { user } = useAuth();
   const { setUser } = useAuthStore();
   const { locale } = useLanguage();
+  const { showToast } = useToast();
 
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -94,9 +96,9 @@ export function SecuritySettingsCard() {
         setUser({ ...user, hasPassword: true, needPasswordUpdate: false });
       }
 
-      setStatus({
+      showToast({
         type: 'success',
-        text:
+        message:
           res?.data?.message ||
           (hasPassword
             ? locale === 'bn'

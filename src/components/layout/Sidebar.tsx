@@ -14,6 +14,7 @@ import {
   MessageCircle,
   Sparkles,
   Calculator,
+  Trophy,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/providers/LanguageProvider';
@@ -34,6 +35,13 @@ export function Sidebar({ className }: SidebarProps = {}) {
   const unreadMessagesCount = useTotalUnreadCount();
 
   const menuItems: SidebarNavItem[] = [
+    {
+      id: 'sidebar-points',
+      label: locale === 'bn' ? 'অর্জন ও সম্মাননা' : 'Achievements',
+      href: ROUTES.POINTS,
+      icon: Trophy,
+      iconBg: 'bg-amber-500 text-white',
+    },
     {
       id: 'sidebar-home',
       label: t('nav.home'),

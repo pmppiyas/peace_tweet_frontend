@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import {
   Card,
   CardContent,
@@ -13,6 +14,8 @@ import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/hooks/useAuth';
 import { useAuthStore } from '@/stores/authStore';
 import { useLanguage } from '@/providers/LanguageProvider';
+import { useToast } from '@/providers/ToastProvider';
+import { useGoogleSDK } from '@/features/auth/hooks/useGoogleSDK';
 import { usersApi } from '../api/users.api';
 import {
   User,
@@ -21,23 +24,46 @@ import {
   FileText,
   CheckCircle2,
   AlertCircle,
+  ShieldCheck,
+  Sparkles,
 } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 
 export function BasicInfoSettingsCard() {
+  const searchParams = useSearchParams();
   const { user } = useAuth();
   const { setUser } = useAuthStore();
   const { locale } = useLanguage();
+  const { showToast } = useToast();
+  const { redirectToGoogleOAuth, isLoading: isGoogleRedirecting } = useGoogleSDK();
 
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [bio, setBio] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
+  const [devOtpHint, setDevOtpHint] = useState<string | null>(null);
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
+  const [isConfirmingOtp, setIsConfirmingOtp] = useState(false);
   const [status, setStatus] = useState<{
     type: 'success' | 'error';
     text: string;
   } | null>(null);
+
+  useEffect(() => {
+    if (searchParams.get('gmailVerified') === '1') {
+      const pts = Number(searchParams.get('pts') || '0');
+      showToast({
+        type: 'success',
+        message:
+          locale === 'bn'
+            ? `Google দিয়ে জিমেইল সফলভাবে ভেরিফাই হয়েছে${pts > 0 ? ` (+${pts} পয়েন্ট!)` : '!'}`
+            : `Gmail verified with Google successfully${pts > 0 ? ` (+${pts} pts!)` : '!'}`,
+      });
+    }
+  }, [searchParams, locale, showToast]);
 
   useEffect(() => {
     if (user) {
@@ -107,17 +133,34 @@ export function BasicInfoSettingsCard() {
     setStatus(null);
 
     try {
-      const res = await usersApi.updateProfile({
-        name: name.trim(),
-        username: username.trim().toLowerCase(),
-        email: email.trim().toLowerCase(),
-        bio: bio.trim() || null,
-      });
+      const payload: Record<string, string | null> = {};
+      const nextName = name.trim();
+      const nextUsername = username.trim().toLowerCase();
+      const nextEmail = email.trim().toLowerCase();
+      const nextBio = bio.trim() || null;
+
+      if (nextName !== (user?.name || '').trim()) payload.name = nextName;
+      if (nextUsername !== (user?.username || '').toLowerCase()) payload.username = nextUsername;
+      if (nextEmail !== (user?.email || '').toLowerCase()) payload.email = nextEmail;
+      if (nextBio !== (user?.bio?.trim() || null)) payload.bio = nextBio;
+
+      if (Object.keys(payload).length === 0) {
+        showToast({
+          type: 'info',
+          message:
+            locale === 'bn'
+              ? 'কোনো পরিবর্তন করা হয়নি।'
+              : 'No changes to save.',
+        });
+        return;
+      }
+
+      const res = await usersApi.updateProfile(payload);
 
       setUser(res.data);
-      setStatus({
+      showToast({
         type: 'success',
-        text:
+        message:
           locale === 'bn'
             ? 'সাধারণ তথ্য সফলভাবে সংরক্ষিত হয়েছে!'
             : 'Basic info saved successfully!',
@@ -132,6 +175,135 @@ export function BasicInfoSettingsCard() {
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const normalizedInputEmail = email.trim().toLowerCase();
+  const isCurrentEmailVerified =
+    Boolean(user?.emailVerified) &&
+    normalizedInputEmail === (user?.email || '').trim().toLowerCase();
+
+  const handleSendOtp = async () => {
+    if (!normalizedInputEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedInputEmail)) {
+      setStatus({
+        type: 'error',
+        text:
+          locale === 'bn'
+            ? 'অনুগ্রহ করে একটি সঠিক জিমেইল বা ইমেইল লিখুন।'
+            : 'Please enter a valid Gmail or email address.',
+      });
+      return;
+    }
+
+    setIsSendingOtp(true);
+    setStatus(null);
+    try {
+      const res = await usersApi.requestEmailVerification(normalizedInputEmail);
+      const data = res?.data;
+      if (data?.alreadyVerified) {
+        const refreshed = await usersApi.getProfile();
+        if (refreshed?.data) setUser(refreshed.data);
+        showToast({
+          type: 'success',
+          message:
+            locale === 'bn'
+              ? 'আপনার ইমেইল ইতিমধ্যেই ভেরিফাইড!'
+              : 'Your email is already verified!',
+        });
+        return;
+      }
+      setOtpSent(true);
+      setDevOtpHint(data?.devCode || null);
+      showToast({
+        type: 'success',
+        message:
+          data?.deliveryMode === 'dev' && data?.devCode
+            ? locale === 'bn'
+              ? `ভেরিফিকেশন কোড তৈরি হয়েছে: ${data.devCode}`
+              : `Verification code ready: ${data.devCode}`
+            : locale === 'bn'
+              ? `${data?.email || normalizedInputEmail} এ ৬-সংখ্যার কোড পাঠানো হয়েছে।`
+              : `A 6-digit verification code was sent to ${data?.email || normalizedInputEmail}.`,
+      });
+    } catch (err: any) {
+      setStatus({
+        type: 'error',
+        text:
+          err?.response?.data?.message ||
+          (locale === 'bn'
+            ? 'ভেরিফিকেশন কোড পাঠাতে ব্যর্থ হয়েছে।'
+            : 'Failed to send verification code.'),
+      });
+    } finally {
+      setIsSendingOtp(false);
+    }
+  };
+
+  const handleConfirmOtp = async () => {
+    const cleanCode = otpCode.trim();
+    if (!/^\d{6}$/.test(cleanCode)) {
+      setStatus({
+        type: 'error',
+        text:
+          locale === 'bn'
+            ? '৬-সংখ্যার সঠিক কোড লিখুন।'
+            : 'Please enter a valid 6-digit verification code.',
+      });
+      return;
+    }
+
+    setIsConfirmingOtp(true);
+    setStatus(null);
+    try {
+      const res = await usersApi.confirmEmailVerification(
+        cleanCode,
+        normalizedInputEmail
+      );
+      const data = res?.data;
+      if (data?.user) {
+        setUser(data.user);
+      }
+      setOtpSent(false);
+      setOtpCode('');
+      setDevOtpHint(null);
+      const pts = data?.pointsAwarded ?? 0;
+      const badgeMsg =
+        data?.userStatus === 'VERIFIED'
+          ? locale === 'bn'
+            ? ' গ্রীন ভেরিফাইড আইকন আনলক হয়েছে!'
+            : ' Green Verified Icon unlocked!'
+          : '';
+      showToast({
+        type: 'success',
+        message:
+          (locale === 'bn'
+            ? 'জিমেইল সফলভাবে ভেরিফাই হয়েছে!'
+            : 'Gmail verified successfully!') +
+          (pts > 0
+            ? locale === 'bn'
+              ? ` (+${pts} পয়েন্ট!)`
+              : ` (+${pts} pts!)`
+            : '') +
+          badgeMsg,
+      });
+    } catch (err: any) {
+      setStatus({
+        type: 'error',
+        text:
+          err?.response?.data?.message ||
+          (locale === 'bn'
+            ? 'ভেরিফিকেশন কোড সঠিক নয়।'
+            : 'Invalid verification code.'),
+      });
+    } finally {
+      setIsConfirmingOtp(false);
+    }
+  };
+
+  const handleVerifyWithGoogle = () => {
+    if (typeof window !== 'undefined') {
+      window.sessionStorage.setItem('pt_google_verify_email', '1');
+    }
+    redirectToGoogleOAuth();
   };
 
   return (
@@ -206,15 +378,130 @@ export function BasicInfoSettingsCard() {
             />
           </div>
 
-          <Input
-            label={locale === 'bn' ? 'ইমেইল অ্যাড্রেস *' : 'Email Address *'}
-            type="email"
-            placeholder="name@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            leftIcon={<Mail className="h-4 w-4" />}
-            required
-          />
+          <div className="space-y-2.5">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                {locale === 'bn' ? 'জিমেইল / ইমেইল অ্যাড্রেস *' : 'Gmail / Email Address *'}
+              </label>
+              {isCurrentEmailVerified ? (
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 px-2.5 py-0.5 text-[11px] font-bold text-emerald-700 dark:text-emerald-300">
+                  <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                  <span>{locale === 'bn' ? 'ভেরিফাইড' : 'Verified'}</span>
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 px-2.5 py-0.5 text-[11px] font-bold text-amber-700 dark:text-amber-300">
+                  <Sparkles className="h-3 w-3" />
+                  <span>
+                    {locale === 'bn'
+                      ? '+৩০ পয়েন্ট • গ্রীন ভেরিফাইড আইকনের জন্য বাধ্যতামূলক'
+                      : '+30 pts • Mandatory for Green Verified Icon'}
+                  </span>
+                </span>
+              )}
+            </div>
+
+            <Input
+              type="email"
+              placeholder="name@gmail.com"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (otpSent) {
+                  setOtpSent(false);
+                  setOtpCode('');
+                  setDevOtpHint(null);
+                }
+              }}
+              leftIcon={<Mail className="h-4 w-4" />}
+              required
+            />
+
+            {!isCurrentEmailVerified ? (
+              <div className="rounded-xl border border-[#e4e6eb] dark:border-[#393a3b] bg-[#f8fafc] dark:bg-[#1e1f21] p-3 space-y-2.5">
+                <p className="text-[11.5px] text-[#65676b] dark:text-[#b0b3b8]">
+                  {locale === 'bn'
+                    ? 'গ্রীন ভেরিফাইড আইকন পেতে ও +৩০ পয়েন্ট অর্জন করতে আপনার জিমেইল ভেরিফাই করা বাধ্যতামূলক।'
+                    : 'Verifying your Gmail/email is mandatory for the green verified icon and earns +30 points.'}
+                </p>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleVerifyWithGoogle}
+                    isLoading={isGoogleRedirecting}
+                    disabled={isGoogleRedirecting || isSendingOtp || isConfirmingOtp}
+                    className="rounded-xl text-xs h-9 px-3.5 border-[#d0d5dd] dark:border-[#4a4b4d] bg-white dark:bg-[#242526]"
+                  >
+                    {locale === 'bn' ? 'Google দিয়ে ভেরিফাই' : 'Verify with Google'}
+                  </Button>
+
+                  <Button
+                    type="button"
+                    onClick={handleSendOtp}
+                    isLoading={isSendingOtp}
+                    disabled={isSendingOtp || isConfirmingOtp || isGoogleRedirecting}
+                    className="rounded-xl text-xs h-9 px-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
+                  >
+                    {otpSent
+                      ? locale === 'bn'
+                        ? 'আবার কোড পাঠান'
+                        : 'Resend Code'
+                      : locale === 'bn'
+                        ? 'কোড পাঠান (OTP)'
+                        : 'Send Code (OTP)'}
+                  </Button>
+                </div>
+
+                {otpSent && (
+                  <div className="space-y-2 pt-1">
+                    {devOtpHint && (
+                      <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-300">
+                        {locale === 'bn'
+                          ? `ডেভ ভেরিফিকেশন কোড: ${devOtpHint}`
+                          : `Verification Code: ${devOtpHint}`}
+                      </p>
+                    )}
+                    <div className="flex items-center gap-2">
+                      <Input
+                        placeholder={
+                          locale === 'bn' ? '৬-সংখ্যার কোড' : '6-digit code'
+                        }
+                        value={otpCode}
+                        maxLength={6}
+                        onChange={(e) =>
+                          setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 6))
+                        }
+                        className="font-bold tracking-widest text-center"
+                      />
+                      <Button
+                        type="button"
+                        onClick={handleConfirmOtp}
+                        isLoading={isConfirmingOtp}
+                        disabled={isConfirmingOtp || otpCode.trim().length !== 6}
+                        className="rounded-xl text-xs h-10 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold shrink-0"
+                      >
+                        {locale === 'bn' ? 'নিশ্চিত করুন' : 'Confirm'}
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <p className="text-[11.5px] font-medium text-emerald-700 dark:text-emerald-300 flex items-center gap-1.5">
+                <ShieldCheck className="h-3.5 w-3.5 shrink-0" />
+                <span>
+                  {user?.userStatus === 'VERIFIED'
+                    ? locale === 'bn'
+                      ? 'আপনার গ্রীন ভেরিফাইড আইকন সক্রিয় আছে!'
+                      : 'Your green verified icon is active!'
+                    : locale === 'bn'
+                      ? 'জিমেইল ভেরিফাইড ✓ গ্রীন ভেরিফাইড আইকন পেতে প্রোফাইল ছবি, কভার, বায়ো ও ঠিকানা পূরণ করুন।'
+                      : 'Gmail verified ✓ Complete photo, cover, bio, and location to unlock the green verified icon.'}
+                </span>
+              </p>
+            )}
+          </div>
 
           <div>
             <div className="flex items-center justify-between mb-1.5">

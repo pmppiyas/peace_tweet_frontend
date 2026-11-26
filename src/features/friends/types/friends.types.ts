@@ -28,6 +28,8 @@ export interface FriendUser {
   badge?: string;
   badges?: UserBadge[];
   userStatus?: UserStatus;
+  points?: number;
+  lifetimePoints?: number;
   friendsCount?: number;
   friendCount?: number;
   postCount?: number;
@@ -95,6 +97,12 @@ export interface FriendActionResponse {
 // Full public user profile with relationship status
 export interface UserProfileResponse extends FriendUser {
   email: string;
+  emailVerified?: boolean;
+  emailVerifiedAt?: string | null;
+  country?: string | null;
+  countryCode?: string | null;
+  state?: string | null;
+  city?: string | null;
   role: string;
   createdAt: string;
   updatedAt: string;

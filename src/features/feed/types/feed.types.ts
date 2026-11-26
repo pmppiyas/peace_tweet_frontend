@@ -1,5 +1,6 @@
 import { DuaReference, DuaAudio } from '@/types/dua.types';
 import { BloodRequestItem } from '@/features/blood/types/blood.types';
+import { UserStatus } from '@/types/user.types';
 
 export type PostType = 'TEXT' | 'DUA' | 'BLOOD_REQUEST' | 'QUESTION' | 'ANNOUNCEMENT';
 export type PostVisibility = 'PUBLIC' | 'FOLLOWERS' | 'GROUP';
@@ -10,6 +11,7 @@ export interface FeedAuthor {
   name: string;
   username: string;
   avatar: string | null;
+  userStatus?: UserStatus;
 }
 
 export interface FeedDua {

@@ -42,6 +42,7 @@ import {
   Move,
   MessageCircle,
   ArrowLeft,
+  AtSign,
 } from 'lucide-react';
 import { useChatStore } from '@/stores/useChatStore';
 import { formatDate } from '@/lib/utils/date';
@@ -184,6 +185,20 @@ export function ProfileView({
   }
 
   const bloodGroupLabel = formatBloodGroup(displayUser.bloodGroup);
+  const completedProfileSteps = [
+    Boolean(displayUser.avatarUrl?.trim()),
+    Boolean(displayUser.coverUrl?.trim()),
+    Boolean(displayUser.bio?.trim()),
+    Boolean(
+      displayUser.location?.trim() ||
+        displayUser.city?.trim() ||
+        displayUser.state?.trim() ||
+        displayUser.country?.trim()
+    ),
+    Boolean(displayUser.bloodGroup),
+    Boolean(displayUser.emailVerified),
+  ].filter(Boolean).length;
+  const profileCompletionPct = Math.round((completedProfileSteps / 6) * 100);
   const friendshipData = (displayUser as UserProfileResponse)?.friendship;
   const relationshipStatus = friendshipData?.status || 'NONE';
   const requestId = friendshipData?.requestId;
@@ -378,7 +393,14 @@ export function ProfileView({
       )}
 
       {/* 1. Profile Hero Card */}
-      <div className="relative z-20 rounded-none sm:rounded-2xl border-0 border-b sm:border border-[#e4e6eb] bg-white shadow-none sm:shadow-2xs dark:border-[#393a3b] dark:bg-[#242526]">
+      <div
+        className={cn(
+          'relative z-20 rounded-none sm:rounded-2xl border-0 border-b sm:border border-[#e4e6eb] dark:border-[#393a3b] shadow-none sm:shadow-2xs transition-colors',
+          (displayUser as any).activeProfileTheme === 'NOOR_PROFILE_THEME'
+            ? 'bg-gradient-to-b from-violet-50/75 via-white to-white dark:from-violet-950/30 dark:via-[#242526] dark:to-[#242526]'
+            : 'bg-white dark:bg-[#242526]'
+        )}
+      >
         {/* Cover Photo Banner */}
         <div className="relative h-44 sm:h-56 md:h-64 lg:h-72 xl:h-80 2xl:h-96 rounded-none sm:rounded-t-2xl bg-gradient-to-r from-emerald-800 via-teal-700 to-primary-800 overflow-hidden">
 
@@ -423,9 +445,9 @@ export function ProfileView({
                 }
               >
                 {isUploadingCover ? (
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  <Loader2 className="h-3 w-3 animate-spin" />
                 ) : (
-                  <Camera className="h-3.5 w-3.5" />
+                  <Camera className="h-3 w-3" />
                 )}
                 <span className="hidden sm:inline">
                   {isUploadingCover
@@ -483,22 +505,42 @@ export function ProfileView({
 
         {/* Profile Info Header Bar (Center-wise Layout) */}
         <div className="px-3 sm:px-8 pb-3 sm:pb-4 text-center">
-          {/* Avatar: Centered horizontally, exactly 50% overlaps the cover banner */}
+          {/* Avatar: Centered horizontally with Green/White Profile Completion % Outline */}
           <div className="-mt-14 sm:-mt-[72px] md:-mt-20 relative z-10 inline-block mx-auto">
-            <div className="relative h-28 w-28 sm:h-36 sm:w-36 md:h-40 md:w-40 rounded-full border-4 border-white dark:border-[#242526] bg-primary-600 text-white shadow-xl overflow-hidden">
-              {displayUser.avatarUrl ? (
-                <Image
-                  src={displayUser.avatarUrl}
-                  alt={displayUser.name}
-                  fill
-                  className="object-cover"
-                  unoptimized
-                />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center text-3xl sm:text-4xl font-black">
-                  {displayUser.name.charAt(0).toUpperCase()}
-                </div>
+            <div
+              className={cn(
+                'relative h-[120px] w-[120px] sm:h-[152px] sm:w-[152px] md:h-[168px] md:w-[168px] rounded-full p-[4px] shadow-xl ring-1',
+                (displayUser as any).activeAvatarFrame === 'EMERALD_AVATAR_FRAME'
+                  ? 'ring-4 ring-emerald-400/80 dark:ring-emerald-400/70'
+                  : 'ring-black/10 dark:ring-white/15'
               )}
+              style={{
+                background:
+                  (displayUser as any).activeAvatarFrame === 'EMERALD_AVATAR_FRAME'
+                    ? 'linear-gradient(135deg, #10b981 0%, #34d399 50%, #059669 100%)'
+                    : `linear-gradient(to right, #16a34a 0% ${profileCompletionPct}%, #ffffff ${profileCompletionPct}% 100%)`,
+              }}
+              title={
+                locale === 'bn'
+                  ? `প্রোফাইল সম্পন্ন: ${profileCompletionPct}%`
+                  : `Profile completion: ${profileCompletionPct}%`
+              }
+            >
+              <div className="relative h-full w-full rounded-full bg-primary-600 text-white overflow-hidden">
+                {displayUser.avatarUrl ? (
+                  <Image
+                    src={displayUser.avatarUrl}
+                    alt={displayUser.name}
+                    fill
+                    className="object-cover"
+                    unoptimized
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center text-3xl sm:text-4xl font-black">
+                    {displayUser.name.charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
             </div>
             {/* Update Avatar Button with direct upload (Only for owner in normal mode) */}
             {isOwner && !isViewAs && (
@@ -507,15 +549,20 @@ export function ProfileView({
                   type="button"
                   onClick={() => avatarInputRef.current?.click()}
                   disabled={isUploadingAvatar}
-                  className="absolute bottom-1 right-1 sm:bottom-1.5 sm:right-1.5 flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-white shadow-md border-2 border-white dark:border-[#242526] transition-colors cursor-pointer"
+                  className={cn(
+                    'absolute bottom-1 right-1 sm:bottom-1.5 sm:right-1.5 flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full shadow-md transition-all cursor-pointer',
+                    displayUser.avatarUrl
+                      ? 'bg-black/50 hover:bg-black/70 text-white backdrop-blur-xs'
+                      : 'bg-[#f0f2f5] hover:bg-[#e4e6eb] dark:bg-[#3a3b3c] dark:hover:bg-[#4e4f50] text-[#050505] dark:text-white border-2 border-white dark:border-[#242526]'
+                  )}
                   title={
                     locale === 'bn' ? 'প্রোফাইল ছবি পরিবর্তন' : 'Update Avatar'
                   }
                 >
                   {isUploadingAvatar ? (
-                    <Loader2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 animate-spin" />
+                    <Loader2 className="h-3 w-3 sm:h-3.5 sm:w-3.5 animate-spin" />
                   ) : (
-                    <Camera className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                    <Camera className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                   )}
                 </button>
                 <input
@@ -550,20 +597,49 @@ export function ProfileView({
                   className={cn(
                     'h-4 w-4 sm:h-5 sm:w-5 shrink-0 transition-colors',
                     displayUser.userStatus === 'VERIFIED'
-                      ? 'text-[#0866FF] fill-[#0866FF]/15'
-                      : 'text-[#65676b] dark:text-[#b0b3b8]'
+                      ? 'text-emerald-600 fill-emerald-500/15 dark:text-emerald-400'
+                      : displayUser.userStatus === 'PREMIUM'
+                        ? 'text-amber-500 fill-amber-500/15'
+                        : 'text-[#65676b] dark:text-[#b0b3b8]'
                   )}
                 />
               </span>
             </div>
-
-            <p className="text-[14.5px] sm:text-[15px] font-semibold text-primary-600 dark:text-primary-400 mt-1">
-              @{displayUser.username}
-            </p>
           </div>
 
-          {/* Badges & Meta (Special Badges & Friendship Status) */}
-          <div className="mt-2.5 flex items-center justify-center gap-2 sm:gap-2.5 flex-wrap">
+          {/* All Badges & Meta in One Unified Flex Row */}
+          <div className="mt-2.5 flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap">
+            {/* Mandatory Gmail Verify Shortcut Pill */}
+            {isOwner && !isViewAs && !displayUser.emailVerified && (
+              <Link
+                href="/settings?tab=profile"
+                className="inline-flex items-center gap-1 rounded-full border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/50 px-2.5 py-0.5 text-xs font-bold text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 transition-colors select-none"
+              >
+                <Mail className="h-3.5 w-3.5 shrink-0" />
+                <span>
+                  {locale === 'bn'
+                    ? 'জিমেইল ভেরিফাই (+৩০ pts)'
+                    : 'Verify Gmail (+30 pts)'}
+                </span>
+              </Link>
+            )}
+
+            {/* Points Pill */}
+            {typeof displayUser.points === 'number' && (
+              <Link
+                href={isOwner ? ROUTES.POINTS : '#'}
+                className={cn(
+                  'inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-bold text-amber-700 border border-amber-200 dark:bg-amber-950/60 dark:border-amber-800 dark:text-amber-300 shadow-2xs select-none',
+                  isOwner && 'hover:bg-amber-100 dark:hover:bg-amber-900/60'
+                )}
+              >
+                <Award className="h-3.5 w-3.5 shrink-0 text-amber-600 dark:text-amber-400" />
+                <span>
+                  {displayUser.points} {locale === 'bn' ? 'পয়েন্ট' : 'pts'}
+                </span>
+              </Link>
+            )}
+
             {/* Dynamic Community Badges */}
             {displayUser.badges
               ?.filter(
@@ -945,6 +1021,16 @@ export function ProfileView({
               </h2>
 
               <div className="space-y-2.5 text-xs sm:text-sm">
+                {displayUser.username && (
+                  <div className="flex items-center gap-2.5 text-[#050505] dark:text-[#e4e6eb]">
+                    <AtSign className="h-4 w-4 text-primary-500 shrink-0" />
+                    <span>
+                      {locale === 'bn' ? 'ইউজারনেম:' : 'Username:'}{' '}
+                      <strong className="font-bold">@{displayUser.username}</strong>
+                    </span>
+                  </div>
+                )}
+
                 {displayUser.badges &&
                   displayUser.badges.filter(
                     (b: UserBadge) =>

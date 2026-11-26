@@ -2,14 +2,17 @@
 
 import React, { Suspense, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuthActions } from '@/features/auth/hooks/useAuthActions';
 import { useGoogleSDK } from '@/features/auth/hooks/useGoogleSDK';
+import { usersApi } from '@/features/profile/api/users.api';
+import { useAuthStore } from '@/stores/authStore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { ROUTES } from '@/constants/routes';
 
 function GoogleCallbackContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const { googleLogin } = useAuthActions();
   const { googleRedirectUri } = useGoogleSDK();
@@ -23,14 +26,45 @@ function GoogleCallbackContent() {
     const code = searchParams.get('code');
     const error = searchParams.get('error');
     const errorDescription = searchParams.get('error_description');
+    const isVerifyEmailMode =
+      typeof window !== 'undefined' &&
+      window.sessionStorage.getItem('pt_google_verify_email') === '1';
 
     if (error) {
+      if (typeof window !== 'undefined') {
+        window.sessionStorage.removeItem('pt_google_verify_email');
+      }
       setErrorMsg(errorDescription || 'Google sign-in was cancelled or denied.');
       return;
     }
 
     if (!code) {
+      if (typeof window !== 'undefined') {
+        window.sessionStorage.removeItem('pt_google_verify_email');
+      }
       setErrorMsg('No authorization code received from Google.');
+      return;
+    }
+
+    if (isVerifyEmailMode) {
+      window.sessionStorage.removeItem('pt_google_verify_email');
+      usersApi
+        .verifyEmailWithGoogle({ code, redirectUri: googleRedirectUri })
+        .then((res) => {
+          const payload = res?.data;
+          if (payload?.user) {
+            useAuthStore.getState().setUser(payload.user);
+          }
+          const pts = payload?.pointsAwarded ?? 0;
+          router.replace(`/settings?tab=profile&gmailVerified=1&pts=${pts}`);
+        })
+        .catch((err: any) => {
+          const msg =
+            err?.response?.data?.message ||
+            err?.message ||
+            'Failed to verify Gmail with Google.';
+          setErrorMsg(msg);
+        });
       return;
     }
 
@@ -41,7 +75,7 @@ function GoogleCallbackContent() {
         'Failed to complete Google authentication.';
       setErrorMsg(msg);
     });
-  }, [searchParams, googleLogin, googleRedirectUri]);
+  }, [searchParams, googleLogin, googleRedirectUri, router]);
 
   return (
     <div className="min-h-[70vh] flex items-center justify-center px-4">

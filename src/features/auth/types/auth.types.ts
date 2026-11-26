@@ -11,6 +11,8 @@ export interface RegisterInput {
   city?: string;
   location?: string;
   bloodGroup?: BloodGroup;
+  invitedBy?: string;
+  referralCode?: string;
 }
 
 export interface LoginInput {

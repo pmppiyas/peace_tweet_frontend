@@ -266,7 +266,8 @@ export function NotificationDropdown({
               No notifications yet
             </p>
             <p className="text-xs mt-1 text-[#65676b] dark:text-[#b0b3b8] max-w-xs">
-              When someone likes or comments on your posts, or sends you a friend request, you will see it here.
+              When someone likes or comments on your posts, or sends you a
+              friend request, you will see it here.
             </p>
           </div>
         ) : (
@@ -329,7 +330,12 @@ export function NotificationDropdown({
                       {actorName}
                     </span>{' '}
                     <span className="font-normal text-[#050505] dark:text-[#e4e6eb]">
-                      {item.message}
+                      {item.type === 'POST_COMMENT'
+                        ? item.message &&
+                          item.message.toLowerCase().includes('replied')
+                          ? 'replied to your comment'
+                          : 'commented on your post.'
+                        : item.message}
                     </span>
                   </p>
 

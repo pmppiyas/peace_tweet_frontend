@@ -87,7 +87,6 @@ export function ChatBox({ activeChat, isMobileActive = true }: ChatBoxProps) {
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
   const [editingText, setEditingText] = useState('');
 
-  // Facebook-style 3-dot menu state
   const [menuOpenMessageId, setMenuOpenMessageId] = useState<string | null>(null);
 
   useEffect(() => {

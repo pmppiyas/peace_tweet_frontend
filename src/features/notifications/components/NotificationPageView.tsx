@@ -203,7 +203,7 @@ export function NotificationPageView() {
                 {isLoading && allNotifications.length === 0 ? (
                   <NotificationSkeleton count={7} variant="page" />
                 ) : allNotifications.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-16 px-6 text-center text-[#65676b] dark:text-[#b0b3b8]">
+                  <div className="flex flex-col items-center justify-center py-6 px-6 text-center text-[#65676b] dark:text-[#b0b3b8]">
                     <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#f0f2f5] dark:bg-[#3a3b3c] mb-3">
                       <Inbox className="h-8 w-8 stroke-[1.5]" />
                     </div>
@@ -211,7 +211,8 @@ export function NotificationPageView() {
                       No notifications yet
                     </p>
                     <p className="text-xs mt-1 text-[#65676b] dark:text-[#b0b3b8] max-w-sm">
-                      When someone likes or comments on your posts, or sends you a friend request, you will see it here.
+                      When someone likes or comments on your posts, or sends you
+                      a friend request, you will see it here.
                     </p>
                   </div>
                 ) : (
@@ -273,7 +274,12 @@ export function NotificationPageView() {
                               {actorName}
                             </span>{' '}
                             <span className="font-normal text-[#050505] dark:text-[#e4e6eb]">
-                              {item.message}
+                              {item.type === 'POST_COMMENT'
+                                ? item.message &&
+                                  item.message.toLowerCase().includes('replied')
+                                  ? 'replied to your comment'
+                                  : 'commented on your post.'
+                                : item.message}
                             </span>
                           </p>
 

@@ -10,6 +10,7 @@ import React, {
 import { Socket } from 'socket.io-client';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
+import { useAuthStore } from '@/stores/authStore';
 import { initSocket, disconnectSocket } from '@/lib/socket/socketClient';
 import { useChatStore } from '@/stores/useChatStore';
 import {
@@ -358,6 +359,25 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       }
     };
 
+    const handlePointsEarned = (payload: any) => {
+      if (!payload || typeof payload.pointsDelta !== 'number') return;
+      const current = useAuthStore.getState().user;
+      if (current) {
+        useAuthStore.getState().setUser({
+          ...current,
+          points:
+            typeof payload.totalPoints === 'number'
+              ? payload.totalPoints
+              : (current.points ?? 0) + payload.pointsDelta,
+          lifetimePoints:
+            typeof payload.lifetimePoints === 'number'
+              ? payload.lifetimePoints
+              : (current.lifetimePoints ?? 0) + payload.pointsDelta,
+        });
+      }
+      queryClient.invalidateQueries({ queryKey: ['points'] });
+    };
+
     socket.on('connect', handleConnect);
     socket.on('disconnect', handleDisconnect);
     socket.on('users:online_list', handleOnlineList);
@@ -373,6 +393,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     socket.on('notification:received', handleNotificationReceived);
     socket.on('notification:new', handleNotificationReceived);
     socket.on('notification:unread_count', handleNotificationUnreadCount);
+    socket.on('points:earned', handlePointsEarned);
 
     return () => {
       socket.off('connect', handleConnect);
@@ -390,6 +411,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       socket.off('notification:received', handleNotificationReceived);
       socket.off('notification:new', handleNotificationReceived);
       socket.off('notification:unread_count', handleNotificationUnreadCount);
+      socket.off('points:earned', handlePointsEarned);
     };
   }, [isAuthenticated, user, queryClient]);
 

@@ -14,6 +14,7 @@ import { BloodGroup } from '@/types/user.types';
 import { useAuth } from '@/hooks/useAuth';
 import { useAuthStore } from '@/stores/authStore';
 import { useLanguage } from '@/providers/LanguageProvider';
+import { useToast } from '@/providers/ToastProvider';
 import { usersApi } from '../api/users.api';
 import { Droplet, Heart, CheckCircle2, AlertCircle, Award } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
@@ -33,6 +34,7 @@ export function BloodSettingsCard() {
   const { user } = useAuth();
   const { setUser } = useAuthStore();
   const { locale } = useLanguage();
+  const { showToast } = useToast();
 
   const [bloodGroup, setBloodGroup] = useState<BloodGroup | undefined>(
     undefined
@@ -60,16 +62,28 @@ export function BloodSettingsCard() {
     setStatus(null);
 
     try {
-      const res = await usersApi.updateProfile({
-        bloodGroup: bloodGroup || null,
-        isDonor,
-        donationCount: Number(donationCount) || 0,
-      });
+      const payload: Record<string, any> = {};
+      const nextBg = bloodGroup || null;
+      const nextCount = Number(donationCount) || 0;
+
+      if (nextBg !== (user?.bloodGroup || null)) payload.bloodGroup = nextBg;
+      if (isDonor !== Boolean(user?.isDonor)) payload.isDonor = isDonor;
+      if (nextCount !== (user?.donationCount || 0)) payload.donationCount = nextCount;
+
+      if (Object.keys(payload).length === 0) {
+        showToast({
+          type: 'info',
+          message: locale === 'bn' ? 'কোনো পরিবর্তন করা হয়নি।' : 'No changes to save.',
+        });
+        return;
+      }
+
+      const res = await usersApi.updateProfile(payload);
 
       setUser(res.data);
-      setStatus({
+      showToast({
         type: 'success',
-        text:
+        message:
           locale === 'bn'
             ? 'রক্তদানের তথ্য সফলভাবে সংরক্ষিত হয়েছে!'
             : 'Blood donation settings saved successfully!',
